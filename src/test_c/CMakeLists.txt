@@ -1,5 +1,3 @@
-SET(PHIGS_LIBRARIES phigs
-    ${OPENGL_LIBRARY} ${X11_LIBRARY} ${XMU_LIBRARY} m)
 
 ADD_EXECUTABLE(test_c1 test_c1.c eldata.c)
 TARGET_LINK_LIBRARIES(test_c1 ${PHIGS_LIBRARIES})
@@ -31,3 +29,17 @@ TARGET_LINK_LIBRARIES(test_c9 ${PHIGS_LIBRARIES})
 ADD_EXECUTABLE(test_c10 test_c10.c)
 TARGET_LINK_LIBRARIES(test_c10 ${PHIGS_LIBRARIES})
 
+INSTALL(TARGETS
+    test_c1
+    test_c2
+    test_c3
+    test_c4
+    test_c5
+    test_c6
+    test_c7
+    test_c8
+    test_c9
+    test_c10
+  DESTINATION
+    tests_c
+)

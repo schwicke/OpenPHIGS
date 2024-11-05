@@ -1,0 +1,12 @@
+INSTALL(FILES
+    conv.h
+    ftn.h
+    htab.h
+    list.h
+    mat.h
+    node.h
+    nset.h
+    stk.h
+  DESTINATION
+    include/phigs/util
+)

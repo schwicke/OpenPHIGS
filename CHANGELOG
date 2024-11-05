@@ -8,13 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Removed
+
+## [0.0.1-1] - 2024-11-05
+
+### Added
 - r381 trunk from https://svn.code.sf.net/p/phigs/code/trunk phigs-code
 - Changelog.md (this file)
 - Contrib folder with permission from the original author Alexander von Knorring
+- Added top level Makefile
+- Added CMakeList.txt files
+- Prepare support for Epoxy and Darwin
 
 ### Changed
 - Remove LGPL re-licensing headers of X consortium licensed code. See e-mail from Alexander von Knorring
 - Removed libVk and libGLw build targets from CMakeLists
+- Rearrage code and move include files
 
 ### Removed
 - libVk source and headers

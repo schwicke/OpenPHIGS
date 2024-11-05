@@ -1,0 +1,19 @@
+INSTALL(FILES
+    arP.h
+    cbP.h
+    cssP.h
+    cvsP.h
+    errP.h
+    evtP.h
+    fasd3P.h
+    hdlP.h
+    phgP.h
+    sinP.h
+    sinqP.h
+    sofas3P.h
+    wsbP.h
+    wsglP.h
+    wsxP.h
+  DESTINATION
+    include/phigs/private
+)

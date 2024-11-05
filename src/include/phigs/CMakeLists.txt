@@ -1,0 +1,26 @@
+ADD_SUBDIRECTORY(private)
+ADD_SUBDIRECTORY(util)
+INSTALL(FILES
+    alloc.h
+    ar.h
+    attr.h
+    css.h
+    err.h
+    errnum.h
+    phgargs.h
+    phg_dt.h
+    phg.h
+    phgretdata.h
+    phgtype.h
+    phigsf77.h
+    phigsfunc.h
+    phigs.h
+    psl.h
+    sin.h
+    util.h
+    ws.h
+    ws_inp.h
+    ws_type.h
+  DESTINATION
+    include/phigs
+)
