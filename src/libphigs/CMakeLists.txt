@@ -1,21 +1,145 @@
-ADD_LIBRARY(phigs
-    ut.c ut_mat.c ut_list.c ut_htab.c ut_nset.c ut_stk.c ut_conv.c
-    css_ini.c css_stb.c css_set.c css_str.c css_el.c css_inq.c css_pr.c
-    css_ws.c phg.c phg_attr.c
-    hdl.c err.c err_num.c psl.c
-    wsb.c wsb_lut.c ws_inp.c
-    wst.c wsx.c wsx_util.c wstx_ini.c wsx_inp.c
-    sin.c sinq.c sin_evt.c sin_ws.c sin_cvs.c sin_val.c sin_cho.c sin_str.c
-    sin_dev.c
-    fnt.c fnt_mroman.c fnt_roman.c
-    phg_swap.c ar.c ar_conv.c ar_hier.c ar_ops.c
-    wsgl.c wsgl_attr.c wsgl_hatch.c
-    wsgl_clear.c wsgl_fill.c wsgl_edge.c wsgl_marker.c wsgl_line.c wsgl_text.c
-    wsgl_extattr.c wsgl_light.c
-    fasd3.c wsgl_fasd3clear.c wsgl_fasd3fill.c wsgl_fasd3edge.c
-    sofas3.c wsgl_sofas3clear.c wsgl_sofas3fill.c wsgl_sofas3edge.c
-    cb.c cb_phg.c cb_ws.c cb_wst.c cb_str.c cb_el.c cb_extel.c cb_inp.c cb_tr.c
-    cb_ar.c
-    fb_phg.c fb_ws.c fb_str.c fb_el.c
-    )
+SET(P_ARCHIVE_SRCS
+  archive/ar.c
+  archive/ar_conv.c
+  archive/ar_ops.c
+  archive/ar_hier.c
+)
 
+SET(P_C_BINDING_SRCS
+  c_binding/cb.c
+  c_binding/cb_ar.c
+  c_binding/cb.c
+  c_binding/cb_el.c
+  c_binding/cb_extel.c
+  c_binding/cb_inp.c
+  c_binding/cb_phg.c
+  c_binding/cb_str.c
+  c_binding/cb_tr.c
+  c_binding/cb_ws.c
+  c_binding/cb_wst.c
+)
+
+SET(P_F_BINDING_SRCS
+  f_binding/fb_el.c
+  f_binding/fb_phg.c
+  f_binding/fb_str.c
+  f_binding/fb_ws.c
+)
+
+SET(P_CSS_SRCS
+  css/css_el.c
+  css/css_ini.c
+  css/css_inq.c
+  css/css_pr.c
+  css/css_set.c
+  css/css_stb.c
+  css/css_str.c
+  css/css_ws.c
+  )
+
+SET(P_UT_SRCS
+  ut/ut.c
+  ut/ut_conv.c
+  ut/ut_htab.c
+  ut/ut_list.c
+  ut/ut_mat.c
+  ut/ut_nset.c
+  ut/ut_stk.c
+  )
+
+SET(P_PHG_SRCS
+  phg/phg_attr.c
+  phg/phg.c
+  phg/phg_swap.c
+  )
+
+SET(P_WSGL_SRCS
+  wsgl/wsgl_attr.c
+  wsgl/wsgl.c
+  wsgl/wsgl_clear.c
+  wsgl/wsgl_edge.c
+  wsgl/wsgl_extattr.c
+  wsgl/wsgl_fasd3clear.c
+  wsgl/wsgl_fasd3edge.c
+  wsgl/wsgl_fasd3fill.c
+  wsgl/wsgl_fill.c
+  wsgl/wsgl_hatch.c
+  wsgl/wsgl_light.c
+  wsgl/wsgl_line.c
+  wsgl/wsgl_marker.c
+  wsgl/wsgl_sofas3clear.c
+  wsgl/wsgl_sofas3edge.c
+  wsgl/wsgl_sofas3fill.c
+  wsgl/wsgl_text.c
+)
+
+SET(P_SIN_SRCS
+  input/sin.c
+  input/sin_cho.c
+  input/sin_cvs.c
+  input/sin_dev.c
+  input/sin_evt.c
+  input/sinq.c
+  input/sin_str.c
+  input/sin_val.c
+  input/sin_ws.c
+)
+
+SET(P_WS_SRCS
+  ws/wsb.c
+  ws/wsb_lut.c
+  ws/ws_inp.c
+  ws/wst.c
+  ws/wstx_ini.c
+  ws/wsx.c
+  ws/wsx_inp.c
+  ws/wsx_util.c
+)
+
+SET(P_FONTS_SRCS
+  fonts/fnt.c
+  fonts/fnt_mroman.c
+  fonts/fnt_roman.c
+  )
+
+SET(P_ERRORS_SRCS
+  errors/err.c
+  errors/err_num.c
+  )
+
+SET(P_UTILS_SRCS
+  utils/hdl.c
+  utils/psl.c
+  utils/fasd3.c
+  utils/sofas3.c
+  )
+
+SET(OPHIGS_ALL
+  ${P_ARCHIVE_SRCS}
+  ${P_C_BINDING_SRCS}
+  ${P_F_BINDING_SRCS}
+  ${P_CSS_SRCS}
+  ${P_UT_SRCS}
+  ${P_PHG_SRCS}
+  ${P_WSGL_SRCS}
+  ${P_SIN_SRCS}
+  ${P_WS_SRCS}
+  ${P_ERRORS_SRCS}
+  ${P_FONTS_SRCS}
+  ${P_UTILS_SRCS}
+  )
+
+
+add_library(phigs STATIC ${OPHIGS_ALL})
+add_library(phigs-shared SHARED ${OPHIGS_ALL})
+if (APPLE)
+  set_target_properties(phigs-shared PROPERTIES OUTPUT_NAME phigs LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
+else()
+  set_target_properties(phigs-shared PROPERTIES OUTPUT_NAME phigs)
+endif()
+
+INSTALL(TARGETS
+  phigs
+  phigs-shared
+  ARCHIVE DESTINATION lib
+)
