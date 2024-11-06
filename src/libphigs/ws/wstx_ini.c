@@ -16,6 +16,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
@@ -55,12 +57,18 @@ static void init_output_ws_dt(
    switch (ws_type) {
       case PWST_OUTPUT_TRUE:
       case PWST_OUTIN_TRUE:
+      case PWST_HCOPY_TRUE:
+      case PWST_HCOPY_TRUE_RGBA_PNG:
+      case PWST_HCOPY_TRUE_RGB_PNG:
          wsdt->default_colour_model = PMODEL_RGB;
          wsdt->has_double_buffer    = FALSE;
          break;
 
       case PWST_OUTPUT_TRUE_DB:
       case PWST_OUTIN_TRUE_DB:
+      case PWST_HCOPY_TRUE_DB:
+      case PWST_HCOPY_TRUE_RGBA_PNG_DB:
+      case PWST_HCOPY_TRUE_RGB_PNG_DB:
          wsdt->default_colour_model = PMODEL_RGB;
          wsdt->has_double_buffer    = TRUE;
          break;
@@ -286,56 +294,91 @@ int init_devices(
    Ppoint3 position = {0.0, 0.0, 0.0};
    Plimit3 e_volume = {0.0, 1.0, 0.0, 1.0, 0.0, 1.0};
    Wst_input_wsdt *idt = &wst->desc_tbl.phigs_dt.in_dt;
+   int i;
 
    wst->desc_tbl.xwin_dt.num_pick_device_types = 1;
    wst->desc_tbl.xwin_dt.pick_device_types = (Pint *) malloc(sizeof(Pint));
    if (wst->desc_tbl.xwin_dt.pick_device_types == NULL) {
       return FALSE;
    }
-
    /* Default locator */
-   idt->num_devs.loc = 1;
-   memcpy(&idt->locators[0].position, &position, sizeof(Ppoint3));
-   idt->locators[0].num_pets = 1;
-   idt->locators[0].pets[0] = 1;
-   memcpy(&idt->locators[0].e_volume, &e_volume, sizeof(Plimit3));
-   idt->locators[0].record.pets.pet_r1.unused = 0;
-   idt->locators[0].type = WST_LOC_TYPE_POINTER_BUTTON_1;
-
+   idt->num_devs.loc = WST_MAX_NUM_LOCATOR_DEVS;
+   for (i=0; i<WST_MAX_NUM_LOCATOR_DEVS; i++){
+     memcpy(&idt->locators[i].position, &position, sizeof(Ppoint3));
+     memcpy(&idt->locators[i].e_volume, &e_volume, sizeof(Plimit3));
+     idt->locators[i].num_pets = 1;
+     idt->locators[i].pets[0] = 1;
+     idt->locators[i].record.pets.pet_r1.unused = 0;
+     idt->locators[i].type = WST_LOC_TYPE_POINTER_BUTTON_1;
+   }
    /* Default stroke */
-   idt->num_devs.stroke = 1;
-   memcpy(&idt->strokes[0].e_volume, &e_volume, sizeof(Plimit3));
-   idt->strokes[0].max_bufsize = 200;
-   idt->strokes[0].num_pets = 1;
-   idt->strokes[0].pets[0] = 1;
-   idt->strokes[0].record.pets.pet_r1.unused = 0;
-   idt->strokes[0].record.buffer_size = 100;
-   idt->strokes[0].record.init_pos = 1;
-   idt->strokes[0].type = WST_LOC_TYPE_POINTER_BUTTON_1;
-
+   idt->num_devs.stroke = WST_MAX_NUM_STROKE_DEVS;
+   for (i=0; i<WST_MAX_NUM_STROKE_DEVS; i++){
+     memcpy(&idt->strokes[i].e_volume, &e_volume, sizeof(Plimit3));
+     idt->strokes[i].max_bufsize = 200;
+     idt->strokes[i].num_pets = 1;
+     idt->strokes[i].pets[0] = 1;
+     idt->strokes[i].record.pets.pet_r1.unused = 0;
+     idt->strokes[i].record.buffer_size = 100;
+     idt->strokes[i].record.init_pos = 1;
+     idt->strokes[i].type = WST_LOC_TYPE_POINTER_BUTTON_1;
+   }
    /* Default pick */
-   idt->num_devs.pick = 1;
-   memcpy(&idt->picks[0].e_volume, &e_volume, sizeof(Plimit3));
-   idt->picks[0].num_pets = 1;
-   idt->picks[0].pets[0] = 1;
-   idt->picks[0].record.pets.pet_r1.unused = 0;
-   idt->picks[0].type = WST_LOC_TYPE_POINTER_BUTTON_1;
-
+   idt->num_devs.pick = WST_MAX_NUM_PICK_DEVS;
+   for (i=0; i<WST_MAX_NUM_PICK_DEVS; i++){
+     memcpy(&idt->picks[i].e_volume, &e_volume, sizeof(Plimit3));
+     idt->picks[i].num_pets = 1;
+     idt->picks[i].pets[0] = 1;
+     idt->picks[i].record.pets.pet_r1.unused = 0;
+     idt->picks[i].type = WST_LOC_TYPE_POINTER_BUTTON_1;
+   }
    /* Default valuator */
-   idt->num_devs.val = 1;
-   memcpy(&idt->valuators[0].e_volume, &e_volume, sizeof(Plimit3));
-   idt->valuators[0].record.pets.pet_r1.unused = 0;
-
+   idt->num_devs.val = WST_MAX_NUM_VALUATOR_DEVS;
+   for (i=0; i<WST_MAX_NUM_VALUATOR_DEVS; i++){
+     memcpy(&idt->valuators[i].e_volume, &e_volume, sizeof(Plimit3));
+     idt->valuators[i].type = WST_VAL_TYPE_SLIDER;
+     idt->valuators[i].record.pets.pet_r1.unused = 0;
+     idt->valuators[i].num_pets = 6;
+     idt->valuators[i].pets[0] = 1;
+     idt->valuators[i].pets[1] = -1;
+     idt->valuators[i].pets[2] = 2; // like 1 but restricted to window
+     idt->valuators[i].pets[3] = -2; // like -1 but restricted to window
+     idt->valuators[i].pets[4] = 3; // like 2 but boxed up
+     idt->valuators[i].pets[5] = -3; // like -2 but boxed up
+   }
    /* Default choice */
-   idt->num_devs.choice = 1;
-   memcpy(&idt->choices[0].e_volume, &e_volume, sizeof(Plimit3));
-   idt->choices[0].record.pets.pet_r1.unused = 0;
-
+   idt->num_devs.choice = WST_MAX_NUM_CHOICE_DEVS;
+   for (i=0; i<WST_MAX_NUM_CHOICE_DEVS;i++){
+     memcpy(&idt->choices[i].e_volume, &e_volume, sizeof(Plimit3));
+     idt->choices[i].type = WST_CHOICE_TYPE_LIST;
+     idt->choices[i].num_pets = 6;
+     idt->choices[i].pets[0] = 1;
+     idt->choices[i].pets[1] = -1;
+     idt->choices[i].pets[2] = 3;
+     idt->choices[i].pets[3] = -3;
+     idt->choices[i].pets[4] = 4;
+     idt->choices[i].pets[5] = -4;
+     idt->choices[i].record.pets.pet_r1.unused = 0;
+     idt->choices[i].record.pets.pet_r2.num_prompts=0;
+     idt->choices[i].record.pets.pet_r2.prompts=NULL;
+     idt->choices[i].record.pets.pet_r3.num_strings=0;
+     idt->choices[i].record.pets.pet_r3.strings=NULL;
+     idt->choices[i].record.pets.pet_r4.num_strings=0;
+     idt->choices[i].record.pets.pet_r4.strings=NULL;
+   }
    /* Default string */
-   idt->num_devs.string = 1;
-   memcpy(&idt->strings[0].e_volume, &e_volume, sizeof(Plimit3));
-   idt->strings[0].record.pets.pet_r1.unused = 0;
-
+   idt->num_devs.string = WST_MAX_NUM_STRING_DEVS;
+   for (i=0; i<WST_MAX_NUM_STRING_DEVS;i++){
+     idt->strings[i].type = WST_STRING_TYPE_WINDOW;
+     idt->strings[i].num_pets = 2;
+     idt->strings[i].pets[0] = 1;
+     idt->strings[i].pets[1] = -1;
+     idt->strings[i].record.pets.pet_r1.unused = 0;
+     idt->strings[i].max_bufsize = 2048;
+     idt->strings[i].record.buffer_size = 80;
+     idt->strings[i].record.init_pos = 0;
+     memcpy(&idt->strings[i].e_volume, &e_volume, sizeof(Plimit3));
+   }
    return TRUE;
 }
 
@@ -371,6 +414,36 @@ Wst* phg_wstx_create(
          }
          else {
             ws_type = PWST_OUTIN_TRUE;
+         }
+         break;
+
+      case PCAT_TGA:
+
+         if (double_buffer) {
+            ws_type = PWST_HCOPY_TRUE_DB;
+         }
+         else {
+            ws_type = PWST_HCOPY_TRUE;
+         }
+         break;
+
+      case PCAT_PNG:
+
+         if (double_buffer) {
+            ws_type = PWST_HCOPY_TRUE_RGB_PNG_DB;
+         }
+         else {
+            ws_type = PWST_HCOPY_TRUE_RGB_PNG;
+         }
+         break;
+
+      case PCAT_PNGA:
+
+         if (double_buffer) {
+            ws_type = PWST_HCOPY_TRUE_RGBA_PNG_DB;
+         }
+         else {
+            ws_type = PWST_HCOPY_TRUE_RGBA_PNG;
          }
          break;
 
@@ -462,4 +535,3 @@ int phg_wstx_init(
 
    return TRUE;
 }
-

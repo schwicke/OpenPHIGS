@@ -99,6 +99,7 @@ SET(P_WS_SRCS
   ws/wsb.c
   ws/wsb_lut.c
   ws/ws_inp.c
+  ws/ws_pm.c
   ws/wst.c
   ws/wstx_ini.c
   ws/wsx.c

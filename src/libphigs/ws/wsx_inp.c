@@ -16,6 +16,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
@@ -25,6 +27,9 @@
 #include "phg.h"
 #include "private/evtP.h"
 #include "private/wsxP.h"
+
+#include <X11/Shell.h>
+#include <X11/StringDefs.h>
 
 /*******************************************************************************
  * phg_wsx_input_dispatch_next
@@ -40,12 +45,21 @@ int phg_wsx_input_dispatch_next(
 {
    int status;
    XEvent event;
+   XtInputMask m;
+   XtInputMask t;
 
+   m = XtIMXEvent;
+   if (((t = XtAppPending(ws->app_context)) & m)) {
+     /* wait for certain events, stepping through choices */
+     XtAppPeekEvent(ws->app_context, &event);
+     phg_sin_evt_dispatch(evt_tbl, ws->display, &event);
+     status = TRUE;
+     XtAppProcessEvent(ws->app_context, t & m);
+   }
    if (XCheckWindowEvent(ws->display,
                          ws->input_overlay_window,
                          (unsigned long) 0xffffffffUL,
                          &event) == True) {
-      phg_sin_evt_dispatch(evt_tbl, ws->display, &event);
       status = TRUE;
    }
    else {
@@ -54,4 +68,3 @@ int phg_wsx_input_dispatch_next(
 
    return status;
 }
-

@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +25,21 @@ Except as contained in this notice, the name of the X Consortium shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from the X Consortium.
 
-Copyright 1989, 1990, 1991 by Sun Microsystems, Inc. 
+Copyright 1989, 1990, 1991 by Sun Microsystems, Inc.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Sun Microsystems,
-not be used in advertising or publicity pertaining to distribution of 
-the software without specific, written prior permission.  
+not be used in advertising or publicity pertaining to distribution of
+the software without specific, written prior permission.
 
-SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, 
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT 
-SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
+SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
 DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
 ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
@@ -53,11 +54,15 @@ SOFTWARE.
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
+#include <X11/StringDefs.h>
+#include <X11/Shell.h>
 
 #include "phg.h"
 #include "private/phgP.h"
 #include "util.h"
 #include "ws.h"
+#include "cp.h"
 #include "private/wsbP.h"
 #include "private/wsglP.h"
 #include "private/wsxP.h"
@@ -122,6 +127,7 @@ static void wsb_load_funcs(
     ws->point_in_viewport = phg_wsb_point_in_viewport;
     ws->resolve_stroke = phg_wsb_resolve_stroke;
     ws->resolve_pick = phg_wsb_resolve_pick;
+    ws->message = phg_wsb_message;
 
     /* Not used by all workstations */
     ws->valid_pick_path = NULL;
@@ -137,7 +143,7 @@ static void wsb_load_funcs(
     ws->inq_inp_dev_state = NULL;
 }
 
-/* 
+/*
  * Tables that determine what update action is valid at a give point
  * in time.  The table has 3 axes:
  *	[Time] [Modification Mode] [Deferral Mode].
@@ -145,8 +151,8 @@ static void wsb_load_funcs(
 
 static Ws_action_table default_action_table =
 {
-    {   /* PHG_TIME_NOW */  
-	{   /* NIVE */   
+    {   /* PHG_TIME_NOW */
+	{   /* NIVE */
 	    PHG_UPDATE_ACCURATE, 		/* ASAP */
 	    PHG_UPDATE_IF_IG,	 		/* BNIG */
 	    PHG_UPDATE_IF_IL, 			/* BNIL */
@@ -166,71 +172,71 @@ static Ws_action_table default_action_table =
 	    PHG_UPDATE_IF_IL, 			/* BNIL */
 	    PHG_UPDATE_UQUM, 			/* ASTI */
 	    PHG_UPDATE_UQUM			/* WAIT */
-	}, 
-    }, 
+	},
+    },
 
-    {   /* PHG_TIME_BIG */  
-	{   /* NIVE */   
+    {   /* PHG_TIME_BIG */
+	{   /* NIVE */
 	    ASSURE_CORRECT, 			/* ASAP */
 	    PHG_UPDATE_ACCURATE, 		/* BNIG */
 	    PHG_UPDATE_NOTHING, 		/* BNIL */
 	    PHG_UPDATE_NOTHING, 		/* ASTI */
 	    PHG_UPDATE_NOTHING			/* WAIT */
-	}, 
-	{   /* UWOR */ 
+	},
+	{   /* UWOR */
 	    ASSURE_CORRECT, 			/* ASAP */
 	    PHG_UPDATE_ACCURATE, 		/* BNIG */
 	    PHG_UPDATE_NOTHING, 		/* BNIL */
 	    PHG_UPDATE_NOTHING, 		/* ASTI */
 	    PHG_UPDATE_NOTHING			/* WAIT */
-	}, 
-	{   /* UQUM */   
+	},
+	{   /* UQUM */
 	    ASSURE_CORRECT, 			/* ASAP */
 	    PHG_UPDATE_ACCURATE, 		/* BNIG */
 	    PHG_UPDATE_NOTHING, 		/* BNIL */
 	    PHG_UPDATE_NOTHING, 		/* ASTI */
 	    PHG_UPDATE_NOTHING			/* WAIT */
-	}, 
-    }, 	    
-    {   /* PHG_TIME_BIL */  
-	{   /* NIVE */   
+	},
+    },
+    {   /* PHG_TIME_BIL */
+	{   /* NIVE */
 	    ASSURE_CORRECT, 			/* ASAP */
 	    PHG_UPDATE_ACCURATE, 		/* BNIG */
 	    PHG_UPDATE_ACCURATE, 		/* BNIL */
 	    PHG_UPDATE_NOTHING, 		/* ASTI */
 	    PHG_UPDATE_NOTHING			/* WAIT */
-	}, 
-	{   /* UWOR */ 
+	},
+	{   /* UWOR */
 	    ASSURE_CORRECT, 			/* ASAP */
 	    PHG_UPDATE_ACCURATE, 		/* BNIG */
 	    PHG_UPDATE_ACCURATE, 		/* BNIL */
 	    PHG_UPDATE_NOTHING, 		/* ASTI */
 	    PHG_UPDATE_NOTHING			/* WAIT */
-	}, 
-	{   /* UQUM */   
+	},
+	{   /* UQUM */
 	    ASSURE_CORRECT, 			/* ASAP */
 	    PHG_UPDATE_ACCURATE, 		/* BNIG */
 	    PHG_UPDATE_ACCURATE, 		/* BNIL */
 	    PHG_UPDATE_NOTHING, 		/* ASTI */
 	    PHG_UPDATE_NOTHING			/* WAIT */
-	}, 
-    }, 
-    {   /* PHG_TIME_ATI */  
-	{   /* NIVE */   
-	    ASSURE_CORRECT, 			/* ASAP */
-	    PHG_UPDATE_IF_INCORRECT, 		/* BNIG */
-	    PHG_UPDATE_IF_INCORRECT, 		/* BNIL */
-	    PHG_UPDATE_ACCURATE, 		/* ASTI */
-	    PHG_UPDATE_NOTHING			/* WAIT */
-	}, 
-	{   /* UWOR */ 
+	},
+    },
+    {   /* PHG_TIME_ATI */
+	{   /* NIVE */
 	    ASSURE_CORRECT, 			/* ASAP */
 	    PHG_UPDATE_IF_INCORRECT, 		/* BNIG */
 	    PHG_UPDATE_IF_INCORRECT, 		/* BNIL */
 	    PHG_UPDATE_ACCURATE, 		/* ASTI */
 	    PHG_UPDATE_NOTHING			/* WAIT */
 	},
-	{   /* UQUM */   
+	{   /* UWOR */
+	    ASSURE_CORRECT, 			/* ASAP */
+	    PHG_UPDATE_IF_INCORRECT, 		/* BNIG */
+	    PHG_UPDATE_IF_INCORRECT, 		/* BNIL */
+	    PHG_UPDATE_ACCURATE, 		/* ASTI */
+	    PHG_UPDATE_NOTHING			/* WAIT */
+	},
+	{   /* UQUM */
 	    ASSURE_CORRECT, 			/* ASAP */
 	    PHG_UPDATE_IF_INCORRECT, 		/* BNIG */
 	    PHG_UPDATE_IF_INCORRECT, 		/* BNIL */
@@ -243,7 +249,7 @@ static Ws_action_table default_action_table =
 static void init_update_state(
     Ws *ws
     )
-{   
+{
     Ws_output_ws	*ows = &ws->out_ws;
     Wsb_output_ws	*owsb = &ows->model.b;
 
@@ -374,6 +380,12 @@ static void destroy_resources(
     if (ows->nset.invis_excl != NULL) {
        phg_nset_destroy(ows->nset.invis_excl);
     }
+    if (ows->hnset.high_incl != NULL) {
+        phg_nset_destroy(ows->hnset.high_incl);
+    }
+    if (ows->hnset.high_excl != NULL) {
+       phg_nset_destroy(ows->hnset.high_excl);
+    }
 }
 
 static int init_resources(
@@ -391,6 +403,18 @@ static int init_resources(
 
     ows->nset.invis_excl = phg_nset_create(WS_MAX_NAMES_IN_NAMESET);
     if (ows->nset.invis_excl == NULL) {
+        destroy_resources(ws);
+        status = FALSE;
+    }
+
+    ows->hnset.high_incl = phg_nset_create(WS_MAX_NAMES_IN_NAMESET);
+    if (ows->hnset.high_incl == NULL) {
+        destroy_resources(ws);
+        status = FALSE;
+    }
+
+    ows->hnset.high_excl = phg_nset_create(WS_MAX_NAMES_IN_NAMESET);
+    if (ows->hnset.high_excl == NULL) {
         destroy_resources(ws);
         status = FALSE;
     }
@@ -441,6 +465,12 @@ Ws* phg_wsb_open_ws(
     Wst_phigs_dt *dt;
     Wst_xwin_dt *xdt;
     Pgcolr background;
+    Pint lun;
+    int         argc = 0;
+    char        **argv = (char **)NULL;
+    int n;
+    Arg  arglist[3] ;
+    Pint err;
 
     ret->err = -1;
     ws = phg_wsx_create(args);
@@ -450,19 +480,50 @@ Ws* phg_wsb_open_ws(
 
     wsb_load_funcs( ws );
 
-    if (args->conn_type == PHG_ARGS_CONN_OPEN) {
+    ws->display     = NULL;
+    ws->drawable_id = 0;
+    ws->glx_context = 0;
+
+    if (args->conn_type == PHG_ARGS_CONN_HCOPY) {
 
         /* Store workstation type parameters */
         dt = &args->type->desc_tbl.phigs_dt;
         xdt = &args->type->desc_tbl.xwin_dt;
         xdt->tool.x            = 0;
         xdt->tool.y            = 0;
-        xdt->tool.width        = (unsigned) dt->dev_coords[0] / 2;
-        xdt->tool.height       = xdt->tool.width;
+        //        xdt->tool.width        = (unsigned) dt->dev_coords[0] / 2;
+        xdt->tool.width        = DISPLAY_WIDTH;
+        xdt->tool.height       = DISPLAY_HEIGHT;
         xdt->tool.border_width = 1;
         strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
         strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
+        ws->display = phg_wsx_open_gl_display(NULL, &ret->err);
+       /* store the output lun */
+        lun = args->conn_info.lun;
+        ws->lun = lun;
+        if (ws->display == NULL) {
+            ERR_BUF(ws->erh, ret->err);
+            goto abort;
+        }
 
+        if (!phg_wsx_setup_tool(ws, NULL, args->type)) {
+            goto abort;
+        }
+
+    }
+    else if (args->conn_type == PHG_ARGS_CONN_OPEN) {
+
+        /* Store workstation type parameters */
+        dt = &args->type->desc_tbl.phigs_dt;
+        xdt = &args->type->desc_tbl.xwin_dt;
+        xdt->tool.x            = 0;
+        xdt->tool.y            = 0;
+        //        xdt->tool.width        = (unsigned) dt->dev_coords[0] / 2;
+        xdt->tool.width        = DISPLAY_WIDTH;
+        xdt->tool.height       = DISPLAY_HEIGHT;
+        xdt->tool.border_width = 1;
+        strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
+        strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
         ws->display = phg_wsx_open_gl_display(NULL, &ret->err);
         if (ws->display == NULL) {
             ERR_BUF(ws->erh, ret->err);
@@ -472,6 +533,7 @@ Ws* phg_wsb_open_ws(
         if (!phg_wsx_setup_tool(ws, NULL, args->type)) {
             goto abort;
         }
+
     }
     else if (args->conn_type == PHG_ARGS_CONN_DRAWABLE) {
 
@@ -492,7 +554,6 @@ Ws* phg_wsb_open_ws(
         }
     }
 
-#if 1
     if (dt->ws_category == PCAT_OUTIN) {
 
         ws->input_overlay_window = phg_wsx_create_overlay(ws);
@@ -500,14 +561,27 @@ Ws* phg_wsb_open_ws(
             XDestroyWindow(ws->display, ws->drawable_id);
             goto abort;
         }
-
+	ws->shell = phg_cpm_toolkit_add_connection(ws->app_context, ws->display, &err);
+	if (err > 0){
+	  XDestroyWindow(ws->display, ws->input_overlay_window);
+	  XDestroyWindow(ws->display, ws->drawable_id);
+	  printf("Failed to initialise top level!");
+	  goto abort;
+	}
+	/*
+	if (phg_cpm_toolkit_open_ws(ws)){
+	  XDestroyWindow(ws->display, ws->input_overlay_window);
+	  XDestroyWindow(ws->display, ws->drawable_id);
+	  printf("Failed to create a popup shell!\n");
+	}
+	*/
         if (!phg_ws_input_init(ws, args->input_q)) {
             XDestroyWindow(ws->display, ws->input_overlay_window);
             XDestroyWindow(ws->display, ws->drawable_id);
+	    printf("Destroying input window\n");
             goto abort;
         }
     }
-#endif
 
     (void)XGetWindowAttributes( ws->display, ws->drawable_id, &wattr );
     WS_SET_WS_RECT( ws, &wattr )
@@ -689,6 +763,9 @@ void phg_wsb_make_requested_current(
            /* Remove duplicated views */
            dupref = phg_wsb_find_view(&owsb->views, vref->id);
            if (dupref != NULL) {
+#ifdef DEBUG
+	     printf("wsb: removing duplicated view\n");
+#endif
               list_remove(&owsb->views, &dupref->node);
               free(dupref);
            }
@@ -741,10 +818,12 @@ void phg_wsb_repaint_all(
 	 * entry in the WS colour table and runs it through colour mapping.
 	 */
 #ifdef DEBUG
-        printf("wsb: Clear\n");
+        printf("wsb_repaint_all: Clear\n");
 #endif
 
-	wsgl_clear(ws);
+#ifdef DONT
+	wgl_clear(ws);
+#endif
     }
     owsb->surf_state = PSURF_EMPTY;
 
@@ -1333,7 +1412,7 @@ void phg_wsb_update(
 {
     Wsb_output_ws	*owsb = &ws->out_ws.model.b;
 
-    if ( flag != PFLAG_POSTPONE && owsb->vis_rep != PVISUAL_ST_CORRECT ) 
+    if ( flag != PFLAG_POSTPONE && owsb->vis_rep != PVISUAL_ST_CORRECT )
 	(*ws->redraw_all)( ws, PFLAG_COND );
     else
 	(*ws->make_requested_current)( ws );
@@ -1586,6 +1665,7 @@ void phg_wsb_set_filter(
     if ( (type == PHG_ARGS_FLT_HIGH || type == PHG_ARGS_FLT_INVIS)
 	    && WSB_SOME_POSTED(&owsb->posted) ) {
 	WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, &owsb->now_action);
+	printf("phg_wsb_set_filter: type: %d action %d\n", type,owsb->now_action);
 	switch ( owsb->now_action ) {
 	    case_PHG_UPDATE_ACCURATE_or_IF_Ix:
 		(*ws->redraw_all)( ws, PFLAG_COND );
@@ -1607,7 +1687,7 @@ void phg_wsb_inq_filter(
     Phg_ret *ret
     )
 {
-    phg_wsb_inq_name_set( ws, type, 0, ret );
+  phg_wsb_inq_name_set( ws, type, 0, ret );
 }
 
 
@@ -1801,7 +1881,6 @@ void phg_wsb_set_view_input_priority(
         for (v = (Ws_view_ref *) LIST_HEAD(&owsb->views);
              v != NULL;
              v = (Ws_view_ref *) NODE_NEXT(&v->node)) {
-            printf("wsb: View %d with priority: %d\n", v->id, v->priority);
         }
     }
 #endif
@@ -2207,7 +2286,6 @@ int phg_wsb_resolve_pick(
 
         post_str = owsb->posted.highest.lower;
         end = &(owsb->posted.lowest);
-
         while (post_str != end) {
             phg_wsb_traverse_net(ws, post_str->structh);
             post_str = post_str->lower;
@@ -2233,6 +2311,7 @@ int phg_wsb_resolve_pick(
         else {
             pick->status = PIN_STATUS_OK;
             if (dev->order == PORDER_BOTTOM_FIRST) {
+
                 for (i = 0; i < depth; i++) {
                     pick->pick_path.path_list[i].struct_id =
                         elmts[depth - i - 1].sid;
@@ -2261,4 +2340,3 @@ int phg_wsb_resolve_pick(
 
     return status;
 }
-

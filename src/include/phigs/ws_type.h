@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -60,6 +61,12 @@ extern "C" {
 #define PWST_OUTIN_TRUE                  1
 #define PWST_OUTPUT_TRUE_DB              2
 #define PWST_OUTIN_TRUE_DB               3
+#define PWST_HCOPY_TRUE                  4
+#define PWST_HCOPY_TRUE_DB               5
+#define PWST_HCOPY_TRUE_RGB_PNG          6
+#define PWST_HCOPY_TRUE_RGB_PNG_DB       7
+#define PWST_HCOPY_TRUE_RGBA_PNG         8
+#define PWST_HCOPY_TRUE_RGBA_PNG_DB      9
 
 /* Default tables */
 #define WST_MIN_PREDEF_LINE_REPS         1
@@ -75,7 +82,7 @@ extern "C" {
 #define WST_MAX_NUM_PICK_DEVS            3
 #define WST_MAX_NUM_VALUATOR_DEVS        12
 #define WST_MAX_NUM_CHOICE_DEVS          3
-#define WST_MAX_NUM_STRING_DEVS          1
+#define WST_MAX_NUM_STRING_DEVS          3
 
 /* Default settings */
 #define WST_DEFAULT_VALUATOR_LABEL       "value:"
@@ -300,7 +307,7 @@ int phg_wst_init(
 /*******************************************************************************
  * phg_wst_find
  *
- * DESCR:       Find workstation type 
+ * DESCR:       Find workstation type
  * RETURNS:     Pointer to workstation type or NULL
  */
 
@@ -311,11 +318,11 @@ Wst* phg_wst_find(
 
 /*******************************************************************************
  * phg_wst_destroy
- * 
+ *
  * DESCR:       Destroy workstation type structure
  * RETURNS:     N/A
  */
- 
+
 void phg_wst_destroy(
    Wst *wst
    );
@@ -362,4 +369,3 @@ void phg_wst_remove_ws_types(
 #endif /* __cplusplus */
 
 #endif /* _ws_type_h */
-

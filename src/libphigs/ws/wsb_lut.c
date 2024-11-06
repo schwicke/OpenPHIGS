@@ -16,6 +16,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
@@ -32,7 +34,7 @@
 #include "css.h"
 #include "alloc.h"
 
-#define HASH_SIZE 10
+#define HASH_SIZE 16
 
 /*******************************************************************************
  * phg_create_table
@@ -372,6 +374,13 @@ void phg_wsb_set_LUT_entry(
 #endif
             data = malloc(sizeof(Pgcolr));
             if (data != NULL) {
+#ifdef DEBUG
+	      printf("Setting gcolr for index=%d %f %f %f\n", rep->index,
+		     gcolr->val.general.x,
+		     gcolr->val.general.y,
+		     gcolr->val.general.z
+		     );
+#endif
                 memcpy(data, gcolr, sizeof(Pgcolr));
                 if (!phg_htab_add_entry(ows->htab.colour, rep->index, data)) {
                     ERR_BUF(ws->erh, ERR900);
@@ -446,7 +455,6 @@ void phg_wsb_inq_LUT_entry(
     caddr_t data;
     Phg_ret_rep *rep = &ret->data.rep;
     Ws_output_ws *ows = &ws->out_ws;
-
     switch(rep_type) {
         case PHG_ARGS_LNREP:
         case PHG_ARGS_EXTLNREP:
@@ -522,7 +530,7 @@ void phg_wsb_inq_LUT_entry(
 #ifdef DEBUG
             printf("Inq colour: %d\n", index);
 #endif
-            if (!phg_htab_get_entry(ows->htab.colour, index, &data)) {
+	    if (ows == NULL || ows->htab.colour == NULL || !phg_htab_get_entry(ows->htab.colour, index, &data)) {
                 ret->err = ERR101;
             }
             else {
@@ -689,6 +697,18 @@ void phg_wsb_set_name_set(
                             excl_set->ints);
          break;
 
+      case PHG_ARGS_FLT_HIGH:
+         phg_nset_names_set(ows->hnset.high_incl,
+                            incl_set->num_ints,
+                            incl_set->ints);
+         phg_nset_names_set(ows->hnset.high_excl,
+                            excl_set->num_ints,
+                            excl_set->ints);
+         wsgl_set_filter(ws,
+                         PHG_ARGS_FLT_HIGH,
+                         ows->hnset.high_incl,
+                         ows->hnset.high_excl);
+         break;
       default:
          /* TODO: Other filter types */
          break;
@@ -759,4 +779,3 @@ void phg_wsb_inq_name_set(
       }
    }
 }
-

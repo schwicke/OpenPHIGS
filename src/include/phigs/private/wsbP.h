@@ -3,6 +3,7 @@
 *
 *   This file is part of Open PHIGS
 *   Copyright (C) 2014 Surplus Users Ham Society
+*             (C) 2022-2023 CERN
 *
 *   Open PHIGS is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Lesser General Public License as published by
@@ -227,6 +228,11 @@ void phg_wsb_inq_name_set(
    Pint dev_id,
    Phg_ret *ret
    );
+
+void phg_wsb_message(
+   Ws *ws,
+   Phg_args_message *args
+);
 
 /*******************************************************************************
  * phg_wsb_set_view_input_priority

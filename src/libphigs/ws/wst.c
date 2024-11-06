@@ -16,6 +16,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
@@ -148,6 +150,9 @@ Wst_phigs_dt* phg_wst_check_set_rep(
          dt = &wsinfo->wstype->desc_tbl.phigs_dt;
          if (!(dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_OUT ||
+	       dt->ws_category == PCAT_TGA ||
+	       dt->ws_category == PCAT_PNG ||
+	       dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_MO)) {
             ERR_REPORT(PHG_ERH, ERR59);
             dt = NULL;
@@ -204,4 +209,3 @@ void phg_wst_remove_ws_types(
       wst = (Wst *) list_get(&PHG_WST_LIST);
    }
 }
-

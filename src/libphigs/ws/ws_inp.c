@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +25,21 @@ Except as contained in this notice, the name of the X Consortium shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from the X Consortium.
 
-Copyright 1989, 1990, 1991 by Sun Microsystems, Inc. 
+Copyright 1989, 1990, 1991 by Sun Microsystems, Inc.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Sun Microsystems,
-not be used in advertising or publicity pertaining to distribution of 
-the software without specific, written prior permission.  
+not be used in advertising or publicity pertaining to distribution of
+the software without specific, written prior permission.
 
-SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, 
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT 
-SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
+SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
 DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
 ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
@@ -49,6 +50,8 @@ SOFTWARE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <X11/Intrinsic.h>
+#include <X11/StringDefs.h>
 
 #include "phg.h"
 #include "ws.h"
@@ -57,6 +60,68 @@ SOFTWARE.
 #include "private/evtP.h"
 #include "util.h"
 #include "ws_inp.h"
+#include "private/sinP.h"
+
+
+/*******************************************************************************
+ * set_generic_enable_data
+ *
+ * DESCR:       extension: replaces WSINP_SET_GENERIC_ENABLE_DATA
+ *              check for relative data
+ * RETURNS:     TRUE or FALSE
+ */
+
+void set_generic_enable_data(Ws *ws, Plimit3* e_volume, Sin_window_rect* ed ){
+  Window w;
+  Display * display;
+  XWindowAttributes attributes;
+  Arg argv[20];
+  Plimit drawing_limits;
+  Status status;
+  Pint n, i;
+  short xpos, ypos, width, height;
+#ifdef DEBUGINP
+  printf("set_generic_enable_data: setting volume x(%f %f) y(%f %f)\n",
+	 e_volume->x_min,
+	 e_volume->x_max,
+	 e_volume->y_min,
+	 e_volume->y_max);
+#endif
+  if ((e_volume->x_min>=0.0 && e_volume->x_min<=1.0) &&
+      (e_volume->y_min>=0.0 && e_volume->y_min<=1.0)){
+    /* echo volume relative to display */
+    w = ws->drawable_id;
+    display = ws->display;
+#ifdef MOTIF_EXT
+    n = 0;
+    XtSetArg(argv[n], XtNx, &xpos);n++;
+    XtSetArg(argv[n], XtNy, &ypos);n++;
+    XtSetArg(argv[n], XtNwidth, &width);n++;
+    XtSetArg(argv[n], XtNheight, &height);n++;
+    XtGetValues(ws->top_level, argv, n);
+#else
+    status = XGetWindowAttributes(display, w, &attributes);
+    xpos = attributes.x;
+    ypos = attributes.y;
+    width = attributes.width;
+    height = attributes.height;
+#endif
+    drawing_limits.x_min = xpos + e_volume->x_min*(float)width;
+    drawing_limits.x_max = xpos + e_volume->x_max*(float)width;
+    drawing_limits.y_min = ypos + e_volume->y_min*(float)height;
+    drawing_limits.y_max = ypos + e_volume->y_max*(float)height;
+    // TODO clip to limits
+    ed->ll.x = (short)drawing_limits.x_min;
+    ed->ll.y = (short)drawing_limits.y_min;
+    ed->ur.x = (short)drawing_limits.x_max;
+    ed->ur.y = (short)drawing_limits.y_max;
+#ifdef DEBUGINP
+    printf("Window positions and size x=%d y=%d w=%d h=%d\n", xpos, ypos, width, height);
+    printf("Final box: ll(%d %d) ur(%d %d)\n", ed->ll.x, ed->ll.y, ed->ur.x, ed->ur.y);
+#endif
+  } else
+    WSINP_DC_ECHO_TO_DRWBL_ECHO2(ws, e_volume, ed)
+}
 
 /*******************************************************************************
  * resolve_locator
@@ -172,10 +237,11 @@ static int resolve_pick(
 
     if ( pick.status == PIN_STATUS_OK && pick.pick_path.depth > 0 ) {
 	/* Get space for the converted path. */
-	if ( dev_state->mode == POP_REQ || dev_state->mode == POP_SAMPLE ) {
+        if ( dev_state->mode == POP_REQ || dev_state->mode == POP_SAMPLE ) {
 	    /* Use the scratch path.  Enlarge it if it's too small. */
-	    if ( dev_state->scratch_path.depth >= pick.pick_path.depth )
+	     if ( dev_state->scratch_path.depth >= pick.pick_path.depth ){
 		path = dev_state->scratch_path.path_list;
+	     }
 	    else {
 		path = (Ppick_path_elem *)
 		    malloc(pick.pick_path.depth * sizeof(Ppick_path_elem));
@@ -312,8 +378,8 @@ static void init_sin_stroke(
     nd->data.stroke.view = dev->stroke.view_ind;
     nd->data.stroke.init_count = dev->stroke.num_points;
     nd->data.stroke.count = dev->stroke.num_points;
-    nd->data.stroke.wc_pts = dev->stroke.points; 
-    nd->data.stroke.init_pts = init_dwbl_pts; 
+    nd->data.stroke.wc_pts = dev->stroke.points;
+    nd->data.stroke.init_pts = init_dwbl_pts;
     WSINP_DC_ECHO_TO_DRWBL_ECHO2( ws, &dev->e_volume, &nd->echo_area )
     nd->client_data = (caddr_t)ws;
     nd->data.stroke.resolve = resolve_stroke;
@@ -428,7 +494,9 @@ static void init_sin_choice(
 {
     Sin_dev_init_data new_data;
     Sin_dev_init_data *nd = &new_data;
-
+#ifdef DEBUGINP
+    printf("Called init_sin_choice\n");
+#endif
     WSINP_DC_ECHO_TO_DRWBL_ECHO2( ws, &dev->e_volume, &nd->echo_area )
     nd->client_data = (caddr_t)ws;
     if ( dev->choice.status == PIN_STATUS_OK )
@@ -437,14 +505,21 @@ static void init_sin_choice(
 	nd->data.choice.init_choice = 1;
     switch ( nd->pe_type = dev->pet ) {
 	case 1:
+	case -1:
 	default:
 	    /* No user-specified data in data record, for portability. */
 	    nd->data.choice.count = sizeof(pet1_strings)/sizeof(char*);
 	    nd->data.choice.choices.strings = pet1_strings;
 	    break;
 	case 3:
+	case -3:
 	    nd->data.choice.count = dev->record.pets.pet_r3.num_strings;
 	    nd->data.choice.choices.strings = dev->record.pets.pet_r3.strings;
+	    break;
+	case 4:
+	case -4:
+	    nd->data.choice.count = dev->record.pets.pet_r4.num_strings;
+	    nd->data.choice.choices.strings = dev->record.pets.pet_r4.strings;
 	    break;
     }
     phg_sin_init_device( iws->sin_handle, SIN_CHOICE, dev->num, nd );
@@ -466,6 +541,9 @@ static int setup_choice_init(
     int	i, cnt;
     int	errnum = 0;	/* success is the default */
 
+#ifdef DEBUGINP
+    printf("Setup choice init\n");
+#endif
     dev->pet = args->pet;
     dev->choice.status = args->data.cho.status;
     dev->choice.choice = args->data.cho.init;
@@ -477,34 +555,49 @@ static int setup_choice_init(
 
     /* Take care of pets that need more data moving/mapping. */
     switch ( dev->pet ) {
-	case 3: {
+	case 3:
+	case -3:
+	  {
 	    char **strs, *new_strs;
 
 	    /* Get space for the new list of strings and copy them.*/
 	    cnt = dev->record.pets.pet_r3.num_strings
 		= args->data.cho.rec.pets.pet_r3.num_strings;
 	    if ( cnt > 0 ) {
-		/* Get pointer array space. */
-		strs = (char**) malloc( cnt * sizeof(char*));
-		if (strs == NULL) {
-		    errnum = ERR900;
-		/* Get space for ALL the strings. */
-		} else if ( !( strs[0]
-			= (char*) malloc(args->data.cho.string_list_size)) ) {
-		    errnum = ERR900;
-		    free(strs);
-		} else {
-		    dev->strings_length = args->data.cho.string_list_size; 
-		    new_strs =
-			(char*)args->data.cho.rec.pets.pet_r3.strings;
-		    memcpy(strs[0], new_strs, args->data.cho.string_list_size);
-		    /* Resolve the pointers into the "strings" array. */
-		    for ( i = 1; i < cnt; i++ )
-			strs[i] = strs[i-1] + strlen(strs[i-1]) + 1;
-		    dev->record.pets.pet_r3.strings = strs;
-		}
+	      /* Get pointer array space. */
+	      strs = (char**) malloc( cnt * sizeof(char*));
+	      if (strs == NULL) {
+		errnum = ERR900;
+	      } else {
+		dev->strings_length = args->data.cho.string_list_size;
+		for ( i = 0; i < cnt; i++ )
+		  strs[i] = args->data.cho.rec.pets.pet_r4.strings[i];
+		dev->record.pets.pet_r4.strings = strs;
+	      }
 	    }
-	}
+	  }
+	  break;
+	case 4:
+	case -4:
+	  {
+	    char **strs, *new_strs;
+
+	    /* Get space for the new list of strings and copy them.*/
+	    cnt = dev->record.pets.pet_r4.num_strings
+		= args->data.cho.rec.pets.pet_r4.num_strings;
+	    if ( cnt > 0 ) {
+	      /* Get pointer array space. */
+	      strs = (char**) malloc( (cnt+1) * sizeof(char*));
+	      if (strs == NULL) {
+		errnum = ERR900;
+	      } else {
+		dev->strings_length = args->data.cho.string_list_size;
+		for ( i = 0; i < cnt+1; i++ )
+		  strs[i] = args->data.cho.rec.pets.pet_r4.strings[i];
+		dev->record.pets.pet_r4.strings = strs;
+	      }
+	    }
+	  }
 	break;
     }
 
@@ -519,17 +612,26 @@ static int setup_choice_init(
  */
 
 static void free_choice(
-    Ws_inp_choice *dev
-    )
+			Ws_inp_choice *dev
+			)
 {
-    switch ( dev->pet ) {
-	case 3:
-	    if ( dev->record.pets.pet_r3.num_strings > 0 ) {
-		free(dev->record.pets.pet_r3.strings[0]);
-		free(dev->record.pets.pet_r3.strings);
-	    }
-	    break;
+#ifdef DEBUGINP
+  printf("Free string allocations for choice\n");
+#endif
+  switch ( dev->pet ) {
+  case 3:
+  case -3:
+    if ( (dev->record.pets.pet_r3.num_strings > 0) && (dev->record.pets.pet_r3.strings != NULL)) {
+      free(dev->record.pets.pet_r3.strings);
     }
+    break;
+  case 4:
+  case -4:
+    if ( (dev->record.pets.pet_r4.num_strings > 0) && (dev->record.pets.pet_r3.strings != NULL)) {
+      free(dev->record.pets.pet_r4.strings);
+    }
+    break;
+  }
 }
 
 /*******************************************************************************
@@ -551,6 +653,9 @@ static void init_choice(
     int errnum;
 
     /* Initialize and operate on a temporary copy of the state. */
+#ifdef DEBUGINP
+    printf("Init choice\n");
+#endif
     new_dev = *dev;
     errnum = setup_choice_init( &new_dev, args, two_d );
     if ( errnum ) {
@@ -579,27 +684,35 @@ static void init_sin_valuator(
 {
     Sin_dev_init_data new_data;
     Sin_dev_init_data *nd = &new_data;
+#ifdef DEBUGINP
+  printf("init_sin_valuator called.\n");
+#endif
 
     WSINP_DC_ECHO_TO_DRWBL_ECHO2( ws, &dev->e_volume, &nd->echo_area )
     nd->client_data = (caddr_t)ws;
     nd->data.valuator.init_value = dev->val;
     nd->data.valuator.low = dev->record.low;
     nd->data.valuator.high = dev->record.high;
+    nd->data.valuator.num_boxed = dev->record.num_boxed;
     switch ( nd->pe_type = dev->pet) {
-	case 1:
-	default:
-	    /* No user specifed data in data record, for portability. */
-	    nd->data.valuator.label = WST_DEFAULT_VALUATOR_LABEL;
-	    nd->data.valuator.format = WST_DEFAULT_VALUATOR_FORMAT;
-	    nd->data.valuator.low_label = WST_DEFAULT_VALUATOR_LOW_LABEL;
-	    nd->data.valuator.high_label = WST_DEFAULT_VALUATOR_HIGH_LABEL;
-	    break;
-	case -1:
-	    nd->data.valuator.label = dev->record.pets.pet_u1.label;
-	    nd->data.valuator.format = dev->record.pets.pet_u1.format;
-	    nd->data.valuator.low_label = dev->record.pets.pet_u1.low_label;
-	    nd->data.valuator.high_label = dev->record.pets.pet_u1.high_label;
-	    break;
+        case -3:
+        case -2:
+        case -1:
+            nd->data.valuator.label = dev->record.pets.pet_u1.label;
+            nd->data.valuator.format = dev->record.pets.pet_u1.format;
+            nd->data.valuator.low_label = dev->record.pets.pet_u1.low_label;
+            nd->data.valuator.high_label = dev->record.pets.pet_u1.high_label;
+            break;
+        case 1:
+        case 2:
+        case 3:
+        default:
+            /* No user specifed data in data record, for portability. */
+            nd->data.valuator.label = WST_DEFAULT_VALUATOR_LABEL;
+            nd->data.valuator.format = WST_DEFAULT_VALUATOR_FORMAT;
+            nd->data.valuator.low_label = WST_DEFAULT_VALUATOR_LOW_LABEL;
+            nd->data.valuator.high_label = WST_DEFAULT_VALUATOR_HIGH_LABEL;
+            break;
     }
     phg_sin_init_device( iws->sin_handle, SIN_VALUATOR, dev->num, nd);
 }
@@ -626,6 +739,7 @@ static int setup_val_init(
     dev->val = args->data.val.init;
     dev->record.low = args->data.val.rec.low;
     dev->record.high = args->data.val.rec.high;
+    dev->record.num_boxed = args->data.val.rec.num_boxed;
     if ( two_d ) {
 	SET_ECHO_AREA( args->echo_volume, dev->e_volume);
     } else {
@@ -635,6 +749,8 @@ static int setup_val_init(
     /* Take care of pets that need more data moving/mapping. */
     switch ( args->pet ) {
 	case -1:
+	case -2:
+	case -3:
 	    size = args->data.val.counts[0] + args->data.val.counts[1] +
 		args->data.val.counts[2] + args->data.val.counts[3];
 	    strings = (char *) malloc( size );
@@ -686,6 +802,8 @@ static void free_valuator(
 {
     switch ( dev->pet ) {
 	case -1:
+        case -2:
+        case -3:
 	    if ( dev->string_buf )
 		free(dev->string_buf);
 	    break;
@@ -826,6 +944,9 @@ static void init_sin_string(
     WSINP_DC_ECHO_TO_DRWBL_ECHO2( ws, &dev->e_volume, &nd->echo_area )
     nd->client_data = (caddr_t)ws;
     nd->data.string.init_string = dev->string;
+#ifdef DEBUGINP
+    printf("init_sin_string: new buffer size is %d\n", dev->record.buffer_size);
+#endif
     nd->data.string.buf_size = dev->record.buffer_size;
     nd->data.string.edit_pos = dev->record.init_pos;
     phg_sin_init_device( iws->sin_handle, SIN_STRING, dev->num, nd);
@@ -852,9 +973,9 @@ static void init_string(
     /* Copy initial string to state list. */
     /* TODO: detect allocation failure and free this at ws close. */
     if ( init->length > 0 ) {
-	init_str = (char *) malloc( init->length );
+        init_str = (char *) malloc( init->length + 1 );
         if (init_str != NULL) {
-	   strcpy( init_str, init->string );
+	  strcpy( init_str, init->string );
         }
     } else
 	init_str = NULL;
@@ -867,7 +988,12 @@ static void init_string(
     }
     dev->length = init->length;
     dev->string = init_str;
-
+#ifdef DEBUGINP
+    printf("init_string: allocated and copied init string (%s) length %d\n",
+	   dev->string,
+	   dev->length
+	   );
+#endif
     if ( two_d ) {
 	SET_ECHO_AREA( args->echo_volume, dev->e_volume);
     } else
@@ -892,7 +1018,7 @@ void phg_ws_inp_init_device(
     Pop_mode mode;
     int two_d;
 
-#ifdef DEBUG
+#ifdef DEBUGINP
     printf("ws_inp: phg_ws_inp_init_device\n");
 #endif
 
@@ -902,7 +1028,10 @@ void phg_ws_inp_init_device(
         case PHG_ARGS_INP_LOC:
             dev.loc = &iws->devs.locator[args->dev-1];
             mode = dev.loc->mode;
-            if (mode == POP_REQ) {
+#ifdef DEBUGINP
+	    printf("Setup locator stuff in ws_inp %d\n", mode);
+#endif
+            if (mode == POP_REQ || mode == POP_EVENT) {
                 two_d = args->idev_class == PHG_ARGS_INP_LOC ? 1 : 0;
                 init_locator( ws, iws, dev.loc, args, two_d );
             }
@@ -914,6 +1043,9 @@ void phg_ws_inp_init_device(
         case PHG_ARGS_INP_STK:
             dev.stk = &iws->devs.stroke[args->dev-1];
             mode = dev.stk->mode;
+#ifdef DEBUGINP
+	    printf("Setup stroke stuff in ws_inp %d\n", mode);
+#endif
             if (mode == POP_REQ) {
                 two_d = args->idev_class == PHG_ARGS_INP_STK ? 1 : 0;
                 init_stroke( ws, iws, dev.stk, args, two_d );
@@ -926,7 +1058,10 @@ void phg_ws_inp_init_device(
         case PHG_ARGS_INP_CHC:
             dev.cho = &iws->devs.choice[args->dev-1];
             mode = dev.cho->mode;
-            if (mode == POP_REQ) {
+#ifdef DEBUGINP
+	    printf("Setup choice stuff in ws_inp %d\n", mode);
+#endif
+            if (mode == POP_REQ || mode == POP_EVENT) {
                 two_d = args->idev_class == PHG_ARGS_INP_CHC ? 1 : 0;
                 init_choice( ws, iws, dev.cho, args, two_d );
             }
@@ -938,7 +1073,10 @@ void phg_ws_inp_init_device(
         case PHG_ARGS_INP_VAL:
             dev.val = &iws->devs.valuator[args->dev-1];
             mode = dev.val->mode;
-            if (mode == POP_REQ) {
+#ifdef DEBUGINP
+	  printf("Setup valuator stuff in ws_inp mode=%d\n", mode);
+#endif
+            if (mode == POP_REQ || mode == POP_EVENT) {
                 two_d = args->idev_class == PHG_ARGS_INP_VAL ? 1 : 0;
                 init_valuator( ws, iws, dev.val, args, two_d );
             }
@@ -1412,7 +1550,7 @@ void phg_ws_input_close(
 
     {
 	Ws_inp_stroke *stk = iws->devs.stroke;
-	
+
 	if (stk != NULL) {
 	    for ( i = 0; i < iws->num_devs.stroke; i++, stk++ ) {
 		if ( stk->stroke.points )
@@ -1423,7 +1561,7 @@ void phg_ws_input_close(
 
     {
 	Ws_inp_pick *pick = iws->devs.pick;
- 
+
 	if (pick != NULL) {
 	    for ( i = 0; i < iws->num_devs.pick; i++, pick++ ) {
                 phg_nset_destroy(pick->filter.incl);
@@ -1437,7 +1575,7 @@ void phg_ws_input_close(
 
     {
 	Ws_inp_string *str = iws->devs.string;
- 
+
 	if (str != NULL) {
 	    for ( i = 0; i < iws->num_devs.string; i++, str++)
 		free(str->string);
@@ -1446,16 +1584,17 @@ void phg_ws_input_close(
 
     {
 	Ws_inp_choice *cho = iws->devs.choice;
- 
+
 	if (cho != NULL) {
-	    for ( i = 0; i < iws->num_devs.choice; i++, cho++ )
-		free_choice( cho );
+	  for ( i = 0; i < iws->num_devs.choice; i++, cho++ ){
+	    free_choice( cho );
+	  }
 	}
     }
 
     {
 	Ws_inp_val *val = iws->devs.valuator;
- 
+
 	if (val != NULL) {
 	    for ( i = 0; i < iws->num_devs.val; i++, val++ )
 		free_valuator( val );
@@ -1575,7 +1714,6 @@ void phg_ws_inp_set_mode(
 
 #ifdef DEBUG
     printf("ws_inp: phg_ws_inp_set_mode\n");
-    printf("\tClass: %d\n", args->class);
 #endif
 
     phg_wsx_update_ws_rect( ws );
@@ -1613,6 +1751,9 @@ void phg_ws_inp_set_mode(
 	    dev.cho->mode = args->mode;
 	    dev.cho->esw = args->echo;
 	    WSINP_SET_GENERIC_ENABLE_DATA( ws, dev.cho, &ed)
+#ifdef DEBUGINP
+	      printf("phg_ws_inp_set_mode: set generic enable data done %d %d\n", dev.cho->mode, dev.cho->esw);
+#endif
 	    break;
         case PHG_ARGS_INP_PIK:
 	    md.inp_class = SIN_PICK;
@@ -1682,6 +1823,9 @@ void phg_ws_inp_request(
     Pop_mode cur_mode;
     int okay = TRUE;
 
+#ifdef DEBUGINP
+    printf("Entering phg_ws_inp_request\n");
+#endif
     ret->err = -1;
     phg_wsx_update_ws_rect( ws );
     switch (idev_class) {
@@ -1731,7 +1875,6 @@ void phg_ws_inp_request(
         default:
             break;
     }
-
     if ( cur_mode != POP_REQ ) {
 	ret->err = ERR251;
 	ERR_BUF( ws->erh, ERR251);
@@ -1739,9 +1882,15 @@ void phg_ws_inp_request(
     } else if ( okay ) {
 	ret->err = 0;
 	++ws->num_active_input_devs;
+#ifdef DEBUGINP
+	printf("OK; calling phg_sin_request\n");
+#endif
 	phg_sin_request( iws->sin_handle, sin_class, dev_num, &ed);
     }
     XFlush( ws->display );
+#ifdef DEBUGINP
+	printf("Done with phg_ws_inp_request\n");
+#endif
 }
 
 /*******************************************************************************
@@ -2050,20 +2199,21 @@ void phg_ws_inp_inq_dev_state(
 	    WSINP_COPY_COMMON_STATE_FIELDS( st, dev )
 	    st->val = dev->val;
 	    switch ( dev->pet ) {
-		case -1:
-		    if ( dev->record.pets.pet_u1.label )
-			st->counts[0] =
-			    1 + strlen(dev->record.pets.pet_u1.label);
-		    if ( dev->record.pets.pet_u1.format )
-			st->counts[1] =
-			    1 + strlen(dev->record.pets.pet_u1.format);
-		    if ( dev->record.pets.pet_u1.low_label )
-			st->counts[2] =
-			    1 + strlen(dev->record.pets.pet_u1.low_label);
-		    if ( dev->record.pets.pet_u1.high_label )
-			st->counts[3] =
-			    1 + strlen(dev->record.pets.pet_u1.high_label);
-		    break;
+	    case -1:
+	    case -2:
+	      if ( dev->record.pets.pet_u1.label )
+		st->counts[0] =
+		  1 + strlen(dev->record.pets.pet_u1.label);
+	      if ( dev->record.pets.pet_u1.format )
+		st->counts[1] =
+		  1 + strlen(dev->record.pets.pet_u1.format);
+	      if ( dev->record.pets.pet_u1.low_label )
+		st->counts[2] =
+		  1 + strlen(dev->record.pets.pet_u1.low_label);
+	      if ( dev->record.pets.pet_u1.high_label )
+		st->counts[3] =
+		  1 + strlen(dev->record.pets.pet_u1.high_label);
+	      break;
 	    }
 	} break;
 
@@ -2076,9 +2226,17 @@ void phg_ws_inp_inq_dev_state(
 	    st->choice = dev->choice;
 	    switch ( st->pet ) {
 		case 3:
+		case -3:
 		    if ( st->record.pets.pet_r3.num_strings > 0 )
 			ret->data.inp_state.choice.strings =
 			    st->record.pets.pet_r3.strings[0];
+		    ret->data.inp_state.choice.length = dev->strings_length;
+		    break;
+		case 4:
+		case -4:
+		    if ( st->record.pets.pet_r4.num_strings > 0 )
+			ret->data.inp_state.choice.strings =
+			    st->record.pets.pet_r4.strings[0];
 		    ret->data.inp_state.choice.length = dev->strings_length;
 		    break;
 	    }
@@ -2172,7 +2330,7 @@ static void overlay_event(
     XEvent *event
     )
 {
-#ifdef PROPAGATE
+  //#ifdef PROPAGATE
     Window parent = (Window) client_data;
 
 #ifdef DEBUG
@@ -2183,7 +2341,7 @@ static void overlay_event(
 #endif
 
 #ifdef DEBUG
-    fprintf(stderr, "Got OVERLAY event %s on window %x on display %#x\n", 
+    fprintf(stderr, "Got OVERLAY event %s on window %x on display %#x\n",
 	phg_sin_evt_name(event), (unsigned) window, (unsigned) display);
 #endif
 
@@ -2194,7 +2352,7 @@ static void overlay_event(
 	    | ButtonPressMask | ButtonReleaseMask, event );
 	break;
     }
-#endif
+    //#endif
 }
 
 /*******************************************************************************
@@ -2233,7 +2391,7 @@ Window phg_wsx_create_overlay(
     XWindowAttributes gattrs;
     XSetWindowAttributes sattrs;
     Display *display = ws->display;
-    Drawable parent = ws->drawable_id;
+    Window parent = ws->drawable_id;
 
 #ifdef DEBUG
     printf("ws_inp: phg_ws_create_overlay\n");
@@ -2246,26 +2404,23 @@ Window phg_wsx_create_overlay(
 	    (unsigned)gattrs.width, (unsigned)gattrs.height, (unsigned)0,
 	    0, InputOnly, (Visual *)NULL, CWWinGravity, &sattrs );
     if ( win ) {
-#ifndef NOT_USED
-	/* Set up to propogate input events to parent. */
-	(void)phg_sin_evt_register(PHG_EVT_TABLE, display, win, KeyPress,
-	    (caddr_t)parent, overlay_event );
-	(void)phg_sin_evt_register(PHG_EVT_TABLE, display, win, KeyRelease,
-	    (caddr_t)parent, overlay_event );
-	(void)phg_sin_evt_register(PHG_EVT_TABLE, display, win, ButtonPress,
-	    (caddr_t)parent, overlay_event );
-	(void)phg_sin_evt_register(PHG_EVT_TABLE, display, win, ButtonRelease,
-	    (caddr_t)parent, overlay_event );
-#endif
+      /* Set up to propogate input events to parent. */
+      (void)phg_sin_evt_register(PHG_EVT_TABLE, display, win, KeyPress,
+				 (caddr_t)parent, overlay_event );
+      (void)phg_sin_evt_register(PHG_EVT_TABLE, display, win, KeyRelease,
+				 (caddr_t)parent, overlay_event );
+      (void)phg_sin_evt_register(PHG_EVT_TABLE, display, win, ButtonPress,
+				 (caddr_t)parent, overlay_event );
+      (void)phg_sin_evt_register(PHG_EVT_TABLE, display, win, ButtonRelease,
+				 (caddr_t)parent, overlay_event );
+      /* Set up to resize overlay when parent is resized. */
+      (void)phg_sin_evt_register(PHG_EVT_TABLE, display, parent,
+				 ConfigureNotify, (caddr_t)win, overlay_parent_resize );
 
-	/* Set up to resize overlay when parent is resized. */
-	(void)phg_sin_evt_register(PHG_EVT_TABLE, display, parent,
-	    ConfigureNotify, (caddr_t)win, overlay_parent_resize );
-
-	/* Let the input device initialization select events. */
-	XSelectInput( display, win, (long)0 );
-	XMapWindow( display, win );
-	XFlush( display );
+      /* Let the input device initialization select events. */
+      XSelectInput( display, win, (long)0 );
+      XMapWindow( display, win );
+      XFlush( display );
     } else {
 	ERR_BUF( ws->erh, ERRN203 );
     }
@@ -2282,7 +2437,7 @@ Window phg_wsx_create_overlay(
 void phg_wsx_destroy_overlay(
     Display *display,
     Window overlay,
-    Drawable parent
+    Window parent
     )
 {
     phg_sin_evt_unregister_window( PHG_EVT_TABLE, display, overlay );
@@ -2290,4 +2445,3 @@ void phg_wsx_destroy_overlay(
         ConfigureNotify, (caddr_t)overlay );
     XDestroyWindow( display, overlay );
 }
-

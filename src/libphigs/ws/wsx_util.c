@@ -16,6 +16,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
@@ -126,6 +128,9 @@ void phg_wsx_find_best_visual(
    switch (wst->ws_type) {
       case PWST_OUTPUT_TRUE:
       case PWST_OUTIN_TRUE:
+      case PWST_HCOPY_TRUE:
+      case PWST_HCOPY_TRUE_RGBA_PNG:
+      case PWST_HCOPY_TRUE_RGB_PNG:
           args[argc++] = GLX_RGBA;
           args[argc++] = GLX_RED_SIZE;
              args[argc++] = 1;
@@ -141,6 +146,9 @@ void phg_wsx_find_best_visual(
 
        case PWST_OUTPUT_TRUE_DB:
        case PWST_OUTIN_TRUE_DB:
+       case PWST_HCOPY_TRUE_DB:
+       case PWST_HCOPY_TRUE_RGBA_PNG_DB:
+       case PWST_HCOPY_TRUE_RGB_PNG_DB:
           args[argc++] = GLX_DOUBLEBUFFER;
           args[argc++] = GLX_RGBA;
           args[argc++] = GLX_RED_SIZE;
@@ -216,10 +224,14 @@ void phg_wsx_pixel_colour(
    )
 {
    XColor color;
+   Phg_ret ret;
 
    color.pixel = pixel;
-   XQueryColor(ws->display, cmap, &color);
-
+   if (ws->display) {
+     XQueryColor(ws->display, cmap, &color);
+   } else {
+     printf("OpenPHIGS FATAL: DISPLAY is NULL!!!!");
+   }
    gcolr->type = PMODEL_RGB;
    gcolr->val.general.x = (float) color.red / 65535.0;
    gcolr->val.general.y = (float) color.green / 65535.0;
@@ -238,8 +250,11 @@ void phg_wsx_update_ws_rect(
    )
 {
    XWindowAttributes wattr;
-
-   XGetWindowAttributes(ws->display, ws->drawable_id, &wattr);
+#ifdef DEBUGINP
+  printf("Setting window attributes.\n");
+#endif
+  memset(&wattr, 0, sizeof(XWindowAttributes));
+  XGetWindowAttributes(ws->display, ws->drawable_id, &wattr);
    WS_SET_WS_RECT(ws, &wattr)
 }
 
@@ -271,4 +286,3 @@ void phg_wsx_compute_ws_transform(
    ws_xform->offset.y = ws_vp->y_min - (ws_win->y_min * sxy);
    ws_xform->offset.z = ws_vp->z_min - (ws_win->z_min * sz);
 }
-
