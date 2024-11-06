@@ -16,6 +16,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
@@ -102,6 +104,12 @@ void popen_phigs(
    phg_wst_add_ws_type(PCAT_OUT, 1);
    phg_wst_add_ws_type(PCAT_OUTIN, 0);
    phg_wst_add_ws_type(PCAT_OUTIN, 1);
+   phg_wst_add_ws_type(PCAT_TGA, 0);
+   phg_wst_add_ws_type(PCAT_TGA, 1);
+   phg_wst_add_ws_type(PCAT_PNG, 0);
+   phg_wst_add_ws_type(PCAT_PNG, 1);
+   phg_wst_add_ws_type(PCAT_PNGA, 0);
+   phg_wst_add_ws_type(PCAT_PNGA, 1);
 
    PHG_WS_LIST = (Ws_handle *) malloc(sizeof(Ws_handle) * MAX_NO_OPEN_WS);
    if (PHG_WS_LIST == NULL) {
@@ -197,4 +205,3 @@ void pdel_store(
       }
    }
 }
-

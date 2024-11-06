@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Support for Motif input devices
 * Fix tab character warnings in Fortran example
 * Add more elements in css to prepare for additional features
+* Add C bindings for annotation text
+* Add support for transparency, extension
+* Add C bindings for input devices
 
 ### Changed
 * Fixed typos in various headers

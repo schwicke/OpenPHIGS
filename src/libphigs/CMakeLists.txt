@@ -11,10 +11,13 @@ SET(P_C_BINDING_SRCS
   c_binding/cb.c
   c_binding/cb_conf.c
   c_binding/cb_el.c
+  c_binding/cb_lite.c
   c_binding/cb_extel.c
   c_binding/cb_inp.c
+  c_binding/cb_pgse.c
   c_binding/cb_phg.c
   c_binding/cb_str.c
+  c_binding/cb_text.c
   c_binding/cb_tr.c
   c_binding/cb_ws.c
   c_binding/cb_wst.c

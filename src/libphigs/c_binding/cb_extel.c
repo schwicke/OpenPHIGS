@@ -16,6 +16,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdlib.h>
@@ -90,7 +92,7 @@ void pfill_area_set3_data(
                vertex_size = sizeof(Pptconorm3);
                break;
 
-            default: 
+            default:
                vertex_size = 0;
                break;
          }
@@ -205,6 +207,185 @@ void pfill_area_set3_data(
 }
 
 /*******************************************************************************
+ * pfill_area_set_data
+ *
+ * DESCR:	Creates a new element - Fill area set with data
+ * RETURNS:	N/A
+ */
+
+void pfill_area_set_data(
+   Pint fflag,
+   Pint eflag,
+   Pint vflag,
+   Pint colr_type,
+   Pfacet_data3 *fdata,
+   Pint nfa,
+   Pedge_data_list *edata,
+   Pfacet_vdata_list3 *vdata
+   )
+{
+   Phg_args_add_el args;
+   Pint i;
+   unsigned facet_size, vertex_size;
+   Pint *data;
+   char *tp;
+   Pint num_vertices;
+
+   if (phg_entry_check(PHG_ERH, ERR5, Pfn_fill_area_set_data)) {
+      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
+         ERR_REPORT(PHG_ERH, ERR5);
+      }
+      else {
+         switch (fflag) {
+            case PFACET_COLOUR:
+               facet_size = sizeof(Pcoval);
+               break;
+
+            case PFACET_NORMAL:
+               facet_size = sizeof(Pvec3);
+               break;
+
+            case PFACET_COLOUR_NORMAL:
+               facet_size = sizeof(Pconorm3);
+               break;
+
+            default:
+               facet_size = 0;
+               break;
+         }
+
+         switch (vflag) {
+            case PVERT_COORD:
+               vertex_size = sizeof(Ppoint);
+               break;
+
+            case PVERT_COORD_COLOUR:
+               vertex_size = sizeof(Pptco3);
+               break;
+
+            case PVERT_COORD_NORMAL:
+               vertex_size = sizeof(Pptnorm3);
+               break;
+
+            case PVERT_COORD_COLOUR_NORMAL:
+               vertex_size = sizeof(Pptconorm3);
+               break;
+
+            default:
+               vertex_size = 0;
+               break;
+         }
+
+         args.el_type = PELEM_FILL_AREA_SET_DATA;
+         args.el_size = 5 * sizeof(Pint) + facet_size;
+
+         if (eflag == PEDGE_VISIBILITY) {
+            for (i = 0; i < nfa; i++) {
+               args.el_size += sizeof(Pint);   /* Pint num_edges */
+               args.el_size += edata[i].num_edges * sizeof(Pedge_flag);
+            }
+         }
+
+         for (i = 0; i < nfa; i++) {
+            args.el_size += sizeof(Pint);      /* Pint num_vertices */
+            args.el_size += vdata[i].num_vertices * vertex_size;
+         }
+
+         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
+            ERR_REPORT(PHG_ERH, ERR900);
+         }
+         else {
+            args.el_data = PHG_SCRATCH.buf;
+            data = (Pint *) args.el_data;
+            data[0] = fflag;
+            data = &data[1];
+            data[0] = eflag;
+            data = &data[1];
+            data[0] = vflag;
+            data = &data[1];
+            data[0] = colr_type;
+            tp = (char *) &data[1];
+
+            switch(fflag) {
+               case PFACET_COLOUR:
+                  memcpy(tp, &fdata->colr, sizeof(Pcoval));
+                  tp += sizeof(Pcoval);
+                  break;
+
+               case PFACET_NORMAL:
+                  memcpy(tp, &fdata->norm, sizeof(Pvec3));
+                  tp += sizeof(Pvec3);
+                  break;
+
+               case PFACET_COLOUR_NORMAL:
+                  memcpy(tp, &fdata->conorm, sizeof(Pconorm3));
+                  tp += sizeof(Pconorm3);
+                  break;
+
+               default:
+                  break;
+            }
+
+            data = (Pint *) tp;
+            data[0] = nfa;
+            tp = (char *) &data[1];
+
+            if (eflag == PEDGE_VISIBILITY) {
+               for (i = 0; i < nfa; i++) {
+                  num_vertices = edata[i].num_edges;
+                  data = (Pint *) tp;
+                  data[0] = num_vertices;
+                  tp = (char *) &data[1];
+                  memcpy(tp, edata[i].edgedata.edges,
+                         sizeof(Pedge_flag) * num_vertices);
+                  tp += sizeof(Pedge_flag) * num_vertices;
+               }
+            }
+
+            for (i = 0; i < nfa; i++) {
+               num_vertices = vdata[i].num_vertices;
+
+               data = (Pint *) tp;
+               data[0] = num_vertices;
+               tp = (char *) &data[1];
+
+               switch (vflag) {
+                  case PVERT_COORD:
+                     memcpy(tp, vdata[i].vertex_data.points,
+                            num_vertices * sizeof(Ppoint));
+                     tp += num_vertices * sizeof(Ppoint);
+                     break;
+
+                  case PVERT_COORD_COLOUR:
+                     memcpy(tp, vdata[i].vertex_data.ptcolrs,
+                            num_vertices * sizeof(Pptco3));
+                     tp += num_vertices * sizeof(Pptco3);
+                     break;
+
+                  case PVERT_COORD_NORMAL:
+                     memcpy(tp, vdata[i].vertex_data.ptnorms,
+                            num_vertices * sizeof(Pptnorm3));
+                     tp += num_vertices * sizeof(Pptnorm3);
+                     break;
+
+                  case PVERT_COORD_COLOUR_NORMAL:
+                     memcpy(tp, vdata[i].vertex_data.ptconorms,
+                            num_vertices * sizeof(Pptconorm3));
+                     tp += num_vertices * sizeof(Pptconorm3);
+                     break;
+
+                  default:
+                     break;
+               }
+            }
+
+            phg_add_el(PHG_CSS, &args);
+         }
+      }
+   }
+}
+
+/*******************************************************************************
  * pset_of_fill_area_set3_data
  *
  * DESCR:	Creates a new element - Set of fill area set with data 3D
@@ -270,7 +451,7 @@ void pset_of_fill_area_set3_data(
                vertex_size = sizeof(Pptconorm3);
                break;
 
-            default: 
+            default:
                vertex_size = 0;
                break;
          }
@@ -970,3 +1151,124 @@ void pset_face_cull_mode(
    }
 }
 
+/* clipping related */
+
+/*******************************************************************************
+ * pset_model_clip_ind
+ *
+ * DESCR:	Creates a new element - set clipping indicator
+ * RETURNS:	N/A
+ */
+
+void pset_model_clip_ind(
+   Pclip_ind clipi
+   )
+{
+   Phg_args_add_el args;
+
+   if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_model_clip_ind)) {
+      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
+         ERR_REPORT(PHG_ERH, ERR5);
+      }
+      else if (clipi < 0) {
+         ERR_REPORT(PHG_ERH, ERR112);
+      }
+      else {
+         args.el_type = PELEM_MODEL_CLIP_IND;
+         args.el_size = sizeof(Pint);
+         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
+            ERR_REPORT(PHG_ERH, ERR900);
+         }
+         else {
+            args.el_data = PHG_SCRATCH.buf;
+            memcpy(args.el_data, &clipi, args.el_size);
+            phg_add_el(PHG_CSS, &args);
+         }
+      }
+   }
+}
+
+/*******************************************************************************
+ * pset_model_clip_vol3
+ *
+ * DESCR:	Creates a new element - set clipping volume 3
+ * RETURNS:	N/A
+ */
+
+void  pset_model_clip_vol3 (
+			    Pint op,
+			    Phalf_space_list3 spacelist
+   )
+{
+   Phg_args_add_el args;
+   Pint * data;
+   Phalf_space3 * selement;
+   int i;
+   if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_model_clip_vol3)) {
+      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
+         ERR_REPORT(PHG_ERH, ERR5);
+      }
+      else if ( op < 0) {
+	/* the value of op is not important as this is anyway not used */
+	ERR_REPORT(PHG_ERH, ERR112);
+      }
+      else {
+         args.el_type = PELEM_MODEL_CLIP_VOL3;
+         args.el_size = 2*sizeof(Pint)+spacelist.num_half_spaces*sizeof(Phalf_space3);
+         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
+            ERR_REPORT(PHG_ERH, ERR900);
+         }
+         else {
+            args.el_data = PHG_SCRATCH.buf;
+	    data =(Pint *) args.el_data;
+	    data[0] = op;
+	    data[1] = spacelist.num_half_spaces;
+	    selement = (Phalf_space3 *)&data[2];
+	    for (i=0; i<spacelist.num_half_spaces; i++){
+	      memcpy(&selement[i], &spacelist.half_spaces[i], sizeof(Phalf_space3));
+	    }
+            phg_add_el(PHG_CSS, &args);
+         }
+      }
+   }
+}
+
+
+/***********
+   Extensions outside the standards
+ **********/
+
+/*******************************************************************************
+ * pset_alpha_channel
+ *
+ * DESCR:	sets the color alpha channel
+ * RETURNS:	N/A
+ */
+
+void pset_alpha_channel(
+   Pfloat alpha
+   )
+{
+   Phg_args_add_el args;
+
+   if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_alpha_channel)) {
+      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
+         ERR_REPORT(PHG_ERH, ERR5);
+      }
+      else if (alpha < 0.0 || alpha > 1.0) {
+         ERR_REPORT(PHG_ERH, ERR112);
+      }
+      else {
+         args.el_type = PELEM_ALPHA_CHANNEL;
+         args.el_size = sizeof(Pfloat);
+         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
+            ERR_REPORT(PHG_ERH, ERR900);
+         }
+         else {
+            args.el_data = PHG_SCRATCH.buf;
+            memcpy(args.el_data, &alpha, args.el_size);
+            phg_add_el(PHG_CSS, &args);
+         }
+      }
+   }
+}

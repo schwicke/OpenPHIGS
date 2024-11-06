@@ -16,10 +16,13 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "phg.h"
 #include "css.h"
@@ -124,7 +127,7 @@ void pset_indiv_asf(
             args.el_data = PHG_SCRATCH.buf;
             data = (Pasf_info *) args.el_data;
             data->id = asf_id;
-            data->source = asf_source; 
+            data->source = asf_source;
             phg_add_el(PHG_CSS, &args);
          }
       }
@@ -228,42 +231,6 @@ void pset_view_ind(
          else {
             args.el_data = PHG_SCRATCH.buf;
             memcpy(args.el_data, &view_ind, args.el_size);
-            phg_add_el(PHG_CSS, &args);
-         }
-      }
-   }
-}
-
-/*******************************************************************************
- * ptext
- *
- * DESCR:	Creates a new element - Text
- * RETURNS:	N/A
- */
-
-void ptext(
-   Ppoint *text_pos,
-   char *char_string
-   )
-{
-   Phg_args_add_el args;
-   Ppoint *data;
-
-   if (phg_entry_check(PHG_ERH, ERR5, Pfn_text)) {
-      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
-         ERR_REPORT(PHG_ERH, ERR5);
-      }
-      else {
-         args.el_type = PELEM_TEXT;
-         args.el_size = sizeof(Ppoint) + strlen(char_string) + 1;
-         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-            ERR_REPORT(PHG_ERH, ERR900);
-         }
-         else {
-            args.el_data = PHG_SCRATCH.buf;
-            data = (Ppoint *) args.el_data;
-            memcpy(data, text_pos, sizeof(Ppoint));
-            strcpy((char *) &data[1], char_string);
             phg_add_el(PHG_CSS, &args);
          }
       }
@@ -1254,134 +1221,6 @@ void pset_edgewidth(
 }
 
 /*******************************************************************************
- * pset_text_font
- *
- * DESCR:	Creates a new element - Text Font Attribute
- * RETURNS:	N/A
- */
-
-void pset_text_font(
-   Pint font
-   )
-{
-   Phg_args_add_el args;
-
-   if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_text_font)) {
-      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
-         ERR_REPORT(PHG_ERH, ERR5);
-      }
-      else {
-         args.el_type = PELEM_TEXT_FONT;
-         args.el_size = sizeof(Pint);
-         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-            ERR_REPORT(PHG_ERH, ERR900);
-         }
-         else {
-            args.el_data = PHG_SCRATCH.buf;
-            memcpy(args.el_data, &font, args.el_size);
-            phg_add_el(PHG_CSS, &args);
-         }
-      }
-   }
-}
-
-/*******************************************************************************
- * pset_text_prec
- *
- * DESCR:	Creates a new element - Text Precision Attribute
- * RETURNS:	N/A
- */
-
-void pset_text_prec(
-   Ptext_prec prec
-   )
-{
-   Phg_args_add_el args;
-
-   if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_text_prec)) {
-      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
-         ERR_REPORT(PHG_ERH, ERR5);
-      }
-      else {
-         args.el_type = PELEM_TEXT_PREC;
-         args.el_size = sizeof(Pint);
-         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-            ERR_REPORT(PHG_ERH, ERR900);
-         }
-         else {
-            args.el_data = PHG_SCRATCH.buf;
-            *((Pint *) args.el_data) = (Pint) prec;
-            phg_add_el(PHG_CSS, &args);
-         }
-      }
-   }
-}
-
-/*******************************************************************************
- * pset_text_path
- *
- * DESCR:	Creates a new element - Text Path Attribute
- * RETURNS:	N/A
- */
-
-void pset_text_path(
-   Ptext_path text_path
-   )
-{
-   Phg_args_add_el args;
-
-   if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_text_path)) {
-      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
-         ERR_REPORT(PHG_ERH, ERR5);
-      }
-      else {
-         args.el_type = PELEM_TEXT_PATH;
-         args.el_size = sizeof(Pint);
-         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-            ERR_REPORT(PHG_ERH, ERR900);
-         }
-         else {
-            args.el_data = PHG_SCRATCH.buf;
-            *((Pint *) args.el_data) = (Pint) text_path;
-            phg_add_el(PHG_CSS, &args);
-         }
-      }
-   }
-}
-
-/*******************************************************************************
- * pset_text_align
- *
- * DESCR:	Creates a new element - Text Alignment Attribute
- * RETURNS:	N/A
- */
-
-void pset_text_align(
-   Ptext_align *text_align
-   )
-{
-   Phg_args_add_el args;
-
-   if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_text_align)) {
-      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
-         ERR_REPORT(PHG_ERH, ERR5);
-      }
-      else {
-         args.el_type = PELEM_TEXT_ALIGN;
-         args.el_size = sizeof(Ptext_align);
-         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-            ERR_REPORT(PHG_ERH, ERR900);
-         }
-         else {
-            args.el_data = PHG_SCRATCH.buf;
-            memcpy(args.el_data, text_align, args.el_size);
-            phg_add_el(PHG_CSS, &args);
-         }
-      }
-   }
-}
-
-/*******************************************************************************
  * pset_char_ht
  *
  * DESCR:	Creates a new element - Character height Attribute
@@ -1510,69 +1349,31 @@ void pset_char_up_vec(
 }
 
 /*******************************************************************************
- * pset_text_ind
+ * pset_anno_char_up_vec
  *
- * DESCR:	Creates a new element - Text Attribute Index
+ * DESCR:	Creates a new element - Character up vector Attribute
  * RETURNS:	N/A
  */
 
-void pset_text_ind(
-   Pint text_ind
+void pset_anno_char_up_vec(
+   Pvec *char_up_vec
    )
 {
    Phg_args_add_el args;
 
-   if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_text_ind)) {
+   if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_char_up_vec)) {
       if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
          ERR_REPORT(PHG_ERH, ERR5);
       }
-      else if (text_ind < 1) {
-         ERR_REPORT(PHG_ERH, ERR100);
-      }
       else {
-         args.el_type = PELEM_TEXT_IND;
-         args.el_size = sizeof(Pint);
+         args.el_type = PELEM_ANNO_CHAR_UP_VEC;
+         args.el_size = sizeof(Pvec);
          if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
             ERR_REPORT(PHG_ERH, ERR900);
          }
          else {
             args.el_data = PHG_SCRATCH.buf;
-            memcpy(args.el_data, &text_ind, args.el_size);
-            phg_add_el(PHG_CSS, &args);
-         }
-      }
-   }
-}
-
-/*******************************************************************************
- * pset_text_colr_ind
- *
- * DESCR:	Creates a new element - Text Color Attribute
- * RETURNS:	N/A
- */
-
-void pset_text_colr_ind(
-   Pint colr_ind
-   )
-{
-   Phg_args_add_el args;
-
-   if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_text_colr_ind)) {
-      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
-         ERR_REPORT(PHG_ERH, ERR5);
-      }
-      else if (colr_ind < 0) {
-         ERR_REPORT(PHG_ERH, ERR113);
-      }
-      else {
-         args.el_type = PELEM_TEXT_COLR_IND;
-         args.el_size = sizeof(Pint);
-         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-            ERR_REPORT(PHG_ERH, ERR900);
-         }
-         else {
-            args.el_data = PHG_SCRATCH.buf;
-            memcpy(args.el_data, &colr_ind, args.el_size);
+            memcpy(args.el_data, char_up_vec, args.el_size);
             phg_add_el(PHG_CSS, &args);
          }
       }
@@ -1610,4 +1411,3 @@ void pexec_struct(
       }
    }
 }
-
