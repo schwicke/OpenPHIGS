@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -117,7 +118,8 @@ typedef enum {
 
 typedef enum {
    PHG_ARGS_CONN_OPEN,
-   PHG_ARGS_CONN_DRAWABLE
+   PHG_ARGS_CONN_DRAWABLE,
+   PHG_ARGS_CONN_HCOPY
 } Phg_args_conn_type;
 
 typedef enum {
@@ -163,6 +165,7 @@ typedef struct _Phg_args_conn_info {
    Display       *display;
    char          *display_name;
    Pint          display_name_length;
+   Pint          lun;
 } Phg_args_conn_info;
 
 typedef struct _Phg_args_open_ws {
@@ -301,9 +304,14 @@ typedef struct {
    Pstruct_net_source src;
 } Phg_args_q_conflicting;
 
+typedef struct {
+    Pint        wsid;
+    char        *msg;
+    Pint        msg_length;
+} Phg_args_message;
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
 #endif /* _phgargs_h */
-

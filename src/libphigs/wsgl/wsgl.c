@@ -16,6 +16,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
@@ -35,6 +37,7 @@
 #include "util.h"
 #include "private/wsxP.h"
 #include "private/wsglP.h"
+#include "private/wsbP.h"
 #include "private/sofas3P.h"
 
 #define LOG_INT(DATA) \
@@ -62,7 +65,6 @@ int wsgl_init(
 {
    int status;
    Wsgl_handle wsgl;
-
    wsgl = (Wsgl_handle) malloc(sizeof(Wsgl) + 4 * sizeof(GLuint) * select_size);
    if (wsgl == NULL) {
       return FALSE;
@@ -73,7 +75,14 @@ int wsgl_init(
       free(wsgl);
       return FALSE;
    }
-
+#ifdef DEBUG
+   printf("wsgl_init: background color type %d (%f %f %f)\n",
+	  background->type,
+	  background->val.general.x,
+	  background->val.general.y,
+	  background->val.general.z
+	  );
+#endif
    phg_nset_init(&wsgl->cur_struct.ast.asf_nameset,
                  1,
                  wsgl->cur_struct.ast.ast_buf);
@@ -83,7 +92,6 @@ int wsgl_init(
    phg_nset_init(&wsgl->cur_struct.lightstat,
                  1,
                  wsgl->cur_struct.lightstat_buf);
-
    memcpy(&wsgl->background, background, sizeof(Pgcolr));
    wsgl->render_mode = WS_RENDER_MODE_DRAW;
    wsgl->select_size = select_size;
@@ -93,7 +101,8 @@ int wsgl_init(
    wsgl->dev_st.int_style     = -1;
    wsgl->dev_st.int_style_ind = -1;
    wsgl->dev_st.int_shad_meth = -1;
-
+   /* initialise shaders */
+   wsgl_shaders(ws);
    status = TRUE;
 
    return status;
@@ -184,7 +193,26 @@ void wsgl_clear(
 #ifdef DEBUG
    printf("wsgl_clear\n");
 #endif
-
+   Phg_ret ret;
+   Pgcolr gcolr;
+   Wsgl_handle wsgl = ws->render_context;
+   /* try to get the background color from the color table entry for this ws */
+   phg_wsb_inq_LUT_entry(ws, 0, PINQ_REALIZED, PHG_ARGS_COREP, &ret, &gcolr, NULL);
+   if (ret.err == 0) {
+     wsgl->background.val.general.x = gcolr.val.general.x;
+     wsgl->background.val.general.y = gcolr.val.general.y;
+     wsgl->background.val.general.z = gcolr.val.general.z;
+   } else {
+     wsgl->background.val.general.x = 0.;
+     wsgl->background.val.general.y = 0.;
+     wsgl->background.val.general.z = 0.;
+#ifdef DEBUG
+     printf("INFO: background color index 0 not defined. Using default black.\n");
+#endif
+   }
+#ifdef DEBUG
+   printf("wsgl_setup_background: Setting background to (%f %f %f)\n",  gcolr.val.general.x,gcolr.val.general.y,gcolr.val.general.z);
+#endif
    glXMakeCurrent(ws->display, ws->drawable_id, ws->glx_context);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    if (ws->has_double_buffer) {
@@ -271,6 +299,10 @@ void wsgl_flush(
          printf("Enable z-buffer\n");
 #endif
          glEnable(GL_DEPTH_TEST);
+         glEnable(GL_BLEND);
+         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+         glAlphaFunc (GL_GREATER, 0.1);
+         glEnable(GL_ALPHA_TEST);
       }
       else if (wsgl->hlhsr_mode == PHIGS_HLHSR_MODE_NONE) {
 #ifdef DEBUG
@@ -285,9 +317,15 @@ void wsgl_flush(
                 wsgl->background.val.general.y,
                 wsgl->background.val.general.z,
                 0.0);
-
+#ifdef DEBUG
+   printf("wsgl: clear to background color %f %f %f\n",
+	  wsgl->background.val.general.x,
+	  wsgl->background.val.general.y,
+	  wsgl->background.val.general.z
+	  );
+#endif
    if (clear_flag) {
-      wsgl_clear(ws);
+     wsgl_clear(ws);
    }
 }
 
@@ -316,9 +354,17 @@ static void init_rendering_state(
    wsgl_set_text_ind(ws, &wsgl->cur_struct.ast.bundl_group, 0);
    wsgl_set_text_ind(ws, &wsgl->cur_struct.ast.indiv_group, 0);
    wsgl->cur_struct.ast.char_ht = 0.01;
+   wsgl->cur_struct.ast.anno_char_ht = 0.01;
    wsgl->cur_struct.ast.text_path = PPATH_RIGHT;
+   wsgl->cur_struct.ast.anno_text_path = PPATH_RIGHT;
+   wsgl->cur_struct.ast.text_align.hor = PHOR_NORM;
+   wsgl->cur_struct.ast.text_align.vert = PVERT_NORM;
+   wsgl->cur_struct.ast.anno_text_align.hor = PHOR_NORM;
+   wsgl->cur_struct.ast.anno_text_align.vert = PVERT_NORM;
    wsgl->cur_struct.ast.char_up_vec.delta_x = 0.0;
    wsgl->cur_struct.ast.char_up_vec.delta_y = 1.0;
+   wsgl->cur_struct.ast.anno_char_up_vec.delta_x = 0.0;
+   wsgl->cur_struct.ast.anno_char_up_vec.delta_y = 1.0;
    wsgl->cur_struct.ast.disting_mode = PDISTING_YES;
    wsgl->cur_struct.ast.cull_mode = PCULL_NONE;
    wsgl_set_edge_ind(ws, &wsgl->cur_struct.ast.bundl_group, 0);
@@ -327,6 +373,7 @@ static void init_rendering_state(
    wsgl_set_int_ind(ws, &wsgl->cur_struct.ast.indiv_group, 0);
    phg_nset_names_set_all(&wsgl->cur_struct.ast.asf_nameset);
    wsgl_set_view_ind(ws, 0);
+   wsgl_set_clip_ind(ws, 0);
    phg_nset_names_clear_all(&wsgl->cur_struct.cur_nameset);
    phg_nset_names_clear_all(&wsgl->cur_struct.lightstat);
    wsgl->cur_struct.pick_id = 0;
@@ -368,9 +415,15 @@ void wsgl_end_rendering(
 #endif
 
    if (ws->has_double_buffer) {
+#ifdef DEBUG
+     printf("Swapping buffers\n");
+#endif
       glXSwapBuffers(ws->display, ws->drawable_id);
    }
    else {
+#ifdef DEBUG
+     printf("Flushing buffers\n");
+#endif
       glFlush();
    }
 }
@@ -466,6 +519,36 @@ static int check_draw_primitive(
 
    return status;
 }
+/*******************************************************************************
+ * check_highlight_primitive
+ *
+ * DESCR:	check if the current primitive is highlighted
+ * RETURNS:	N/A
+ */
+
+static int check_highlight_primitive(
+   Ws *ws
+   )
+{
+  int status;
+  Wsgl_handle wsgl = ws->render_context;
+
+  if (wsgl->highl_filter.used) {
+    if (!phg_nset_names_intersect(&wsgl->cur_struct.cur_nameset,
+				  wsgl->highl_filter.incl) ||
+	phg_nset_names_intersect(&wsgl->cur_struct.cur_nameset,
+				 wsgl->highl_filter.excl)) {
+      status = FALSE;
+    }
+    else {
+      status = TRUE;
+    }
+  }
+  else {
+    status = FALSE;
+  }
+  return status;
+}
 
 /*******************************************************************************
  * wsgl_begin_structure
@@ -493,6 +576,8 @@ void wsgl_begin_structure(
    wsgl->cur_struct.offset  = 0;
    phg_mat_copy(wsgl->cur_struct.global_tran, wsgl->composite_tran);
    phg_mat_identity(wsgl->cur_struct.local_tran);
+   wsgl_set_clip_ind(ws, 0); // FIXME
+   wsgl_set_alpha_channel(ws, 1.0); // FIXME
    wsgl_update_modelview(ws);
 
    if (wsgl->render_mode == WS_RENDER_MODE_SELECT) {
@@ -562,8 +647,11 @@ void wsgl_render_element(
    Pmatrix3 mat3;
    Plocal_tran3 tran3;
    Wsgl_handle wsgl = ws->render_context;
-
+   Pgse_elem gse_elem;
+   Pgcolr highlight_color;
+   Ws_output_ws *ows;
    update_cur_struct(ws);
+   ows = &ws->out_ws;
    switch (el->eltype) {
       case PELEM_LABEL:
          break;
@@ -745,10 +833,18 @@ void wsgl_render_element(
          break;
 
       case PELEM_LINE_COLR_IND:
-         phg_get_colr_ind(ws,
-                          &wsgl->cur_struct.ast.indiv_group.line_bundle.colr,
-                          PHG_INT(el));
-         break;
+	if (check_highlight_primitive(ws)){
+	    phg_get_colr_ind(ws,
+			     &wsgl->cur_struct.ast.highlighting_color,
+			     PHG_INT(el));
+	  }
+	else
+	  {
+	    phg_get_colr_ind(ws,
+			     &wsgl->cur_struct.ast.indiv_group.line_bundle.colr,
+			     PHG_INT(el));
+	  }
+	break;
 
       case PELEM_LINE_COLR:
          memcpy(&wsgl->cur_struct.ast.indiv_group.line_bundle.colr,
@@ -856,6 +952,49 @@ void wsgl_render_element(
          }
          break;
 
+      case PELEM_FILL_AREA_SET_DATA:
+         if (check_draw_primitive(ws)) {
+            style = wsgl_get_int_style(&wsgl->cur_struct.ast);
+            if (wsgl->cur_struct.hlhsr_id == PHIGS_HLHSR_ID_ON) {
+               if (style == PSTYLE_EMPTY || style == PSTYLE_HOLLOW) {
+                  wsgl_clear_area_set_data(ws,
+                                            ELMT_CONTENT(el),
+                                            &wsgl->cur_struct.ast);
+               }
+            }
+            if (style != PSTYLE_EMPTY) {
+               if (wsgl->cur_struct.ast.cull_mode != PCULL_BACKFACE) {
+                  if (wsgl->cur_struct.ast.disting_mode == PDISTING_YES) {
+                     glEnable(GL_CULL_FACE);
+                     wsgl_fill_area_set_data_back(ws,
+                                                   ELMT_CONTENT(el),
+                                                   &wsgl->cur_struct.ast);
+                     glDisable(GL_CULL_FACE);
+                  }
+               }
+               if (wsgl->cur_struct.ast.cull_mode != PCULL_FRONTFACE) {
+                  if (wsgl->cur_struct.ast.disting_mode == PDISTING_YES) {
+                     glEnable(GL_CULL_FACE);
+                     wsgl_fill_area_set_data_front(ws,
+                                                    ELMT_CONTENT(el),
+                                                    &wsgl->cur_struct.ast);
+                     glDisable(GL_CULL_FACE);
+                  }
+                  else {
+                     wsgl_fill_area_set_data_front(ws,
+                                                    ELMT_CONTENT(el),
+                                                    &wsgl->cur_struct.ast);
+                  }
+               }
+            }
+            if (wsgl_get_edge_flag(&wsgl->cur_struct.ast) == PEDGE_ON) {
+               wsgl_edge_area_set_data(ws,
+                                        ELMT_CONTENT(el),
+                                        &wsgl->cur_struct.ast);
+            }
+         }
+         break;
+
       case PELEM_FILL_AREA_SET3_DATA:
          if (check_draw_primitive(ws)) {
             style = wsgl_get_int_style(&wsgl->cur_struct.ast);
@@ -885,16 +1024,16 @@ void wsgl_render_element(
                      glDisable(GL_CULL_FACE);
                   }
                   else {
-                     wsgl_fill_area_set3_data_front(ws,
+                    wsgl_fill_area_set3_data_front(ws,
                                                     ELMT_CONTENT(el),
                                                     &wsgl->cur_struct.ast);
                   }
                }
             }
             if (wsgl_get_edge_flag(&wsgl->cur_struct.ast) == PEDGE_ON) {
-               wsgl_edge_area_set3_data(ws,
-                                        ELMT_CONTENT(el),
-                                        &wsgl->cur_struct.ast);
+	      wsgl_edge_area_set3_data(ws,
+				       ELMT_CONTENT(el),
+				       &wsgl->cur_struct.ast);
             }
          }
          break;
@@ -954,9 +1093,46 @@ void wsgl_render_element(
          }
          break;
 
-      case PELEM_TEXT:
-         wsgl_text(ws, ELMT_CONTENT(el), &wsgl->cur_struct.ast);
+      case PELEM_ANNO_TEXT_REL:
+	{
+	  wsgl_anno_text_rel(ws, ELMT_CONTENT(el), &wsgl->cur_struct.ast, wsgl->cur_struct.view_rep.ori_matrix);
+	}
+	break;
+
+      case PELEM_ANNO_TEXT_REL3:
+	{
+	  wsgl_anno_text_rel3(ws, ELMT_CONTENT(el), &wsgl->cur_struct.ast, wsgl->cur_struct.view_rep.ori_matrix);
+	}
+	break;
+
+      case PELEM_ANNO_CHAR_HT:
+         wsgl->cur_struct.ast.anno_char_ht = PHG_FLOAT(el);
          break;
+
+      case PELEM_ANNO_ALIGN:
+         memcpy(&wsgl->cur_struct.ast.anno_text_align,
+                ELMT_CONTENT(el),
+                sizeof(Ptext_align));
+         break;
+
+      case PELEM_ANNO_PATH:
+         wsgl->cur_struct.ast.anno_text_path =
+            (Ptext_path) PHG_INT(el);
+         break;
+
+      case PELEM_ANNO_CHAR_UP_VEC:
+         memcpy(&wsgl->cur_struct.ast.anno_char_up_vec,
+                ELMT_CONTENT(el),
+                sizeof(Pvec));
+         break;
+
+      case PELEM_TEXT:
+	wsgl_text(ws, ELMT_CONTENT(el), &wsgl->cur_struct.ast);
+	break;
+
+      case PELEM_TEXT3:
+	wsgl_text3(ws, ELMT_CONTENT(el), &wsgl->cur_struct.ast);
+	break;
 
       case PELEM_GLOBAL_MODEL_TRAN3:
          phg_mat_pack(mat3, (Pfloat *) ELMT_CONTENT(el));
@@ -1032,6 +1208,25 @@ void wsgl_render_element(
          wsgl->cur_struct.ast.cull_mode = (Pcull_mode) PHG_INT(el);
          break;
 
+      case PELEM_GSE:
+	memcpy(&gse_elem, ELMT_CONTENT(el), sizeof(Pgse_elem));
+	if (gse_elem.gse_type == PGSE_ID_HIGHLIGHT_COLOR) {
+	  wsgl->cur_struct.ast.highlighting_color = gse_elem.gse_data.colr.highlight_colr;
+	}
+	break;
+
+      case PELEM_MODEL_CLIP_IND:
+         wsgl_set_clip_ind(ws, PHG_INT(el));
+         break;
+
+      case PELEM_MODEL_CLIP_VOL3:
+	wsgl_set_clip_vol3(ws, (char*)ELMT_CONTENT(el));
+         break;
+
+      case PELEM_ALPHA_CHANNEL:
+         wsgl_set_alpha_channel(ws, PHG_FLOAT(el));
+         break;
+
       default:
          css_print_eltype(el->eltype);
          printf(" not processed\n");
@@ -1041,7 +1236,7 @@ void wsgl_render_element(
 
 /*******************************************************************************
  * wsgl_set_filter
- * 
+ *
  * DESCR:       Set filter
  * RETURNS:     N/A
  */
@@ -1080,6 +1275,18 @@ void wsgl_set_filter(
 #endif
          break;
 
+      case PHG_ARGS_FLT_HIGH:
+         wsgl->highl_filter.used = TRUE;
+         wsgl->highl_filter.incl = incl;
+         wsgl->highl_filter.excl = excl;
+#ifdef DEBUG
+         printf("Include filter:\n");
+         phg_nset_print(wsgl->highl_filter.incl);
+         printf("Exclude filter:\n");
+         phg_nset_print(wsgl->highl_filter.excl);
+#endif
+         break;
+
       default:
          /* TODO: Other filter types */
          break;
@@ -1088,11 +1295,11 @@ void wsgl_set_filter(
 
 /*******************************************************************************
  * wsgl_begin_pick
- * 
+ *
  * DESCR:       Begin pick process
  * RETURNS:     N/A
  */
- 
+
 void wsgl_begin_pick(
    Ws *ws,
    Ws_hit_box *box
@@ -1136,11 +1343,11 @@ void wsgl_begin_pick(
 
 /*******************************************************************************
  * wsgl_end_pick
- * 
+ *
  * DESCR:       End pick process
  * RETURNS:     N/A
  */
- 
+
 void wsgl_end_pick(
    Ws *ws,
    Pint *err_ind,
@@ -1166,6 +1373,7 @@ void wsgl_end_pick(
    hits = glRenderMode(GL_RENDER);
 
    for (i = 0; i < hits; i++) {
+
       names = *ptr / 2;
       ptr++;
       z = *ptr;
@@ -1218,8 +1426,8 @@ void wsgl_end_pick(
       }
    }
    else {
+
       *depth   = 0;
       *err_ind = 0;
    }
 }
-

@@ -16,17 +16,29 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef GLEW
+#include <GL/glew.h>
 #include <GL/gl.h>
-
+#else
+#include <epoxy/gl.h>
+#include <epoxy/glx.h>
+#endif
 #include "phg.h"
 #include "private/phgP.h"
 #include "ws.h"
 #include "private/wsglP.h"
+
+extern GLint clipping_ind, num_clip_planes, plane0, point0;
+extern GLint shading_mode;
+extern GLint ModelViewMatrix, ProjectionMatrix;
+extern GLint alpha_channel;
 
 /*******************************************************************************
  * wsgl_set_matrix
@@ -59,6 +71,40 @@ static void wsgl_set_matrix(
    }
 }
 
+static void wsgl_set_model_view_matrix(
+    Pmatrix3 mat
+    )
+{
+   int i, j;
+   GLfloat m[16];
+   GLfloat *mp = &m[0];
+
+   for (i = 0; i < 4; i++) {
+      for (j = 0; j < 4; j++) {
+         *mp = mat[j][i];
+         mp++;
+      }
+   }
+   glUniformMatrix4fv(ModelViewMatrix, 1, FALSE, m);
+}
+
+static void wsgl_set_projection_matrix(
+    Pmatrix3 mat
+    )
+{
+   int i, j;
+   GLfloat m[16];
+   GLfloat *mp = &m[0];
+
+   for (i = 0; i < 4; i++) {
+      for (j = 0; j < 4; j++) {
+         *mp = mat[j][i];
+         mp++;
+      }
+   }
+   glUniformMatrix4fv(ProjectionMatrix, 1, FALSE, m);
+}
+
 /*******************************************************************************
  * wsgl_update_projection
  *
@@ -81,10 +127,10 @@ void wsgl_update_projection(
       phg_mat_mul(wsgl->model_tran,
                   wsgl->pick_tran,
                   wsgl->cur_struct.view_rep.map_matrix);
-      wsgl_set_matrix(wsgl->model_tran, FALSE);
+      wsgl_set_projection_matrix(wsgl->model_tran);
    }
    else {
-      wsgl_set_matrix(wsgl->cur_struct.view_rep.map_matrix, FALSE);
+      wsgl_set_projection_matrix(wsgl->cur_struct.view_rep.map_matrix);
    }
 }
 
@@ -103,7 +149,12 @@ void wsgl_update_modelview(
 
 #ifdef DEBUG
    printf("Update modelview\n");
+   printf("Orientation matrix is :\n");
+   printf("%f %f %f\n", wsgl->cur_struct.view_rep.ori_matrix[0,0],wsgl->cur_struct.view_rep.ori_matrix[0,1],wsgl->cur_struct.view_rep.ori_matrix[0,2]);
+   printf("%f %f %f\n", wsgl->cur_struct.view_rep.ori_matrix[1,0],wsgl->cur_struct.view_rep.ori_matrix[1,1],wsgl->cur_struct.view_rep.ori_matrix[1,2]);
+   printf("%f %f %f\n", wsgl->cur_struct.view_rep.ori_matrix[2,0],wsgl->cur_struct.view_rep.ori_matrix[2,1],wsgl->cur_struct.view_rep.ori_matrix[2,2]);
 #endif
+
 
    glMatrixMode(GL_MODELVIEW);
    phg_mat_mul(wsgl->composite_tran,
@@ -112,7 +163,8 @@ void wsgl_update_modelview(
    phg_mat_mul(wsgl->model_tran,
                wsgl->cur_struct.view_rep.ori_matrix,
                wsgl->composite_tran);
-   wsgl_set_matrix(wsgl->model_tran, FALSE);
+   wsgl_set_model_view_matrix(wsgl->model_tran);
+
 }
 
 /*******************************************************************************
@@ -142,6 +194,73 @@ void wsgl_set_view_ind(
       wsgl_update_projection(ws);
       wsgl_update_modelview(ws);
    }
+}
+
+/*******************************************************************************
+ * wsgl_set_view_ind
+ *
+ * DESCR:	Setup view
+ * RETURNS:	N/A
+ */
+
+void wsgl_set_clip_ind(
+   Ws *ws,
+   Pint ind
+   )
+{
+  Phg_ret ret;
+  Wsgl_handle wsgl = ws->render_context;
+  glUniform1i(clipping_ind, ind);
+  if (ind == 1) {
+    glEnable(GL_CLIP_PLANE0);
+  } else {
+    glDisable(GL_CLIP_PLANE0);
+  }
+}
+
+/*******************************************************************************
+ * wsgl_set_alpha_channel
+ *
+ * DESCR:	Setup alpha channel
+ * RETURNS:	N/A
+ */
+
+void wsgl_set_alpha_channel(
+   Ws *ws,
+   Pfloat alpha
+   )
+{
+  Phg_ret ret;
+  Wsgl_handle wsgl = ws->render_context;
+  glUniform1f(alpha_channel, alpha);
+}
+
+/*******************************************************************************
+ * wsgl_set_clip_vol3
+ *
+ * DESCR:	Setup view
+ * RETURNS:	N/A
+ */
+
+void wsgl_set_clip_vol3(
+   Ws *ws,
+   char * el_data
+   )
+{
+  Phg_ret ret;
+  int op, num;
+  int * int_data = (int*) el_data;
+  Phalf_space3 * list;
+  Phalf_space3 volume0;
+  op = int_data[0];
+  num = int_data[1];
+  list = (Phalf_space3 *)(&int_data[2]);
+  volume0 = list[0];
+  glUniform1i(num_clip_planes, num);
+  glUniform4f(plane0, volume0.norm.delta_x, volume0.norm.delta_y, volume0.norm.delta_z, 0.);
+  glUniform4f(point0, volume0.point.x, volume0.point.y, volume0.point.z, 0.);
+  GLdouble eqn0[4] = {volume0.norm.delta_x, volume0.norm.delta_y, volume0.norm.delta_z, 0.};
+  glClipPlane(GL_CLIP_PLANE0, eqn0);
 }
 
 /*******************************************************************************
@@ -207,13 +326,15 @@ void wsgl_set_colr(
 {
    switch(colr_type) {
       case PINDIRECT:
-         glIndexi(colr->ind);
-         break;
+	glIndexi(colr->ind);
+	break;
 
       case PMODEL_RGB:
-         glColor3f(colr->direct.rgb.red,
-                   colr->direct.rgb.green,
-                   colr->direct.rgb.blue);
+	 glVertexAttrib4f(vCOLOR,
+			  colr->direct.rgb.red,
+			  colr->direct.rgb.green,
+			  colr->direct.rgb.blue,
+			  1.0);
          break;
 
       default:
@@ -234,13 +355,16 @@ void wsgl_set_gcolr(
 {
    switch(gcolr->type) {
       case PINDIRECT:
-         glIndexi(gcolr->val.ind);
-         break;
+	glIndexi(gcolr->val.ind);
+	break;
 
       case PMODEL_RGB:
-         glColor3f(gcolr->val.general.x,
-                   gcolr->val.general.y,
-                   gcolr->val.general.z);
+	glVertexAttrib4f(vCOLOR,
+			 gcolr->val.general.x,
+			 gcolr->val.general.y,
+			 gcolr->val.general.z,
+			 1.0);
+
          break;
 
       default:
@@ -350,15 +474,14 @@ void wsgl_setup_line_attr(
          glDisable(GL_LINE_STIPPLE);
       break;
    }
-
    if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_LINEWIDTH)) {
       glLineWidth(ast->indiv_group.line_bundle.width);
    }
    else {
       glLineWidth(ast->bundl_group.line_bundle.width);
    }
-
-   glDisable(GL_LIGHTING);
+   glEnable(GL_LINE_SMOOTH);
+   glUniform1i(shading_mode, 0);
 }
 
 /*******************************************************************************
@@ -391,7 +514,7 @@ void wsgl_set_int_ind(
 /*******************************************************************************
  * wsgl_get_int_colr
  *
- * DESCR:	Get interior colur
+ * DESCR:	Get interior colour
  * RETURNS:	Pointer to interiour colour
  */
 
@@ -407,7 +530,6 @@ Pgcolr* wsgl_get_int_colr(
    else {
       gcolr = &ast->bundl_group.int_bundle.colr;
    }
-
    return gcolr;
 }
 
@@ -514,19 +636,19 @@ void wsgl_setup_int_attr_nocol(
 
    if (shad_meth != wsgl->dev_st.int_shad_meth) {
       if (shad_meth == PSD_NONE) {
-         glShadeModel(GL_FLAT);
+	//glShadeModel(GL_FLAT);
       }
       else {
-         glShadeModel(GL_SMOOTH);
+	//glShadeModel(GL_SMOOTH);
       }
       wsgl->dev_st.int_shad_meth = shad_meth;
    }
 
    if (wsgl->cur_struct.lighting) {
-      glEnable(GL_LIGHTING);
+     glUniform1i(shading_mode, 1);
    }
    else {
-      glDisable(GL_LIGHTING);
+     glUniform1i(shading_mode, 0);
    }
 
    glCullFace(GL_BACK);
@@ -671,8 +793,7 @@ void wsgl_setup_edge_attr(
          glDisable(GL_LINE_STIPPLE);
       break;
    }
-
-   glDisable(GL_LIGHTING);
+   glUniform1i(shading_mode, 0);
 }
 
 
@@ -737,8 +858,7 @@ void wsgl_setup_marker_attr(
    else {
       *size = ast->bundl_group.marker_bundle.size;
    }
-
-   glDisable(GL_LIGHTING);
+   glUniform1i(shading_mode, 0);
 }
 
 /*******************************************************************************
@@ -753,13 +873,13 @@ void wsgl_setup_background(
    )
 {
    Wsgl_handle wsgl = ws->render_context;
-
    glDisable(GL_POLYGON_STIPPLE);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   glColor3f(wsgl->background.val.general.x,
-             wsgl->background.val.general.y,
-             wsgl->background.val.general.z);
-
+   glVertexAttrib4f(vCOLOR,
+		    wsgl->background.val.general.x,
+		    wsgl->background.val.general.y,
+		    wsgl->background.val.general.z,
+		    1.0);
    /* Need to restore polygon mode */
    wsgl->dev_st.int_style = -1;
 }
@@ -857,8 +977,7 @@ void wsgl_setup_text_attr(
       *char_expan = ast->bundl_group.text_bundle.char_expan;
    }
 
-   glDisable(GL_LIGHTING);
-   glLineWidth(2.0);
+   glUniform1i(shading_mode, 0);
 
 }
 
@@ -932,4 +1051,3 @@ void wsgl_remove_names_set(
                         num_ints,
                         data);
 }
-

@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -67,8 +68,12 @@ extern "C" {
 #define PMARKER_DOT               1
 #define PMARKER_PLUS              2
 #define PMARKER_ASTERISK          3
-#define PMARKER_CIRLCE            4
+#define PMARKER_CIRCLE            4
 #define PMARKER_CROSS             5
+#define PMARKER_TRIANG            6
+#define PMARKER_SQUARE            7
+#define PMARKER_PENTAGON          8
+#define PMARKER_HEXAGON           9
 
 /* Color model */
 #define PINDIRECT                 0
@@ -152,7 +157,10 @@ typedef enum {
    PCAT_IN,
    PCAT_OUTIN,
    PCAT_MO,
-   PCAT_MI
+   PCAT_MI,
+   PCAT_TGA,
+   PCAT_PNG,
+   PCAT_PNGA
 } Pws_cat;
 
 typedef enum {
@@ -223,8 +231,26 @@ typedef enum {
    PELEM_BACK_REFL_PROPS,
    PELEM_FACE_DISTING_MODE,
    PELEM_FACE_CULL_MODE,
+   PELEM_ANNO_TEXT_REL3,
+   PELEM_ANNO_TEXT_REL,
+   PELEM_ANNO_CHAR_HT,
+   PELEM_ANNO_CHAR_UP_VEC,
+   PELEM_ANNO_PATH,
+   PELEM_ANNO_ALIGN,
+   PELEM_ANNO_STYLE,
+   PELEM_MODEL_CLIP_VOL3,
+   PELEM_MODEL_CLIP_IND,
+   PELEM_FILL_AREA_SET_DATA,
+   PELEM_GSE,
+   PELEM_ALPHA_CHANNEL,
+   PELEM_TEXT3,
    PELEM_NUM_EL_TYPES
 } Pelem_type;
+
+typedef enum {
+  PGSE_ID_NO_OPERATION,
+  PGSE_ID_HIGHLIGHT_COLOR
+} Pgse_type;
 
 typedef enum {
    PDIR_BACKWARD,
@@ -502,9 +528,24 @@ typedef struct {
          Pfloat x;
          Pfloat y;
          Pfloat z;
-      }         general;
-   }            val;
+      } general;
+   } val;
 } Pgcolr;
+
+typedef union {
+  struct Pgse_0 {
+    Pint noop;
+  } noop;
+  struct Pgse_1 {
+    Pgcolr highlight_colr;
+  } colr;
+} Pgse_data;
+
+typedef struct {
+  Pgse_type gse_type;
+  Pint gse_size;
+  Pgse_data gse_data;
+} Pgse_elem;
 
 typedef struct {
    Pint num_ints;
@@ -630,7 +671,7 @@ typedef struct {
    Pfloat     diffuse_coef;
    Pfloat     specular_coef;
    Pgcolr     specular_colr;
-   Pfloat     specualr_exp;
+   Pfloat     specular_exp;
 } Prefl_props;
 
 typedef struct {
@@ -678,6 +719,12 @@ typedef struct {
    Ppoint pos;
    char   *char_string;
 } Ptext;
+
+typedef struct {
+   Ppoint3 pos;
+   Pvec3 plane[2];
+   char   *char_string;
+} Ptext3;
 
 typedef struct {
    Pcompose_type compose_type;
@@ -887,6 +934,23 @@ typedef struct {
    Pint_list deactivation;
 } Plss;
 
+typedef struct {
+  Ppoint3         ref_point;      /* reference pt */
+  Pvec3           offset;         /* anno. pt/offset */
+  char            *char_string;   /* text string */
+} Panno_text_rel3;
+
+typedef struct {
+  Ppoint          ref_point;      /* reference pt */
+  Pvec            offset;         /* anno. pt/offset */
+  char            *char_string;   /* text string */
+} Panno_text_rel;
+
+typedef struct {
+  size_t  size;             /* sizeof data                                   */
+  void   *data;             /* pointer to data                               */
+} Pdata;
+
 typedef union {
    Pint              int_data;
    Pfloat            float_data;
@@ -900,6 +964,9 @@ typedef union {
    Ptext_path        text_path;
    Ptext_align       text_align;
    Ptext             text;
+   Ptext3            text3;
+   Panno_text_rel    anno_text_rel;
+   Panno_text_rel3   anno_text_rel3;
    Pasf_info         asf_info;
    Pvec              vec;
    Plocal_tran       local_tran;
@@ -989,6 +1056,16 @@ typedef struct {
    Pint            depth;
    Ppick_path_elem *path_list;
 } Ppick_path;
+
+typedef struct {
+	Ppoint3	point;
+	Pvec3	norm;
+} Phalf_space3;
+
+typedef struct {
+	Pint num_half_spaces;
+	Phalf_space3 *half_spaces;
+} Phalf_space_list3;
 
 typedef struct {
    Pint loc;
@@ -1101,8 +1178,9 @@ typedef struct {
 } Pstroke_data3;
 
 typedef struct {
-   Pfloat low;
-   Pfloat high;
+  Pfloat low;
+  Pfloat high;
+  Pint num_boxed;
 
    union {
 
@@ -1111,10 +1189,10 @@ typedef struct {
       } pet_r1;
 
       struct {
-         char *label;
-         char *format;
-         char *low_label;
-         char *high_label;
+	char *label;
+	char *format;
+	char *low_label;
+	char *high_label;
       } pet_u1;
 
    } pets;
@@ -2203,6 +2281,19 @@ void ptext(
    );
 
 /*******************************************************************************
+ * ptext3
+ *
+ * DESCR:       Creates a new element - Text
+ * RETURNS:     N/A
+ */
+
+void ptext3(
+   Ppoint3 *text_pos,
+   Pvec3 plane[2],
+   char *char_string
+   );
+
+/*******************************************************************************
  * ppolyline
  *
  * DESCR:       Creates a new element - Polyline
@@ -2288,6 +2379,24 @@ void pfill_area_set(
 
 void pfill_area_set3(
    Ppoint_list_list3 *point_list_list
+   );
+
+/*******************************************************************************
+ * pfill_area_set_data
+ *
+ * DESCR:       Creates a new element - Fill area set with data 3D
+ * RETURNS:     N/A
+ */
+
+void pfill_area_set_data(
+   Pint fflag,
+   Pint eflag,
+   Pint vflag,
+   Pint colr_type,
+   Pfacet_data3 *fdata,
+   Pint nfa,
+   Pedge_data_list *edata,
+   Pfacet_vdata_list3 *vdata
    );
 
 /*******************************************************************************
@@ -2658,6 +2767,17 @@ void pset_char_up_vec(
    );
 
 /*******************************************************************************
+ * pset_anno_char_up_vec
+ *
+ * DESCR:       Creates a new element - Character up vector Attribute
+ * RETURNS:     N/A
+ */
+
+void pset_anno_char_up_vec(
+   Pvec *char_up_vec
+   );
+
+/*******************************************************************************
  * pset_text_ind
  *
  * DESCR:       Creates a new element - Text Attribute Index
@@ -2884,11 +3004,11 @@ void ptranslate(
 
 /*******************************************************************************
  * pscale3
- *  
+ *
  * DESCR:       Generate 3D scaling matrix
  * RETURNS:     N/A
  */
-    
+
 void pscale3(
     Pvec3 *scale_vector,       /* scale factor vector */
     Pint *error_ind,           /* OUT error indicator */
@@ -2909,7 +3029,7 @@ void pscale(
     );
 
 /*******************************************************************************
- * protate_x 
+ * protate_x
  *
  * DESCR:       Generate matrix for rotation around x-axis
  * RETURNS:     N/A
@@ -2949,7 +3069,7 @@ void protate_z(
 
 /*******************************************************************************
  * protate
- *  
+ *
  * DESCR:       Generate rotation matrix
  * RETURNS:     N/A
  */
@@ -3071,10 +3191,10 @@ void pcompose_tran_matrix3(
 
 /*******************************************************************************
  * pcompose_tran_matrix
- *  
+ *
  * DESCR:       Combine transformation with other transformation matrix
- * RETURNS:     N/A            
- */ 
+ * RETURNS:     N/A
+ */
 
 void pcompose_tran_matrix(
     Pmatrix m,                 /* transformation matrix */
@@ -3193,6 +3313,68 @@ void pinit_pick3(
    Ppath_order order
    );
 
+ /*******************************************************************************
+ * pinit_string
+ *
+ * DESCR:       Initialize string device
+ * RETURNS:     N/A
+ */
+void pinit_string(
+   Pint ws_id,
+   Pint string_dev,
+   char * init_string,
+   Pint pet,
+   Plimit * area,
+   Pstring_data *data_rec
+   );
+
+ /*******************************************************************************
+ * pinit_string3
+ *
+ * DESCR:       Initialize string device 3d
+ * RETURNS:     N/A
+ */
+void pinit_string3(
+   Pint ws_id,
+   Pint string_dev,
+   char * init_string,
+   Pint pet,
+   Plimit3 * area,
+   Pstring_data3 *data_rec
+   );
+
+/*******************************************************************************
+ * pinit_choice3
+ *
+ * DESCR:       Initialize string
+ * RETURNS:     N/A
+ */
+void pinit_choice3(
+   Pint ws_id,
+   Pint choice_dev,
+   Pin_status init_status,
+   Pint init_choice,
+   Pint pet,
+   Plimit3 * echo_volume,
+   Pchoice_data3 *choice_data_rec
+);
+
+/*******************************************************************************
+ * pinit_val3
+ *
+ * DESCR:       Initialize string
+ * RETURNS:     N/A
+ */
+
+void pinit_val3(
+   Pint ws_id,
+   Pint val_dev,
+   Pfloat init_value,
+   Pint pet,
+   Plimit3 * echo_volume,
+   Pval_data *val_data_rec
+);
+
 /*******************************************************************************
  * pset_pick_filter
  *
@@ -3247,6 +3429,45 @@ void pset_pick_mode(
    Pop_mode op_mode,
    Pecho_switch echo_switch
    );
+
+/*******************************************************************************
+ * pset_string_mode
+ *
+ * DESCR:       Set string input device mode
+ * RETURNS:     N/A
+ */
+void pset_string_mode(
+   Pint ws_id,
+   Pint string_dev,
+   Pop_mode op_mode,
+   Pecho_switch echo_switch
+);
+
+/*******************************************************************************
+ * pset_choice_mode
+ *
+ * DESCR:       Set choice input device mode
+ * RETURNS:     N/A
+ */
+void pset_choice_mode(
+   Pint ws_id,
+   Pint choice_dev,
+   Pop_mode op_mode,
+   Pecho_switch echo_switch
+);
+
+/*******************************************************************************
+ * pset_val_mode
+ *
+ * DESCR:       Set string input device mode
+ * RETURNS:     N/A
+ */
+void pset_val_mode(
+   Pint ws_id,
+   Pint val_dev,
+   Pop_mode op_mode,
+   Pecho_switch echo_switch
+);
 
 /*******************************************************************************
  * psample_loc
@@ -3310,14 +3531,26 @@ void psample_stroke3(
  * DESCR:       Sample pick device
  * RETURNS:     N/A
  */
-
 void psample_pick(
    Pint ws_id,
    Pint pick_num,
    Pint depth,
    Pin_status *pick_in_status,
    Ppick_path *pick
-   );
+);
+
+/*******************************************************************************
+ * psample_string
+ *
+ * DESCR:       Sample string device
+ * RETURNS:     String
+ */
+
+void psample_string(
+   Pint ws_id,
+   Pint string_dev,
+   char* string
+);
 
 /*******************************************************************************
  * pawait_event
@@ -3395,9 +3628,32 @@ void pget_pick(
    );
 
 /*******************************************************************************
+ * pget_val
+ *
+ * DESCR:       Get valuator event from event queue
+ * RETURNS:     N/A
+ */
+
+void pget_val(
+	      Pfloat *val
+	      );
+
+/*******************************************************************************
+ * pget_choice
+ *
+ * DESCR:       Get choice event from event queue
+ * RETURNS:     N/A
+ */
+
+void pget_choice(
+	      Pin_status *in_status,
+	      Pint *choice
+		 );
+
+/*******************************************************************************
  * preq_loc3
  *
- * DESCR:       Request input from locator device 3D
+ * DESCR:       Request input from locater device
  * RETURNS:     N/A
  */
 
@@ -3408,6 +3664,49 @@ void preq_loc3(
    Pint *view_ind,
    Ppoint3 *loc_pos
    );
+
+/*******************************************************************************
+ * preq_pick
+ *
+ * DESCR:       Request input from pick device
+ * RETURNS:     N/A
+ */
+
+void preq_pick(
+	       Pint ws_id,
+	       Pint pick_num,
+	       Pint depth,
+	       Pin_status *status,
+	       Ppick_path *pick
+	       );
+
+/*******************************************************************************
+ * preq_choice
+ *
+ * DESCR:       Request input from choice device
+ * RETURNS:     N/A
+ */
+
+  void preq_choice(
+		   Pint ws_id,
+		   Pint choice_dev,
+		   Pin_status *status,
+		   Pint *choice
+		   );
+
+/*******************************************************************************
+ * preq_valuator
+ *
+ * DESCR:       Request input from valuator device
+ * RETURNS:     N/A
+ */
+
+  void preq_valuator(
+		   Pint ws_id,
+		   Pint val_dev,
+		   Pin_status *status,
+		   Pfloat *choice
+		   );
 
 /*******************************************************************************
  * preq_stroke3
@@ -3425,6 +3724,32 @@ void preq_stroke3(
    );
 
 /*******************************************************************************
+ * preq_string
+ *
+ * DESCR:       Request input from string
+ * RETURNS:     N/A
+ */
+
+void preq_string(
+   Pint ws_id,
+   Pint string_dev,
+   Pin_status *status,
+   char *string
+   );
+
+/*******************************************************************************
+ * pflush_events
+ *
+ * DESCR:       Flush events for device
+ * RETURNS:     N/A
+ */
+void pflush_events(
+		   Pint ws_id,
+		   Pin_class inp_class,
+		   Pint dev
+		   );
+
+/*******************************************************************************
  * popen_ar_file
  *
  * DESCR:       Open archive file
@@ -3438,7 +3763,7 @@ void popen_ar_file(
 
 /*******************************************************************************
  * pclose_ar_file
- * 
+ *
  * DESCR:       Close archive file
  * RETURNS:     N/A
  */
@@ -3650,9 +3975,177 @@ void pinq_conf_structs_net(
    Pint *num_elems_impl_list
    );
 
+/*******************************************************************************
+ * pinq_light_src_rep
+ *
+ * DESCR:       inquire light source respresentation
+ * RETURNS:     N/A
+ */
+
+void pinq_light_src_rep(
+   Pint  ws_id,
+   Pint  index,
+   Pinq_type  type,
+   Pint *err_ind,
+   Plight_src_bundle *rep
+  );
+
+/*******************************************************************************
+ * pannot_text_rel3
+ *
+ * DESCR:       annotation text relative 3
+ * RETURNS:     N/A
+ */
+void panno_text_rel3(
+		    Ppoint3 *ref_point,
+		    Pvec3 *offset,
+		    char *text);
+
+
+/*******************************************************************************
+ * pannot_text_rel
+ *
+ * DESCR:       annotation text relative
+ * RETURNS:     N/A
+ */
+void panno_text_rel(
+		    Ppoint *ref_point,
+		    Pvec *offset,
+		    char *text);
+
+/*******************************************************************************
+ * set_anno_char_ht
+ *
+ * DESCR:       annotation text height
+ * RETURNS:     N/A
+ */
+void pset_anno_char_ht(
+		    Pfloat height
+		       );
+
+/*******************************************************************************
+ * set_anno_align
+ *
+ * DESCR:       annotation text height
+ * RETURNS:     N/A
+ */
+void pset_anno_align(
+		     Ptext_align *text_align
+		     );
+
+/*******************************************************************************
+ * set_anno_path
+ *
+ * DESCR:       annotation text path
+ * RETURNS:     N/A
+ */
+  void pset_anno_path(
+		      Ptext_path text_path
+		      );
+
+/*******************************************************************************
+ * GS element
+ *
+ * DESCR:       generalised structure element
+ * RETURNS:     N/A
+ */
+void pgse(
+	  Pgse_type gse_type,
+	  Pgse_data * gse_data
+	  );
+
+/*******************************************************************************
+ * set highlighting color
+ *
+ * DESCR:       set the highlighting color
+ * RETURNS:     N/A
+ */
+void pxset_highlight_colr (
+			   Pgcolr *colr
+			   );
+
+/*******************************************************************************
+ * set highlighting filter
+ *
+ * DESCR:       set the highlighting filter
+ * RETURNS:     N/A
+ */
+void pset_highl_filter (
+			Pint ws_id,
+			Pfilter *filter
+			);
+
+/*******************************************************************************
+ * pset_model_clip_ind
+ *
+ * DESCR:	Creates a new element - set clipping indicator
+ * RETURNS:	N/A
+ */
+
+void pset_model_clip_ind(
+			 Pclip_ind clipi
+			 );
+
+/*******************************************************************************
+ * pset_model_clip_vol3
+ *
+ * DESCR:	Creates a new element - set clipping volume 3
+ * RETURNS:	N/A
+ */
+
+void  pset_model_clip_vol3 (
+			    Pint op,
+			    Phalf_space_list3 spacelist
+			    );
+
+/*******************************************************************************
+ * predefine colors
+ *
+ * DESCR:       set color map
+ * RETURNS:     N/A
+ * Note: DELPHI extension
+ */
+void pxset_color_map(
+		    Pint ws_id
+		    );
+
+/*******************************************************************************
+ * print invisibility filter
+ *
+ * DESCR:       print invisibility filter
+ * RETURNS:     N/A
+ * Note: moved here from testing suite for debugging
+ */
+void print_invis_filter(
+			Pint ws_id
+			);
+
+/*******************************************************************************
+ * set alpha channel
+ *
+ * DESCR:       set alpha channel
+ * RETURNS:     N/A
+ * Note: extending the standard
+ */
+void pset_alpha_channel(
+			  Pfloat alpha
+			  );
+
+/*******************************************************************************
+ * phigs message
+ *
+ * DESCR:       message in a box
+ * RETURNS:     N/A
+ * Note: extending the standard
+ */
+
+void pmessage(
+	      Pint ws_id,
+	      char* message
+	      );
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
 #endif /* _phigs_h */
-

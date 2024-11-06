@@ -3,6 +3,7 @@
 *
 *   This file is part of Open PHIGS
 *   Copyright (C) 2014 Surplus Users Ham Society
+*             (C) 2022-2023 CERN
 *
 *   Open PHIGS is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Lesser General Public License as published by
@@ -58,6 +59,11 @@ typedef struct {
    Pcull_mode    cull_mode;
    Nset          asf_nameset;
    uint32_t      ast_buf[1];
+   Pgcolr        highlighting_color;
+   Pfloat        anno_char_ht;
+   Ptext_path    anno_text_path;
+   Ptext_align   anno_text_align;
+   Pvec          anno_char_up_vec;
 } Ws_attr_st;
 
 typedef struct {
@@ -104,6 +110,7 @@ typedef struct _Wsgl {
    Pmatrix3        pick_tran;
    Ws_filter       invis_filter;
    Ws_filter       pick_filter;
+   Ws_filter       highl_filter;
    Pint            select_size;
    GLuint          *select_buf;
    Ws_dev_st       dev_st;
@@ -368,6 +375,43 @@ void wsgl_set_view_ind(
    Ws *ws,
    Pint ind
    );
+
+/*******************************************************************************
+ * wsgl_set_clip_ind
+ *
+ * DESCR:       Setup clip indicator
+ * RETURNS:     N/A
+ */
+
+ void wsgl_set_clip_ind(
+   Ws *ws,
+   Pint ind
+   );
+
+/*******************************************************************************
+ * wsgl_set_clip_vol3
+ *
+ * DESCR:       Setup clipping volume
+ * RETURNS:     N/A
+ */
+
+ void wsgl_set_clip_vol3(
+   Ws *ws,
+   char * data
+   );
+
+/*******************************************************************************
+ * wsgl_set_alpha_channel
+ *
+ * DESCR:       Setup alpha channel
+ * RETURNS:     N/A
+ */
+
+ void wsgl_set_alpha_channel(
+   Ws *ws,
+   Pfloat alpha
+   );
+
 
 /*******************************************************************************
  * wsgl_update_hlhsr_id
@@ -926,6 +970,19 @@ void wsgl_text(
    );
 
 /*******************************************************************************
+ * wsgl_text
+ *
+ * DESCR:       Draw text
+ * RETURNS:     N/A
+ */
+
+void wsgl_text3(
+   Ws *ws,
+   void *tdata,
+   Ws_attr_st *ast
+   );
+
+/*******************************************************************************
  * wsgl_edge_area_set3
  *
  * DESCR:       Draw fill area set edge 3D
@@ -933,6 +990,58 @@ void wsgl_text(
  */
 
 void wsgl_edge_area_set3(
+   Ws *ws,
+   void *pdata,
+   Ws_attr_st *ast
+   );
+
+/*******************************************************************************
+ * wsgl_clear_area_set3_data
+ *
+ * DESCR:       Clear fill area set with data 3D
+ * RETURNS:     N/A
+ */
+
+void wsgl_clear_area_set_data(
+   Ws *ws,
+   void *pdata,
+   Ws_attr_st *ast
+   );
+
+/*******************************************************************************
+ * wsgl_fill_area_set3_data_front
+ *
+ * DESCR:       Draw fill area set with data 3D front faces
+ * RETURNS:     N/A
+ */
+
+void wsgl_fill_area_set_data_front(
+   Ws *ws,
+   void *pdata,
+   Ws_attr_st *ast
+   );
+
+/*******************************************************************************
+ * wsgl_fill_area_set3_data_back
+ *
+ * DESCR:       Draw fill area set with data 3D back faces
+ * RETURNS:     N/A
+ */
+
+void wsgl_fill_area_set_data_back(
+   Ws *ws,
+   void *pdata,
+   Ws_attr_st *ast
+   );
+
+/*******************************************************************************
+ * wsgl_edge_area_set3_data
+ *
+ * DESCR:       Draw fill area set edges with data 3D
+ * RETURNS:     N/A
+ */
+
+void wsgl_edge_area_set_data(
    Ws *ws,
    void *pdata,
    Ws_attr_st *ast
@@ -1064,6 +1173,41 @@ void wsgl_set_light_src_state(
 void wsgl_update_light_src_state(
    Ws *ws
    );
+
+/*******************************************************************************
+ * wsgl_anno_text_rel
+ *
+ * DESCR:	Draw annotation text
+ * RETURNS:	N/A
+ */
+void wsgl_anno_text_rel3(
+  Ws *ws,
+  void *data,
+  Ws_attr_st *ast,
+  Pmatrix3  wc_to_vrc
+);
+
+/*******************************************************************************
+ * wsgl_anno_text_rel3
+ *
+ * DESCR:	Draw annotation text
+ * RETURNS:	N/A
+ */
+void wsgl_anno_text_rel(
+   Ws *ws,
+   void *data,
+   Ws_attr_st *ast,
+   Pmatrix3 wc_to_npc
+ );
+
+/*******************************************************************************
+ * wsgl_shaders
+ *
+ * DESCR:	Initialise shaders
+ * RETURNS:	N/A
+ */
+
+  void wsgl_shaders(Ws * ws);
 
 extern Phg_font *fnt_fonts[];
 extern unsigned char *wsgl_hatch_tbl[];

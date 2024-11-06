@@ -8,8 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+* 2d Fascade functions wsgl_fasdclear.c wsgl_fasdfill.c sgl_fasedge.c
+* Shaders wsgl_shaders.c
+* annotation text functions
+* support for high lighting
 
 ### Changed
+* Fixed typos in various headers
+* Added additional required fields in the headers
+* Default to GLEW over Epoxy
 
 ### Removed
 

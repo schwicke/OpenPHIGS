@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -66,6 +67,13 @@ extern "C" {
 #define NUM_SELECTABLE_STRUCTS  256
 #define WS_MAX_NAMES_IN_NAMESET 1024
 #define WS_MAX_LIGHT_SRC        8
+
+/* hard code display size */
+#define DISPLAY_WIDTH  1024
+#define DISPLAY_HEIGHT 1024
+
+/* bind attributes */
+#define vCOLOR 1
 
 typedef enum {
    PHG_TIME_NOW,
@@ -189,6 +197,11 @@ typedef struct {
       Nameset       invis_excl;
    } nset;
 
+   struct {
+      Nameset       high_incl;
+      Nameset       high_excl;
+   } hnset;
+
    union {
       Wsa_output_ws a;
       Wsb_output_ws b;
@@ -212,14 +225,26 @@ typedef struct _Ws {
 
    /* Window system variables */
    Display      *display;
-   Drawable     drawable_id;
+   Window       drawable_id;
    GLXContext   glx_context;
+   XtAppContext app_context;
    Window       input_overlay_window;
    Wsgl_handle  render_context;
    int          has_double_buffer;
    XRectangle   ws_rect;
+   Widget       top_level; /* only in PM */
+   Widget       msg_shell; /* only in PM */
+   Widget       msg_label; /* only in PM */
    Widget       shell;
+   Pint         num_boxed_valuators;
+   Widget       valuator_shell;
+   Widget       valuator_box;
+   Widget       valuator_frame;
 
+   /* Output LUN for some work station types, e.g. to print out stuff here */
+   Pint           lun;
+   /* File name */
+   char         filename[512];
    void         (*close)(
                    struct _Ws *ws
                    );
@@ -245,6 +270,10 @@ typedef struct _Ws {
                    struct _Ws *ws,
                    Pdefer_mode def_mode,
                    Pmod_mode mod_mode
+                   );
+   void         (*message)(
+                   struct _Ws *ws,
+                   Phg_args_message *args
                    );
    void         (*set_hlhsr_mode)(
                    struct _Ws *ws,
@@ -498,4 +527,3 @@ typedef struct _Ws {
 #endif /* __cplusplus */
 
 #endif /* _ws_h */
-
