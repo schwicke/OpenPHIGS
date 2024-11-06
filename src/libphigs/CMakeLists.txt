@@ -30,7 +30,7 @@ SET(P_F_BINDING_SRCS
 
 SET(P_CONF_SRCS
   conf/ophconf.c
-  )
+)
 
 SET(P_CSS_SRCS
   css/css_el.c
@@ -41,7 +41,7 @@ SET(P_CSS_SRCS
   css/css_stb.c
   css/css_str.c
   css/css_ws.c
-  )
+)
 
 SET(P_UT_SRCS
   ut/ut.c
@@ -51,13 +51,13 @@ SET(P_UT_SRCS
   ut/ut_mat.c
   ut/ut_nset.c
   ut/ut_stk.c
-  )
+)
 
 SET(P_PHG_SRCS
   phg/phg_attr.c
   phg/phg.c
   phg/phg_swap.c
-  )
+)
 
 SET(P_WSGL_SRCS
   wsgl/wsgl_attr.c
@@ -110,19 +110,23 @@ SET(P_FONTS_SRCS
   fonts/fnt.c
   fonts/fnt_mroman.c
   fonts/fnt_roman.c
-  )
+)
 
 SET(P_ERRORS_SRCS
   errors/err.c
   errors/err_num.c
-  )
+)
 
 SET(P_UTILS_SRCS
   utils/hdl.c
   utils/psl.c
   utils/fasd3.c
   utils/sofas3.c
-  )
+)
+
+SET(P_CP_SRCS
+  cp/cpm_tlkt.c
+)
 
 SET(OPHIGS_ALL
   ${P_ARCHIVE_SRCS}
@@ -136,8 +140,10 @@ SET(OPHIGS_ALL
   ${P_WS_SRCS}
   ${P_ERRORS_SRCS}
   ${P_FONTS_SRCS}
+  ${P_CONF_SRCS}
   ${P_UTILS_SRCS}
-  )
+  ${P_CP_SRCS}
+)
 
 
 add_library(phigs STATIC ${OPHIGS_ALL})

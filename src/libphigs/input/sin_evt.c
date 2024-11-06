@@ -16,6 +16,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
@@ -146,8 +148,8 @@ int phg_sin_evt_register(
 #ifdef DEBUG
    printf("sin_evt: phg_sin_evt_register\n");
    printf("\t%-14s", eventNames[event_type]);
-   printf("\tWindow = %x, ", (unsigned) window);
-   printf("\tClient_data = %x\n", (unsigned) cdata);
+   printf("\tWindow = %x, ", (unsigned long) window);
+   printf("\tClient_data = %x\n", (unsigned long) cdata);
 #endif
    /* First check if entry exists */
    for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[event_type]);
@@ -291,7 +293,7 @@ void phg_sin_evt_dispatch(
       if ((ev->display == display) &&
           (ev->window == event->xany.window)) {
 #ifdef DEBUG
-         printf("%x\t", (unsigned) ev->cdata);
+         printf("%x\t", (unsigned long) ev->cdata);
          phg_sin_evt_print(event);
          printf("\n");
 #endif
@@ -330,4 +332,3 @@ void phg_sin_evt_print(
 {
    printf("%-14s", eventNames[event->type]);
 }
-

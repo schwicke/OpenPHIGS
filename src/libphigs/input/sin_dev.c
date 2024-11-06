@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +25,21 @@ Except as contained in this notice, the name of the X Consortium shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from the X Consortium.
 
-Copyright 1989, 1990, 1991 by Sun Microsystems, Inc. 
+Copyright 1989, 1990, 1991 by Sun Microsystems, Inc.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Sun Microsystems,
-not be used in advertising or publicity pertaining to distribution of 
-the software without specific, written prior permission.  
+not be used in advertising or publicity pertaining to distribution of
+the software without specific, written prior permission.
 
-SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, 
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT 
-SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
+SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
 DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
 ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
@@ -321,7 +322,7 @@ void phg_sin_dev_init_devices(
     int i;
     Sin_input_device *dev;
 
-#ifdef DEBUG
+#ifdef DEBUGINP
    printf("sin_dev: phg_sin_dev_init_devices\n");
    printf("\tinput_window = %x\n", (unsigned) ws->input_window);
 #endif
@@ -417,6 +418,7 @@ void phg_sin_dev_init_devices(
     idt_val = ws->idt->valuators;
     dev = ws->devices[SIN_CLASS_INDEX(SIN_VALUATOR)];
     for ( i = 1; i <= ws->num_devs.val; i++, dev++, idt_val++ ) {
+        dev->item_handle.choice.shell = NULL;
 	dev->inp_class = SIN_VALUATOR;
 	dev->num = i;
 	dev->data.valuator.type = idt_val->type;
@@ -444,4 +446,3 @@ void phg_sin_dev_init_devices(
 	phg_sin_dev_boot_string( dev );
     }
 }
-

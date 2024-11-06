@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +25,21 @@ Except as contained in this notice, the name of the X Consortium shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from the X Consortium.
 
-Copyright 1989, 1990, 1991 by Sun Microsystems, Inc. 
+Copyright 1989, 1990, 1991 by Sun Microsystems, Inc.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Sun Microsystems,
-not be used in advertising or publicity pertaining to distribution of 
-the software without specific, written prior permission.  
+not be used in advertising or publicity pertaining to distribution of
+the software without specific, written prior permission.
 
-SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, 
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT 
-SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
+SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
 DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
 ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
@@ -72,7 +73,7 @@ void phg_sin_destroy(
     )
 {
     int	i;
-
+    printf("WARNING: phg_sin_destroy called .... may need fixing!\n");
     phg_sin_dev_stop( iws );
     phg_sin_ws_destroy_event_buf( iws );
     phg_sin_dev_destroy_devices( iws );
@@ -149,6 +150,9 @@ Sin_handle phg_sin_create(
     }
 
     if (iws->num_devs.choice > 0) {
+#ifdef DEBUGINP
+      printf("Creating choice\n");
+#endif
         iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)] = (Sin_input_device*)
             calloc((unsigned) iws->num_devs.choice, sizeof(Sin_input_device));
         if (iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)] == NULL) {
@@ -240,12 +244,13 @@ void phg_sin_init_device(
     )
 {
     Sin_input_device *dev = SIN_DEV(iws, inp_class, dev_num);
+    size_t buf_size;
 
 #ifdef DEBUG
     printf("sin: phg_sin_init_device\n");
     printf("\tDevice class: %d\n", inp_class);
+    printf("Device number %d at %ld\n", dev_num, (long)dev);
 #endif
-
     if ( !dev->flags.exists )
 	return;
 
@@ -296,6 +301,9 @@ void phg_sin_init_device(
 	    switch ( dev->pe_type ) {
 		case 1:
 		case 3:
+		case -3:
+		case 4:
+		case -4:
 		    dev->data.choice.count = new_data->data.choice.count;
 		    dev->data.choice.choices.strings =
 			new_data->data.choice.choices.strings;
@@ -306,20 +314,35 @@ void phg_sin_init_device(
 	    /* Allocate buffer. */
 	    /* TODO: detect allocation failure and free this at ws close. */
 	    char	*str;
-
+#ifdef DEBUGINP
+	    printf("Sin.c: Allocating String buffer of size old: %d new:%d\n",
+		   dev->data.string.buf_size,
+		   new_data->data.string.buf_size);
+#endif
 	    if ( dev->data.string.buf_size < new_data->data.string.buf_size) {
 		if ( dev->data.string.string )
 		    free( dev->data.string.string);
 		str = malloc(new_data->data.string.buf_size);
-	    } else
-		str = dev->data.string.string;
+		buf_size = new_data->data.string.buf_size;
+	    } else {
+	        str = dev->data.string.string;
+		buf_size = dev->data.string.buf_size;
+	    }
 	    dev->data = new_data->data;
 	    dev->data.string.string = str;
+	    dev->data.string.buf_size = buf_size;
 	    } break;
 	case SIN_PICK:
 	    SIN_COPY_PICK_INIT_DATA(new_data, dev)
 	    break;
     }
+#ifdef DEBUGINP
+    printf("Area for this device is: ll(%d %d) up(%d %d)\n",
+	   dev->echo_area.ll.x,
+	   dev->echo_area.ll.y,
+	   dev->echo_area.ur.x,
+	   dev->echo_area.ur.y);
+#endif
 }
 
 /*******************************************************************************
@@ -339,25 +362,38 @@ void phg_sin_set_mode(
 
     if ( !dev->flags.exists )
 	return;
-
+#ifdef DEBUGINP
+    printf("phg_sin_set_mode called\n");
+#endif
     /* Turn old device off if it's on. */
     if ( dev->flags.on ) {
-	phg_sin_ws_disable_device( dev);
-        /* Allow the cancellation of REQUEST_PENDING. */
-        if ( dev->mode == SIN_REQUEST_PENDING ) {
-            dev->mode = SIN_REQUEST;
-            SIN_DISABLE_BREAK(dev->ws);
-        }
+#ifdef DEBUGINP
+      printf("phg_sin_set_mode called: disabling device\n");
+#endif
+      phg_sin_ws_disable_device( dev);
+
+      /* Allow the cancellation of REQUEST_PENDING. */
+
+      if ( dev->mode == SIN_REQUEST_PENDING ) {
+	dev->mode = SIN_REQUEST;
+	SIN_DISABLE_BREAK(dev->ws);
+      }
     }
 
     dev->mode = md->mode;
     dev->echo_sw = md->echo;
     SIN_SET_ENABLE_DATA(dev, ed)
 
+#ifdef DEBUGINP
+      printf("Device mode is %d\n", dev->mode);
+#endif
     /* turn device on if usable */
-    if ( dev->mode == SIN_EVENT || dev->mode == SIN_SAMPLE ) {
-	phg_sin_ws_reset_device( dev );
-	phg_sin_ws_enable_device( dev );
+    if ( dev->mode == SIN_EVENT || dev->mode == SIN_SAMPLE) {
+#ifdef DEBUGINP
+      printf("Resetting and enabling device \n");
+#endif
+      phg_sin_ws_reset_device( dev );
+      phg_sin_ws_enable_device( dev );
     }
 }
 
@@ -406,14 +442,35 @@ void phg_sin_request(
 {
     Sin_input_device *dev = SIN_DEV(iws, inp_class, dev_num);
 
-    if ( !dev->flags.exists )
-	return;
-
+#ifdef DEBUGINP
+    printf("Entering phg_sin_request\n");
+#endif
+    if ( !dev->flags.exists ){
+#ifdef DEBUGINP
+      printf("No flags => returning\n");
+#endif
+      return;
+    }
+#ifdef DEBUGINP
+    printf("using SIN_SET_ENABLE_DATA\n");
+#endif
     SIN_SET_ENABLE_DATA(dev, ed)
     dev->mode = SIN_REQUEST_PENDING;
+#ifdef DEBUGINP
+    printf("using SIN_ENABLE_BREAK\n");
+#endif
     SIN_ENABLE_BREAK(dev);
+#ifdef DEBUGINP
+      printf("Resetting device\n");
+#endif
     phg_sin_ws_reset_device( dev );
+#ifdef DEBUGINP
+      printf("Enabling device\n");
+#endif
     phg_sin_ws_enable_device( dev );
+#ifdef DEBUGINP
+      printf("Done with phg_sin_request\n");
+#endif
 }
 
 /*******************************************************************************
@@ -490,4 +547,3 @@ void phg_sin_resize_dev(
 	    (dev->dev_ops.resize)( dev, old_rect, new_rect );
     }
 }
-

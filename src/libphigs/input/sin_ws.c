@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +25,21 @@ Except as contained in this notice, the name of the X Consortium shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from the X Consortium.
 
-Copyright 1989, 1990, 1991 by Sun Microsystems, Inc. 
+Copyright 1989, 1990, 1991 by Sun Microsystems, Inc.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Sun Microsystems,
-not be used in advertising or publicity pertaining to distribution of 
-the software without specific, written prior permission.  
+not be used in advertising or publicity pertaining to distribution of
+the software without specific, written prior permission.
 
-SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, 
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT 
-SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
+SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
 DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
 ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
@@ -380,7 +381,7 @@ void phg_sin_ws_enable_device(
 {
     device->flags.on = 1;
     if ( device->dev_ops.enable) {
-	(device->dev_ops.enable)( device );
+         (device->dev_ops.enable)( device );
     }
 }
 
@@ -423,7 +424,7 @@ void phg_sin_ws_reset_device(
         case SIN_STROKE:
             break;
         case SIN_CHOICE:
-            device->data.choice.cur_choice = device->data.choice.init_choice;
+	  // device->data.choice.cur_choice = device->data.choice.init_choice;
             break;
         case SIN_STRING:
 	    if (device->data.string.init_string)
@@ -457,11 +458,11 @@ void phg_sin_ws_send_request(
     Sin_input_event scratch_event;
 
     if ( dev->mode == SIN_REQUEST_PENDING) {
-	dev->mode = SIN_REQUEST;
-	SIN_DISABLE_BREAK( ws);
-	phg_sin_ws_disable_device( dev);
-	phg_sin_ws_load_event( dev, &scratch_event);
-	(*ws->ops.send_request)( ws->wsh, &scratch_event, 0);
+      dev->mode = SIN_REQUEST;
+      SIN_DISABLE_BREAK( ws);
+      phg_sin_ws_disable_device( dev);
+      phg_sin_ws_load_event( dev, &scratch_event);
+      (*ws->ops.send_request)( ws->wsh, &scratch_event, 0);
     }
 }
 
@@ -493,7 +494,7 @@ int phg_sin_ws_break(
 	scratch_event.wsid = dev->wsid;
 	scratch_event.dev_num = dev->num;
 	(*ws->ops.send_request)( ws->wsh, &scratch_event, 1);
-    } 
+    }
 
     return status;
 }
@@ -612,7 +613,6 @@ void phg_sin_ws_flush_event_buffer(
     SIN_WS_RESET_EVENT_BUFFER(ev_buf);
 }
 
-#ifdef TODO
 XtActionProc phg_sin_xt_request_satisfied(
     Widget  w
     )
@@ -620,8 +620,8 @@ XtActionProc phg_sin_xt_request_satisfied(
     Sin_input_device    *device;
 
     if ( XFindContext( XtDisplay(w), XtWindow(w),
-	    phg_sin_device_context_id, (caddr_t*)&device ) == 0 )
-	phg_sin_ws_send_request( device );
+		       phg_sin_device_context_id, (caddr_t*)&device ) == 0 ){
+      phg_sin_ws_send_request( device );
+    }
+    return NULL;
 }
-#endif
-

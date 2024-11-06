@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +25,21 @@ Except as contained in this notice, the name of the X Consortium shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from the X Consortium.
 
-Copyright 1989, 1990, 1991 by Sun Microsystems, Inc. 
+Copyright 1989, 1990, 1991 by Sun Microsystems, Inc.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Sun Microsystems,
-not be used in advertising or publicity pertaining to distribution of 
-the software without specific, written prior permission.  
+not be used in advertising or publicity pertaining to distribution of
+the software without specific, written prior permission.
 
-SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, 
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT 
-SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
+SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
 DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
 ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
@@ -137,7 +138,7 @@ static void echo_stroke(
     switch ( dev->sin_dev->pe_type ) {
 	case 1:
 	default:
-	    if ( echo_op == SIN_ECHO_ADD_POINT || 
+	    if ( echo_op == SIN_ECHO_ADD_POINT ||
 		 echo_op == SIN_ECHO_DELETE_POINT) {
 		pt = &dev->measure->data.pts[dev->measure->pos];
 		if ( SIN_POINT_IN_ECHO_AREA(pt, dev->sin_dev) ) {
@@ -366,7 +367,7 @@ static void pick_event_func(
 	    break;
 	case SIN_SAMPLE:
     	    (void)(*sin_dev->data.pick.resolve)( sin_dev, echo, NULL );
-	    break; 
+	    break;
         default:
            break;
     	}
@@ -402,7 +403,7 @@ static void process_stroke_event(
 	/* Flush buffer and start again . */
 	deactivate_stroke( dev, cvs_tbl);
 	activate_stroke( dev, cvs_tbl);
-    
+
 
     } else if ( EVENT_CTRL_IS_DOWN(event) ) {
 	/* Remove point from buffer (if after the edit position. */
@@ -901,7 +902,7 @@ int phg_sin_cvs_create_device(
 		break;
 	}
     }
-    
+
     return status;
 }
 
@@ -1115,4 +1116,3 @@ no_mem:
     free(cvs_tbl);
     return NULL;
 }
-

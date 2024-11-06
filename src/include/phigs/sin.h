@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -138,6 +139,7 @@ typedef struct {
    Pfloat       init_value;
    Pfloat       low;
    Pfloat       high;
+   Pint         num_boxed;
    char         *label;
    char         *format;
    char         *low_label;
@@ -204,7 +206,10 @@ typedef struct {
 } Sin_set_mode_data;
 
 typedef struct {
+   Pint num_boxed;
    Widget shell;
+   Widget frame;
+   Widget box;
    Widget pane;
    Widget scrollbar;
    Widget value;
@@ -215,12 +220,14 @@ typedef struct {
 
 typedef struct {
    Widget shell;
+   Widget frame;
    Widget viewport;
    Widget list;
 } Sin_choice_handle;
 
 typedef struct {
    Widget shell;
+   Widget frame;
    Widget pane;
    Widget textw;
 } Sin_string_handle;
@@ -368,6 +375,25 @@ typedef struct {
                       );
 } Sin_desc;
 
+/* The context id for Xt input devices. */
+extern XContext         phg_sin_device_context_id;
+
+  /*
+extern Sin_handle       phg_sin_create();
+extern void             phg_sin_close();
+extern void             phg_sin_dev_stop();
+extern void             phg_sin_init_device();
+extern void             phg_sin_set_mode();
+extern void             phg_sin_repaint();
+extern void             phg_sin_resize_dev();
+extern void             phg_sin_request();
+extern void             phg_sin_sample();
+  */
+
+/* Xt action procs for input. */
+  extern XtActionProc     phg_sin_xt_request_satisfied(Widget);
+  extern XtActionProc     phg_sin_xt_string_event(Widget, XEvent*, String *, Cardinal*);
+
 #define SIN_CLASS_INDEX(_class) \
     ((int)(_class))
 
@@ -446,7 +472,7 @@ void phg_sin_init_device(
  * RETURNS:     N/A
  */
 
-void phg_sin_set_mode( 
+void phg_sin_set_mode(
     Sin_input_ws *iws,
     Sin_set_mode_data *md,
     Sin_enable_data *ed
@@ -482,10 +508,10 @@ void phg_sin_request(
 
 /*******************************************************************************
  * phg_sin_repaint
- *  
+ *
  * DESCR:       Repaint device for input workstation
  * RETURNS:     N/A
- */ 
+ */
 
 void phg_sin_repaint(
     Sin_input_ws *iws,
@@ -495,10 +521,10 @@ void phg_sin_repaint(
 
 /*******************************************************************************
  * phg_sin_resize_dev
- *  
+ *
  * DESCR:       Resize device for input workstation
  * RETURNS:     N/A
- */ 
+ */
 
 void phg_sin_resize_dev(
     Sin_input_ws *ws,
@@ -514,4 +540,3 @@ void phg_sin_resize_dev(
 #endif /* __cplusplus */
 
 #endif /* _sin_h */
-

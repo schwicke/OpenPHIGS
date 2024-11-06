@@ -13,11 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * annotation text functions
 * support for high lighting
 * configuration file support
+* support for Motif input devices
 
 ### Changed
 * Fixed typos in various headers
 * Added additional required fields in the headers
 * Default to GLEW over Epoxy
+* input devices: largely redone
 
 ### Removed
 
