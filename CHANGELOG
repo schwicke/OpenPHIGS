@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Add C bindings for input devices
 * Add Fortran bindings
 * Add some basic Fortran tests
+* Add README.md
 
 ### Changed
 * Fixed typos in various headers
