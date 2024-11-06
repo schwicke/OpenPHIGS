@@ -10,18 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 * 2d Fascade functions wsgl_fasdclear.c wsgl_fasdfill.c sgl_fasedge.c
 * Shaders wsgl_shaders.c
-* annotation text functions
-* support for high lighting
-* configuration file support
-* support for Motif input devices
-* fix tab character warnings in Fortran example
-* add more elements in css to prepare for additional features
+* Annotation text functions
+* Support for high lighting
+* Configuration file support
+* Support for Motif input devices
+* Fix tab character warnings in Fortran example
+* Add more elements in css to prepare for additional features
 
 ### Changed
 * Fixed typos in various headers
 * Added additional required fields in the headers
 * Default to GLEW over Epoxy
-* input devices: largely redone
+* Input devices: largely redone
+* Correct norm in fasd3.c
 
 ### Removed
 

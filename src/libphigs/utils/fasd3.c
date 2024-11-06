@@ -3,6 +3,7 @@
 *
 *   This file is part of Open PHIGS
 *   Copyright (C) 2014 Surplus Users Ham Society
+*             (C) 2022-2024 CERN
 *
 *   Open PHIGS is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +17,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
@@ -204,6 +207,7 @@ void fasd3_normal3(
 {
    Pvec3 a, b, c;
    Pvec3 v1, v2;
+   Pfloat angle;
 
    switch(fasd3->vflag) {
       case PVERT_COORD:
@@ -258,4 +262,7 @@ void fasd3_normal3(
    phg_vector_sub(&v1, &b, &a);
    phg_vector_sub(&v2, &c, &a);
    phg_vector_cross_prod(norm, &v1, &v2);
+   /* ensure the direction to point outward */
+   angle = phg_vector_dot_prod(norm, &a);
+   if (angle > 0) phg_vector_cross_prod(norm, &v2, &v1);
 }
