@@ -8,31 +8,33 @@ SET(P_ARCHIVE_SRCS
 SET(P_C_BINDING_SRCS
   c_binding/cb.c
   c_binding/cb_ar.c
-  c_binding/cb.c
-  c_binding/cb_conf.c
   c_binding/cb_el.c
   c_binding/cb_lite.c
+  c_binding/cb_phg.c
+  c_binding/cb_text.c
+  c_binding/cb_ws.c
+  c_binding/cb_conf.c
   c_binding/cb_extel.c
   c_binding/cb_inp.c
   c_binding/cb_pgse.c
-  c_binding/cb_phg.c
   c_binding/cb_str.c
-  c_binding/cb_text.c
   c_binding/cb_tr.c
-  c_binding/cb_ws.c
   c_binding/cb_wst.c
 )
 
 SET(P_F_BINDING_SRCS
+  f_binding/fb_ar.c
   f_binding/fb_conf.c
   f_binding/fb_el.c
+  f_binding/fb_extel.c
+  f_binding/fb_inp.c
+  f_binding/fb_pgse.c
   f_binding/fb_phg.c
   f_binding/fb_str.c
+  f_binding/fb_text.c
+  f_binding/fb_tr.c
   f_binding/fb_ws.c
-)
-
-SET(P_CONF_SRCS
-  conf/ophconf.c
+  f_binding/fb_wst.c
 )
 
 SET(P_CSS_SRCS
@@ -119,6 +121,10 @@ SET(P_FONTS_SRCS
 SET(P_ERRORS_SRCS
   errors/err.c
   errors/err_num.c
+)
+
+SET(P_CONF_SRCS
+  conf/ophconf.c
 )
 
 SET(P_UTILS_SRCS

@@ -3,6 +3,7 @@
 *
 *   This file is part of Open PHIGS
 *   Copyright (C) 2014 Surplus Users Ham Society
+*             (C) 2022-2023 CERN
 *
 *   Open PHIGS is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Lesser General Public License as published by
@@ -38,6 +39,9 @@ extern "C" {
 
 #define FTN_REAL_ARRAY(NAME)             float NAME[]
 #define FTN_REAL_ARRAY_GET(NAME, INDEX)  NAME[INDEX]
+
+#define FTN_INTEGER_ARRAY(NAME)             int NAME[]
+#define FTN_INTEGER_ARRAY_GET(NAME, INDEX)  NAME[INDEX]
 
 #define FTN_CHARACTER(NAME)              char *NAME_str, \
                                          int NAME_len
