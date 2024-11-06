@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Removed
+
+## [0.0.2-1] - 2024-11-06
+
+### Added
 * 2d Fascade functions wsgl_fasdclear.c wsgl_fasdfill.c sgl_fasedge.c
 * Shaders wsgl_shaders.c
 * Annotation text functions

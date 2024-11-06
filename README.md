@@ -16,8 +16,9 @@ The code maturity level is pre-alpha, since it does not implement the full stand
 Run
 ```
 make
+make install
 ```
-which will create and install the OpenPHIGS library, headers and tests in a new subdirectory called distrib.
+which will create and install the OpenPHIGS library, headers and tests in a new subdirectory called distrib. The install step will create a folder called distrib, including headers, binaries and libraries.
 
 ### Switching between GLEW and Epoxy
 Openphigs uses by default GLEW. Switching between GLEW and Epoxy is supported by configuring with -DUSE_GLEW=0. The Makefile checks for the environment variable NO_GLEW. If defined, it will use Epoxy, else GLEW. To switch to Epoxy, do
@@ -132,7 +133,7 @@ Extensions:
   * as 4 but
   * echo area is given as a fraction of the root window
 
-## Contributors
-* Alexander von Knorring
-* Ulrich Schwickerath
-* Matthias Schroeder
+## Versions
+* 0.0.1-1: Revised code from upstream
+* 0.0.2-1: Implement additional extend C and Fortran bindings for CERN specific purposes
+
