@@ -2,6 +2,7 @@
 
 Copyright (c) 1989,1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,18 +29,18 @@ Copyright (c) 1989,1990, 1991 by Sun Microsystems, Inc.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the names of Sun Microsystems,
-and the X Consortium, not be used in advertising or publicity 
-pertaining to distribution of the software without specific, written 
-prior permission.  
+and the X Consortium, not be used in advertising or publicity
+pertaining to distribution of the software without specific, written
+prior permission.
 
-SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, 
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT 
-SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
+SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
 DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
 ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
@@ -149,6 +150,9 @@ Struct_handle phg_css_post(Css_handle cssh,
 	if ( !phg_css_add_to_ws_appear(cssh, structp, addlist, 1) )
 	    return(NULL);				/* out of memory */
     } else
+#ifdef DEBUG
+      printf("phg_css_post posted structure %d\n", structid);
+#endif
 	*was_posted = TRUE;
 
     return(structp);
@@ -231,13 +235,13 @@ int phg_css_add_to_ws_appear(Css_handle cssh,
 	return(TRUE);					/* nothing to do */
     /* combine the 2 ws_appear_on lists for execp and its descendants */
     while (wsnext->wsh) {
-	ADD_TO_WS_LIST(cssh, execp->ws_appear_on, wsnext->wsh, 
+	ADD_TO_WS_LIST(cssh, execp->ws_appear_on, wsnext->wsh,
 	    wsnext->count*nexec, postflag)
 	wsnext++;
     }
     el = execp->i_refer_to->elements->next;
     while (el) {
-	if ( !phg_css_add_to_ws_appear(cssh, (Struct_handle)el->key, 
+	if ( !phg_css_add_to_ws_appear(cssh, (Struct_handle)el->key,
 		addlist, ((Css_set_ptr)el->data)->num_elements*nexec) )
 	    return(FALSE);				/* out of memory */
 	el = el->next;
@@ -269,7 +273,7 @@ void phg_css_rm_from_ws_appear(Css_handle cssh,
     }
     el = execp->i_refer_to->elements->next;
     while (el) {
-	phg_css_rm_from_ws_appear(cssh, (Struct_handle)el->key, 
+	phg_css_rm_from_ws_appear(cssh, (Struct_handle)el->key,
 	    rmlist, ((Css_set_ptr)el->data)->num_elements*nexec);
 	el = el->next;
     }
@@ -295,14 +299,14 @@ int phg_css_join_ws_list(Css_handle cssh,
     Css_ws_list 	wsnext;
     char 		postflag = FALSE;
 
-    if (s1 && (wsnext = 
+    if (s1 && (wsnext =
 	    (op==CSS_WS_APPEAR ? s1->ws_appear_on : s1->ws_posted_to)) ) {
 	while (wsnext->wsh) {
 	    ADD_TO_WS_LIST(cssh, *newlist, wsnext->wsh, wsnext->count, postflag)
 	    wsnext++;
 	}
     }
-    if (s2 && (wsnext = 
+    if (s2 && (wsnext =
 	    (op==CSS_WS_APPEAR ? s2->ws_appear_on : s2->ws_posted_to)) ) {
 	while (wsnext->wsh) {
 	    ADD_TO_WS_LIST(cssh, *newlist, wsnext->wsh, wsnext->count, postflag)
@@ -328,7 +332,7 @@ int phg_css_copy_ws_lists(Css_handle cssh,
                           Css_ws_list_op op)
 {
     int i;
-   
+
     if ( (op==CSS_WS_POST || op==CSS_WS_BOTH) && from->ws_posted_to) {
 	if (!to->ws_posted_to)
 	    if ( !(to->ws_posted_to = (Css_ws_list)
@@ -372,7 +376,7 @@ int phg_css_copy_ws_lists(Css_handle cssh,
 int phg_css_ws_posted(Struct_handle structp, Ws_handle wsh)
 {
     Css_ws_list wsptr;
-   
+
     if ( !(wsptr = structp->ws_posted_to) )
 	return(FALSE);
     while (wsptr->wsh && wsptr->wsh!=wsh)
@@ -389,11 +393,10 @@ int phg_css_ws_posted(Struct_handle structp, Ws_handle wsh)
 int phg_css_ws_appearances(Struct_handle structp, Ws_handle wsh)
 {
     Css_ws_list wsptr;
-   
+
     if ( !(wsptr = structp->ws_appear_on) )
 	return(0);
     while (wsptr->wsh && wsptr->wsh!=wsh)
 	wsptr++;
     return(wsptr->wsh ? wsptr->count : 0);
 }
-

@@ -2,6 +2,7 @@
 
 Copyright (c) 1989,1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,18 +29,18 @@ Copyright (c) 1989,1990, 1991 by Sun Microsystems, Inc.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the names of Sun Microsystems,
-and the X Consortium, not be used in advertising or publicity 
-pertaining to distribution of the software without specific, written 
-prior permission.  
+and the X Consortium, not be used in advertising or publicity
+pertaining to distribution of the software without specific, written
+prior permission.
 
-SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, 
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT 
-SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
+SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
 DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
 ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
@@ -70,7 +71,7 @@ Css_handle phg_css_init(Err_handle erh, Css_ssh_type ssh_type)
 {
     Css_handle	cssh;
     Css_func	*fptr;
-   
+
     if ( !(cssh = (Css_handle) calloc((unsigned)1,sizeof(Css_struct))) )
         return(NULL);					/* out of memory */
     fptr = cssh->el_funcs;
@@ -140,6 +141,19 @@ Css_handle phg_css_init(Err_handle erh, Css_ssh_type ssh_type)
     fptr[(int)PELEM_BACK_REFL_PROPS] = hdl_generic_elmt;
     fptr[(int)PELEM_FACE_DISTING_MODE] = hdl_generic_elmt;
     fptr[(int)PELEM_FACE_CULL_MODE] = hdl_generic_elmt;
+    fptr[(int)PELEM_ANNO_TEXT_REL3] = hdl_generic_elmt;
+    fptr[(int)PELEM_ANNO_TEXT_REL] = hdl_generic_elmt;
+    fptr[(int)PELEM_ANNO_CHAR_HT] = hdl_generic_elmt;
+    fptr[(int)PELEM_ANNO_CHAR_UP_VEC] = hdl_generic_elmt;
+    fptr[(int)PELEM_ANNO_PATH] = hdl_generic_elmt;
+    fptr[(int)PELEM_ANNO_ALIGN] = hdl_generic_elmt;
+    fptr[(int)PELEM_ANNO_STYLE] = hdl_generic_elmt;
+    fptr[(int)PELEM_MODEL_CLIP_VOL3] = hdl_generic_elmt;
+    fptr[(int)PELEM_MODEL_CLIP_IND] = hdl_generic_elmt;
+    fptr[(int)PELEM_FILL_AREA_SET_DATA] = hdl_generic_elmt;
+    fptr[(int)PELEM_ALPHA_CHANNEL] = hdl_generic_elmt;
+    fptr[(int)PELEM_TEXT3] = hdl_generic_elmt;
+    fptr[(int)PELEM_GSE] = hdl_generic_elmt;
 
     if ( !(cssh->stab = phg_css_stab_init(CSS_STAB_SIZE)) ) {
 	free((char *)cssh);
@@ -158,7 +172,7 @@ Css_handle phg_css_init(Err_handle erh, Css_ssh_type ssh_type)
     }
     cssh->mem = NULL;		/* don't allocate space until it's needed */
     cssh->ssh_type = ssh_type;
-    return(cssh);   
+    return(cssh);
 }
 
 /*******************
@@ -176,4 +190,3 @@ void phg_css_destroy(Css_handle cssh)
 	free(cssh->mem);
     free((char *)cssh);
 }
-

@@ -16,6 +16,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdlib.h>
@@ -227,6 +229,26 @@ static void phg_swap_text(
 }
 
 /******************************************************************************
+ * phg_swap_text3
+ *
+ * DESCR:       Swap text element
+ * RETURNS:     N/A
+ */
+
+static void phg_swap_text3(
+   Phg_swap *swp,
+   void *data
+   )
+{
+   Ppoint3 *pdata;
+
+   pdata = (Ppoint3 *) data;
+   (*swp->conv_float)((float *) &pdata->x);
+   (*swp->conv_float)((float *) &pdata->y);
+   (*swp->conv_float)((float *) &pdata->z);
+}
+
+/******************************************************************************
  * phg_swap_matrix3
  *
  * DESCR:       Swap matrix 3D element
@@ -311,6 +333,54 @@ static void phg_swap_gcolr(
    }
 }
 
+/******************************************************************************
+ * phg_swap_anno_text_rel
+ *
+ * DESCR:       Swap text element
+ * RETURNS:     N/A
+ */
+
+static void phg_swap_anno_text_rel(
+   Phg_swap *swp,
+   void *data
+   )
+{
+   Ppoint *pdata;
+   Pvec *odata;
+   pdata = (Ppoint *) data;
+   (*swp->conv_float)((float *) &pdata->x);
+   (*swp->conv_float)((float *) &pdata->y);
+   odata = (Pvec *) &pdata[1];
+   (*swp->conv_float)((float *) &odata->delta_x);
+   (*swp->conv_float)((float *) &odata->delta_y);
+
+}
+
+/******************************************************************************
+ * phg_swap_anno_text_rel
+ *
+ * DESCR:       Swap text element
+ * RETURNS:     N/A
+ */
+
+static void phg_swap_anno_text_rel3(
+   Phg_swap *swp,
+   void *data
+   )
+{
+   Ppoint3 *pdata;
+   Pvec3 * odata;
+   pdata = (Ppoint3 *) data;
+   (*swp->conv_float)((float *) &pdata->x);
+   (*swp->conv_float)((float *) &pdata->y);
+   (*swp->conv_float)((float *) &pdata->z);
+   odata = (Pvec3 *) &pdata[1];
+   (*swp->conv_float)((float *) &odata->delta_x);
+   (*swp->conv_float)((float *) &odata->delta_y);
+   (*swp->conv_float)((float *) &odata->delta_z);
+}
+
+
 Phg_conv phg_swap_tbl[PELEM_NUM_EL_TYPES] = {
    NULL,                           /* PELEM_ALL */
    phg_swap_nil,                   /* PELEM_NIL */
@@ -378,6 +448,18 @@ Phg_conv phg_swap_tbl[PELEM_NUM_EL_TYPES] = {
    phg_swap_nil,                   /* PELEM_REFL_PROPS */
    phg_swap_nil,                   /* PELEM_BACK_REFL_PROPS */
    phg_swap_int,                   /* PELEM_FACE_DISTING_MODE */
-   phg_swap_int                    /* PELEM_FACE_CULL_MODE */
+   phg_swap_int,                   /* PELEM_FACE_CULL_MODE */
+   phg_swap_anno_text_rel3,        /* PELEM_ANNO_TEXT_REL3 */
+   phg_swap_anno_text_rel,         /* PELEM_ANNO_TEXT_REL */
+   phg_swap_float,                 /* PELEM_ANNO_CHAR_HT */
+   phg_swap_float2,                /* PELEM_ANNO_CHAR_UP_VEC */
+   phg_swap_int,                   /* PELEM_ANNO_PATH */
+   phg_swap_int2,                  /* PELEM_ANNO_ALIGN */
+   phg_swap_int,                   /* PELEM_ANNO_STYLE */
+   phg_swap_nil,                   /* PELEM_MODEL_CLIP_VOL3 */
+   phg_swap_int,                   /* PELEM_MODEL_CLIP_IND */
+   phg_swap_nil,                   /* PELEM_FILL_AREA_SET_DATA */
+   phg_swap_nil,                   /* PELEM_GSE */
+   phg_swap_nil,                   /* PELEM_ALPHA_CHANNEL */
+   phg_swap_text3                  /* PELEM_TEXT3 */
 };
-

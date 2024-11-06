@@ -2,6 +2,7 @@
 
 Copyright (c) 1989,1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,18 +29,18 @@ Copyright (c) 1989,1990, 1991 by Sun Microsystems, Inc.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the names of Sun Microsystems,
-and the X Consortium, not be used in advertising or publicity 
-pertaining to distribution of the software without specific, written 
-prior permission.  
+and the X Consortium, not be used in advertising or publicity
+pertaining to distribution of the software without specific, written
+prior permission.
 
-SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, 
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT 
-SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
+SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
 DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
 ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
@@ -53,6 +54,7 @@ SOFTWARE.
 #include "phg.h"
 #include "css.h"
 #include "private/cssP.h"
+#include "private/phgP.h"
 
 static void css_print_refer_to_me(Css_set_ptr s);
 static void css_print_i_refer_to(Css_set_ptr s);
@@ -111,6 +113,7 @@ void phg_css_print_struct(Struct_handle structp, int arflag)
 
 void phg_css_print_eldata(El_handle elptr, int arflag)
 {
+  Struct_handle structp;
     if (!elptr) {
 	fprintf(stderr, "*** elptr is NULL ***\n");
 	return;
@@ -119,7 +122,21 @@ void phg_css_print_eldata(El_handle elptr, int arflag)
 
     switch(elptr->eltype) {
       /* TODO: Print the element data. */
-
+      case PELEM_HLHSR_ID:
+      case PELEM_INT_IND:
+      case PELEM_EDGE_IND:
+      case PELEM_LINETYPE:
+      case PELEM_VIEW_IND:
+      case PELEM_LABEL:
+      case PELEM_INT_STYLE:
+      case PELEM_EDGE_COLR_IND:
+      case PELEM_INT_COLR_IND:
+      case PELEM_INT_SHAD_METH:
+      case PELEM_INT_REFL_EQN:
+      case PELEM_MODEL_CLIP_IND:
+        fprintf(stderr, "%d", PHG_INT(elptr));
+      case PELEM_ALPHA_CHANNEL:
+        fprintf(stderr, "%f", PHG_FLOAT(elptr));
       case PELEM_NIL:
       default:
 	/* no data */
@@ -147,9 +164,13 @@ void css_print_eltype(Pelem_type eltype)
         case PELEM_POLYMARKER3: name = "PELEM_POLYMARKER3"; break;
         case PELEM_POLYMARKER: name = "PELEM_POLYMARKER"; break;
         case PELEM_TEXT: name = "PELEM_TEXT"; break;
+        case PELEM_TEXT3: name = "PELEM_TEXT3"; break;
         case PELEM_FILL_AREA3: name = "PELEM_FILL_AREA3"; break;
         case PELEM_FILL_AREA_SET: name = "PELEM_FILL_AREA_SET"; break;
         case PELEM_FILL_AREA_SET3: name = "PELEM_FILL_AREA_SET3"; break;
+        case PELEM_FILL_AREA_SET_DATA:
+            name = "PELEM_FILL_AREA_SET_DATA";
+            break;
         case PELEM_FILL_AREA_SET3_DATA:
             name = "PELEM_FILL_AREA_SET3_DATA";
             break;
@@ -211,14 +232,21 @@ void css_print_eltype(Pelem_type eltype)
         case PELEM_BACK_REFL_PROPS: name = "PELEM_BACK_REFL_PROP"; break;
         case PELEM_FACE_DISTING_MODE: name = "PELEM_FACE_DISTING_MODE"; break;
         case PELEM_FACE_CULL_MODE: name = "PELEM_FACE_CULL_MODE"; break;
+        case PELEM_ANNO_TEXT_REL3: name = "PELEM_ANNO_TEXT_REL3"; break;
+        case PELEM_ANNO_TEXT_REL: name = "PELEM_ANNO_TEXT_REL"; break;
+        case PELEM_ANNO_ALIGN: name = "PELEM_ANNO_ALIGN"; break;
+        case PELEM_ANNO_CHAR_HT: name = "PELEM_ANNO_CHAR_HT"; break;
+        case PELEM_MODEL_CLIP_VOL3: name = "PELEM_MODEL_CLIP_VOL3"; break;
+        case PELEM_MODEL_CLIP_IND: name = "PELEM_MODEL_CLIP_IND"; break;
+        case PELEM_GSE: name = "PELEM_GSE"; break;
 
       default:
-	fprintf(stderr, "UNKNOWN TYPE: %d", eltype);
+	fprintf(stderr, "UNKNOWN TYPE: %d\n", eltype);
 	break;
     }
 
     if ( name )
-	fprintf( stderr, "%s", name );
+	fprintf( stderr, "%s\n", name );
 }
 
 /*******************
@@ -236,7 +264,7 @@ static void css_print_refer_to_me(Css_set_ptr s)
 	fprintf(stderr, "none");
     else {
 	while (el) {
-	    fprintf(stderr, "%d(x%d) ", 
+	    fprintf(stderr, "%d(x%d) ",
 		    ((Struct_handle)el->key)->struct_id, (unsigned)((long)el->data));
 	    el = el->next;
 	}
@@ -277,4 +305,3 @@ static void css_print_i_refer_to(Css_set_ptr s)
     }
     fprintf(stderr, "\n");
 }
-

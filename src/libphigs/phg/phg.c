@@ -16,10 +16,13 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "phg.h"
 #include "css.h"
@@ -259,9 +262,15 @@ void phg_del_struct(
       ws_list = CSS_GET_WS_ON(structh);
       if (ws_list != NULL) {
          for (; ws_list->wsh != NULL; ws_list++) {
-            if ((*ws_list->wsh->delete_struct)(ws_list->wsh, structh,
-                                               WS_PRE_CSS_DELETE)) {
-               *wsp++ = ws_list->wsh;
+	   if (*ws_list->wsh->delete_struct == NULL) {
+	     printf("ERROR: Cannot delete this structure as wsh->>delete_struct is NULL\n");
+	   } else if (ws_list->wsh->id <= 0 || ws_list->wsh->id > 10){
+	     printf("ERROR: Refusing to delete structure as the WS Id looks like garbage: %d.\n", ws_list->wsh->id);
+	   } else {
+	     if ((*ws_list->wsh->delete_struct)(ws_list->wsh, structh,
+						WS_PRE_CSS_DELETE)) {
+	       *wsp++ = ws_list->wsh;
+	     }
             }
          }
       }
@@ -543,6 +552,9 @@ void phg_set_ws_filter(
       switch (wsinfo->wstype->desc_tbl.phigs_dt.ws_category) {
          case PCAT_OUTIN:
          case PCAT_OUT:
+         case PCAT_TGA:
+         case PCAT_PNG:
+         case PCAT_PNGA:
          case PCAT_MO:
             wsh = PHG_WSID(ws_id);
             (*wsh->set_filter)(wsh,
@@ -616,4 +628,3 @@ int phg_echo_limits_valid(
 
    return status;
 }
-

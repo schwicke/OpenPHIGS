@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * configuration file support
 * support for Motif input devices
 * fix tab character warnings in Fortran example
+* add more elements in css to prepare for additional features
 
 ### Changed
 * Fixed typos in various headers
