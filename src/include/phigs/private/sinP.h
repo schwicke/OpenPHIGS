@@ -3,6 +3,7 @@
 *
 *   This file is part of Open PHIGS
 *   Copyright (C) 2014 Surplus Users Ham Society
+*             (C) 2022-2023 CERN
 *
 *   Open PHIGS is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Lesser General Public License as published by
@@ -70,6 +71,7 @@ extern "C" {
     (_n)->data.valuator.format          = (_o)->data.valuator.format; \
     (_n)->data.valuator.low_label       = (_o)->data.valuator.low_label; \
     (_n)->data.valuator.high_label      = (_o)->data.valuator.high_label; \
+    (_n)->data.valuator.num_boxed       = (_o)->data.valuator.num_boxed; \
     }
 
 #define SET_DEFAULT_DEV_GENERIC_DATA( _ws, _dev ) \
@@ -223,7 +225,7 @@ void phg_sin_ws_load_event(
  *              SIN_EVENT_NOT_ENQUED is returned.
  *              All the events are treated as simultaneous.
  *
- *              Call the event notify proc (if any) anytime an attempt is made 
+ *              Call the event notify proc (if any) anytime an attempt is made
  *              to place events on the queue -- even if the queue has overfloed.
  * RETURNS:     N/A
  */
@@ -284,7 +286,7 @@ void phg_sin_ws_send_request(
  * RETURNS:     TRUE or FALSE
  */
 
-int phg_sin_ws_break( 
+int phg_sin_ws_break(
     Sin_input_ws *ws
     );
 
@@ -338,20 +340,20 @@ void phg_sin_ws_flush_event_buffer(
  *
  * DESCR:       Boot valuator device
  * RETURNS:     N/A
- */     
-            
-void phg_sin_dev_boot_valuator( 
+ */
+
+void phg_sin_dev_boot_valuator(
     Sin_input_device *dev
     );
 
 /*******************************************************************************
  * phg_sin_dev_boot_choice
  *
- * DESCR:       Boot choice device 
+ * DESCR:       Boot choice device
  * RETURNS:     N/A
- */         
+ */
 
-void phg_sin_dev_boot_choice( 
+void phg_sin_dev_boot_choice(
     Sin_input_device *dev
     );
 
@@ -362,7 +364,7 @@ void phg_sin_dev_boot_choice(
  * RETURNS:     N/A
  */
 
-void phg_sin_dev_boot_string( 
+void phg_sin_dev_boot_string(
     Sin_input_device *dev
     );
 
@@ -412,10 +414,10 @@ void phg_sin_dev_destroy_devices(
 
 /*******************************************************************************
  * phg_sin_dev_init_devices
- *  
+ *
  * DESCR:       Initialize devices on workspace
  * RETURNS:     N/A
- */ 
+ */
 
 void phg_sin_dev_init_devices(
     Sin_input_ws *ws
@@ -426,4 +428,3 @@ void phg_sin_dev_init_devices(
 #endif /* __cplusplus */
 
 #endif /* _sinP_h */
-
