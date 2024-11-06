@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -55,8 +56,8 @@ SOFTWARE.
 extern "C" {
 #endif
 
-#define MAX_NO_OPEN_WS                         10
-#define MAX_NO_OPEN_ARFILES                    10
+#define MAX_NO_OPEN_WS                         20
+#define MAX_NO_OPEN_ARFILES                    20
 
 typedef struct {
    Pint       used;                            /* Mark if workstation is used */
@@ -137,6 +138,13 @@ typedef Phg_state_list *Psl_handle;
             if ( (_psl)->cur_event.data.str.length > 0) \
                 free(((_psl)->cur_event.data.str.string)); \
             break; \
+          case PIN_CHOICE: \
+            (_psl)->cur_event.data.chc.status = 0;\
+            (_psl)->cur_event.data.chc.choice = 0;\
+            break; \
+          case PIN_VAL: \
+            (_psl)->cur_event.data.val = 0;\
+            break; \
           default: \
             break; \
         } \
@@ -208,7 +216,7 @@ int phg_psl_inq_wsids(
 
 /*******************************************************************************
  * phg_psl_get_ws_info
- * 
+ *
  * DESCR:       Get open workstation information
  * RETURNS:     Pointer to information structure
  */
@@ -219,7 +227,7 @@ Psl_ws_info* phg_psl_get_ws_info(
    );
 
 /*******************************************************************************
- * phg_psl_ws_free_slot 
+ * phg_psl_ws_free_slot
  *
  * DESCR:       Find if there is a free slot for a workstation
  * RETURNS:     TRUE or there is a slot free otherwise FALSE
@@ -320,4 +328,3 @@ void phg_psl_rem_ar(
 #endif /* __cplusplus */
 
 #endif /* _psl_h */
-

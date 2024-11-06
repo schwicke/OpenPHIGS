@@ -2,6 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
+Copyright (c) 2022-2023 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -200,7 +201,8 @@ typedef struct _Ws_input_ws {
 #define WSINP_SET_GENERIC_ENABLE_DATA( _ws, _dev, _ed ) \
     { \
     /* Set echo area using the current vdc rect of the window.  */ \
-    WSINP_DC_ECHO_TO_DRWBL_ECHO2((_ws), &(_dev)->e_volume, &(_ed)->echo_area) \
+    /*WSINP_DC_ECHO_TO_DRWBL_ECHO2((_ws), &(_dev)->e_volume, &(_ed)->echo_area) */ \
+    set_generic_enable_data( _ws, &(_dev)->e_volume, &(_ed)->echo_area); \
     }
 
 #define WSINP_COPY_COMMON_STATE_FIELDS( _st, _dev ) \
@@ -357,4 +359,3 @@ void phg_wsx_destroy_overlay(
 #endif /* __cplusplus */
 
 #endif /* _ws_inp_h */
-

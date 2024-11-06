@@ -4,9 +4,11 @@ INSTALL(FILES
     alloc.h
     ar.h
     attr.h
+    cp.h
     css.h
     err.h
     errnum.h
+    phconf.h
     phgargs.h
     phg_dt.h
     phg.h
