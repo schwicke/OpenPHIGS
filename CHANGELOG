@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Shaders wsgl_shaders.c
 * annotation text functions
 * support for high lighting
+* configuration file support
 
 ### Changed
 * Fixed typos in various headers

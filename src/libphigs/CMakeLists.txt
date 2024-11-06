@@ -9,6 +9,7 @@ SET(P_C_BINDING_SRCS
   c_binding/cb.c
   c_binding/cb_ar.c
   c_binding/cb.c
+  c_binding/cb_conf.c
   c_binding/cb_el.c
   c_binding/cb_extel.c
   c_binding/cb_inp.c
@@ -20,11 +21,16 @@ SET(P_C_BINDING_SRCS
 )
 
 SET(P_F_BINDING_SRCS
+  f_binding/fb_conf.c
   f_binding/fb_el.c
   f_binding/fb_phg.c
   f_binding/fb_str.c
   f_binding/fb_ws.c
 )
+
+SET(P_CONF_SRCS
+  conf/ophconf.c
+  )
 
 SET(P_CSS_SRCS
   css/css_el.c
