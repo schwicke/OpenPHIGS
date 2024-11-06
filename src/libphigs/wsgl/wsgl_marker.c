@@ -16,17 +16,22 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include <GL/gl.h>
 
 #include "phg.h"
 #include "private/phgP.h"
 #include "ws.h"
 #include "private/wsglP.h"
+
+#define PI 3.1415926535897932384626433832795
 
 /*******************************************************************************
  * wsgl_marker_dot
@@ -161,6 +166,36 @@ static void wsgl_marker_cross(
 }
 
 /*******************************************************************************
+ * wsgl_marker_polygon
+ *
+ * DESCR:	Draw a polygon with n corners
+ * RETURNS:	N/A
+ */
+
+static void wsgl_marker_polygon(
+   Pint n,
+   Ppoint_list *point_list,
+   Pfloat scale
+   )
+{
+   int i, j;
+   float alpha, dalpha;
+   glLineWidth(1.0);
+   glDisable(GL_LINE_STIPPLE);
+   dalpha = 2.0*PI/(float)n;
+   glBegin(GL_TRIANGLE_FAN);
+   for (i = 0; i < point_list->num_points; i++) {
+     alpha = dalpha/2.0;
+     for (j = 0; j < n; j++){
+       glVertex2f(point_list->points[i].x + scale*cos(alpha),
+		  point_list->points[i].y + scale*sin(alpha));
+       alpha += dalpha;
+     }
+   }
+   glEnd();
+}
+
+/*******************************************************************************
  * wsgl_polymarker
  *
  * DESCR:	Draw markers
@@ -184,20 +219,40 @@ void wsgl_polymarker(
    wsgl_setup_marker_attr(ast, &type, &size);
    switch (type) {
       case PMARKER_DOT:
-         wsgl_marker_dot(&point_list, size);
-      break;
+	wsgl_marker_dot(&point_list, size);
+	break;
 
       case PMARKER_PLUS:
-         wsgl_marker_plus(&point_list, size);
-      break;
+	wsgl_marker_plus(&point_list, size);
+	break;
 
       case PMARKER_ASTERISK:
-         wsgl_marker_asterisk(&point_list, size);
-      break;
+	wsgl_marker_asterisk(&point_list, size);
+	break;
 
       case PMARKER_CROSS:
-         wsgl_marker_cross(&point_list, size);
-      break;
+	wsgl_marker_cross(&point_list, size);
+	break;
+
+      case PMARKER_CIRCLE:
+	wsgl_marker_polygon(40, &point_list, size);
+	break;
+
+      case PMARKER_TRIANG:
+        wsgl_marker_polygon(3, &point_list, size);
+	break;
+
+      case PMARKER_SQUARE:
+        wsgl_marker_polygon(4, &point_list, size);
+	break;
+
+      case PMARKER_PENTAGON:
+        wsgl_marker_polygon(5, &point_list, size);
+	break;
+
+      case PMARKER_HEXAGON:
+        wsgl_marker_polygon(6, &point_list, size);
+	break;
    }
 }
 
@@ -238,25 +293,44 @@ void wsgl_polymarker3(
 
       wsgl_setup_marker_attr(ast, &type, &size);
       switch (type) {
-         case PMARKER_DOT:
-            wsgl_marker_dot(&plist, size);
-         break;
+      case PMARKER_DOT:
+	wsgl_marker_dot(&plist, size);
+	break;
 
-         case PMARKER_PLUS:
-            wsgl_marker_plus(&plist, size);
-         break;
+      case PMARKER_PLUS:
+	wsgl_marker_plus(&plist, size);
+	break;
 
-         case PMARKER_ASTERISK:
-            wsgl_marker_asterisk(&plist, size);
-         break;
+      case PMARKER_ASTERISK:
+	wsgl_marker_asterisk(&plist, size);
+	break;
 
-         case PMARKER_CROSS:
-            wsgl_marker_cross(&plist, size);
-         break;
+      case PMARKER_CROSS:
+	wsgl_marker_cross(&plist, size);
+	break;
+
+      case PMARKER_CIRCLE:
+	wsgl_marker_polygon(40, &plist, size);
+	break;
+
+      case PMARKER_TRIANG:
+        wsgl_marker_polygon(3, &plist, size);
+	break;
+
+      case PMARKER_SQUARE:
+        wsgl_marker_polygon(4, &plist, size);
+	break;
+
+      case PMARKER_PENTAGON:
+        wsgl_marker_polygon(5, &plist, size);
+	break;
+
+      case PMARKER_HEXAGON:
+        wsgl_marker_polygon(6, &plist, size);
+	break;
       }
    }
    else {
       ERR_REPORT(ws->erh, ERR900);
    }
 }
-

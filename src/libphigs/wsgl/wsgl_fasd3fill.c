@@ -3,6 +3,7 @@
 *
 *   This file is part of Open PHIGS
 *   Copyright (C) 2014 Surplus Users Ham Society
+*             (C) 2022-2023 CERN
 *
 *   Open PHIGS is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +17,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
@@ -213,6 +216,7 @@ void wsgl_fill_area_set3_data_front(
    Pfacet_vdata_list3 vdata;
    Pcoval colr;
    Pvec3 norm;
+   Pint colr_type;
 
    fasd3.edata = &edata;
    fasd3.vdata = &vdata;
@@ -245,8 +249,9 @@ void wsgl_fill_area_set3_data_front(
             }
          }
          else if (fasd3.fflag == PFACET_NORMAL) {
+	    colr_type = wsgl_get_int_colr(ast)->type;
             wsgl_colr_from_gcolr(&colr, wsgl_get_int_colr(ast));
-            wsgl_setup_int_colr(ws, fasd3.colr_type, &colr, ast);
+            wsgl_setup_int_colr(ws, colr_type, &colr, ast);
             glNormal3f(fasd3.fdata.norm.delta_x,
                        fasd3.fdata.norm.delta_y,
                        fasd3.fdata.norm.delta_z);
@@ -262,7 +267,7 @@ void wsgl_fill_area_set3_data_front(
             }
          }
          else if (fasd3.fflag == PFACET_COLOUR) {
-            wsgl_setup_int_colr(ws,
+           wsgl_setup_int_colr(ws,
                                 fasd3.colr_type,
                                 &fasd3.fdata.colr,
                                 ast);
@@ -280,8 +285,9 @@ void wsgl_fill_area_set3_data_front(
             }
          }
          else {
+	    colr_type = wsgl_get_int_colr(ast)->type;
             wsgl_colr_from_gcolr(&colr, wsgl_get_int_colr(ast));
-            wsgl_setup_int_colr(ws, fasd3.colr_type, &colr, ast);
+            wsgl_setup_int_colr(ws, colr_type, &colr, ast);
             fasd3_normal3(&norm, &fasd3);
             glNormal3f(norm.delta_x, norm.delta_y, norm.delta_z);
             for (i = 0; i < fasd3.nfa; i++) {
@@ -336,7 +342,7 @@ void wsgl_fill_area_set3_data_front(
          break;
 
       case PVERT_COORD_NORMAL:
-         if (fasd3.fflag == PFACET_COLOUR) {
+        if (fasd3.fflag == PFACET_COLOUR) {
             wsgl_setup_int_colr(ws,
                                 fasd3.colr_type,
                                 &fasd3.fdata.colr,
@@ -353,8 +359,9 @@ void wsgl_fill_area_set3_data_front(
             }
          }
          else {
+	    colr_type = wsgl_get_int_colr(ast)->type;
             wsgl_colr_from_gcolr(&colr, wsgl_get_int_colr(ast));
-            wsgl_setup_int_colr(ws, fasd3.colr_type, &colr, ast);
+            wsgl_setup_int_colr(ws, colr_type, &colr, ast);
             for (i = 0; i < fasd3.nfa; i++) {
                priv_fill_area3_ptnorms(fasd3.vdata->num_vertices,
                                        fasd3.vdata->vertex_data.ptnorms);
@@ -411,6 +418,7 @@ void wsgl_fill_area_set3_data_back(
    Pfacet_vdata_list3 vdata;
    Pcoval colr;
    Pvec3 norm;
+   Pint colr_type;
 
    fasd3.edata = &edata;
    fasd3.vdata = &vdata;
@@ -443,8 +451,9 @@ void wsgl_fill_area_set3_data_back(
             }
          }
          else if (fasd3.fflag == PFACET_NORMAL) {
+	    colr_type = wsgl_get_back_int_colr(ast)->type;
             wsgl_colr_from_gcolr(&colr, wsgl_get_back_int_colr(ast));
-            wsgl_setup_back_int_colr(ws, fasd3.colr_type, &colr, ast);
+            wsgl_setup_back_int_colr(ws, colr_type, &colr, ast);
             glNormal3f(fasd3.fdata.norm.delta_x,
                        fasd3.fdata.norm.delta_y,
                        fasd3.fdata.norm.delta_z);
@@ -478,8 +487,9 @@ void wsgl_fill_area_set3_data_back(
             }
          }
          else {
+	    colr_type = wsgl_get_back_int_colr(ast)->type;
             wsgl_colr_from_gcolr(&colr, wsgl_get_back_int_colr(ast));
-            wsgl_setup_back_int_colr(ws, fasd3.colr_type, &colr, ast);
+            wsgl_setup_back_int_colr(ws, colr_type, &colr, ast);
             fasd3_normal3(&norm, &fasd3);
             glNormal3f(norm.delta_x, norm.delta_y, norm.delta_z);
             for (i = 0; i < fasd3.nfa; i++) {
@@ -551,8 +561,9 @@ void wsgl_fill_area_set3_data_back(
             }
          }
          else {
+	    colr_type = wsgl_get_back_int_colr(ast)->type;
             wsgl_colr_from_gcolr(&colr, wsgl_get_back_int_colr(ast));
-            wsgl_setup_back_int_colr(ws, fasd3.colr_type, &colr, ast);
+            wsgl_setup_back_int_colr(ws, colr_type, &colr, ast);
             for (i = 0; i < fasd3.nfa; i++) {
                priv_fill_area3_ptnorms(fasd3.vdata->num_vertices,
                                        fasd3.vdata->vertex_data.ptnorms);
