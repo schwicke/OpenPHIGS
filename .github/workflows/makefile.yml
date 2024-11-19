@@ -1,0 +1,30 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: dependencies
+      run: sudo apt install cmake gcc g++ gfortran libx11-dev libx11-dev libx11-6 libx11-6 libglu1-mesa libglu1-mesa-dev xutils-dev libmotif-dev libmotif-common r-base-dev tcsh xfonts-100dpi xfonts-75dpi libxfont2  xutils-dev libxbae-dev libxaw7-dev libssl-dev libglew-dev libdlm-dev
+
+    - name: clean
+      run: make clean
+
+    - name: configure
+      run: make config
+
+    - name: Build
+      run: make build
+
+    - name: Install test
+      run: make install
