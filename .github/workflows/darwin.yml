@@ -1,0 +1,33 @@
+name: OpenPHIGS build CI on Darwin
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    strategy:
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: dependencies
+      run: brew reinstall gcc; brew install --cask xquartz; brew install mesa-glu glfw3 tcsh glew openmotif libXaw
+
+    - name: clean
+      run: make clean
+
+    - name: configure
+      run: make config
+
+    - name: Build
+      run: make build
+
+    - name: Install test
+      run: make install
