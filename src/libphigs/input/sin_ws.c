@@ -91,7 +91,7 @@ void phg_sin_ws_window_event_proc(
      */
     for ( nd = ws->notify_list; nd && ws->notify_list; nd = next ) {
 #ifdef DEBUG
-        printf("\tNotify %lx\n", (unsigned long) nd);
+        printf("\tNotify %p\n", nd);
 #endif
 	next = nd->next; /* remember next node in case list changes */
 	if ( nd->window == window && nd->notify ) {

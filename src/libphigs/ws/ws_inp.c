@@ -2341,8 +2341,8 @@ static void overlay_event(
 #endif
 
 #ifdef DEBUG
-    fprintf(stderr, "Got OVERLAY event %s on window %x on display %#lx\n",
-	phg_sin_evt_name(event), (unsigned) window, (unsigned long) display);
+    fprintf(stderr, "Got OVERLAY event %s on window %ld on display %p\n",
+	phg_sin_evt_name(event), window, display);
 #endif
 
     switch ( event->type ) {
