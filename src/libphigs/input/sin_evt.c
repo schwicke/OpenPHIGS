@@ -148,8 +148,8 @@ int phg_sin_evt_register(
 #ifdef DEBUG
    printf("sin_evt: phg_sin_evt_register\n");
    printf("\t%-14s", eventNames[event_type]);
-   printf("\tWindow = %x, ", (unsigned long) window);
-   printf("\tClient_data = %x\n", (unsigned long) cdata);
+   printf("\tWindow = %lx, ", (unsigned long) window);
+   printf("\tClient_data = %lx\n", (unsigned long) cdata);
 #endif
    /* First check if entry exists */
    for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[event_type]);
@@ -293,7 +293,7 @@ void phg_sin_evt_dispatch(
       if ((ev->display == display) &&
           (ev->window == event->xany.window)) {
 #ifdef DEBUG
-         printf("%x\t", (unsigned long) ev->cdata);
+         printf("%x\t", ev->cdata);
          phg_sin_evt_print(event);
          printf("\n");
 #endif
