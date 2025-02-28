@@ -150,9 +150,9 @@ void wsgl_update_modelview(
 #ifdef DEBUG
    printf("Update modelview\n");
    printf("Orientation matrix is :\n");
-   printf("%f %f %f\n", wsgl->cur_struct.view_rep.ori_matrix[0,0],wsgl->cur_struct.view_rep.ori_matrix[0,1],wsgl->cur_struct.view_rep.ori_matrix[0,2]);
-   printf("%f %f %f\n", wsgl->cur_struct.view_rep.ori_matrix[1,0],wsgl->cur_struct.view_rep.ori_matrix[1,1],wsgl->cur_struct.view_rep.ori_matrix[1,2]);
-   printf("%f %f %f\n", wsgl->cur_struct.view_rep.ori_matrix[2,0],wsgl->cur_struct.view_rep.ori_matrix[2,1],wsgl->cur_struct.view_rep.ori_matrix[2,2]);
+   printf("%e %e %e\n", (double) *wsgl->cur_struct.view_rep.ori_matrix[0,0], (double) *wsgl->cur_struct.view_rep.ori_matrix[0,1], (double) *wsgl->cur_struct.view_rep.ori_matrix[0,2]);
+   printf("%e %e %e\n", (double) *wsgl->cur_struct.view_rep.ori_matrix[1,0], (double) *wsgl->cur_struct.view_rep.ori_matrix[1,1], (double) *wsgl->cur_struct.view_rep.ori_matrix[1,2]);
+   printf("%e %e %e\n", (double) *wsgl->cur_struct.view_rep.ori_matrix[2,0], (double) *wsgl->cur_struct.view_rep.ori_matrix[2,1], (double) *wsgl->cur_struct.view_rep.ori_matrix[2,2]);
 #endif
 
 
