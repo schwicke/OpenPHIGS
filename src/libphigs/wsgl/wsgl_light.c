@@ -96,47 +96,53 @@ static void setup_ambient_light(
 #ifdef DEBUG
    printf("Ambient light: %f %f %f\n", amb[0], amb[1], amb[2]);
 #endif
-   switch (ind){
-   case 0:
-     glUniform1i(lightSource0, 0);
-   case 1:
-     glUniform1i(lightSource0, 1);
-     glUniform1i(lightSourceTyp0, PLIGHT_AMBIENT);
-     glUniform4fv(lightSourceCol0, 1, amb);
-     break;
-   case 2:
-     glUniform1i(lightSource1, 1);
-     glUniform1i(lightSourceTyp1, PLIGHT_AMBIENT);
-     glUniform4fv(lightSourceCol1, 1, amb);
-     break;
-   case 3:
-     glUniform1i(lightSource2, 1);
-     glUniform1i(lightSourceTyp2, PLIGHT_AMBIENT);
-     glUniform4fv(lightSourceCol2, 1, amb);
-     break;
-   case 4:
-     glUniform1i(lightSource3, 1);
-     glUniform1i(lightSourceTyp3, PLIGHT_AMBIENT);
-     glUniform4fv(lightSourceCol3, 1, amb);
-     break;
-   case 5:
-     glUniform1i(lightSource4, 1);
-     glUniform1i(lightSourceTyp4, PLIGHT_AMBIENT);
-     glUniform4fv(lightSourceCol4, 1, amb);
-     break;
-   case 6:
-     glUniform1i(lightSource5, 1);
-     glUniform1i(lightSourceTyp5, PLIGHT_AMBIENT);
-     glUniform4fv(lightSourceCol5, 1, amb);
-     break;
-   case 7:
-     glUniform1i(lightSource6, 1);
-     glUniform1i(lightSourceTyp6, PLIGHT_AMBIENT);
-     glUniform4fv(lightSourceCol6, 1, amb);
-     break;
-   default:
-     printf("ERROR: Unknown ambient light source index\n");
-     break;
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+     switch (ind){
+     case 0:
+       glUniform1i(lightSource0, 0);
+     case 1:
+       glUniform1i(lightSource0, 1);
+       glUniform1i(lightSourceTyp0, PLIGHT_AMBIENT);
+       glUniform4fv(lightSourceCol0, 1, amb);
+       break;
+     case 2:
+       glUniform1i(lightSource1, 1);
+       glUniform1i(lightSourceTyp1, PLIGHT_AMBIENT);
+       glUniform4fv(lightSourceCol1, 1, amb);
+       break;
+     case 3:
+       glUniform1i(lightSource2, 1);
+       glUniform1i(lightSourceTyp2, PLIGHT_AMBIENT);
+       glUniform4fv(lightSourceCol2, 1, amb);
+       break;
+     case 4:
+       glUniform1i(lightSource3, 1);
+       glUniform1i(lightSourceTyp3, PLIGHT_AMBIENT);
+       glUniform4fv(lightSourceCol3, 1, amb);
+       break;
+     case 5:
+       glUniform1i(lightSource4, 1);
+       glUniform1i(lightSourceTyp4, PLIGHT_AMBIENT);
+       glUniform4fv(lightSourceCol4, 1, amb);
+       break;
+     case 6:
+       glUniform1i(lightSource5, 1);
+       glUniform1i(lightSourceTyp5, PLIGHT_AMBIENT);
+       glUniform4fv(lightSourceCol5, 1, amb);
+       break;
+     case 7:
+       glUniform1i(lightSource6, 1);
+       glUniform1i(lightSourceTyp6, PLIGHT_AMBIENT);
+       glUniform4fv(lightSourceCol6, 1, amb);
+       break;
+     default:
+       printf("ERROR: Unknown ambient light source index\n");
+       break;
+     }
+   } else {
+     id = get_light_id(ind);
+     glLightfv(id, GL_AMBIENT, amb);
+     glEnable(id);
    }
 }
 
@@ -171,54 +177,61 @@ static void setup_directional_light(
           dif[0], dif[1], dif[2],
           pos[0], pos[1], pos[2]);
 #endif
-   switch (ind){
-   case 0:
-     glUniform1i(lightSource0, 0);
-   case 1:
-     glUniform1i(lightSource0, 1);
-     glUniform1i(lightSourceTyp0, PLIGHT_DIRECTIONAL);
-     glUniform4fv(lightSourceCol0, 1, dif);
-     glUniform4fv(lightSourcePos0, 1, pos);
-     break;
-   case 2:
-     glUniform1i(lightSource1, 1);
-     glUniform1i(lightSourceTyp1, PLIGHT_DIRECTIONAL);
-     glUniform4fv(lightSourceCol1, 1, dif);
-     glUniform4fv(lightSourcePos1, 1, pos);
-     break;
-   case 3:
-     glUniform1i(lightSource2, 1);
-     glUniform1i(lightSourceTyp2, PLIGHT_DIRECTIONAL);
-     glUniform4fv(lightSourceCol2, 1, dif);
-     glUniform4fv(lightSourcePos2, 1, pos);
-     break;
-   case 4:
-     glUniform1i(lightSource3, 1);
-     glUniform1i(lightSourceTyp3, PLIGHT_DIRECTIONAL);
-     glUniform4fv(lightSourceCol3, 1, dif);
-     glUniform4fv(lightSourcePos3, 1, pos);
-     break;
-   case 5:
-     glUniform1i(lightSource4, 1);
-     glUniform1i(lightSourceTyp4, PLIGHT_DIRECTIONAL);
-     glUniform4fv(lightSourceCol4, 1, dif);
-     glUniform4fv(lightSourcePos4, 1, pos);
-     break;
-   case 6:
-     glUniform1i(lightSource5, 1);
-     glUniform1i(lightSourceTyp5, PLIGHT_DIRECTIONAL);
-     glUniform4fv(lightSourceCol5, 1, dif);
-     glUniform4fv(lightSourcePos5, 1, pos);
-     break;
-   case 7:
-     glUniform1i(lightSource6, 1);
-     glUniform1i(lightSourceTyp6, PLIGHT_DIRECTIONAL);
-     glUniform4fv(lightSourceCol6, 1, dif);
-     glUniform4fv(lightSourcePos6, 1, pos);
-     break;
-   default:
-     printf("ERROR: Unknown directional light source index\n");
-     break;
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+     switch (ind){
+     case 0:
+       glUniform1i(lightSource0, 0);
+     case 1:
+       glUniform1i(lightSource0, 1);
+       glUniform1i(lightSourceTyp0, PLIGHT_DIRECTIONAL);
+       glUniform4fv(lightSourceCol0, 1, dif);
+       glUniform4fv(lightSourcePos0, 1, pos);
+       break;
+     case 2:
+       glUniform1i(lightSource1, 1);
+       glUniform1i(lightSourceTyp1, PLIGHT_DIRECTIONAL);
+       glUniform4fv(lightSourceCol1, 1, dif);
+       glUniform4fv(lightSourcePos1, 1, pos);
+       break;
+     case 3:
+       glUniform1i(lightSource2, 1);
+       glUniform1i(lightSourceTyp2, PLIGHT_DIRECTIONAL);
+       glUniform4fv(lightSourceCol2, 1, dif);
+       glUniform4fv(lightSourcePos2, 1, pos);
+       break;
+     case 4:
+       glUniform1i(lightSource3, 1);
+       glUniform1i(lightSourceTyp3, PLIGHT_DIRECTIONAL);
+       glUniform4fv(lightSourceCol3, 1, dif);
+       glUniform4fv(lightSourcePos3, 1, pos);
+       break;
+     case 5:
+       glUniform1i(lightSource4, 1);
+       glUniform1i(lightSourceTyp4, PLIGHT_DIRECTIONAL);
+       glUniform4fv(lightSourceCol4, 1, dif);
+       glUniform4fv(lightSourcePos4, 1, pos);
+       break;
+     case 6:
+       glUniform1i(lightSource5, 1);
+       glUniform1i(lightSourceTyp5, PLIGHT_DIRECTIONAL);
+       glUniform4fv(lightSourceCol5, 1, dif);
+       glUniform4fv(lightSourcePos5, 1, pos);
+       break;
+     case 7:
+       glUniform1i(lightSource6, 1);
+       glUniform1i(lightSourceTyp6, PLIGHT_DIRECTIONAL);
+       glUniform4fv(lightSourceCol6, 1, dif);
+       glUniform4fv(lightSourcePos6, 1, pos);
+       break;
+     default:
+       printf("ERROR: Unknown directional light source index\n");
+       break;
+     }
+   } else {
+     id = get_light_id(ind);
+     glLightfv(id, GL_DIFFUSE, dif);
+     glLightfv(id, GL_POSITION, pos);
+     glEnable(id);
    }
 }
 
@@ -260,61 +273,68 @@ static void setup_positional_light(
           pos[0], pos[1], pos[2],
           coef[0], coef[1]);
 #endif
-   switch (ind){
-   case 0:
-     glUniform1i(lightSource0, 0);
-   case 1:
-     glUniform1i(lightSource0, 1);
-     glUniform1i(lightSourceTyp0, PLIGHT_POSITIONAL);
-     glUniform4fv(lightSourceCol0, 1, dif);
-     glUniform4fv(lightSourcePos0, 1, pos);
-     glUniform4fv(lightSourceCoef0, 1, coef);
-     break;
-   case 2:
-     glUniform1i(lightSource1, 1);
-     glUniform1i(lightSourceTyp1, PLIGHT_POSITIONAL);
-     glUniform4fv(lightSourceCol1, 1, dif);
-     glUniform4fv(lightSourcePos1, 1, pos);
-     glUniform4fv(lightSourceCoef1, 1, coef);
-     break;
-   case 3:
-     glUniform1i(lightSource2, 1);
-     glUniform1i(lightSourceTyp2, PLIGHT_POSITIONAL);
-     glUniform4fv(lightSourceCol2, 1, dif);
-     glUniform4fv(lightSourcePos2, 1, pos);
-     glUniform4fv(lightSourceCoef2, 1, coef);
-     break;
-   case 4:
-     glUniform1i(lightSource3, 1);
-     glUniform1i(lightSourceTyp3, PLIGHT_POSITIONAL);
-     glUniform4fv(lightSourceCol3, 1, dif);
-     glUniform4fv(lightSourcePos3, 1, pos);
-     glUniform4fv(lightSourceCoef3, 1, coef);
-     break;
-   case 5:
-     glUniform1i(lightSource4, 1);
-     glUniform1i(lightSourceTyp4, PLIGHT_POSITIONAL);
-     glUniform4fv(lightSourceCol4, 1, dif);
-     glUniform4fv(lightSourcePos4, 1, pos);
-     glUniform4fv(lightSourceCoef4, 1, coef);
-     break;
-   case 6:
-     glUniform1i(lightSource5, 1);
-     glUniform1i(lightSourceTyp5, PLIGHT_POSITIONAL);
-     glUniform4fv(lightSourceCol5, 1, dif);
-     glUniform4fv(lightSourcePos5, 1, pos);
-     glUniform4fv(lightSourceCoef5, 1, coef);
-     break;
-   case 7:
-     glUniform1i(lightSource6, 1);
-     glUniform1i(lightSourceTyp6, PLIGHT_POSITIONAL);
-     glUniform4fv(lightSourceCol6, 1, dif);
-     glUniform4fv(lightSourcePos6, 1, pos);
-     glUniform4fv(lightSourceCoef6, 1, coef);
-     break;
-   default:
-     printf("ERROR: Unknown positional light source index\n");
-     break;
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+     switch (ind){
+     case 0:
+       glUniform1i(lightSource0, 0);
+     case 1:
+       glUniform1i(lightSource0, 1);
+       glUniform1i(lightSourceTyp0, PLIGHT_POSITIONAL);
+       glUniform4fv(lightSourceCol0, 1, dif);
+       glUniform4fv(lightSourcePos0, 1, pos);
+       glUniform4fv(lightSourceCoef0, 1, coef);
+       break;
+     case 2:
+       glUniform1i(lightSource1, 1);
+       glUniform1i(lightSourceTyp1, PLIGHT_POSITIONAL);
+       glUniform4fv(lightSourceCol1, 1, dif);
+       glUniform4fv(lightSourcePos1, 1, pos);
+       glUniform4fv(lightSourceCoef1, 1, coef);
+       break;
+     case 3:
+       glUniform1i(lightSource2, 1);
+       glUniform1i(lightSourceTyp2, PLIGHT_POSITIONAL);
+       glUniform4fv(lightSourceCol2, 1, dif);
+       glUniform4fv(lightSourcePos2, 1, pos);
+       glUniform4fv(lightSourceCoef2, 1, coef);
+       break;
+     case 4:
+       glUniform1i(lightSource3, 1);
+       glUniform1i(lightSourceTyp3, PLIGHT_POSITIONAL);
+       glUniform4fv(lightSourceCol3, 1, dif);
+       glUniform4fv(lightSourcePos3, 1, pos);
+       glUniform4fv(lightSourceCoef3, 1, coef);
+       break;
+     case 5:
+       glUniform1i(lightSource4, 1);
+       glUniform1i(lightSourceTyp4, PLIGHT_POSITIONAL);
+       glUniform4fv(lightSourceCol4, 1, dif);
+       glUniform4fv(lightSourcePos4, 1, pos);
+       glUniform4fv(lightSourceCoef4, 1, coef);
+       break;
+     case 6:
+       glUniform1i(lightSource5, 1);
+       glUniform1i(lightSourceTyp5, PLIGHT_POSITIONAL);
+       glUniform4fv(lightSourceCol5, 1, dif);
+       glUniform4fv(lightSourcePos5, 1, pos);
+       glUniform4fv(lightSourceCoef5, 1, coef);
+       break;
+     case 7:
+       glUniform1i(lightSource6, 1);
+       glUniform1i(lightSourceTyp6, PLIGHT_POSITIONAL);
+       glUniform4fv(lightSourceCol6, 1, dif);
+       glUniform4fv(lightSourcePos6, 1, pos);
+       glUniform4fv(lightSourceCoef6, 1, coef);
+       break;
+     default:
+       printf("ERROR: Unknown positional light source index\n");
+       break;
+     }
+   } else {
+     id = get_light_id(ind);
+     glLightfv(id, GL_DIFFUSE, dif);
+     glLightfv(id, GL_POSITION, pos);
+     glEnable(id);
    }
 }
 
@@ -368,33 +388,37 @@ void wsgl_update_light_src_state(
                   break;
             }
          }
-      }
-      else {
-	switch (i){
-	case 1:
-	  glUniform1i(lightSource0, 0);
-	  break;
-	case 2:
-	  glUniform1i(lightSource1, 0);
-	  break;
-	case 3:
-	  glUniform1i(lightSource2, 0);
-	  break;
-	case 4:
-	  glUniform1i(lightSource3, 0);
-	  break;
-	case 5:
-	  glUniform1i(lightSource4, 0);
-	  break;
-	case 6:
-	  glUniform1i(lightSource5, 0);
-	  break;
-	case 7:
-	  glUniform1i(lightSource6, 0);
-	  break;
+      } else {
+	if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+	  switch (i){
+	  case 1:
+	    glUniform1i(lightSource0, 0);
+	    break;
+	  case 2:
+	    glUniform1i(lightSource1, 0);
+	    break;
+	  case 3:
+	    glUniform1i(lightSource2, 0);
+	    break;
+	  case 4:
+	    glUniform1i(lightSource3, 0);
+	    break;
+	  case 5:
+	    glUniform1i(lightSource4, 0);
+	    break;
+	  case 6:
+	    glUniform1i(lightSource5, 0);
+	    break;
+	  case 7:
+	    glUniform1i(lightSource6, 0);
+	    break;
+	  }
+	} else {
+	  glDisable(get_light_id(i));
 	}
       }
    }
+   if (!GLEW_ARB_vertex_shader || !GLEW_ARB_fragment_shader || !GLEW_ARB_shader_objects) glPopMatrix();
 }
 
 /*******************************************************************************

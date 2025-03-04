@@ -343,122 +343,132 @@ void wsgl_shaders(Ws * ws){
   GLchar eLog[1024] = { 0 };
   glXMakeCurrent(ws->display, ws->drawable_id, ws->glx_context);
 #ifdef GLEW
+#ifdef DEBUG
+   printf("DEBUG: Shaders: initialising GLEW\n");
+#endif
   err = glewInit();
   if (GLEW_OK != err){
     fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-  };
+    abort();
+  }
 #endif
-  vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-  fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-  char NewerVersion[] = "1.30";
-  const char * ShaderVersion = (const char *) glGetString(GL_SHADING_LANGUAGE_VERSION);
-  const char * Vendor = (const char *) glGetString(GL_VENDOR);
-  const char * Renderer = (const char *) glGetString(GL_RENDERER);
-  printf("INFO: Shader version is %s.\n", ShaderVersion);
-  printf("INFO Vendor: %s, card: %s\n", Vendor, Renderer);
-  if (strcmp(ShaderVersion, NewerVersion) < 0 ){
-    printf("WARNING: Shader version is %s Using version 1.20 for shaders\n", ShaderVersion);
-    glShaderSource(vertex_shader, 1, &vertex_shader_text_120, NULL);
-    glShaderSource(fragment_shader, 1, &fragment_shader_text_120, NULL);
+  if (!GLEW_ARB_vertex_shader ||! GLEW_ARB_fragment_shader ||! GLEW_ARB_shader_objects) {
+    fprintf(stderr, "WARNING: Shaders are not available. Some functionality will not work, like shading, lighting and clipping\n");
   } else {
-    if (strcmp(Vendor, "NVIDIA Corporation") == 0){
-      printf("Detected NVIDIA card. Using 1.30 for vertex and fragment shaders\n");
-      glShaderSource(vertex_shader, 1, &vertex_shader_text_130, NULL);
-      glShaderSource(fragment_shader, 1, &fragment_shader_text_130, NULL);
-    } else if (strcmp(Vendor, "Intel") == 0) {
-      printf("Detected Intel card. Using 1.20 for vertex and 1.30 for fragment shader\n");
+    vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    char NewerVersion[] = "1.30";
+    const char * ShaderVersion = (const char *) glGetString(GL_SHADING_LANGUAGE_VERSION);
+    const char * Vendor = (const char *) glGetString(GL_VENDOR);
+    const char * Renderer = (const char *) glGetString(GL_RENDERER);
+    printf("INFO: Shader version is %s.\n", ShaderVersion);
+    printf("INFO Vendor: %s, card: %s\n", Vendor, Renderer);
+    if (strcmp(ShaderVersion, NewerVersion) < 0 ){
+      printf("WARNING: Shader version is %s Using version 1.20 for shaders\n", ShaderVersion);
       glShaderSource(vertex_shader, 1, &vertex_shader_text_120, NULL);
-      glShaderSource(fragment_shader, 1, &fragment_shader_text_130, NULL);
+      glShaderSource(fragment_shader, 1, &fragment_shader_text_120, NULL);
     } else {
-      printf("Unknown vendor card. Trying 1.30 for vertex and 1.30 for fragment shader\n");
-      printf("Please report any problems.\n");
-      glShaderSource(vertex_shader, 1, &vertex_shader_text_130, NULL);
-      glShaderSource(fragment_shader, 1, &fragment_shader_text_130, NULL);
+      if (strcmp(Vendor, "NVIDIA Corporation") == 0){
+	printf("Detected NVIDIA card. Using 1.30 for vertex and fragment shaders\n");
+	glShaderSource(vertex_shader, 1, &vertex_shader_text_130, NULL);
+	glShaderSource(fragment_shader, 1, &fragment_shader_text_130, NULL);
+      } else if (strcmp(Vendor, "Intel") == 0) {
+	printf("Detected Intel card. Using 1.20 for vertex and 1.30 for fragment shader\n");
+	glShaderSource(vertex_shader, 1, &vertex_shader_text_120, NULL);
+	glShaderSource(fragment_shader, 1, &fragment_shader_text_130, NULL);
+      } else {
+	printf("Unknown vendor card. Trying 1.30 for vertex and 1.30 for fragment shader\n");
+	printf("Please report any problems.\n");
+	glShaderSource(vertex_shader, 1, &vertex_shader_text_130, NULL);
+	glShaderSource(fragment_shader, 1, &fragment_shader_text_130, NULL);
+      }
     }
+    // compile vertex shader
+    glCompileShader(vertex_shader);
+    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &result);
+    if (!result){
+      glGetShaderInfoLog(vertex_shader, 1024, NULL, eLog);
+      fprintf(stderr, "Error compiling the vertex shader: '%s'\n", eLog);
+      abort();
+    }
+    // compile fragment shader
+    glCompileShader(fragment_shader);
+    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &result);
+    if (!result){
+      glGetShaderInfoLog(fragment_shader, 1024, NULL, eLog);
+      fprintf(stderr, "Error compiling the fragment shader: '%s'\n", eLog);
+      abort();
+    }
+    program = glCreateProgram();
+    glAttachShader(program, vertex_shader);
+    glAttachShader(program, fragment_shader);
+    glLinkProgram(program);
+    glUseProgram(program);
+    // define static vColor as index 1
+    glBindAttribLocation(program, vCOLOR, "vColor");
+    // lighting parameters
+    vAmbient = glGetUniformLocation(program, "vAmbient");
+    vDiffuse = glGetUniformLocation(program, "vDiffuse");
+    vSpecular = glGetUniformLocation(program, "vSpecular");
+    vPositional = glGetUniformLocation(program, "vPositional");
+    // set some default color
+    glVertexAttrib4f(vCOLOR, 0.5, 0.5, 0.5, 1.0);
+    alpha_channel = glGetUniformLocation(program, "alpha_channel");
+    glUniform1f(alpha_channel, 1.0);
+    // init clipping
+    num_clip_planes = glGetUniformLocation(program, "num_clip_planes");
+    clipping_ind = glGetUniformLocation(program, "clipping_ind");
+    glDisable(GL_CLIP_PLANE0);
+    glUniform1i(clipping_ind, 0);
+    glUniform1i(num_clip_planes, 1);
+    plane0 = glGetUniformLocation(program, "plane0");
+    point0 = glGetUniformLocation(program, "point0");
+    // shading mode
+    shading_mode = glGetUniformLocation(program, "ShadingMode");
+    // light sources
+    lightSource0    = glGetUniformLocation(program, "lightSource0");
+    lightSourceTyp0 = glGetUniformLocation(program, "lightSourceTyp0");
+    lightSourceCol0 = glGetUniformLocation(program, "lightSourceCol0");
+    lightSourcePos0 = glGetUniformLocation(program, "lightSourcePos0");
+    lightSourceCoef0 = glGetUniformLocation(program, "lightSourceCoef0");
+    //
+    lightSource1    = glGetUniformLocation(program, "lightSource1");
+    lightSourceTyp1 = glGetUniformLocation(program, "lightSourceTyp1");
+    lightSourceCol1 = glGetUniformLocation(program, "lightSourceCol1");
+    lightSourcePos1 = glGetUniformLocation(program, "lightSourcePos1");
+    lightSourceCoef1 = glGetUniformLocation(program, "lightSourceCoef1");
+    //
+    lightSource2    = glGetUniformLocation(program, "lightSource2");
+    lightSourceTyp2 = glGetUniformLocation(program, "lightSourceTyp2");
+    lightSourceCol2 = glGetUniformLocation(program, "lightSourceCol2");
+    lightSourcePos2 = glGetUniformLocation(program, "lightSourcePos2");
+    lightSourceCoef2 = glGetUniformLocation(program, "lightSourceCoef2");
+    //
+    lightSource3    = glGetUniformLocation(program, "lightSource3");
+    lightSourceTyp3 = glGetUniformLocation(program, "lightSourceTyp3");
+    lightSourceCol3 = glGetUniformLocation(program, "lightSourceCol3");
+    lightSourcePos3 = glGetUniformLocation(program, "lightSourcePos3");
+    lightSourceCoef3 = glGetUniformLocation(program, "lightSourceCoef3");
+    //
+    lightSource4    = glGetUniformLocation(program, "lightSource4");
+    lightSourceTyp4 = glGetUniformLocation(program, "lightSourceTyp4");
+    lightSourceCol4 = glGetUniformLocation(program, "lightSourceCol4");
+    lightSourcePos4 = glGetUniformLocation(program, "lightSourcePos4");
+    lightSourceCoef4 = glGetUniformLocation(program, "lightSourceCoef4");
+    //
+    lightSource5    = glGetUniformLocation(program, "lightSource5");
+    lightSourceTyp5 = glGetUniformLocation(program, "lightSourceTyp5");
+    lightSourceCol5 = glGetUniformLocation(program, "lightSourceCol5");
+    lightSourcePos5 = glGetUniformLocation(program, "lightSourcePos5");
+    lightSourceCoef5 = glGetUniformLocation(program, "lightSourceCoef5");
+    //
+    lightSource6    = glGetUniformLocation(program, "lightSource6");
+    lightSourceTyp6 = glGetUniformLocation(program, "lightSourceTyp6");
+    lightSourceCol6 = glGetUniformLocation(program, "lightSourceCol6");
+    lightSourcePos6 = glGetUniformLocation(program, "lightSourcePos6");
+    lightSourceCoef6 = glGetUniformLocation(program, "lightSourceCoef6");
+    // projection matrices
+    ModelViewMatrix = glGetUniformLocation(program, "ModelViewMatrix");
+    ProjectionMatrix = glGetUniformLocation(program, "ProjectionMatrix");
   }
-  // compile vertex shader
-  glCompileShader(vertex_shader);
-  glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &result);
-  if (!result){
-    glGetShaderInfoLog(vertex_shader, 1024, NULL, eLog);
-    fprintf(stderr, "Error compiling the vertex shader: '%s'\n", eLog);
-  }
-  // compile fragment shader
-  glCompileShader(fragment_shader);
-  glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &result);
-  if (!result){
-    glGetShaderInfoLog(fragment_shader, 1024, NULL, eLog);
-    fprintf(stderr, "Error compiling the fragment shader: '%s'\n", eLog);
-  }
-  program = glCreateProgram();
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
-  glLinkProgram(program);
-  glUseProgram(program);
-  // define static vColor as index 1
-  glBindAttribLocation(program, vCOLOR, "vColor");
-  // lighting parameters
-  vAmbient = glGetUniformLocation(program, "vAmbient");
-  vDiffuse = glGetUniformLocation(program, "vDiffuse");
-  vSpecular = glGetUniformLocation(program, "vSpecular");
-  vPositional = glGetUniformLocation(program, "vPositional");
-  // set some default color
-  glVertexAttrib4f(vCOLOR, 0.5, 0.5, 0.5, 1.0);
-  alpha_channel = glGetUniformLocation(program, "alpha_channel");
-  glUniform1f(alpha_channel, 1.0);
-  // init clipping
-  num_clip_planes = glGetUniformLocation(program, "num_clip_planes");
-  clipping_ind = glGetUniformLocation(program, "clipping_ind");
-  glDisable(GL_CLIP_PLANE0);
-  glUniform1i(clipping_ind, 0);
-  glUniform1i(num_clip_planes, 1);
-  plane0 = glGetUniformLocation(program, "plane0");
-  point0 = glGetUniformLocation(program, "point0");
-  // shading mode
-  shading_mode = glGetUniformLocation(program, "ShadingMode");
-  // light sources
-  lightSource0    = glGetUniformLocation(program, "lightSource0");
-  lightSourceTyp0 = glGetUniformLocation(program, "lightSourceTyp0");
-  lightSourceCol0 = glGetUniformLocation(program, "lightSourceCol0");
-  lightSourcePos0 = glGetUniformLocation(program, "lightSourcePos0");
-  lightSourceCoef0 = glGetUniformLocation(program, "lightSourceCoef0");
-  //
-  lightSource1    = glGetUniformLocation(program, "lightSource1");
-  lightSourceTyp1 = glGetUniformLocation(program, "lightSourceTyp1");
-  lightSourceCol1 = glGetUniformLocation(program, "lightSourceCol1");
-  lightSourcePos1 = glGetUniformLocation(program, "lightSourcePos1");
-  lightSourceCoef1 = glGetUniformLocation(program, "lightSourceCoef1");
-  //
-  lightSource2    = glGetUniformLocation(program, "lightSource2");
-  lightSourceTyp2 = glGetUniformLocation(program, "lightSourceTyp2");
-  lightSourceCol2 = glGetUniformLocation(program, "lightSourceCol2");
-  lightSourcePos2 = glGetUniformLocation(program, "lightSourcePos2");
-  lightSourceCoef2 = glGetUniformLocation(program, "lightSourceCoef2");
-  //
-  lightSource3    = glGetUniformLocation(program, "lightSource3");
-  lightSourceTyp3 = glGetUniformLocation(program, "lightSourceTyp3");
-  lightSourceCol3 = glGetUniformLocation(program, "lightSourceCol3");
-  lightSourcePos3 = glGetUniformLocation(program, "lightSourcePos3");
-  lightSourceCoef3 = glGetUniformLocation(program, "lightSourceCoef3");
-  //
-  lightSource4    = glGetUniformLocation(program, "lightSource4");
-  lightSourceTyp4 = glGetUniformLocation(program, "lightSourceTyp4");
-  lightSourceCol4 = glGetUniformLocation(program, "lightSourceCol4");
-  lightSourcePos4 = glGetUniformLocation(program, "lightSourcePos4");
-  lightSourceCoef4 = glGetUniformLocation(program, "lightSourceCoef4");
-  //
-  lightSource5    = glGetUniformLocation(program, "lightSource5");
-  lightSourceTyp5 = glGetUniformLocation(program, "lightSourceTyp5");
-  lightSourceCol5 = glGetUniformLocation(program, "lightSourceCol5");
-  lightSourcePos5 = glGetUniformLocation(program, "lightSourcePos5");
-  lightSourceCoef5 = glGetUniformLocation(program, "lightSourceCoef5");
-  //
-  lightSource6    = glGetUniformLocation(program, "lightSource6");
-  lightSourceTyp6 = glGetUniformLocation(program, "lightSourceTyp6");
-  lightSourceCol6 = glGetUniformLocation(program, "lightSourceCol6");
-  lightSourcePos6 = glGetUniformLocation(program, "lightSourcePos6");
-  lightSourceCoef6 = glGetUniformLocation(program, "lightSourceCoef6");
-  // projection matrices
-  ModelViewMatrix = glGetUniformLocation(program, "ModelViewMatrix");
-  ProjectionMatrix = glGetUniformLocation(program, "ProjectionMatrix");
 }

@@ -79,13 +79,17 @@ static void wsgl_set_model_view_matrix(
    GLfloat m[16];
    GLfloat *mp = &m[0];
 
-   for (i = 0; i < 4; i++) {
-      for (j = 0; j < 4; j++) {
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+     for (i = 0; i < 4; i++) {
+       for (j = 0; j < 4; j++) {
          *mp = mat[j][i];
          mp++;
-      }
+       }
+     }
+     glUniformMatrix4fv(ModelViewMatrix, 1, FALSE, m);
+   } else {
+     wsgl_set_matrix(mat, FALSE);
    }
-   glUniformMatrix4fv(ModelViewMatrix, 1, FALSE, m);
 }
 
 static void wsgl_set_projection_matrix(
@@ -95,14 +99,17 @@ static void wsgl_set_projection_matrix(
    int i, j;
    GLfloat m[16];
    GLfloat *mp = &m[0];
-
-   for (i = 0; i < 4; i++) {
-      for (j = 0; j < 4; j++) {
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects) {
+     for (i = 0; i < 4; i++) {
+       for (j = 0; j < 4; j++) {
          *mp = mat[j][i];
          mp++;
-      }
+       }
+     }
+     glUniformMatrix4fv(ProjectionMatrix, 1, FALSE, m);
+   } else {
+     wsgl_set_matrix(mat, FALSE);
    }
-   glUniformMatrix4fv(ProjectionMatrix, 1, FALSE, m);
 }
 
 /*******************************************************************************
@@ -210,11 +217,13 @@ void wsgl_set_clip_ind(
 {
   Phg_ret ret;
   Wsgl_handle wsgl = ws->render_context;
-  glUniform1i(clipping_ind, ind);
-  if (ind == 1) {
-    glEnable(GL_CLIP_PLANE0);
-  } else {
-    glDisable(GL_CLIP_PLANE0);
+  if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+    glUniform1i(clipping_ind, ind);
+    if (ind == 1) {
+      glEnable(GL_CLIP_PLANE0);
+    } else {
+      glDisable(GL_CLIP_PLANE0);
+    }
   }
 }
 
@@ -232,7 +241,7 @@ void wsgl_set_alpha_channel(
 {
   Phg_ret ret;
   Wsgl_handle wsgl = ws->render_context;
-  glUniform1f(alpha_channel, alpha);
+  if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects) glUniform1f(alpha_channel, alpha);
 }
 
 /*******************************************************************************
@@ -252,15 +261,17 @@ void wsgl_set_clip_vol3(
   int * int_data = (int*) el_data;
   Phalf_space3 * list;
   Phalf_space3 volume0;
-  op = int_data[0];
-  num = int_data[1];
-  list = (Phalf_space3 *)(&int_data[2]);
-  volume0 = list[0];
-  glUniform1i(num_clip_planes, num);
-  glUniform4f(plane0, volume0.norm.delta_x, volume0.norm.delta_y, volume0.norm.delta_z, 0.);
-  glUniform4f(point0, volume0.point.x, volume0.point.y, volume0.point.z, 0.);
-  GLdouble eqn0[4] = {volume0.norm.delta_x, volume0.norm.delta_y, volume0.norm.delta_z, 0.};
-  glClipPlane(GL_CLIP_PLANE0, eqn0);
+  if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects) {
+    op = int_data[0];
+    num = int_data[1];
+    list = (Phalf_space3 *)(&int_data[2]);
+    volume0 = list[0];
+    glUniform1i(num_clip_planes, num);
+    glUniform4f(plane0, volume0.norm.delta_x, volume0.norm.delta_y, volume0.norm.delta_z, 0.);
+    glUniform4f(point0, volume0.point.x, volume0.point.y, volume0.point.z, 0.);
+    GLdouble eqn0[4] = {volume0.norm.delta_x, volume0.norm.delta_y, volume0.norm.delta_z, 0.};
+    glClipPlane(GL_CLIP_PLANE0, eqn0);
+  }
 }
 
 /*******************************************************************************
@@ -324,22 +335,28 @@ void wsgl_set_colr(
    Pcoval *colr
    )
 {
-   switch(colr_type) {
-      case PINDIRECT:
-	glIndexi(colr->ind);
-	break;
-
-      case PMODEL_RGB:
-	 glVertexAttrib4f(vCOLOR,
-			  colr->direct.rgb.red,
-			  colr->direct.rgb.green,
-			  colr->direct.rgb.blue,
-			  1.0);
-         break;
-
-      default:
-         break;
-   }
+  switch(colr_type) {
+  case PINDIRECT:
+    glIndexi(colr->ind);
+    break;
+    
+  case PMODEL_RGB:
+    if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+      glVertexAttrib4f(vCOLOR,
+		       colr->direct.rgb.red,
+		       colr->direct.rgb.green,
+		       colr->direct.rgb.blue,
+		       1.0);
+    } else {
+      glColor3f(colr->direct.rgb.red,
+		colr->direct.rgb.green,
+		colr->direct.rgb.blue);
+    }
+    break;
+    
+  default:
+    break;
+  }
 }
 
 /*******************************************************************************
@@ -350,26 +367,31 @@ void wsgl_set_colr(
  */
 
 void wsgl_set_gcolr(
-   Pgcolr *gcolr
-   )
+		    Pgcolr *gcolr
+		    )
 {
-   switch(gcolr->type) {
-      case PINDIRECT:
-	glIndexi(gcolr->val.ind);
-	break;
-
-      case PMODEL_RGB:
-	glVertexAttrib4f(vCOLOR,
-			 gcolr->val.general.x,
-			 gcolr->val.general.y,
-			 gcolr->val.general.z,
-			 1.0);
-
-         break;
-
-      default:
-         break;
-   }
+  switch(gcolr->type) {
+  case PINDIRECT:
+    glIndexi(gcolr->val.ind);
+    break;
+    
+  case PMODEL_RGB:
+    if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+      glVertexAttrib4f(vCOLOR,
+		       gcolr->val.general.x,
+		       gcolr->val.general.y,
+		       gcolr->val.general.z,
+		       1.0);
+    } else {
+      glColor3f(gcolr->val.general.x,
+		gcolr->val.general.y,
+		gcolr->val.general.z);
+    }
+    break;
+    
+  default:
+    break;
+  }
 }
 
 /*******************************************************************************
@@ -380,24 +402,24 @@ void wsgl_set_gcolr(
  */
 
 void wsgl_colr_from_gcolr(
-   Pcoval *colr,
-   Pgcolr *gcolr
-   )
+			  Pcoval *colr,
+			  Pgcolr *gcolr
+			  )
 {
-   switch(gcolr->type) {
-      case PINDIRECT:
-         colr->ind = gcolr->val.ind;
-         break;
-
-      case PMODEL_RGB:
-         colr->direct.rgb.red = gcolr->val.general.x;
-         colr->direct.rgb.green = gcolr->val.general.y;
-         colr->direct.rgb.blue = gcolr->val.general.z;
-         break;
-
-      default:
-         break;
-   }
+  switch(gcolr->type) {
+  case PINDIRECT:
+    colr->ind = gcolr->val.ind;
+    break;
+    
+  case PMODEL_RGB:
+    colr->direct.rgb.red = gcolr->val.general.x;
+    colr->direct.rgb.green = gcolr->val.general.y;
+    colr->direct.rgb.blue = gcolr->val.general.z;
+    break;
+    
+  default:
+    break;
+  }
 }
 
 /*******************************************************************************
@@ -408,23 +430,23 @@ void wsgl_colr_from_gcolr(
  */
 
 void wsgl_set_line_ind(
-   Ws *ws,
-   Pattr_group *attr_group,
-   Pint ind
-   )
+		       Ws *ws,
+		       Pattr_group *attr_group,
+		       Pint ind
+		       )
 {
-   Phg_ret ret;
-
-   (*ws->inq_representation)(ws,
-                             ind,
-                             PINQ_REALIZED,
-                             PHG_ARGS_EXTLNREP,
-                             &ret);
-   if (ret.err == 0) {
-      phg_attr_group_set_line_bundle(ws,
-                                     attr_group,
-                                     &ret.data.rep.extlnrep);
-   }
+  Phg_ret ret;
+  
+  (*ws->inq_representation)(ws,
+			    ind,
+			    PINQ_REALIZED,
+			    PHG_ARGS_EXTLNREP,
+			    &ret);
+  if (ret.err == 0) {
+    phg_attr_group_set_line_bundle(ws,
+				   attr_group,
+				   &ret.data.rep.extlnrep);
+  }
 }
 
 /*******************************************************************************
@@ -435,53 +457,57 @@ void wsgl_set_line_ind(
  */
 
 void wsgl_setup_line_attr(
-   Ws_attr_st *ast
-   )
+			  Ws_attr_st *ast
+			  )
 {
-   Pint type;
-
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_LINE_COLR_IND)) {
-      wsgl_set_gcolr(&ast->indiv_group.line_bundle.colr);
-   }
-   else {
-      wsgl_set_gcolr(&ast->bundl_group.line_bundle.colr);
-   }
-
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_LINETYPE)) {
-      type = ast->indiv_group.line_bundle.type;
-   }
-   else {
-      type = ast->bundl_group.line_bundle.type;
-   }
-
-   switch (type) {
-      case PLINE_DASH:
-         glLineStipple(1, 0x00ff);
-         glEnable(GL_LINE_STIPPLE);
-      break;
-
-      case PLINE_DOT:
-         glLineStipple(1, 0x0101);
-         glEnable(GL_LINE_STIPPLE);
-      break;
-
-      case PLINE_DASH_DOT:
-         glLineStipple(1, 0x1c47);
-         glEnable(GL_LINE_STIPPLE);
-      break;
-
-      default:
-         glDisable(GL_LINE_STIPPLE);
-      break;
-   }
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_LINEWIDTH)) {
-      glLineWidth(ast->indiv_group.line_bundle.width);
-   }
-   else {
-      glLineWidth(ast->bundl_group.line_bundle.width);
-   }
-   glEnable(GL_LINE_SMOOTH);
-   glUniform1i(shading_mode, 0);
+  Pint type;
+  
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_LINE_COLR_IND)) {
+    wsgl_set_gcolr(&ast->indiv_group.line_bundle.colr);
+  }
+  else {
+    wsgl_set_gcolr(&ast->bundl_group.line_bundle.colr);
+  }
+  
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_LINETYPE)) {
+    type = ast->indiv_group.line_bundle.type;
+  }
+  else {
+    type = ast->bundl_group.line_bundle.type;
+  }
+  
+  switch (type) {
+  case PLINE_DASH:
+    glLineStipple(1, 0x00ff);
+    glEnable(GL_LINE_STIPPLE);
+    break;
+    
+  case PLINE_DOT:
+    glLineStipple(1, 0x0101);
+    glEnable(GL_LINE_STIPPLE);
+    break;
+    
+  case PLINE_DASH_DOT:
+    glLineStipple(1, 0x1c47);
+    glEnable(GL_LINE_STIPPLE);
+    break;
+    
+  default:
+    glDisable(GL_LINE_STIPPLE);
+    break;
+  }
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_LINEWIDTH)) {
+    glLineWidth(ast->indiv_group.line_bundle.width);
+  }
+  else {
+    glLineWidth(ast->bundl_group.line_bundle.width);
+  }
+  glEnable(GL_LINE_SMOOTH);
+  if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+    glUniform1i(shading_mode, 0);
+  } else {
+    glDisable(GL_LIGHTING);
+  }
 }
 
 /*******************************************************************************
@@ -492,23 +518,23 @@ void wsgl_setup_line_attr(
  */
 
 void wsgl_set_int_ind(
-   Ws *ws,
-   Pattr_group *attr_group,
-   Pint ind
-   )
+		      Ws *ws,
+		      Pattr_group *attr_group,
+		      Pint ind
+		      )
 {
-   Phg_ret ret;
-
-   (*ws->inq_representation)(ws,
-                             ind,
-                             PINQ_REALIZED,
-                             PHG_ARGS_EXTINTERREP,
-                             &ret);
-   if (ret.err == 0) {
-      phg_attr_group_set_int_bundle(ws,
-                                    attr_group,
-                                    &ret.data.rep.extinterrep);
-   }
+  Phg_ret ret;
+  
+  (*ws->inq_representation)(ws,
+			    ind,
+			    PINQ_REALIZED,
+			    PHG_ARGS_EXTINTERREP,
+			    &ret);
+  if (ret.err == 0) {
+    phg_attr_group_set_int_bundle(ws,
+				  attr_group,
+				  &ret.data.rep.extinterrep);
+  }
 }
 
 /*******************************************************************************
@@ -519,18 +545,18 @@ void wsgl_set_int_ind(
  */
 
 Pgcolr* wsgl_get_int_colr(
-   Ws_attr_st *ast
-   )
+			  Ws_attr_st *ast
+			  )
 {
-   Pgcolr *gcolr;
-
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_INT_COLR_IND)) {
-      gcolr = &ast->indiv_group.int_bundle.colr;
-   }
-   else {
-      gcolr = &ast->bundl_group.int_bundle.colr;
-   }
-   return gcolr;
+  Pgcolr *gcolr;
+  
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_INT_COLR_IND)) {
+    gcolr = &ast->indiv_group.int_bundle.colr;
+  }
+  else {
+    gcolr = &ast->bundl_group.int_bundle.colr;
+  }
+  return gcolr;
 }
 
 /*******************************************************************************
@@ -541,19 +567,19 @@ Pgcolr* wsgl_get_int_colr(
  */
 
 Pint_style wsgl_get_int_style(
-   Ws_attr_st *ast
-   )
+			      Ws_attr_st *ast
+			      )
 {
-   Pint_style style;
-
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_INT_STYLE)) {
-      style = ast->indiv_group.int_bundle.style;
-   }
-   else {
-      style = ast->bundl_group.int_bundle.style;
-   }
-
-   return style;
+  Pint_style style;
+  
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_INT_STYLE)) {
+    style = ast->indiv_group.int_bundle.style;
+  }
+  else {
+    style = ast->bundl_group.int_bundle.style;
+  }
+  
+  return style;
 }
 
 /*******************************************************************************
@@ -564,30 +590,30 @@ Pint_style wsgl_get_int_style(
  */
 
 void wsgl_setup_int_style(
-   Pint_style style
-   )
+			  Pint_style style
+			  )
 {
-   switch (style) {
-      case PSTYLE_HOLLOW:
-         glDisable(GL_POLYGON_STIPPLE);
-         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-         break;
-
-      case PSTYLE_SOLID:
-         glDisable(GL_POLYGON_STIPPLE);
-         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-         break;
-
-      case PSTYLE_HATCH:
-         glEnable(GL_POLYGON_STIPPLE);
-         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-         break;
-
-      default:
-         glDisable(GL_POLYGON_STIPPLE);
-         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-         break;
-   }
+  switch (style) {
+  case PSTYLE_HOLLOW:
+    glDisable(GL_POLYGON_STIPPLE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    break;
+    
+  case PSTYLE_SOLID:
+    glDisable(GL_POLYGON_STIPPLE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    break;
+    
+  case PSTYLE_HATCH:
+    glEnable(GL_POLYGON_STIPPLE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    break;
+    
+  default:
+    glDisable(GL_POLYGON_STIPPLE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    break;
+  }
 }
 
 /*******************************************************************************
@@ -598,60 +624,68 @@ void wsgl_setup_int_style(
  */
 
 void wsgl_setup_int_attr_nocol(
-   Ws *ws,
-   Ws_attr_st *ast
-   )
+			       Ws *ws,
+			       Ws_attr_st *ast
+			       )
 {
-   Pint_style style;
-   Pint style_ind;
-   Pint shad_meth;
-
-   Wsgl_handle wsgl = ws->render_context;
-
-   style = wsgl_get_int_style(ast);
-   if (style != wsgl->dev_st.int_style) {
-      wsgl_setup_int_style(style);
-      wsgl->dev_st.int_style = style;
-   }
-
-   if (phg_nset_name_is_set(&ast->asf_nameset,
-                            (Pint) PASPECT_INT_STYLE_IND)) {
-      style_ind = ast->indiv_group.int_bundle.style_ind;
-   }
-   else {
-      style_ind = ast->bundl_group.int_bundle.style_ind;
-   }
-
-   if (style_ind != wsgl->dev_st.int_style_ind) {
-      glPolygonStipple(wsgl_hatch_tbl[style_ind - 1]);
-      wsgl->dev_st.int_style_ind = style_ind;
-   }
-
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_INT_SHAD_METH)) {
-      shad_meth = ast->indiv_group.int_bundle.shad_meth;
-   }
-   else {
-      shad_meth = ast->bundl_group.int_bundle.shad_meth;
-   }
-
-   if (shad_meth != wsgl->dev_st.int_shad_meth) {
-      if (shad_meth == PSD_NONE) {
-	//glShadeModel(GL_FLAT);
-      }
-      else {
-	//glShadeModel(GL_SMOOTH);
-      }
-      wsgl->dev_st.int_shad_meth = shad_meth;
-   }
-
-   if (wsgl->cur_struct.lighting) {
-     glUniform1i(shading_mode, 1);
-   }
-   else {
-     glUniform1i(shading_mode, 0);
-   }
-
-   glCullFace(GL_BACK);
+  Pint_style style;
+  Pint style_ind;
+  Pint shad_meth;
+  
+  Wsgl_handle wsgl = ws->render_context;
+  
+  style = wsgl_get_int_style(ast);
+  if (style != wsgl->dev_st.int_style) {
+    wsgl_setup_int_style(style);
+    wsgl->dev_st.int_style = style;
+  }
+  
+  if (phg_nset_name_is_set(&ast->asf_nameset,
+			   (Pint) PASPECT_INT_STYLE_IND)) {
+    style_ind = ast->indiv_group.int_bundle.style_ind;
+  }
+  else {
+    style_ind = ast->bundl_group.int_bundle.style_ind;
+  }
+  
+  if (style_ind != wsgl->dev_st.int_style_ind) {
+    glPolygonStipple(wsgl_hatch_tbl[style_ind - 1]);
+    wsgl->dev_st.int_style_ind = style_ind;
+  }
+  
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_INT_SHAD_METH)) {
+    shad_meth = ast->indiv_group.int_bundle.shad_meth;
+  }
+  else {
+    shad_meth = ast->bundl_group.int_bundle.shad_meth;
+  }
+  
+  if (shad_meth != wsgl->dev_st.int_shad_meth) {
+    if (shad_meth == PSD_NONE) {
+      glShadeModel(GL_FLAT);
+    }
+    else {
+      glShadeModel(GL_SMOOTH);
+    }
+    wsgl->dev_st.int_shad_meth = shad_meth;
+  }
+  
+  if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects) {
+    if (wsgl->cur_struct.lighting) {
+      glUniform1i(shading_mode, 1);
+    }
+    else {
+      glUniform1i(shading_mode, 0);
+    }
+  } else {
+    if (wsgl->cur_struct.lighting) {
+      glEnable(GL_LIGHTING);
+    }
+    else {
+      glDisable(GL_LIGHTING);
+    }
+  }
+  glCullFace(GL_BACK);
 }
 
 /*******************************************************************************
@@ -793,9 +827,12 @@ void wsgl_setup_edge_attr(
          glDisable(GL_LINE_STIPPLE);
       break;
    }
-   glUniform1i(shading_mode, 0);
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+     glUniform1i(shading_mode, 0);
+   } else {
+     glDisable(GL_LIGHTING);
+   }
 }
-
 
 /*******************************************************************************
  * wsgl_set_marker_ind
@@ -858,7 +895,11 @@ void wsgl_setup_marker_attr(
    else {
       *size = ast->bundl_group.marker_bundle.size;
    }
-   glUniform1i(shading_mode, 0);
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+     glUniform1i(shading_mode, 0);
+   } else {
+     glDisable(GL_LIGHTING);
+   }
 }
 
 /*******************************************************************************
@@ -875,11 +916,17 @@ void wsgl_setup_background(
    Wsgl_handle wsgl = ws->render_context;
    glDisable(GL_POLYGON_STIPPLE);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   glVertexAttrib4f(vCOLOR,
-		    wsgl->background.val.general.x,
-		    wsgl->background.val.general.y,
-		    wsgl->background.val.general.z,
-		    1.0);
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+     glVertexAttrib4f(vCOLOR,
+		      wsgl->background.val.general.x,
+		      wsgl->background.val.general.y,
+		      wsgl->background.val.general.z,
+		      1.0);
+   } else {
+     glColor3f(wsgl->background.val.general.x,
+	       wsgl->background.val.general.y,
+	       wsgl->background.val.general.z);
+   }
    /* Need to restore polygon mode */
    wsgl->dev_st.int_style = -1;
 }
@@ -977,8 +1024,12 @@ void wsgl_setup_text_attr(
       *char_expan = ast->bundl_group.text_bundle.char_expan;
    }
 
-   glUniform1i(shading_mode, 0);
-
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+     glUniform1i(shading_mode, 0);
+   } else {
+     glDisable(GL_LIGHTING);
+     glLineWidth(2.0);
+   }
 }
 
 /*******************************************************************************
