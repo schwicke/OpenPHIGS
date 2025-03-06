@@ -353,6 +353,7 @@ void wsgl_update_light_src_state(
    Phg_ret ret;
    Wsgl *wsgl = ws->render_context;
 
+   glPushMatrix();
    glLoadIdentity();
 
    /* Activate light sources */

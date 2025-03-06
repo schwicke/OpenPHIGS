@@ -79,17 +79,13 @@ static void wsgl_set_model_view_matrix(
    GLfloat m[16];
    GLfloat *mp = &m[0];
 
-   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
-     for (i = 0; i < 4; i++) {
-       for (j = 0; j < 4; j++) {
-         *mp = mat[j][i];
-         mp++;
-       }
+   for (i = 0; i < 4; i++) {
+     for (j = 0; j < 4; j++) {
+       *mp = mat[j][i];
+       mp++;
      }
-     glUniformMatrix4fv(ModelViewMatrix, 1, FALSE, m);
-   } else {
-     wsgl_set_matrix(mat, FALSE);
    }
+   glUniformMatrix4fv(ModelViewMatrix, 1, FALSE, m);
 }
 
 static void wsgl_set_projection_matrix(
@@ -99,17 +95,13 @@ static void wsgl_set_projection_matrix(
    int i, j;
    GLfloat m[16];
    GLfloat *mp = &m[0];
-   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects) {
-     for (i = 0; i < 4; i++) {
-       for (j = 0; j < 4; j++) {
-         *mp = mat[j][i];
-         mp++;
-       }
+   for (i = 0; i < 4; i++) {
+     for (j = 0; j < 4; j++) {
+       *mp = mat[j][i];
+       mp++;
      }
-     glUniformMatrix4fv(ProjectionMatrix, 1, FALSE, m);
-   } else {
-     wsgl_set_matrix(mat, FALSE);
    }
+   glUniformMatrix4fv(ProjectionMatrix, 1, FALSE, m);
 }
 
 /*******************************************************************************
@@ -134,10 +126,18 @@ void wsgl_update_projection(
       phg_mat_mul(wsgl->model_tran,
                   wsgl->pick_tran,
                   wsgl->cur_struct.view_rep.map_matrix);
-      wsgl_set_projection_matrix(wsgl->model_tran);
+      if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+	wsgl_set_projection_matrix(wsgl->model_tran);
+      } else {
+	wsgl_set_matrix(wsgl->model_tran, FALSE);
+      }
    }
    else {
-      wsgl_set_projection_matrix(wsgl->cur_struct.view_rep.map_matrix);
+     if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+       wsgl_set_projection_matrix(wsgl->cur_struct.view_rep.map_matrix);
+     } else {
+       wsgl_set_matrix(wsgl->cur_struct.view_rep.map_matrix, FALSE);
+     }
    }
 }
 
@@ -170,7 +170,11 @@ void wsgl_update_modelview(
    phg_mat_mul(wsgl->model_tran,
                wsgl->cur_struct.view_rep.ori_matrix,
                wsgl->composite_tran);
-   wsgl_set_model_view_matrix(wsgl->model_tran);
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+     wsgl_set_model_view_matrix(wsgl->model_tran);
+   } else {
+     wsgl_set_matrix(wsgl->model_tran, FALSE);
+   }
 
 }
 
@@ -204,9 +208,9 @@ void wsgl_set_view_ind(
 }
 
 /*******************************************************************************
- * wsgl_set_view_ind
+ * wsgl_set_clip_ind
  *
- * DESCR:	Setup view
+ * DESCR:	Setup clip index
  * RETURNS:	N/A
  */
 
@@ -339,7 +343,7 @@ void wsgl_set_colr(
   case PINDIRECT:
     glIndexi(colr->ind);
     break;
-    
+
   case PMODEL_RGB:
     if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
       glVertexAttrib4f(vCOLOR,
@@ -353,7 +357,7 @@ void wsgl_set_colr(
 		colr->direct.rgb.blue);
     }
     break;
-    
+
   default:
     break;
   }
@@ -374,7 +378,7 @@ void wsgl_set_gcolr(
   case PINDIRECT:
     glIndexi(gcolr->val.ind);
     break;
-    
+
   case PMODEL_RGB:
     if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
       glVertexAttrib4f(vCOLOR,
@@ -388,7 +392,7 @@ void wsgl_set_gcolr(
 		gcolr->val.general.z);
     }
     break;
-    
+
   default:
     break;
   }
@@ -410,13 +414,13 @@ void wsgl_colr_from_gcolr(
   case PINDIRECT:
     colr->ind = gcolr->val.ind;
     break;
-    
+
   case PMODEL_RGB:
     colr->direct.rgb.red = gcolr->val.general.x;
     colr->direct.rgb.green = gcolr->val.general.y;
     colr->direct.rgb.blue = gcolr->val.general.z;
     break;
-    
+
   default:
     break;
   }
@@ -436,7 +440,7 @@ void wsgl_set_line_ind(
 		       )
 {
   Phg_ret ret;
-  
+
   (*ws->inq_representation)(ws,
 			    ind,
 			    PINQ_REALIZED,
@@ -461,37 +465,37 @@ void wsgl_setup_line_attr(
 			  )
 {
   Pint type;
-  
+
   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_LINE_COLR_IND)) {
     wsgl_set_gcolr(&ast->indiv_group.line_bundle.colr);
   }
   else {
     wsgl_set_gcolr(&ast->bundl_group.line_bundle.colr);
   }
-  
+
   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_LINETYPE)) {
     type = ast->indiv_group.line_bundle.type;
   }
   else {
     type = ast->bundl_group.line_bundle.type;
   }
-  
+
   switch (type) {
   case PLINE_DASH:
     glLineStipple(1, 0x00ff);
     glEnable(GL_LINE_STIPPLE);
     break;
-    
+
   case PLINE_DOT:
     glLineStipple(1, 0x0101);
     glEnable(GL_LINE_STIPPLE);
     break;
-    
+
   case PLINE_DASH_DOT:
     glLineStipple(1, 0x1c47);
     glEnable(GL_LINE_STIPPLE);
     break;
-    
+
   default:
     glDisable(GL_LINE_STIPPLE);
     break;
@@ -502,8 +506,8 @@ void wsgl_setup_line_attr(
   else {
     glLineWidth(ast->bundl_group.line_bundle.width);
   }
-  glEnable(GL_LINE_SMOOTH);
   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+    glEnable(GL_LINE_SMOOTH);
     glUniform1i(shading_mode, 0);
   } else {
     glDisable(GL_LIGHTING);
@@ -524,7 +528,7 @@ void wsgl_set_int_ind(
 		      )
 {
   Phg_ret ret;
-  
+
   (*ws->inq_representation)(ws,
 			    ind,
 			    PINQ_REALIZED,
@@ -549,7 +553,7 @@ Pgcolr* wsgl_get_int_colr(
 			  )
 {
   Pgcolr *gcolr;
-  
+
   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_INT_COLR_IND)) {
     gcolr = &ast->indiv_group.int_bundle.colr;
   }
@@ -571,14 +575,14 @@ Pint_style wsgl_get_int_style(
 			      )
 {
   Pint_style style;
-  
+
   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_INT_STYLE)) {
     style = ast->indiv_group.int_bundle.style;
   }
   else {
     style = ast->bundl_group.int_bundle.style;
   }
-  
+
   return style;
 }
 
@@ -598,17 +602,17 @@ void wsgl_setup_int_style(
     glDisable(GL_POLYGON_STIPPLE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     break;
-    
+
   case PSTYLE_SOLID:
     glDisable(GL_POLYGON_STIPPLE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     break;
-    
+
   case PSTYLE_HATCH:
     glEnable(GL_POLYGON_STIPPLE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     break;
-    
+
   default:
     glDisable(GL_POLYGON_STIPPLE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -631,15 +635,15 @@ void wsgl_setup_int_attr_nocol(
   Pint_style style;
   Pint style_ind;
   Pint shad_meth;
-  
+
   Wsgl_handle wsgl = ws->render_context;
-  
+
   style = wsgl_get_int_style(ast);
   if (style != wsgl->dev_st.int_style) {
     wsgl_setup_int_style(style);
     wsgl->dev_st.int_style = style;
   }
-  
+
   if (phg_nset_name_is_set(&ast->asf_nameset,
 			   (Pint) PASPECT_INT_STYLE_IND)) {
     style_ind = ast->indiv_group.int_bundle.style_ind;
@@ -647,19 +651,19 @@ void wsgl_setup_int_attr_nocol(
   else {
     style_ind = ast->bundl_group.int_bundle.style_ind;
   }
-  
+
   if (style_ind != wsgl->dev_st.int_style_ind) {
     glPolygonStipple(wsgl_hatch_tbl[style_ind - 1]);
     wsgl->dev_st.int_style_ind = style_ind;
   }
-  
+
   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_INT_SHAD_METH)) {
     shad_meth = ast->indiv_group.int_bundle.shad_meth;
   }
   else {
     shad_meth = ast->bundl_group.int_bundle.shad_meth;
   }
-  
+
   if (shad_meth != wsgl->dev_st.int_shad_meth) {
     if (shad_meth == PSD_NONE) {
       glShadeModel(GL_FLAT);
@@ -669,7 +673,7 @@ void wsgl_setup_int_attr_nocol(
     }
     wsgl->dev_st.int_shad_meth = shad_meth;
   }
-  
+
   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects) {
     if (wsgl->cur_struct.lighting) {
       glUniform1i(shading_mode, 1);
