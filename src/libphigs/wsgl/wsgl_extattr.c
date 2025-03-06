@@ -148,7 +148,6 @@ void wsgl_setup_back_int_attr_nocol(
  * NOTES:	Make sure to enable GL_COLOR_MATERIAL before use
  * RETURNS:     N/A
  */
-/*
 void wsgl_setup_int_refl_props(
    Pint colr_type,
    Pcoval *colr,
@@ -240,7 +239,6 @@ void wsgl_setup_int_refl_props(
          break;
    }
 }
-*/
 
 /*******************************************************************************
  * wsgl_setup_back_int_refl_props
