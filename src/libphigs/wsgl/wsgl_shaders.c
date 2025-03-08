@@ -352,8 +352,8 @@ void wsgl_shaders(Ws * ws){
     abort();
   }
 #endif
-  if (!GLEW_ARB_vertex_shader ||! GLEW_ARB_fragment_shader ||! GLEW_ARB_shader_objects) {
-    fprintf(stderr, "WARNING: Shaders are not available. Some functionality will not work, like shading, lighting and clipping\n");
+  if (! wsgl_use_shaders || !GLEW_ARB_vertex_shader ||! GLEW_ARB_fragment_shader ||! GLEW_ARB_shader_objects) {
+    fprintf(stderr, "WARNING: Shaders are not available or not wanted.\nSome functionality will not work, e.g. clipping\n");
   } else {
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
