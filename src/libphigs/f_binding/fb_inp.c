@@ -101,10 +101,15 @@ FTN_SUBROUTINE(pprec)(
   /* copy the strings */
   for (i=0; i<nstr; i++){
     len = FTN_INTEGER_ARRAY_GET(lstri, i);
+#ifdef DEBUG
+    printf("DEBUG: pprec string nr %d length %d\n", i, len);
+#endif
     memcpy(here, &str[i*dima], len);
+#ifdef DEBUG
+    printf("DEBUG: pprec source for  %d is at %p\n", i, (void*)&str[i*dima]);
+#endif
     here += len*sizeof(char);
-    intp = (int*)here;
-    *intp = 0;
+    *here = '\0';
     here++;
   }
   *errind = 0;
@@ -815,6 +820,12 @@ FTN_SUBROUTINE(pinch3)(
     }
     strings += 1 + charlen[i];
   }
+#ifdef DEBUG
+  printf("DEBUG pinch3: got %d strings\n", nstrings);
+  for (i=0; i<nstrings; i++){
+    printf("DEBUG Nr.: %d: Content: \"%s\"\n", i, str[i]);
+  }
+#endif
   switch (pet) {
   case 1:
   case -1:
