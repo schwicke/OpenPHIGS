@@ -667,7 +667,7 @@ FTN_SUBROUTINE(pinst)(
 
   char * buffer = (char*)malloc((ilen+1)*sizeof(char));
   if (buffer != NULL) {
-    strncpy(buffer, istr, ilen);
+    strncpy(buffer, istr, ilen*sizeof(char));
     buffer[ilen] = '\0';
     area.x_min = FTN_REAL_GET(xmin);
     area.x_max = FTN_REAL_GET(xmax);
@@ -715,7 +715,7 @@ FTN_SUBROUTINE(pinst3)(
   int * here;
   char * buffer = (char*)malloc((ilen+1)*sizeof(char));
   if (buffer != NULL) {
-    strncpy(buffer, istr, ilen);
+    strncpy(buffer, istr, ilen*sizeof(char));
     buffer[ilen] = '\0';
     area.x_min = FTN_REAL_ARRAY_GET(evol, 0);
     area.x_max = FTN_REAL_ARRAY_GET(evol, 1);
@@ -819,7 +819,7 @@ FTN_SUBROUTINE(pinch3)(
   for (i=0; i<nstrings; i++){
     buffer = (char*) malloc((charlen[i]+1)*sizeof(char));
     if (buffer != NULL){
-      strncpy(buffer, strings, strlen(strings));
+      strncpy(buffer, strings, charlen[i]*sizeof(char));
       buffer[strlen(strings)] = '\0';
     }
     str[i] = buffer;
@@ -997,7 +997,7 @@ FTN_SUBROUTINE(pinvl3)(
     if (l1 > 0){
       buffer = (char*) malloc((l1+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l1);
+	strncpy(buffer, &cp[0], l1*sizeof(char));
 	buffer[l1] = '\0';
 	val_data_rec.pets.pet_u1.label = buffer;
       } else {
@@ -1010,7 +1010,7 @@ FTN_SUBROUTINE(pinvl3)(
     if (l2 > 0){
       buffer = (char*) malloc((l2+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l2);
+	strncpy(buffer, &cp[0], l2*sizeof(char));
 	buffer[l2] = '\0';
 	val_data_rec.pets.pet_u1.format = buffer;
       } else {
@@ -1023,7 +1023,7 @@ FTN_SUBROUTINE(pinvl3)(
     if (l3 > 0){
       buffer = (char*) malloc((l3+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l3);
+	strncpy(buffer, &cp[0], l3*sizeof(char));
 	buffer[l3] = '\0';
 	val_data_rec.pets.pet_u1.low_label = buffer;
       } else {
@@ -1036,7 +1036,7 @@ FTN_SUBROUTINE(pinvl3)(
     if (l4 > 0){
       buffer = (char*) malloc((l4+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l4);
+	strncpy(buffer, &cp[0], l4*sizeof(char));
 	buffer[l4] = '\0';
 	val_data_rec.pets.pet_u1.high_label = buffer;
       } else {
