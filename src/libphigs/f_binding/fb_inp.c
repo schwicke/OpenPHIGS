@@ -57,6 +57,9 @@ FTN_SUBROUTINE(pprec)(
   Pint nstr = FTN_INTEGER_GET(sl);
   Pint dima = FTN_INTEGER_GET(mldr);
   char * here = datrec;
+#ifdef DEBUG
+  char * final;
+#endif
   int i, len, num_bytes, chars;
   int maxbytes, required;
   int * intp;
@@ -101,10 +104,18 @@ FTN_SUBROUTINE(pprec)(
   /* copy the strings */
   for (i=0; i<nstr; i++){
     len = FTN_INTEGER_ARRAY_GET(lstri, i);
+#ifdef DEBUG
+    printf("DEBUG: pprec string nr %d length %d\n", i, len);
+#endif
     memcpy(here, &str[i*dima], len);
+#ifdef DEBUG
+    final = here;
+#endif
     here += len*sizeof(char);
-    intp = (int*)here;
-    *intp = 0;
+    *here = '\0';
+#ifdef DEBUG
+    printf("DEBUG: pprec final %s length %d\n", final, (int)strlen(final));
+#endif
     here++;
   }
   *errind = 0;
@@ -651,12 +662,12 @@ FTN_SUBROUTINE(pinst)(
   Pint pet = FTN_INTEGER_GET(ipet);
   char * init_string = istr;
   Plimit area;
-  char * buffer = (char*)malloc((ilen+1)*sizeof(char));
   Pstring_data data;
   int * here;
 
+  char * buffer = (char*)malloc((ilen+1)*sizeof(char));
   if (buffer != NULL) {
-    strncpy(buffer, istr, ilen);
+    strncpy(buffer, istr, ilen*sizeof(char));
     buffer[ilen] = '\0';
     area.x_min = FTN_REAL_GET(xmin);
     area.x_max = FTN_REAL_GET(xmax);
@@ -704,7 +715,7 @@ FTN_SUBROUTINE(pinst3)(
   int * here;
   char * buffer = (char*)malloc((ilen+1)*sizeof(char));
   if (buffer != NULL) {
-    strncpy(buffer, istr, ilen);
+    strncpy(buffer, istr, ilen*sizeof(char));
     buffer[ilen] = '\0';
     area.x_min = FTN_REAL_ARRAY_GET(evol, 0);
     area.x_max = FTN_REAL_ARRAY_GET(evol, 1);
@@ -808,13 +819,21 @@ FTN_SUBROUTINE(pinch3)(
   for (i=0; i<nstrings; i++){
     buffer = (char*) malloc((charlen[i]+1)*sizeof(char));
     if (buffer != NULL){
-      strncpy(buffer, &strings[0], charlen[i]);
-      str[i] = buffer;
-    } else {
-      str[i] = NULL;
+      strncpy(buffer, strings, charlen[i]*sizeof(char));
+      buffer[strlen(strings)] = '\0';
     }
-    strings += 1 + charlen[i];
+    str[i] = buffer;
+#ifdef DEBUG
+    printf("DEBUG pinch3: string nr %d %s length %d expected %d\n", i, str[i], (int) strlen(str[i]), charlen[i]);
+#endif
+    strings += 1 + strlen(strings);
   }
+#ifdef DEBUG
+  printf("DEBUG pinch3: got %d strings\n", nstrings);
+  for (i=0; i<nstrings; i++){
+    printf("DEBUG pinch3 Nr.: %d: Content: \"%s\" length %d\n", i, str[i], (int)strlen(str[i]));
+  }
+#endif
   switch (pet) {
   case 1:
   case -1:
@@ -978,7 +997,8 @@ FTN_SUBROUTINE(pinvl3)(
     if (l1 > 0){
       buffer = (char*) malloc((l1+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l1);
+	strncpy(buffer, &cp[0], l1*sizeof(char));
+	buffer[l1] = '\0';
 	val_data_rec.pets.pet_u1.label = buffer;
       } else {
 	val_data_rec.pets.pet_u1.label = WST_DEFAULT_VALUATOR_LABEL;
@@ -990,7 +1010,8 @@ FTN_SUBROUTINE(pinvl3)(
     if (l2 > 0){
       buffer = (char*) malloc((l2+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l2);
+	strncpy(buffer, &cp[0], l2*sizeof(char));
+	buffer[l2] = '\0';
 	val_data_rec.pets.pet_u1.format = buffer;
       } else {
 	val_data_rec.pets.pet_u1.format = WST_DEFAULT_VALUATOR_FORMAT;
@@ -1002,7 +1023,8 @@ FTN_SUBROUTINE(pinvl3)(
     if (l3 > 0){
       buffer = (char*) malloc((l3+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l3);
+	strncpy(buffer, &cp[0], l3*sizeof(char));
+	buffer[l3] = '\0';
 	val_data_rec.pets.pet_u1.low_label = buffer;
       } else {
 	val_data_rec.pets.pet_u1.low_label = WST_DEFAULT_VALUATOR_LOW_LABEL;
@@ -1014,7 +1036,8 @@ FTN_SUBROUTINE(pinvl3)(
     if (l4 > 0){
       buffer = (char*) malloc((l4+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l4);
+	strncpy(buffer, &cp[0], l4*sizeof(char));
+	buffer[l4] = '\0';
 	val_data_rec.pets.pet_u1.high_label = buffer;
       } else {
 	val_data_rec.pets.pet_u1.high_label = WST_DEFAULT_VALUATOR_HIGH_LABEL;
