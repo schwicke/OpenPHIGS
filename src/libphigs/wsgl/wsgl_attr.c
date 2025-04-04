@@ -126,14 +126,22 @@ void wsgl_update_projection(
       phg_mat_mul(wsgl->model_tran,
                   wsgl->pick_tran,
                   wsgl->cur_struct.view_rep.map_matrix);
+#ifdef GLEW
       if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+#else
+      if (wsgl_use_shaders){
+#endif
 	wsgl_set_projection_matrix(wsgl->model_tran);
       } else {
 	wsgl_set_matrix(wsgl->model_tran, FALSE);
       }
    }
    else {
+#ifdef GLEW
      if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+#else
+     if (wsgl_use_shaders){
+#endif
        wsgl_set_projection_matrix(wsgl->cur_struct.view_rep.map_matrix);
      } else {
        wsgl_set_matrix(wsgl->cur_struct.view_rep.map_matrix, FALSE);
@@ -170,12 +178,15 @@ void wsgl_update_modelview(
    phg_mat_mul(wsgl->model_tran,
                wsgl->cur_struct.view_rep.ori_matrix,
                wsgl->composite_tran);
+#ifdef GLEW
    if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+#else
+   if (wsgl_use_shaders){
+#endif
      wsgl_set_model_view_matrix(wsgl->model_tran);
    } else {
      wsgl_set_matrix(wsgl->model_tran, FALSE);
    }
-
 }
 
 /*******************************************************************************
@@ -221,7 +232,11 @@ void wsgl_set_clip_ind(
 {
   Phg_ret ret;
   Wsgl_handle wsgl = ws->render_context;
+#ifdef GLEW
   if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+#else
+  if (wsgl_use_shaders){
+#endif
     glUniform1i(clipping_ind, ind);
     if (ind == 1) {
       glEnable(GL_CLIP_PLANE0);
@@ -245,7 +260,11 @@ void wsgl_set_alpha_channel(
 {
   Phg_ret ret;
   Wsgl_handle wsgl = ws->render_context;
+#ifdef GLEW
   if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects) glUniform1f(alpha_channel, alpha);
+#else
+  if (wsgl_use_shaders) glUniform1f(alpha_channel, alpha);
+#endif
 }
 
 /*******************************************************************************
@@ -265,7 +284,11 @@ void wsgl_set_clip_vol3(
   int * int_data = (int*) el_data;
   Phalf_space3 * list;
   Phalf_space3 volume0;
+#ifdef GLEW
   if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects) {
+#else
+  if (wsgl_use_shaders) {
+#endif
     op = int_data[0];
     num = int_data[1];
     list = (Phalf_space3 *)(&int_data[2]);
@@ -345,7 +368,11 @@ void wsgl_set_colr(
     break;
 
   case PMODEL_RGB:
+#ifdef GLEW
     if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+#else
+    if (wsgl_use_shaders){
+#endif
       glVertexAttrib4f(vCOLOR,
 		       colr->direct.rgb.red,
 		       colr->direct.rgb.green,
@@ -380,7 +407,11 @@ void wsgl_set_gcolr(
     break;
 
   case PMODEL_RGB:
+#ifdef GLEW
     if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+#else
+    if (wsgl_use_shaders){
+#endif
       glVertexAttrib4f(vCOLOR,
 		       gcolr->val.general.x,
 		       gcolr->val.general.y,
@@ -506,7 +537,11 @@ void wsgl_setup_line_attr(
   else {
     glLineWidth(ast->bundl_group.line_bundle.width);
   }
+#ifdef GLEW
   if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+#else
+  if (wsgl_use_shaders){
+#endif
     glEnable(GL_LINE_SMOOTH);
     glUniform1i(shading_mode, 0);
   } else {
@@ -674,7 +709,11 @@ void wsgl_setup_int_attr_nocol(
     wsgl->dev_st.int_shad_meth = shad_meth;
   }
 
+#ifdef GLEW
   if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects) {
+#else
+  if (wsgl_use_shaders) {
+#endif
     if (wsgl->cur_struct.lighting) {
       glUniform1i(shading_mode, 1);
     }
@@ -831,7 +870,11 @@ void wsgl_setup_edge_attr(
          glDisable(GL_LINE_STIPPLE);
       break;
    }
+#ifdef GLEW
    if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+#else
+   if (wsgl_use_shaders){
+#endif
      glUniform1i(shading_mode, 0);
    } else {
      glDisable(GL_LIGHTING);
@@ -899,7 +942,11 @@ void wsgl_setup_marker_attr(
    else {
       *size = ast->bundl_group.marker_bundle.size;
    }
+#ifdef GLEW
    if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+#else
+   if (wsgl_use_shaders){
+#endif
      glUniform1i(shading_mode, 0);
    } else {
      glDisable(GL_LIGHTING);
@@ -920,7 +967,11 @@ void wsgl_setup_background(
    Wsgl_handle wsgl = ws->render_context;
    glDisable(GL_POLYGON_STIPPLE);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#ifdef GLEW
    if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+#else
+   if (wsgl_use_shaders){
+#endif
      glVertexAttrib4f(vCOLOR,
 		      wsgl->background.val.general.x,
 		      wsgl->background.val.general.y,
@@ -1028,7 +1079,11 @@ void wsgl_setup_text_attr(
       *char_expan = ast->bundl_group.text_bundle.char_expan;
    }
 
+#ifdef GLEW
    if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+#else
+   if (wsgl_use_shaders){
+#endif
      glUniform1i(shading_mode, 0);
    } else {
      glDisable(GL_LIGHTING);
