@@ -489,9 +489,9 @@ Ws* phg_wsb_open_ws(
         /* Store workstation type parameters */
         dt = &args->type->desc_tbl.phigs_dt;
         xdt = &args->type->desc_tbl.xwin_dt;
+        //        xdt->tool.width        = (unsigned) dt->dev_coords[0] / 2;
         xdt->tool.x            = args->x;
         xdt->tool.y            = args->y;
-        //        xdt->tool.width        = (unsigned) dt->dev_coords[0] / 2;
         xdt->tool.width        = args->width;
         xdt->tool.height       = args->height;
         xdt->tool.border_width = args->border_width;
@@ -516,12 +516,11 @@ Ws* phg_wsb_open_ws(
         /* Store workstation type parameters */
         dt = &args->type->desc_tbl.phigs_dt;
         xdt = &args->type->desc_tbl.xwin_dt;
-        xdt->tool.x            = 0;
-        xdt->tool.y            = 0;
-        //        xdt->tool.width        = (unsigned) dt->dev_coords[0] / 2;
-        xdt->tool.width        = DISPLAY_WIDTH;
-        xdt->tool.height       = DISPLAY_HEIGHT;
-        xdt->tool.border_width = 1;
+        xdt->tool.x            = args->x;
+        xdt->tool.y            = args->y;
+        xdt->tool.width        = args->width;
+        xdt->tool.height       = args->height;
+        xdt->tool.border_width = args->border_width;
         strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
         strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
         ws->display = phg_wsx_open_gl_display(NULL, &ret->err);
