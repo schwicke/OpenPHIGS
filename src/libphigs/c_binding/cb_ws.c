@@ -109,7 +109,12 @@ void popen_ws(
             args.memory = 8192;
             args.input_q = PHG_INPUT_Q;
             args.window_name = config[ws_id].window_title;
-	    args.icon_name = config[ws_id].window_icon;
+            args.icon_name = config[ws_id].window_icon;
+            args.x = config[ws_id].xpos;
+            args.y = config[ws_id].ypos;
+            args.width = config[ws_id].display_width;
+            args.height = config[ws_id].display_height;
+            args.border_width =  config[ws_id].border_width;
 
             /* Open workstation */
             PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);

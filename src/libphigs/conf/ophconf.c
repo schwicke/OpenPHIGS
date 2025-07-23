@@ -31,6 +31,7 @@
 #include "private/phgP.h"
 #include "phconf.h"
 #include "private/wsglP.h"
+#include "ws.h"
 
 int max_wkid = 40;
 Pophconf config[256];
@@ -46,6 +47,8 @@ void read_config(char * config_file){
   int i;
   float xmin,  xmax, ymin, ymax;
   float red, green, blue;
+  unsigned int width, height, border;
+  int xpos, ypos;
   Pophconf newconfig;
   int use_shaders;
 
@@ -59,6 +62,11 @@ void read_config(char * config_file){
     config[i].background_color.rgb.red = 0.;
     config[i].background_color.rgb.green = 0.;
     config[i].background_color.rgb.blue = 0.;
+    config[i].display_width = DISPLAY_WIDTH;
+    config[i].display_height = DISPLAY_HEIGHT;
+    config[i].border_width = 1;
+    config[i].xpos = 0;
+    config[i].ypos = 0;
   }
   strcpy(newconfig.window_title, phg_default_window_name);
   strcpy(newconfig.window_icon, phg_default_icon_name);
@@ -114,6 +122,13 @@ void read_config(char * config_file){
 	  newconfig.vpos.y_min = ymin;
 	  newconfig.vpos.y_max = ymax;
 	  newconfig.set_window_pos = 1;
+	}
+	if (sscanf(line, "%%wg %d %d %d %d %d", &width, &height, &xpos, &ypos, &border) > 0){
+	  newconfig.display_width = width;
+	  newconfig.display_height = height;
+	  newconfig.xpos = xpos;
+	  newconfig.xpos = ypos;
+	  newconfig.border_width = border;
 	}
 	if (sscanf(line, "%%bg %f %f %f", &red, &green, &blue) > 0){
 	  printf("setting new background color for wkid %d to (%f %f %f)\n", wk, red, green, blue);

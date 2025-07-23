@@ -179,6 +179,8 @@ typedef struct _Phg_args_open_ws {
    Input_q_handle     input_q;
    char               *window_name;
    char               *icon_name;
+   unsigned int       width, height, border_width;
+   int                x, y;
 } Phg_args_open_ws;
 
 typedef struct {
