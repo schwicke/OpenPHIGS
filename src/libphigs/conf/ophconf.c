@@ -116,7 +116,6 @@ void read_config(char * config_file){
 	  strncpy(newconfig.window_icon, text, max_text);
 	}
 	if (sscanf(line, "%%wp %f %f %f %f", &xmin, &xmax, &ymin, &ymax) > 0){
-	  /* FIXME this is not used so far */
 	  newconfig.vpos.x_min = xmin;
 	  newconfig.vpos.x_max = xmax;
 	  newconfig.vpos.y_min = ymin;

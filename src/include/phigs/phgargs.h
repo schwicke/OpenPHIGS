@@ -181,6 +181,7 @@ typedef struct _Phg_args_open_ws {
    char               *icon_name;
    unsigned int       width, height, border_width;
    int                x, y;
+   Plimit             limits;
 } Phg_args_open_ws;
 
 typedef struct {
