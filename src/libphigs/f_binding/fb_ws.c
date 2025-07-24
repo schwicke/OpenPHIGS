@@ -153,6 +153,7 @@ FTN_SUBROUTINE(popwk)(
 	   strncpy(wsh->filename, config[ws_id].filename, strlen(config[ws_id].filename));
 	   (wsh->filename)[strlen(config[ws_id].filename)] = '\0';
 	 }
+	 printf("fb_ws: Hardcopy to %s\n", wsh->filename);
 	 wsgl_clear(wsh);
       }
    }

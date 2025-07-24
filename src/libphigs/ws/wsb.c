@@ -489,7 +489,6 @@ Ws* phg_wsb_open_ws(
         /* Store workstation type parameters */
         dt = &args->type->desc_tbl.phigs_dt;
         xdt = &args->type->desc_tbl.xwin_dt;
-        //        xdt->tool.width        = (unsigned) dt->dev_coords[0] / 2;
         xdt->tool.x            = args->x;
         xdt->tool.y            = args->y;
         xdt->tool.width        = args->width;
@@ -505,9 +504,9 @@ Ws* phg_wsb_open_ws(
             ERR_BUF(ws->erh, ret->err);
             goto abort;
         }
-
         if (!phg_wsx_setup_tool(ws, NULL, args->type)) {
-            goto abort;
+	  printf("HCopy failed to setup things. Aborting.");
+	  goto abort;
         }
 
     }
@@ -539,6 +538,13 @@ Ws* phg_wsb_open_ws(
         /* Store workstation type parameters */
         dt = &args->type->desc_tbl.phigs_dt;
         xdt = &args->type->desc_tbl.xwin_dt;
+        xdt->tool.x            = args->x;
+        xdt->tool.y            = args->y;
+        xdt->tool.width        = args->width;
+        xdt->tool.height       = args->height;
+        xdt->tool.border_width = args->border_width;
+        strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
+        strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
 
         ws->display     = args->conn_info.display;
         ws->drawable_id = args->conn_info.drawable_id;
@@ -627,6 +633,7 @@ Ws* phg_wsb_open_ws(
     return ws;
 
 abort:
+    printf("WSB: There was an Error. Aborting and destroying window.");
     wsb_destroy_ws(ws);
     return NULL;
 }

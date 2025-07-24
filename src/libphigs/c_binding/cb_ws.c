@@ -25,6 +25,8 @@
 #include <string.h>
 #include <math.h>
 #include <png.h>
+#include <GL/gl.h>
+#include <GL/glx.h>
 
 #include "phg.h"
 #include "css.h"
@@ -152,6 +154,7 @@ void popen_ws(
 		break;
 	      }
 	    } else {
+	      printf("cb_ws: Hardcopy to %s\n", wsh->filename);
               strncpy(wsh->filename, config[ws_id].filename, sizeof(wsh->filename));
 	    }
 	    wsgl_clear(wsh);
@@ -185,6 +188,7 @@ void pclose_ws(
    int i;
    GLubyte * pixel_buffer;
    png_byte ** png_rows;
+   png_structp png;
    if (phg_ws_open(ws_id, Pfn_close_ws) != NULL) {
       wsh = PHG_WSID(ws_id);
       int width = wsh->type->desc_tbl.xwin_dt.tool.width;
@@ -207,15 +211,16 @@ void pclose_ws(
 	pixel_buffer = (GLubyte * ) malloc(buffer_size);
 	glReadPixels(0, 0, width, height, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixel_buffer);
 	error = glGetError();
-	if (error == GL_NO_ERROR ){
-	  short header[] = {0, 2, 0, 0, 0, 0, (short) width, (short) height, 24};
-	  FILE* fd = fopen(wsh->filename, "w+");
-	  fwrite(&header, sizeof(header), 1, fd);
-	  fwrite(pixel_buffer, buffer_size, 1, fd);
-	  fclose(fd);
-	} else {
+	if (error != GL_NO_ERROR ){
 	  printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
 	}
+	short header[] = {0, 2, 0, 0, 0, 0, (short) width, (short) height, 24};
+	printf("DEBUG writing to %s\n", wsh->filename);
+	FILE* fd = fopen(wsh->filename, "w+");
+	fwrite(&header, sizeof(header), 1, fd);
+	fwrite(pixel_buffer, buffer_size, 1, fd);
+	fclose(fd);
+	printf("DEBUG wrote %s\n", wsh->filename);
 	free(pixel_buffer);
 	break;
       case PCAT_PNG:
@@ -225,40 +230,39 @@ void pclose_ws(
 	nvals = channels * width * height;
 	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixel_buffer);
 	error = glGetError();
-	if (error == GL_NO_ERROR ){
-	  for (i=0; i<height; i++){
-	    png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
-	  }
-	  png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-	  if (png) {
-	    png_infop info = png_create_info_struct(png);
-	    if (info){
-	      FILE* fd = fopen(wsh->filename, "w+");
-	      setjmp(png_jmpbuf(png));
-	      png_init_io(png, fd);
-	      png_set_IHDR(
-			   png,
-			   info,
-			   width, height,
-			   8,
-			   PNG_COLOR_TYPE_RGB,
-			   PNG_INTERLACE_NONE,
-			   PNG_COMPRESSION_TYPE_DEFAULT,
-			   PNG_FILTER_TYPE_DEFAULT
-			   );
-	      png_write_info(png, info);
-	      png_write_image(png, png_rows);
-	      png_write_end(png, NULL);
-	      fclose(fd);
-	    } else {
-	      printf("PNG export error: failed to create info structure\n");
-	    }
-	    png_destroy_write_struct(&png, &info);
-	  } else {
-	    printf("PNG export error: failed to create write structure\n");
-	    }
-	} else {
+	if (error != GL_NO_ERROR ){
 	  printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
+	}
+	for (i=0; i<height; i++){
+	  png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
+	}
+	png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	if (png) {
+	  png_infop info = png_create_info_struct(png);
+	  if (info){
+	    FILE* fd = fopen(wsh->filename, "w+");
+	    setjmp(png_jmpbuf(png));
+	    png_init_io(png, fd);
+	    png_set_IHDR(
+			 png,
+			 info,
+			 width, height,
+			 8,
+			 PNG_COLOR_TYPE_RGB,
+			 PNG_INTERLACE_NONE,
+			 PNG_COMPRESSION_TYPE_DEFAULT,
+			 PNG_FILTER_TYPE_DEFAULT
+			 );
+	    png_write_info(png, info);
+	    png_write_image(png, png_rows);
+	    png_write_end(png, NULL);
+	    fclose(fd);
+	  } else {
+	    printf("PNG export error: failed to create info structure\n");
+	  }
+	  png_destroy_write_struct(&png, &info);
+	} else {
+	  printf("PNG export error: failed to create write structure\n");
 	}
 	free(pixel_buffer);
 	break;
@@ -269,40 +273,39 @@ void pclose_ws(
 	nvals = channels * width * height;
 	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixel_buffer);
 	error = glGetError();
-	if (error == GL_NO_ERROR ){
-	  for (i=0; i<height; i++){
-	    png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
-	  }
-	  png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-	  if (png) {
-	    png_infop info = png_create_info_struct(png);
-	    if (info){
-	      FILE* fd = fopen(wsh->filename, "w+");
-	      setjmp(png_jmpbuf(png));
-	      png_init_io(png, fd);
-	      png_set_IHDR(
-			   png,
-			   info,
-			   width, height,
-			   8,
-			   PNG_COLOR_TYPE_RGBA,
-			   PNG_INTERLACE_NONE,
-			   PNG_COMPRESSION_TYPE_DEFAULT,
-			   PNG_FILTER_TYPE_DEFAULT
-			   );
-	      png_write_info(png, info);
-	      png_write_image(png, png_rows);
-	      png_write_end(png, NULL);
-	      fclose(fd);
-	    } else {
-	      printf("PNG export error: failed to create info structure\n");
-	    }
-	    png_destroy_write_struct(&png, &info);
-	  } else {
-	    printf("PNG export error: failed to create write structure\n");
-	  }
-	} else {
+	if (error != GL_NO_ERROR ){
 	  printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
+	}
+	for (i=0; i<height; i++){
+	  png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
+	}
+	png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	if (png) {
+	  png_infop info = png_create_info_struct(png);
+	  if (info){
+	    FILE* fd = fopen(wsh->filename, "w+");
+	    setjmp(png_jmpbuf(png));
+	    png_init_io(png, fd);
+	    png_set_IHDR(
+			 png,
+			 info,
+			 width, height,
+			 8,
+			 PNG_COLOR_TYPE_RGBA,
+			 PNG_INTERLACE_NONE,
+			 PNG_COMPRESSION_TYPE_DEFAULT,
+			 PNG_FILTER_TYPE_DEFAULT
+			 );
+	    png_write_info(png, info);
+	    png_write_image(png, png_rows);
+	    png_write_end(png, NULL);
+	    fclose(fd);
+	  } else {
+	    printf("PNG export error: failed to create info structure\n");
+	  }
+	  png_destroy_write_struct(&png, &info);
+	} else {
+	  printf("PNG export error: failed to create write structure\n");
 	}
 	free(pixel_buffer);
 	break;
