@@ -74,6 +74,16 @@ void read_config(char * config_file){
   newconfig.background_color.rgb.red = 0.;
   newconfig.background_color.rgb.green = 0.;
   newconfig.background_color.rgb.blue = 0.;
+  newconfig.display_width = DISPLAY_WIDTH;
+  newconfig.display_height = DISPLAY_HEIGHT;
+  newconfig.border_width = 1;
+  newconfig.xpos = 0;
+  newconfig.ypos = 0;
+  newconfig.vpos.x_min = 0.;
+  newconfig.vpos.x_max = 1.;
+  newconfig.vpos.y_min = 0.;
+  newconfig.vpos.y_max = 1.;
+  newconfig.set_window_pos = 1;
 
   if (config_file == NULL){
     printf("No configuration file name defined. Using defaults instead.\n");
