@@ -267,16 +267,20 @@ static void init_update_state(
 }
 
 static int init_output_state(
-    Ws *ws
+			     Ws *ws,
+			     Plimit limits
     )
 {
     Wsb_output_ws *owsb = &ws->out_ws.model.b;
 
     /* Initialize the workstation transform. */
-    owsb->req_ws_window.x_min = 0.0;
-    owsb->req_ws_window.x_max = 1.0;
-    owsb->req_ws_window.y_min = 0.0;
-    owsb->req_ws_window.y_max = 1.0;
+    owsb->req_ws_window.x_min = limits.x_min;
+    owsb->req_ws_window.x_max = limits.x_max;
+    owsb->req_ws_window.y_min = limits.y_min;
+    owsb->req_ws_window.y_max = limits.y_max;
+#ifdef DEBUG
+    printf("DEBUG ws %f %f %f %f\n",  limits.x_min, limits.y_min, limits.x_max, limits.y_max);
+#endif
     owsb->req_ws_window.z_min = 0.0;
     owsb->req_ws_window.z_max = 1.0;
     owsb->ws_window = owsb->req_ws_window;
@@ -287,6 +291,9 @@ static int init_output_state(
     owsb->req_ws_viewport.x_max = (float) ws->ws_rect.width;
     owsb->req_ws_viewport.y_min = 0.0;
     owsb->req_ws_viewport.y_max = (float) ws->ws_rect.height;
+#ifdef DEBUG
+    printf("DEBUG vp %f %f %f %f\n",owsb->req_ws_viewport.x_min, owsb->req_ws_viewport.y_min, owsb->req_ws_viewport.x_max, owsb->req_ws_viewport.y_max);
+#endif
     owsb->req_ws_viewport.z_min = 0.0;
     owsb->req_ws_viewport.z_max = 1.0;
     owsb->ws_viewport = owsb->req_ws_viewport;
@@ -489,12 +496,11 @@ Ws* phg_wsb_open_ws(
         /* Store workstation type parameters */
         dt = &args->type->desc_tbl.phigs_dt;
         xdt = &args->type->desc_tbl.xwin_dt;
-        xdt->tool.x            = 0;
-        xdt->tool.y            = 0;
-        //        xdt->tool.width        = (unsigned) dt->dev_coords[0] / 2;
-        xdt->tool.width        = DISPLAY_WIDTH;
-        xdt->tool.height       = DISPLAY_HEIGHT;
-        xdt->tool.border_width = 1;
+        xdt->tool.x            = args->x;
+        xdt->tool.y            = args->y;
+        xdt->tool.width        = args->width;
+        xdt->tool.height       = args->height;
+        xdt->tool.border_width = args->border_width;
         strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
         strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
         ws->display = phg_wsx_open_gl_display(NULL, &ret->err);
@@ -505,9 +511,9 @@ Ws* phg_wsb_open_ws(
             ERR_BUF(ws->erh, ret->err);
             goto abort;
         }
-
         if (!phg_wsx_setup_tool(ws, NULL, args->type)) {
-            goto abort;
+	  printf("HCopy failed to setup things. Aborting.");
+	  goto abort;
         }
 
     }
@@ -516,12 +522,11 @@ Ws* phg_wsb_open_ws(
         /* Store workstation type parameters */
         dt = &args->type->desc_tbl.phigs_dt;
         xdt = &args->type->desc_tbl.xwin_dt;
-        xdt->tool.x            = 0;
-        xdt->tool.y            = 0;
-        //        xdt->tool.width        = (unsigned) dt->dev_coords[0] / 2;
-        xdt->tool.width        = DISPLAY_WIDTH;
-        xdt->tool.height       = DISPLAY_HEIGHT;
-        xdt->tool.border_width = 1;
+        xdt->tool.x            = args->x;
+        xdt->tool.y            = args->y;
+        xdt->tool.width        = args->width;
+        xdt->tool.height       = args->height;
+        xdt->tool.border_width = args->border_width;
         strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
         strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
         ws->display = phg_wsx_open_gl_display(NULL, &ret->err);
@@ -540,6 +545,13 @@ Ws* phg_wsb_open_ws(
         /* Store workstation type parameters */
         dt = &args->type->desc_tbl.phigs_dt;
         xdt = &args->type->desc_tbl.xwin_dt;
+        xdt->tool.x            = args->x;
+        xdt->tool.y            = args->y;
+        xdt->tool.width        = args->width;
+        xdt->tool.height       = args->height;
+        xdt->tool.border_width = args->border_width;
+        strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
+        strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
 
         ws->display     = args->conn_info.display;
         ws->drawable_id = args->conn_info.drawable_id;
@@ -594,7 +606,7 @@ Ws* phg_wsb_open_ws(
         ws->type->desc_tbl.phigs_dt.out_dt.has_double_buffer;
     ws->out_ws.model.b.cssh = args->cssh;
 
-    if (!init_output_state(ws)) {
+    if (!init_output_state(ws, args->limits)) {
 	goto abort;
     }
 
@@ -628,6 +640,7 @@ Ws* phg_wsb_open_ws(
     return ws;
 
 abort:
+    printf("WSB: There was an Error. Aborting and destroying window.");
     wsb_destroy_ws(ws);
     return NULL;
 }

@@ -35,6 +35,10 @@ extern "C" {
     int  set_window_pos;
     Plimit vpos;
     Pcolr_rep background_color;
+    unsigned int display_width;
+    unsigned int display_height;
+    unsigned int border_width;
+    int xpos, ypos;
   } Pophconf;
 
   /* configuration file name */

@@ -269,10 +269,10 @@ C      Include PHIGS enumeration file
       INCLUDE 'phigsf77.h'
 
 C     Open PHIGS and a workstation
-      CALL POPPH(0, 0)
-      CALL POPWK(0, 0, 0)
+      CALL POPPH(0, 1)
+      CALL POPWK(1, 0, 3)
 
-      CALL KYSABL(0)
+      CALL KYSABL(1)
 
 C      Buisy loop
       DO WHILE (1 .GT. 0)

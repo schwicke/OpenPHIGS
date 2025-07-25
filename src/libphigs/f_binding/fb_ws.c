@@ -122,8 +122,16 @@ FTN_SUBROUTINE(popwk)(
          args.cssh = PHG_CSS;
          args.memory = 8192;
          args.input_q = PHG_INPUT_Q;
-	 args.window_name = config[ws_id].window_title;
-	 args.icon_name = config[ws_id].window_icon;
+         args.window_name = config[ws_id].window_title;
+         args.icon_name = config[ws_id].window_icon;
+         args.x = config[ws_id].xpos;
+         args.y = config[ws_id].ypos;
+         args.width = config[ws_id].display_width;
+         args.height = config[ws_id].display_height;
+         args.border_width =  config[ws_id].border_width;
+         args.limits = config[ws_id].vpos;
+
+         printf("Opening WS %d width %d height %d\n", ws_id, args.width, args.height);
 
          /* Open workstation */
          PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);
@@ -148,6 +156,7 @@ FTN_SUBROUTINE(popwk)(
 	   strncpy(wsh->filename, config[ws_id].filename, strlen(config[ws_id].filename));
 	   (wsh->filename)[strlen(config[ws_id].filename)] = '\0';
 	 }
+	 printf("fb_ws: Hardcopy to %s\n", wsh->filename);
 	 wsgl_clear(wsh);
       }
    }

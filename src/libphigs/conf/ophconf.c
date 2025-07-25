@@ -31,10 +31,39 @@
 #include "private/phgP.h"
 #include "phconf.h"
 #include "private/wsglP.h"
+#include "ws.h"
 
 int max_wkid = 40;
 Pophconf config[256];
 int config_read = 0;
+
+void set_defaults(Pophconf* config){
+    config->wkid = -1;
+    strcpy(config->window_title, phg_default_window_name);
+    strcpy(config->window_icon, phg_default_icon_name);
+    memset(config->filename, 0, sizeof(config->filename));
+    config->background_color.rgb.red = 0.;
+    config->background_color.rgb.green = 0.;
+    config->background_color.rgb.blue = 0.;
+    config->display_width = DISPLAY_WIDTH;
+    config->display_height = DISPLAY_HEIGHT;
+    config->border_width = 1;
+    config->xpos = 0;
+    config->ypos = 0;
+    config->vpos.x_min = 0.;
+    config->vpos.x_max = 1.;
+    config->vpos.y_min = 0.;
+    config->vpos.y_max = 1.;
+    config->set_window_pos = 1;
+}
+
+void init_defaults(){
+  int i;
+  /* set default values for all workstations */
+  for (i=0; i < max_wkid; i++){
+    set_defaults(&config[i]);
+  }
+}
 
 void read_config(char * config_file){
   /* read configuraton for works station from file */
@@ -46,26 +75,16 @@ void read_config(char * config_file){
   int i;
   float xmin,  xmax, ymin, ymax;
   float red, green, blue;
+  unsigned int width, height, border;
+  int xpos, ypos;
   Pophconf newconfig;
   int use_shaders;
 
   /* initialize output */
   newconfig.wkid = -1;
-  for (i=0; i < max_wkid; i++){
-    config[i].wkid = -1;
-    strcpy(config[i].window_title, phg_default_window_name);
-    strcpy(config[i].window_icon, phg_default_icon_name);
-    memset(config[i].filename, 0, sizeof(config[i].filename));
-    config[i].background_color.rgb.red = 0.;
-    config[i].background_color.rgb.green = 0.;
-    config[i].background_color.rgb.blue = 0.;
-  }
-  strcpy(newconfig.window_title, phg_default_window_name);
-  strcpy(newconfig.window_icon, phg_default_icon_name);
-  memset(newconfig.filename, 0, sizeof(newconfig.filename));
-  newconfig.background_color.rgb.red = 0.;
-  newconfig.background_color.rgb.green = 0.;
-  newconfig.background_color.rgb.blue = 0.;
+
+  /* defaults for updated configs */
+  init_defaults();
 
   if (config_file == NULL){
     printf("No configuration file name defined. Using defaults instead.\n");
@@ -78,42 +97,51 @@ void read_config(char * config_file){
       printf("WARNING: Cannot open configuration file %s. Using defaults.\n", config_file);
       return;
     }
+    /* set initial defaults for this configuration */
+    set_defaults(&newconfig);
     while (fgets(line, maxsize, fh) != NULL){
       if (line[0] == '%'){
-	/* get work station ID */
-	if (sscanf(line, "%%wk %d", &wk)>0){
-	  if (newconfig.wkid < 0){
-	    newconfig.wkid = wk;
-	    newconfig.set_window_pos = 0;
-	    strcpy(newconfig.window_title, phg_default_window_name);
-	    strcpy(newconfig.window_icon, phg_default_icon_name);
-	  } else {
-	    /* new config follows - store the parsed one */
-	    if (newconfig.wkid < max_wkid){
-	      memcpy(&config[newconfig.wkid], &newconfig, sizeof(Pophconf));
-	      newconfig.wkid = wk;
-	      newconfig.set_window_pos= 0;
-	      strcpy(newconfig.window_title, phg_default_window_name);
-	      strcpy(newconfig.window_icon, phg_default_icon_name);
-	    }
-	  }
-	}
-	if (sscanf(line, "%%wn %s", text) > 0){
-	  strncpy(newconfig.window_title, text, max_text);
-	}
-	if (sscanf(line, "%%wf %s", text) > 0){
-	  strncpy(newconfig.filename, text, max_text);
-	}
-	if (sscanf(line, "%%wi %s", text) > 0){
-	  strncpy(newconfig.window_icon, text, max_text);
-	}
-	if (sscanf(line, "%%wp %f %f %f %f", &xmin, &xmax, &ymin, &ymax) > 0){
-	  /* FIXME this is not used so far */
-	  newconfig.vpos.x_min = xmin;
-	  newconfig.vpos.x_max = xmax;
-	  newconfig.vpos.y_min = ymin;
-	  newconfig.vpos.y_max = ymax;
-	  newconfig.set_window_pos = 1;
+        /* get work station ID */
+        if (sscanf(line, "%%wk %d", &wk)>0){
+          if (newconfig.wkid < 0){
+            newconfig.wkid = wk;
+            newconfig.set_window_pos = 0;
+            strcpy(newconfig.window_title, phg_default_window_name);
+            strcpy(newconfig.window_icon, phg_default_icon_name);
+          } else {
+            /* new config follows */
+            if (newconfig.wkid < max_wkid){
+              /* save the last parsed config */
+              memcpy(&config[newconfig.wkid], &newconfig, sizeof(Pophconf));
+              /* reset defaults for the next one */
+              set_defaults(&newconfig);
+              /* store workstation number */
+              newconfig.wkid = wk;
+            }
+          }
+        }
+        if (sscanf(line, "%%wn %s", text) > 0){
+          strncpy(newconfig.window_title, text, max_text);
+        }
+        if (sscanf(line, "%%wf %s", text) > 0){
+          strncpy(newconfig.filename, text, max_text);
+        }
+        if (sscanf(line, "%%wi %s", text) > 0){
+          strncpy(newconfig.window_icon, text, max_text);
+        }
+        if (sscanf(line, "%%wp %f %f %f %f", &xmin, &xmax, &ymin, &ymax) > 0){
+          newconfig.vpos.x_min = xmin;
+          newconfig.vpos.x_max = xmax;
+          newconfig.vpos.y_min = ymin;
+          newconfig.vpos.y_max = ymax;
+          newconfig.set_window_pos = 1;
+        }
+	if (sscanf(line, "%%wg %d %d %d %d %d", &width, &height, &xpos, &ypos, &border) > 0){
+	  newconfig.display_width = width;
+	  newconfig.display_height = height;
+	  newconfig.xpos = xpos;
+	  newconfig.xpos = ypos;
+	  newconfig.border_width = border;
 	}
 	if (sscanf(line, "%%bg %f %f %f", &red, &green, &blue) > 0){
 	  printf("setting new background color for wkid %d to (%f %f %f)\n", wk, red, green, blue);
@@ -127,13 +155,14 @@ void read_config(char * config_file){
 	    printf("Shaders are DISABLED by configuration\n");
 	  } else {
 	    wsgl_use_shaders = 1;
-	    printf("Shaders are ENABLED by configuration\n");
-	  }
-	}
+            printf("Shaders are ENABLED by configuration\n");
+          }
+        }
       }
     }
     fclose(fh);
   }
+  /* make sure we store the last one as well */
   if ((newconfig.wkid >= 0) && (newconfig.wkid < max_wkid)){
     memcpy(&config[newconfig.wkid], &newconfig, sizeof(Pophconf));
   }
