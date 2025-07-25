@@ -503,19 +503,20 @@ Ws* phg_wsb_open_ws(
         xdt->tool.border_width = args->border_width;
         strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
         strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
-        ws->display = phg_wsx_open_gl_display(NULL, &ret->err);
-       /* store the output lun */
         lun = args->conn_info.lun;
+        /* store the output lun */
         ws->lun = lun;
+
+        /* we do not want to open a display but create a rendering buffer instead*/
+        ws->display = phg_wsx_open_gl_display(NULL, &ret->err);
         if (ws->display == NULL) {
             ERR_BUF(ws->erh, ret->err);
             goto abort;
         }
         if (!phg_wsx_setup_tool(ws, NULL, args->type)) {
-	  printf("HCopy failed to setup things. Aborting.");
-	  goto abort;
+          printf("HCopy failed to initialize. Aborting.");
+          goto abort;
         }
-
     }
     else if (args->conn_type == PHG_ARGS_CONN_OPEN) {
 
@@ -573,25 +574,25 @@ Ws* phg_wsb_open_ws(
             XDestroyWindow(ws->display, ws->drawable_id);
             goto abort;
         }
-	ws->shell = phg_cpm_toolkit_add_connection(ws->app_context, ws->display, &err);
-	if (err > 0){
-	  XDestroyWindow(ws->display, ws->input_overlay_window);
-	  XDestroyWindow(ws->display, ws->drawable_id);
-	  printf("Failed to initialise top level!");
-	  goto abort;
-	}
-	/*
-	if (phg_cpm_toolkit_open_ws(ws)){
-	  XDestroyWindow(ws->display, ws->input_overlay_window);
-	  XDestroyWindow(ws->display, ws->drawable_id);
-	  printf("Failed to create a popup shell!\n");
-	}
-	*/
+        ws->shell = phg_cpm_toolkit_add_connection(ws->app_context, ws->display, &err);
+        if (err > 0){
+          XDestroyWindow(ws->display, ws->input_overlay_window);
+          XDestroyWindow(ws->display, ws->drawable_id);
+          printf("Failed to initialise top level!");
+          goto abort;
+        }
+        /*
+          if (phg_cpm_toolkit_open_ws(ws)){
+          XDestroyWindow(ws->display, ws->input_overlay_window);
+          XDestroyWindow(ws->display, ws->drawable_id);
+          printf("Failed to create a popup shell!\n");
+          }
+        */
         if (!phg_ws_input_init(ws, args->input_q)) {
-            XDestroyWindow(ws->display, ws->input_overlay_window);
-            XDestroyWindow(ws->display, ws->drawable_id);
-	    printf("Destroying input window\n");
-            goto abort;
+          XDestroyWindow(ws->display, ws->input_overlay_window);
+          XDestroyWindow(ws->display, ws->drawable_id);
+          printf("Destroying input window\n");
+          goto abort;
         }
     }
 

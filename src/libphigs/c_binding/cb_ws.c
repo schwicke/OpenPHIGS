@@ -44,124 +44,125 @@
  */
 
 void popen_ws(
-   Pint ws_id,
-   Phg_args_conn_info *conn_id,
-   Pint ws_type
-   )
+              Pint ws_id,
+              Phg_args_conn_info *conn_id,
+              Pint ws_type
+              )
 {
-   Wst *wst;
-   Ws_handle wsh;
-   Psl_ws_info *wsinfo;
-   Wst_phigs_dt *dt;
-   Phg_args_open_ws args;
-   Phg_ret ret;
-   Pcolr_rep rep;
-   char* filename;
-   /* read default configuration file if not read yet */
-   if (! config_read){
-     config_read = 1;
-     read_config("phigs.def");
-   };
-   if (phg_entry_check(PHG_ERH, ERR2, Pfn_open_ws)) {
-      if ((ws_id < 0) || (ws_id > MAX_NO_OPEN_WS)) {
-         ERR_REPORT(PHG_ERH, ERR65);
-      }
-      else if (phg_psl_inq_ws_open(PHG_PSL, ws_id)) {
-         ERR_REPORT(PHG_ERH, ERR53);
-      }
-      else if (!phg_psl_ws_free_slot(PHG_PSL)) {
-         ERR_REPORT(PHG_ERH, ERR63);
+  Wst *wst;
+  Ws_handle wsh;
+  Psl_ws_info *wsinfo;
+  Wst_phigs_dt *dt;
+  Phg_args_open_ws args;
+  Phg_ret ret;
+  Pcolr_rep rep;
+  char* filename;
+  /* read default configuration file if not read yet */
+  if (! config_read){
+    config_read = 1;
+    read_config("phigs.def");
+  };
+  if (phg_entry_check(PHG_ERH, ERR2, Pfn_open_ws)) {
+    if ((ws_id < 0) || (ws_id > MAX_NO_OPEN_WS)) {
+      ERR_REPORT(PHG_ERH, ERR65);
+    }
+    else if (phg_psl_inq_ws_open(PHG_PSL, ws_id)) {
+      ERR_REPORT(PHG_ERH, ERR53);
+    }
+    else if (!phg_psl_ws_free_slot(PHG_PSL)) {
+      ERR_REPORT(PHG_ERH, ERR63);
+    }
+    else {
+      wst = phg_wst_find(&PHG_WST_LIST, ws_type);
+      
+      if (wst == NULL) {
+        ERR_REPORT(PHG_ERH, ERR52);
       }
       else {
-         wst = phg_wst_find(&PHG_WST_LIST, ws_type);
-
-         if (wst == NULL) {
-            ERR_REPORT(PHG_ERH, ERR52);
-         }
-         else {
-            memset(&args, 0, sizeof(Phg_args_open_ws));
-
-            if (conn_id == NULL) {
-               args.conn_type = PHG_ARGS_CONN_OPEN;
-            }
-	    else {
-	      args.conn_info.background = 0;
-	      if (
-		  ws_type == PWST_HCOPY_TRUE ||
-		  ws_type == PWST_HCOPY_TRUE_DB ||
-		  ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
-		  ws_type == PWST_HCOPY_TRUE_RGB_PNG_DB ||
-		  ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
-		  ws_type == PWST_HCOPY_TRUE_RGBA_PNG_DB
-		  ) {
-		args.conn_type = PHG_ARGS_CONN_HCOPY;
-		/* color index zero is background */
-		memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
-	      }
-	      else {
-		args.conn_type = PHG_ARGS_CONN_DRAWABLE;
-		memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
-	      }
-	    }
-
-            args.wsid = ws_id;
-            args.type = wst;
-            args.erh = PHG_ERH;
-            args.cssh = PHG_CSS;
-            args.memory = 8192;
-            args.input_q = PHG_INPUT_Q;
-            args.window_name = config[ws_id].window_title;
-            args.icon_name = config[ws_id].window_icon;
-            args.x = config[ws_id].xpos;
-            args.y = config[ws_id].ypos;
-            args.width = config[ws_id].display_width;
-            args.height = config[ws_id].display_height;
-            args.border_width =  config[ws_id].border_width;
-            args.limits = config[ws_id].vpos;
-
-            /* Open workstation */
-            PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);
-            if (PHG_WSID(ws_id) == NULL) {
-               ERR_REPORT(PHG_ERH, ERR900);
-            }
-            else {
-               /* Add workstation to info list */
-               phg_psl_add_ws(PHG_PSL, ws_id, NULL, wst);
-            }
-            /* predefine some colors */
-            pxset_color_map(ws_id);
-            /* set background as specified in configuration file */
-            pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
-            wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
-            dt = &wsinfo->wstype->desc_tbl.phigs_dt;
-            /* init the file name */
-            wsh = PHG_WSID(ws_id);
-            if (strlen(config[ws_id].filename) == 0){
-              switch (dt->ws_category){
-              case PCAT_TGA:
-                strcpy(wsh->filename, "output.tga");
-                break;
-              case PCAT_PNG:
-              case PCAT_PNGA:
-                strcpy(wsh->filename, "output.png");
-                break;
-              case PCAT_IN:
-              case PCAT_OUT:
-              case PCAT_OUTIN:
-              case PCAT_MO:
-              case PCAT_MI:
-                break;
-              default:
-                break;
-              }
-            } else {
-              strncpy(wsh->filename, config[ws_id].filename, sizeof(wsh->filename));
-            }
-            wsgl_clear(wsh);
-         }
+        memset(&args, 0, sizeof(Phg_args_open_ws));
+        
+        if (conn_id == NULL) {
+          args.conn_type = PHG_ARGS_CONN_OPEN;
+        }
+        else {
+          args.conn_info.background = 0;
+          if (
+              ws_type == PWST_HCOPY_TRUE ||
+              ws_type == PWST_HCOPY_TRUE_DB ||
+              ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
+              ws_type == PWST_HCOPY_TRUE_RGB_PNG_DB ||
+              ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
+              ws_type == PWST_HCOPY_TRUE_RGBA_PNG_DB
+              ) {
+            args.conn_type = PHG_ARGS_CONN_HCOPY;
+            /* color index zero is background */
+            memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
+          }
+          else {
+            args.conn_type = PHG_ARGS_CONN_DRAWABLE;
+            memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
+          }
+        }
+        
+        args.wsid = ws_id;
+        args.type = wst;
+        args.erh = PHG_ERH;
+        args.cssh = PHG_CSS;
+        args.memory = 8192;
+        args.input_q = PHG_INPUT_Q;
+        args.window_name = config[ws_id].window_title;
+        args.icon_name = config[ws_id].window_icon;
+        args.x = config[ws_id].xpos;
+        args.y = config[ws_id].ypos;
+        args.width = config[ws_id].display_width;
+        args.height = config[ws_id].display_height;
+        args.border_width =  config[ws_id].border_width;
+        args.limits = config[ws_id].vpos;
+        args.hcsf = config[ws_id].hcsf;
+        
+        /* Open workstation */
+        PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);
+        if (PHG_WSID(ws_id) == NULL) {
+          ERR_REPORT(PHG_ERH, ERR900);
+        }
+        else {
+          /* Add workstation to info list */
+          phg_psl_add_ws(PHG_PSL, ws_id, NULL, wst);
+        }
+        /* predefine some colors */
+        pxset_color_map(ws_id);
+        /* set background as specified in configuration file */
+        pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
+        wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
+        dt = &wsinfo->wstype->desc_tbl.phigs_dt;
+        /* init the file name */
+        wsh = PHG_WSID(ws_id);
+        if (strlen(config[ws_id].filename) == 0){
+          switch (dt->ws_category){
+          case PCAT_TGA:
+            strcpy(wsh->filename, "output.tga");
+            break;
+          case PCAT_PNG:
+          case PCAT_PNGA:
+            strcpy(wsh->filename, "output.png");
+            break;
+          case PCAT_IN:
+          case PCAT_OUT:
+          case PCAT_OUTIN:
+          case PCAT_MO:
+          case PCAT_MI:
+            break;
+          default:
+            break;
+          }
+        } else {
+          strncpy(wsh->filename, config[ws_id].filename, sizeof(wsh->filename));
+        }
+        wsgl_clear(wsh);
       }
-      ERR_FLUSH(PHG_ERH);
-   }
+    }
+    ERR_FLUSH(PHG_ERH);
+  }
 }
 
 /*******************************************************************************

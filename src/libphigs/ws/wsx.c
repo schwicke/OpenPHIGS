@@ -132,44 +132,44 @@ int phg_wsx_setup_tool(
       ws->top_level = XtInitialize("Workstation", "", NULL, 0, &argc, argv);
       /* Create window */
       drawable_id = XCreateWindow(display,
-				  RootWindow(display, best_info->screen),
-				  xdt->tool.x, xdt->tool.y,
-				  xdt->tool.width, xdt->tool.height,
-				  xdt->tool.border_width, best_info->depth,
-				  InputOutput, best_info->visual,
-				  CWColormap | CWBackPixel | CWBorderPixel,
-				  &attrs);
+                                  RootWindow(display, best_info->screen),
+                                  xdt->tool.x, xdt->tool.y,
+                                  xdt->tool.width, xdt->tool.height,
+                                  xdt->tool.border_width, best_info->depth,
+                                  InputOutput, best_info->visual,
+                                  CWColormap | CWBackPixel | CWBorderPixel,
+                                  &attrs);
       if (!drawable_id) {
-	ERR_BUF(ws->erh, ERRN203);
-	status = FALSE;
+        ERR_BUF(ws->erh, ERRN203);
+        status = FALSE;
       }
       else {
-	/* Initialize attributes */
-	size_hints.flags = USPosition | USSize;
-	size_hints.x = xdt->tool.x;
-	size_hints.y = xdt->tool.y;
-	size_hints.width = xdt->tool.width;
-	size_hints.height = xdt->tool.height;
-	XSetStandardProperties(display, drawable_id, xdt->tool.label,
-			       xdt->tool.icon_label, None, NULL, 0,
-			       &size_hints);
-	XSelectInput(display, drawable_id, (long) ExposureMask);
-	XMapWindow(display, drawable_id);
-	XSync(display, False);
+        /* Initialize attributes */
+        size_hints.flags = USPosition | USSize;
+        size_hints.x = xdt->tool.x;
+        size_hints.y = xdt->tool.y;
+        size_hints.width = xdt->tool.width;
+        size_hints.height = xdt->tool.height;
+        XSetStandardProperties(display, drawable_id, xdt->tool.label,
+                               xdt->tool.icon_label, None, NULL, 0,
+                               &size_hints);
+        XSelectInput(display, drawable_id, (long) ExposureMask);
+        XMapWindow(display, drawable_id);
+        XSync(display, False);
 
-	XWindowEvent(display, drawable_id, ExposureMask, &event);
-	XSelectInput(display, drawable_id, (long) 0);
-	ws->drawable_id = drawable_id;
-	/* Initialize renderer */
-	phg_wsx_pixel_colour(ws, cmap, attrs.background_pixel, &background);
-	if (!wsgl_init(ws, &background, NUM_SELECTABLE_STRUCTS)) {
-	  ERR_BUF(ws->erh, ERR900);
-	  free(ws);
-	  status = FALSE;
-	}
-	else {
-	  status = TRUE;
-	}
+        XWindowEvent(display, drawable_id, ExposureMask, &event);
+        XSelectInput(display, drawable_id, (long) 0);
+        ws->drawable_id = drawable_id;
+        /* Initialize renderer */
+        phg_wsx_pixel_colour(ws, cmap, attrs.background_pixel, &background);
+        if (!wsgl_init(ws, &background, NUM_SELECTABLE_STRUCTS)) {
+          ERR_BUF(ws->erh, ERR900);
+          free(ws);
+          status = FALSE;
+        }
+        else {
+          status = TRUE;
+        }
       }
     }
   }
