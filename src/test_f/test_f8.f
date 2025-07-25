@@ -40,7 +40,7 @@ C     Open PHIGS and a workstation
       CALL POPPH(0, 1)
       CALL POPWK(WKID, 0, 3)
 
-      CALL PMSG(WKID,"Press ok, please");
+      CALL PMSG(WKID,"Press close, please");
 
       STOP
       END
