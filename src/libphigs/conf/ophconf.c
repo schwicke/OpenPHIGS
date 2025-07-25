@@ -55,6 +55,7 @@ void set_defaults(Pophconf* config){
     config->vpos.y_min = 0.;
     config->vpos.y_max = 1.;
     config->set_window_pos = 1;
+    config->hcsf = 1.0;
 }
 
 void init_defaults(){
@@ -75,6 +76,7 @@ void read_config(char * config_file){
   int i;
   float xmin,  xmax, ymin, ymax;
   float red, green, blue;
+  float hcsf;
   unsigned int width, height, border;
   int xpos, ypos;
   Pophconf newconfig;
@@ -147,6 +149,9 @@ void read_config(char * config_file){
           newconfig.background_color.rgb.red = red;
           newconfig.background_color.rgb.green = green;
           newconfig.background_color.rgb.blue = blue;
+        }
+        if (sscanf(line, "%%hs %f", &hcsf) > 0){
+          newconfig.hcsf = hcsf;
         }
         if (sscanf(line, "%%gs %d", &use_shaders) > 0){
           if (use_shaders == 0){

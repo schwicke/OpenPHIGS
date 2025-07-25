@@ -1,0 +1,10 @@
+Example Parameters for workstation 1
+%wk 1
+%wf fort.10           default output file name for hardcopies
+%wn Workstation_1     workstation name
+%wi icon_1            workstation icon name
+%wp 0.0 0.7 0.05 1.   position
+%wg 512 512 0 0 1     Window width height px py border
+%bg 0. 0. 0.          Background color R G B
+%hs 1.              scale factor for hardcopy
+%gs 1               Use shaders (1) or not (0)
