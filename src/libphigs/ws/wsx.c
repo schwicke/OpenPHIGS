@@ -27,6 +27,15 @@
 #include <X11/Shell.h>
 #include <X11/Xlib.h>
 
+#ifdef GLEW
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glx.h>
+#else
+#include <epoxy/gl.h>
+#include <epoxy/glx.h>
+#endif
+
 #include "phg.h"
 #include "ws.h"
 #include "cp.h"
@@ -78,7 +87,9 @@ Ws* phg_wsx_create(
  ******************************************************************************/
 int X11ErrorHandler(Display * display, XErrorEvent * error)
 {
-  printf("An X11 error was detected: code: %d", error->error_code);
+  char buffer[1024];
+  XGetErrorText(display, error->error_code, buffer, 1024);
+  printf("An X11 error was detected: code: %d: %s\n", error->error_code, buffer);
   return 0;
 }
 /*******************************************************************************
@@ -116,6 +127,7 @@ int phg_wsx_setup_tool(
   }
   else {
     /* Initial attributes */
+
     XSetErrorHandler(X11ErrorHandler);
     attrs.colormap = cmap;
     attrs.border_pixel = WhitePixel(display, best_info->screen);
@@ -132,48 +144,142 @@ int phg_wsx_setup_tool(
       ws->top_level = XtInitialize("Workstation", "", NULL, 0, &argc, argv);
       /* Create window */
       drawable_id = XCreateWindow(display,
-				  RootWindow(display, best_info->screen),
-				  xdt->tool.x, xdt->tool.y,
-				  xdt->tool.width, xdt->tool.height,
-				  xdt->tool.border_width, best_info->depth,
-				  InputOutput, best_info->visual,
-				  CWColormap | CWBackPixel | CWBorderPixel,
-				  &attrs);
+                                  RootWindow(display, best_info->screen),
+                                  xdt->tool.x, xdt->tool.y,
+                                  xdt->tool.width, xdt->tool.height,
+                                  xdt->tool.border_width, best_info->depth,
+                                  InputOutput, best_info->visual,
+                                  CWColormap | CWBackPixel | CWBorderPixel,
+                                  &attrs);
       if (!drawable_id) {
-	ERR_BUF(ws->erh, ERRN203);
-	status = FALSE;
+        ERR_BUF(ws->erh, ERRN203);
+        status = FALSE;
       }
       else {
-	/* Initialize attributes */
-	size_hints.flags = USPosition | USSize;
-	size_hints.x = xdt->tool.x;
-	size_hints.y = xdt->tool.y;
-	size_hints.width = xdt->tool.width;
-	size_hints.height = xdt->tool.height;
-	XSetStandardProperties(display, drawable_id, xdt->tool.label,
-			       xdt->tool.icon_label, None, NULL, 0,
-			       &size_hints);
-	XSelectInput(display, drawable_id, (long) ExposureMask);
-	XMapWindow(display, drawable_id);
-	XSync(display, False);
+        /* Initialize attributes */
+        size_hints.flags = USPosition | USSize;
+        size_hints.x = xdt->tool.x;
+        size_hints.y = xdt->tool.y;
+        size_hints.width = xdt->tool.width;
+        size_hints.height = xdt->tool.height;
+        XSetStandardProperties(display, drawable_id, xdt->tool.label,
+                               xdt->tool.icon_label, None, NULL, 0,
+                               &size_hints);
+        XSelectInput(display, drawable_id, (long) ExposureMask);
+        XMapWindow(display, drawable_id);
+        XSync(display, False);
 
-	XWindowEvent(display, drawable_id, ExposureMask, &event);
-	XSelectInput(display, drawable_id, (long) 0);
-	ws->drawable_id = drawable_id;
-	/* Initialize renderer */
-	phg_wsx_pixel_colour(ws, cmap, attrs.background_pixel, &background);
-	if (!wsgl_init(ws, &background, NUM_SELECTABLE_STRUCTS)) {
-	  ERR_BUF(ws->erh, ERR900);
-	  free(ws);
-	  status = FALSE;
-	}
-	else {
-	  status = TRUE;
-	}
+        XWindowEvent(display, drawable_id, ExposureMask, &event);
+        XSelectInput(display, drawable_id, (long) 0);
+        ws->drawable_id = drawable_id;
+        /* Initialize renderer */
+        phg_wsx_pixel_colour(ws, cmap, attrs.background_pixel, &background);
+        if (!wsgl_init(ws, &background, NUM_SELECTABLE_STRUCTS)) {
+          ERR_BUF(ws->erh, ERR900);
+          free(ws);
+          status = FALSE;
+        }
+        else {
+          status = TRUE;
+        }
       }
     }
   }
   return status;
+}
+
+/*******************************************************************************
+ * phg_wsx_setup_tool_nodisp
+ *
+ * DESCR:       Create invisible window
+ * RETURNS:     TRUE or FALSE
+ */
+
+int phg_wsx_setup_tool_nodisp(
+		       Ws *ws,
+		       Phg_args_conn_info *conn_info,
+                       Phg_args_open_ws *args
+		       )
+{
+  Pint err_ind;
+  XVisualInfo *best_info;
+  Colormap cmap;
+  Pgcolr background;
+  XSetWindowAttributes attrs;
+  Window drawable_id;
+  XSizeHints size_hints;
+  XEvent event;
+  int status = FALSE;
+  Wst *wst = args->type;
+  Wst_xwin_dt *xdt = &wst->desc_tbl.xwin_dt;
+  int         argc = 0;
+  char        **argv = (char **)NULL;
+  int screen;
+  GLint fb;
+
+  XSetErrorHandler(X11ErrorHandler);
+
+  screen = DefaultScreen(ws->display);
+  Display *display = ws->display;
+
+  /* Find matching visual */
+  phg_wsx_find_best_visual(ws, wst, &best_info, &cmap, &err_ind);
+  if (err_ind != 0) {
+    ERR_BUF(ws->erh, err_ind);
+    status = FALSE;
+  }
+  else {
+    attrs.colormap = cmap;
+    attrs.border_pixel = WhitePixel(display, screen);
+    attrs.background_pixel = BlackPixel(display, screen);
+    ws->glx_context = glXCreateNewContext(ws->display, ws->fbc[0], GLX_RGBA_TYPE, NULL, True);
+    drawable_id = glXCreatePbuffer(ws->display, ws->fbc[0],
+                                   (int[]){GLX_PBUFFER_WIDTH,
+                                           args->width,
+                                           GLX_PBUFFER_HEIGHT,
+                                           args->height,
+                                           None});
+    if (glXMakeContextCurrent(ws->display, drawable_id, drawable_id, ws->glx_context)){
+      glReadBuffer(GL_FRONT);
+      glViewport(0, 0, args->width, args->height);
+      /* Initialize rendering context */
+      size_hints.flags = USPosition | USSize;
+      size_hints.x = xdt->tool.x;
+      size_hints.y = xdt->tool.y;
+      size_hints.width = xdt->tool.width;
+      size_hints.height = xdt->tool.height;
+      ws->drawable_id = drawable_id;
+      /* set background color defaut */
+      uint8_t red   = (attrs.background_pixel >> 16) & 0xFF;
+      uint8_t green = (attrs.background_pixel >> 8) & 0xFF;
+      uint8_t blue  = attrs.background_pixel & 0xFF;
+      background.type = PMODEL_RGB;
+      background.val.general.x = (float) red / 65535.0;
+      background.val.general.y = (float) green / 65535.0;
+      background.val.general.z = (float) blue / 65535.0;
+
+      glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &fb);
+
+      if (!wsgl_init(ws, &background, NUM_SELECTABLE_STRUCTS)) {
+        ERR_BUF(ws->erh, ERR900);
+        free(ws);
+        status = FALSE;
+      }
+      else {
+        status = TRUE;
+      }
+      
+      status = TRUE;
+      GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+      if (status != GL_FRAMEBUFFER_COMPLETE)
+        printf("Framebuffer incomplete: 0x%x\n", status);
+    }
+    else {
+      printf("phg_wsx_setup_tool_nodisp: Failed to set context\n");
+      status = FALSE;
+    }
+  }
+return status;
 }
 
 /*******************************************************************************

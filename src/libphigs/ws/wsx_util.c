@@ -23,9 +23,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+/*
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glx.h>
+*/
+#ifdef GLEW
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glx.h>
+#else
+#include <epoxy/gl.h>
+#include <epoxy/glx.h>
+#endif
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xmu/StdCmap.h>
@@ -105,6 +115,106 @@ Display* phg_wsx_open_gl_display(
 }
 
 /*******************************************************************************
+ * phg_wsx_set_best_args
+ *
+ * DESCR:	Find best matching visual
+ * RETURNS:	status as true or false
+ *              Fills args array
+ */
+
+int phg_wsx_set_best_args(
+   Ws*  ws,
+   Wst* wst,
+   int* args,
+   int* rargc,
+   int* err_ind
+   )
+{
+   int argc = 0;
+   Display *dpy = ws->display;
+   int status = 0;
+   /* Select workstation type */
+   switch (wst->ws_type) {
+      case PWST_HCOPY_TRUE:
+      case PWST_HCOPY_TRUE_RGBA_PNG:
+      case PWST_HCOPY_TRUE_RGB_PNG:
+          args[argc++] = GLX_RENDER_TYPE;
+          args[argc++] = GLX_RGBA_BIT;
+          args[argc++] = GLX_DRAWABLE_TYPE;
+          args[argc++] = GLX_PBUFFER_BIT;
+          args[argc++] = GLX_RED_SIZE;
+            args[argc++] = 8;
+          args[argc++] = GLX_GREEN_SIZE;
+            args[argc++] = 8;
+          args[argc++] = GLX_BLUE_SIZE;
+            args[argc++] = 8;
+          args[argc++] = GLX_ALPHA_SIZE;
+            args[argc++] = 8;
+          args[argc++] = GLX_DEPTH_SIZE;
+          args[argc++] = 24;
+          args[argc] = None;
+          status = 2;
+	  break;
+      case PWST_HCOPY_TRUE_DB:
+      case PWST_HCOPY_TRUE_RGBA_PNG_DB:
+      case PWST_HCOPY_TRUE_RGB_PNG_DB:
+          args[argc++] = GLX_RENDER_TYPE;
+          args[argc++] = GLX_RGBA_BIT;
+          args[argc++] = GLX_DRAWABLE_TYPE;
+          args[argc++] = GLX_PBUFFER_BIT;
+          args[argc++] = GLX_RED_SIZE;
+            args[argc++] = 8;
+          args[argc++] = GLX_GREEN_SIZE;
+            args[argc++] = 8;
+          args[argc++] = GLX_BLUE_SIZE;
+            args[argc++] = 8;
+          args[argc++] = GLX_ALPHA_SIZE;
+            args[argc++] = 8;
+          args[argc++] = GLX_DEPTH_SIZE;
+          args[argc++] = 24;
+          args[argc] = None;
+          status = 2;
+          break;
+      case PWST_OUTPUT_TRUE:
+      case PWST_OUTIN_TRUE:
+          args[argc++] = GLX_RGBA;
+          args[argc++] = GLX_RED_SIZE;
+             args[argc++] = 1;
+          args[argc++] = GLX_GREEN_SIZE;
+             args[argc++] = 1;
+          args[argc++] = GLX_BLUE_SIZE;
+             args[argc++] = 1;
+          args[argc++] = GLX_DEPTH_SIZE;
+             args[argc++] = 16;
+          args[argc] = None;
+          status = 1;
+          break;
+       case PWST_OUTPUT_TRUE_DB:
+       case PWST_OUTIN_TRUE_DB:
+          args[argc++] = GLX_DOUBLEBUFFER;
+          args[argc++] = GLX_RGBA;
+          args[argc++] = GLX_RED_SIZE;
+             args[argc++] = 1;
+          args[argc++] = GLX_GREEN_SIZE;
+             args[argc++] = 1;
+          args[argc++] = GLX_BLUE_SIZE;
+             args[argc++] = 1;
+          args[argc++] = GLX_DEPTH_SIZE;
+             args[argc++] = 16;
+          args[argc] = None;
+          status = 1;
+          break;
+
+      default:
+         *err_ind = ERR52;
+         status = 0;
+         break;
+   }
+   *rargc = argc;
+   return(status);
+}
+
+/*******************************************************************************
  * phg_wsx_find_best_visual
  *
  * DESCR:	Find best matching visual
@@ -122,64 +232,36 @@ void phg_wsx_find_best_visual(
    int args[20];
    int argc = 0;
    Display *dpy = ws->display;
-   int status = FALSE;
+   int nfb;
+   int status;
 
-   /* Select workstation type */
-   switch (wst->ws_type) {
-      case PWST_OUTPUT_TRUE:
-      case PWST_OUTIN_TRUE:
-      case PWST_HCOPY_TRUE:
-      case PWST_HCOPY_TRUE_RGBA_PNG:
-      case PWST_HCOPY_TRUE_RGB_PNG:
-          args[argc++] = GLX_RGBA;
-          args[argc++] = GLX_RED_SIZE;
-             args[argc++] = 1;
-          args[argc++] = GLX_GREEN_SIZE;
-             args[argc++] = 1;
-          args[argc++] = GLX_BLUE_SIZE;
-             args[argc++] = 1;
-          args[argc++] = GLX_DEPTH_SIZE;
-             args[argc++] = 16;
-          args[argc] = None;
-          status = TRUE;
-          break;
-
-       case PWST_OUTPUT_TRUE_DB:
-       case PWST_OUTIN_TRUE_DB:
-       case PWST_HCOPY_TRUE_DB:
-       case PWST_HCOPY_TRUE_RGBA_PNG_DB:
-       case PWST_HCOPY_TRUE_RGB_PNG_DB:
-          args[argc++] = GLX_DOUBLEBUFFER;
-          args[argc++] = GLX_RGBA;
-          args[argc++] = GLX_RED_SIZE;
-             args[argc++] = 1;
-          args[argc++] = GLX_GREEN_SIZE;
-             args[argc++] = 1;
-          args[argc++] = GLX_BLUE_SIZE;
-             args[argc++] = 1;
-          args[argc++] = GLX_DEPTH_SIZE;
-             args[argc++] = 16;
-          args[argc] = None;
-          status = TRUE;
-          break;
-
-      default:
-         *err_ind = ERR52;
-         status = FALSE;
-         break;
-   }
-
-   if (status == TRUE) {
-      *visual_info = glXChooseVisual(dpy, DefaultScreen(dpy), args);
-      if (*visual_info == NULL) {
+   *err_ind = 0;
+   status = phg_wsx_set_best_args(ws, wst, args, &argc, err_ind);
+   switch (status)
+     {
+     case 1:
+       *visual_info = glXChooseVisual(dpy, DefaultScreen(dpy), args);
+       if (*visual_info == NULL) {
          *err_ind = ERRN205;
-      }
-      else {
+         printf("Failed to get visual info\n");
+       } else {
          /* NOTE: Only call this for true colour */
          *cmap = get_sharable_colormap(*visual_info, dpy);
          *err_ind = 0;
-      }
-   }
+       }
+       break;
+     case 2:
+       nfb = 0;
+       ws->fbc = glXChooseFBConfig(dpy, DefaultScreen(dpy), args, &nfb);
+       if (ws->fbc != NULL){
+         *visual_info = glXGetVisualFromFBConfig(dpy, ws->fbc[0]);
+         *err_ind = 0;
+       } else {
+         printf("Failed to get visual info for pbuffer\n");
+         *err_ind = ERRN205;
+       }
+       break;
+     }
 }
 
 /*******************************************************************************

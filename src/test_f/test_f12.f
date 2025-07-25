@@ -250,20 +250,20 @@ C     Open PHIGS and a workstation
       WKID=1
       CALL POPPH(0, 1)
       CALL POPWK(WKID, 0, 3)
-      CALL KYSABL(1)
+      CALL KYSABL(WKID)
 C     Wait for user interaction
       CALL PMSG(WKID,"Create a hard copy to file.");
 C     Create color PNG
       WKTOUT = WKPSC
       WKFORM = WKPNG
+      CALL PCLWK(WKID)
 C     Open output workstation
-      CALL POPWK (WKTOUT, LUNPS, WKFORM)
+      CALL POPWK (WKID, LUNPS, WKFORM)
 C     set the output filename
-      CALL PSFNAME(WKTOUT, "hourglass.png")
+      CALL PSFNAME(WKID, "hourglass.png")
 C     draw again
-      CALL KYSABL(WKTOUT)
+      CALL KYSABL(WKID)
 C     close workstations
-      CALL PCLWK(WKTOUT)
       CALL PCLWK(WKID)
       STOP
       END

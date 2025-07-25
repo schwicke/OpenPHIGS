@@ -260,15 +260,15 @@ static void init_update_state(
 
     /* cache action for time "NOW" */
     owsb->now_action = (*owsb->update_action_table)
-	[(int)PHG_TIME_NOW][(int)ows->mod_mode][(int)ows->def_mode];
+      [(int)PHG_TIME_NOW][(int)ows->mod_mode][(int)ows->def_mode];
 
     owsb->vis_rep = PVISUAL_ST_CORRECT;
     owsb->surf_state = PSURF_EMPTY;
 }
 
 static int init_output_state(
-			     Ws *ws,
-			     Plimit limits
+                             Ws *ws,
+                             Plimit limits
     )
 {
     Wsb_output_ws *owsb = &ws->out_ws.model.b;
@@ -482,7 +482,7 @@ Ws* phg_wsb_open_ws(
     ret->err = -1;
     ws = phg_wsx_create(args);
     if (ws == NULL) {
-	return ws;
+      return ws;
     }
 
     wsb_load_funcs( ws );
@@ -503,19 +503,18 @@ Ws* phg_wsb_open_ws(
         xdt->tool.border_width = args->border_width;
         strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
         strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
-        ws->display = phg_wsx_open_gl_display(NULL, &ret->err);
-       /* store the output lun */
         lun = args->conn_info.lun;
+        /* store the output lun */
         ws->lun = lun;
+        ws->display = phg_wsx_open_gl_display(NULL, &ret->err);
         if (ws->display == NULL) {
-            ERR_BUF(ws->erh, ret->err);
-            goto abort;
-        }
-        if (!phg_wsx_setup_tool(ws, NULL, args->type)) {
-	  printf("HCopy failed to setup things. Aborting.");
+	  ERR_BUF(ws->erh, ret->err);
 	  goto abort;
+	}
+        if (!phg_wsx_setup_tool_nodisp(ws, NULL, args)) {
+	  ERR_BUF(ws->erh, ret->err);
+          goto abort;
         }
-
     }
     else if (args->conn_type == PHG_ARGS_CONN_OPEN) {
 
@@ -534,11 +533,9 @@ Ws* phg_wsb_open_ws(
             ERR_BUF(ws->erh, ret->err);
             goto abort;
         }
-
         if (!phg_wsx_setup_tool(ws, NULL, args->type)) {
             goto abort;
         }
-
     }
     else if (args->conn_type == PHG_ARGS_CONN_DRAWABLE) {
 
@@ -573,37 +570,44 @@ Ws* phg_wsb_open_ws(
             XDestroyWindow(ws->display, ws->drawable_id);
             goto abort;
         }
-	ws->shell = phg_cpm_toolkit_add_connection(ws->app_context, ws->display, &err);
-	if (err > 0){
-	  XDestroyWindow(ws->display, ws->input_overlay_window);
-	  XDestroyWindow(ws->display, ws->drawable_id);
-	  printf("Failed to initialise top level!");
-	  goto abort;
-	}
-	/*
-	if (phg_cpm_toolkit_open_ws(ws)){
-	  XDestroyWindow(ws->display, ws->input_overlay_window);
-	  XDestroyWindow(ws->display, ws->drawable_id);
-	  printf("Failed to create a popup shell!\n");
-	}
-	*/
+        ws->shell = phg_cpm_toolkit_add_connection(ws->app_context, ws->display, &err);
+        if (err > 0){
+          XDestroyWindow(ws->display, ws->input_overlay_window);
+          XDestroyWindow(ws->display, ws->drawable_id);
+          printf("Failed to initialise top level!");
+          goto abort;
+        }
+        /*
+          if (phg_cpm_toolkit_open_ws(ws)){
+          XDestroyWindow(ws->display, ws->input_overlay_window);
+          XDestroyWindow(ws->display, ws->drawable_id);
+          printf("Failed to create a popup shell!\n");
+          }
+        */
         if (!phg_ws_input_init(ws, args->input_q)) {
-            XDestroyWindow(ws->display, ws->input_overlay_window);
-            XDestroyWindow(ws->display, ws->drawable_id);
-	    printf("Destroying input window\n");
-            goto abort;
+          XDestroyWindow(ws->display, ws->input_overlay_window);
+          XDestroyWindow(ws->display, ws->drawable_id);
+          goto abort;
         }
     }
-
-    (void)XGetWindowAttributes( ws->display, ws->drawable_id, &wattr );
-    WS_SET_WS_RECT( ws, &wattr )
-
+    if (args->conn_type == PHG_ARGS_CONN_HCOPY) {
+      ws->ws_rect.x = args->x;
+      ws->ws_rect.y = args->y;
+      ws->ws_rect.width = args->width;
+      ws->ws_rect.height = args->height;
+      /* for screen shots double buffering does not work correctly */
+      ws->type->desc_tbl.phigs_dt.out_dt.has_double_buffer = FALSE;
+      ws->has_double_buffer = FALSE;
+    } else {
+      (void)XGetWindowAttributes( ws->display, ws->drawable_id, &wattr );
+      WS_SET_WS_RECT( ws, &wattr )
+      ws->has_double_buffer =
+        ws->type->desc_tbl.phigs_dt.out_dt.has_double_buffer;
+    }
     /* Setup workstation attributes */
     ws->current_colour_model =
         ws->type->desc_tbl.phigs_dt.out_dt.default_colour_model;
     ws->category = ws->type->desc_tbl.phigs_dt.ws_category;
-    ws->has_double_buffer =
-        ws->type->desc_tbl.phigs_dt.out_dt.has_double_buffer;
     ws->out_ws.model.b.cssh = args->cssh;
 
     if (!init_output_state(ws, args->limits)) {
@@ -1678,7 +1682,9 @@ void phg_wsb_set_filter(
     if ( (type == PHG_ARGS_FLT_HIGH || type == PHG_ARGS_FLT_INVIS)
 	    && WSB_SOME_POSTED(&owsb->posted) ) {
 	WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, &owsb->now_action);
+#ifdef DEBUG
 	printf("phg_wsb_set_filter: type: %d action %d\n", type,owsb->now_action);
+#endif
 	switch ( owsb->now_action ) {
 	    case_PHG_UPDATE_ACCURATE_or_IF_Ix:
 		(*ws->redraw_all)( ws, PFLAG_COND );

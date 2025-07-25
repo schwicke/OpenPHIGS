@@ -159,6 +159,9 @@ void wsgl_set_viewport(
    Wsgl_handle wsgl = ws->render_context;
 
    wsgl->vp_changed = 1;
+#ifdef DEBUG
+   printf("setting vp (%f %f) (%f %f) (%f %f)\n", vp->x_min, vp->x_max,  vp->y_min, vp->y_max,  vp->z_min, vp->z_max);
+#endif
    memcpy(&wsgl->cur_vp, vp, sizeof(Plimit3));
 }
 
@@ -214,13 +217,19 @@ void wsgl_clear(
 #ifdef DEBUG
    printf("wsgl_setup_background: Setting background to (%f %f %f)\n",  gcolr.val.general.x,gcolr.val.general.y,gcolr.val.general.z);
 #endif
-   glXMakeCurrent(ws->display, ws->drawable_id, ws->glx_context);
+   glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    if (ws->has_double_buffer) {
-      glXSwapBuffers(ws->display, ws->drawable_id);
+#ifdef DEBUG
+     printf("Swapping buffers in clear\n");
+#endif
+     glXSwapBuffers(ws->display, ws->drawable_id);
    }
    else {
-      glFlush();
+#ifdef DEBUG
+     printf("Clear: flush buffers\n");
+#endif
+     glFlush();
    }
 }
 
@@ -241,7 +250,7 @@ void wsgl_flush(
    int clear_flag = 0;
    Wsgl_handle wsgl = ws->render_context;
 
-   glXMakeCurrent(ws->display, ws->drawable_id, ws->glx_context);
+   glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
 
    if (wsgl->vp_changed || wsgl->win_changed) {
       phg_wsx_compute_ws_transform(&wsgl->cur_win, &wsgl->cur_vp, &ws_xform);
@@ -395,7 +404,7 @@ void wsgl_begin_rendering(
    printf("Begin rendering\n");
 #endif
 
-   glXMakeCurrent(ws->display, ws->drawable_id, ws->glx_context);
+   glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    init_rendering_state(ws);
 }
@@ -417,7 +426,7 @@ void wsgl_end_rendering(
 
    if (ws->has_double_buffer) {
 #ifdef DEBUG
-     printf("Swapping buffers\n");
+     printf("Swapping buffers end rendering\n");
 #endif
       glXSwapBuffers(ws->display, ws->drawable_id);
    }
@@ -1315,7 +1324,7 @@ void wsgl_begin_pick(
 #ifdef DEBUG
    printf("Begin pick\n");
 #endif
-   glXMakeCurrent(ws->display, ws->drawable_id, ws->glx_context);
+   glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
 
    glGetIntegerv(GL_VIEWPORT, vp);
    v.delta_x = ((float) vp[2] - 2.0 * ((float) box->x - (float) vp[0])) /
