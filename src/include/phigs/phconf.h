@@ -28,10 +28,10 @@ extern "C" {
 
   static  int max_text = 30;
   typedef struct {
-    int wkid;
-    char window_title[30];
+    int wkid; /* workstation ID */
+    char window_title[30]; /* Window title */
     char window_icon[30];
-    char filename[512];
+    char filename[512];   /* Output filename for hard copies */
     int  set_window_pos;
     Plimit vpos;
     Pcolr_rep background_color;
@@ -39,6 +39,7 @@ extern "C" {
     unsigned int display_height;
     unsigned int border_width;
     int xpos, ypos;
+    float hcsf; /* hard copy scale factor */
   } Pophconf;
 
   /* configuration file name */

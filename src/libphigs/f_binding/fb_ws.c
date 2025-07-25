@@ -96,8 +96,8 @@ FTN_SUBROUTINE(popwk)(
       else {
          memset(&args, 0, sizeof(Phg_args_open_ws));
          if (lun == 0) {
-	   args.conn_info.background = 0;
-	   args.conn_type = PHG_ARGS_CONN_OPEN;
+           args.conn_info.background = 0;
+           args.conn_type = PHG_ARGS_CONN_OPEN;
          }
 	 else {
 	   if (
