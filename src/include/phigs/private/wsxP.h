@@ -189,9 +189,20 @@ int phg_wstx_init(
    Pws_cat category
    );
 
+/*******************************************************************************
+ * phg_wsx_create_framebuffer
+ *
+ * DESCR:       Create external frame buffer for rendering
+ * RETURNS:     n/a
+ */
+
+void phg_wsx_create_framebuffer(
+                                   unsigned int width,
+                                   unsigned int height
+);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
 #endif /* _wsxP_h */
-

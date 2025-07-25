@@ -95,6 +95,8 @@ FTN_SUBROUTINE(popwk)(
       }
       else {
          memset(&args, 0, sizeof(Phg_args_open_ws));
+         args.width = config[ws_id].display_width;
+         args.height = config[ws_id].display_height;
          if (lun == 0) {
            args.conn_info.background = 0;
            args.conn_type = PHG_ARGS_CONN_OPEN;
@@ -115,8 +117,6 @@ FTN_SUBROUTINE(popwk)(
            }
            else {
              args.conn_type = PHG_ARGS_CONN_DRAWABLE;
-             args.width = config[ws_id].display_width;
-             args.height = config[ws_id].display_height;
              memcpy(&args.conn_info, &conn_id, sizeof(Phg_args_conn_info));
            }
          }

@@ -80,7 +80,8 @@ void popen_ws(
       }
       else {
         memset(&args, 0, sizeof(Phg_args_open_ws));
-        
+        args.width = config[ws_id].display_width;
+        args.height = config[ws_id].display_height;
         if (conn_id == NULL) {
           args.conn_type = PHG_ARGS_CONN_OPEN;
         }
@@ -95,6 +96,8 @@ void popen_ws(
               ws_type == PWST_HCOPY_TRUE_RGBA_PNG_DB
               ) {
             args.conn_type = PHG_ARGS_CONN_HCOPY;
+            args.width = config[ws_id].display_width*config[ws_id].hcsf;
+            args.height = config[ws_id].display_height*config[ws_id].hcsf;
             /* color index zero is background */
             memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
           }
@@ -114,11 +117,8 @@ void popen_ws(
         args.icon_name = config[ws_id].window_icon;
         args.x = config[ws_id].xpos;
         args.y = config[ws_id].ypos;
-        args.width = config[ws_id].display_width;
-        args.height = config[ws_id].display_height;
         args.border_width =  config[ws_id].border_width;
         args.limits = config[ws_id].vpos;
-        args.hcsf = config[ws_id].hcsf;
         
         /* Open workstation */
         PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);

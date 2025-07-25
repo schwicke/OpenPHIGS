@@ -23,9 +23,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+/*
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glx.h>
+*/
+#ifdef GLEW
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glx.h>
+#else
+#include <epoxy/gl.h>
+#include <epoxy/glx.h>
+#endif
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xmu/StdCmap.h>
@@ -285,4 +295,29 @@ void phg_wsx_compute_ws_transform(
    ws_xform->offset.x = ws_vp->x_min - (ws_win->x_min * sxy);
    ws_xform->offset.y = ws_vp->y_min - (ws_win->y_min * sxy);
    ws_xform->offset.z = ws_vp->z_min - (ws_win->z_min * sz);
+}
+
+
+enum {Colorbuf, Depthbuf, nbuffers};
+GLuint framebuffer, renderbuffer[nbuffers];
+
+void phg_wsx_create_framebuffer(
+                               unsigned int width,
+                               unsigned int height
+){
+#ifdef DEBUG
+  printf("DEBUG: phg_wsx_create_framebuffer called with %d x %d\n", width, height);
+#endif
+  glCreateRenderbuffers(nbuffers, renderbuffer);
+  glNamedRenderbufferStorage(renderbuffer[Colorbuf], GL_RGBA, width, height);
+  glNamedRenderbufferStorage(renderbuffer[Depthbuf], GL_DEPTH_COMPONENT24, width, height);
+  glGenFramebuffers(1, &framebuffer); // needed?
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer);
+  glNamedFramebufferRenderbuffer(framebuffer, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer[Colorbuf]);
+  glNamedFramebufferRenderbuffer(framebuffer, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderbuffer[Depthbuf]);
+  glEnable(GL_DEPTH_TEST);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer);
+  glViewport(0, 0, width, height);
+  glClearColor(1.0, 0.0, 0.0, 0.0);
+  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 }

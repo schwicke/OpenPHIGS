@@ -260,15 +260,15 @@ static void init_update_state(
 
     /* cache action for time "NOW" */
     owsb->now_action = (*owsb->update_action_table)
-	[(int)PHG_TIME_NOW][(int)ows->mod_mode][(int)ows->def_mode];
+      [(int)PHG_TIME_NOW][(int)ows->mod_mode][(int)ows->def_mode];
 
     owsb->vis_rep = PVISUAL_ST_CORRECT;
     owsb->surf_state = PSURF_EMPTY;
 }
 
 static int init_output_state(
-			     Ws *ws,
-			     Plimit limits
+                             Ws *ws,
+                             Plimit limits
     )
 {
     Wsb_output_ws *owsb = &ws->out_ws.model.b;
@@ -482,7 +482,7 @@ Ws* phg_wsb_open_ws(
     ret->err = -1;
     ws = phg_wsx_create(args);
     if (ws == NULL) {
-	return ws;
+      return ws;
     }
 
     wsb_load_funcs( ws );
@@ -508,6 +508,8 @@ Ws* phg_wsb_open_ws(
         ws->lun = lun;
 
         /* we do not want to open a display but create a rendering buffer instead*/
+        phg_wsx_create_framebuffer(args->width, args->height);
+        /*
         ws->display = phg_wsx_open_gl_display(NULL, &ret->err);
         if (ws->display == NULL) {
             ERR_BUF(ws->erh, ret->err);
@@ -517,6 +519,8 @@ Ws* phg_wsb_open_ws(
           printf("HCopy failed to initialize. Aborting.");
           goto abort;
         }
+        */
+
     }
     else if (args->conn_type == PHG_ARGS_CONN_OPEN) {
 
@@ -595,10 +599,10 @@ Ws* phg_wsb_open_ws(
           goto abort;
         }
     }
-
-    (void)XGetWindowAttributes( ws->display, ws->drawable_id, &wattr );
-    WS_SET_WS_RECT( ws, &wattr )
-
+    if (args->conn_type != PHG_ARGS_CONN_HCOPY) {
+      (void)XGetWindowAttributes( ws->display, ws->drawable_id, &wattr );
+      WS_SET_WS_RECT( ws, &wattr )
+    }
     /* Setup workstation attributes */
     ws->current_colour_model =
         ws->type->desc_tbl.phigs_dt.out_dt.default_colour_model;
