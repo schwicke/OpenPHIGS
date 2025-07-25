@@ -128,37 +128,36 @@ void popen_ws(
                /* Add workstation to info list */
                phg_psl_add_ws(PHG_PSL, ws_id, NULL, wst);
             }
-	    /* predefine some colors */
-	    pxset_color_map(ws_id);
-	    /* set background as specified in configuration file */
-	    pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
-	    wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
-	    dt = &wsinfo->wstype->desc_tbl.phigs_dt;
-	    /* init the file name */
+            /* predefine some colors */
+            pxset_color_map(ws_id);
+            /* set background as specified in configuration file */
+            pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
+            wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
+            dt = &wsinfo->wstype->desc_tbl.phigs_dt;
+            /* init the file name */
             wsh = PHG_WSID(ws_id);
-	    if (strlen(config[ws_id].filename) == 0){
-	      switch (dt->ws_category){
-	      case PCAT_TGA:
-		strcpy(wsh->filename, "output.tga");
-		break;
-	      case PCAT_PNG:
-	      case PCAT_PNGA:
-		strcpy(wsh->filename, "output.png");
-		break;
-	      case PCAT_IN:
-	      case PCAT_OUT:
-	      case PCAT_OUTIN:
-	      case PCAT_MO:
-	      case PCAT_MI:
-		break;
-	      default:
-		break;
-	      }
-	    } else {
-	      printf("cb_ws: Hardcopy to %s\n", wsh->filename);
+            if (strlen(config[ws_id].filename) == 0){
+              switch (dt->ws_category){
+              case PCAT_TGA:
+                strcpy(wsh->filename, "output.tga");
+                break;
+              case PCAT_PNG:
+              case PCAT_PNGA:
+                strcpy(wsh->filename, "output.png");
+                break;
+              case PCAT_IN:
+              case PCAT_OUT:
+              case PCAT_OUTIN:
+              case PCAT_MO:
+              case PCAT_MI:
+                break;
+              default:
+                break;
+              }
+            } else {
               strncpy(wsh->filename, config[ws_id].filename, sizeof(wsh->filename));
-	    }
-	    wsgl_clear(wsh);
+            }
+            wsgl_clear(wsh);
          }
       }
       ERR_FLUSH(PHG_ERH);

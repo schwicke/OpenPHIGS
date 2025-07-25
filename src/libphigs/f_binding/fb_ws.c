@@ -142,22 +142,21 @@ FTN_SUBROUTINE(popwk)(
             /* Add workstation to info list */
             phg_psl_add_ws(PHG_PSL, ws_id, NULL, wst);
          }
-	 /* predefine some colors */
-	 pxset_color_map(ws_id);
-	 /* set background as specified in configuration file */
-	 pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
-	 /* init output file name */
-	 wsh = PHG_WSID(ws_id);
-	 if (strlen(config[ws_id].filename) == 0){
-	   sprintf(filename, "fort.%d", lun);
-	   strncpy(wsh->filename, filename, strlen(filename));
-	   (wsh->filename)[strlen(filename)] = '\0';
-	 } else {
-	   strncpy(wsh->filename, config[ws_id].filename, strlen(config[ws_id].filename));
-	   (wsh->filename)[strlen(config[ws_id].filename)] = '\0';
-	 }
-	 printf("fb_ws: Hardcopy to %s\n", wsh->filename);
-	 wsgl_clear(wsh);
+         /* predefine some colors */
+         pxset_color_map(ws_id);
+         /* set background as specified in configuration file */
+         pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
+         /* init output file name */
+         wsh = PHG_WSID(ws_id);
+         if (strlen(config[ws_id].filename) == 0){
+           sprintf(filename, "fort.%d", lun);
+           strncpy(wsh->filename, filename, strlen(filename));
+           (wsh->filename)[strlen(filename)] = '\0';
+         } else {
+           strncpy(wsh->filename, config[ws_id].filename, strlen(config[ws_id].filename));
+           (wsh->filename)[strlen(config[ws_id].filename)] = '\0';
+         }
+         wsgl_clear(wsh);
       }
    }
    ERR_FLUSH(PHG_ERH);

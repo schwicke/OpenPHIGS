@@ -136,25 +136,24 @@ void read_config(char * config_file){
           newconfig.vpos.y_max = ymax;
           newconfig.set_window_pos = 1;
         }
-	if (sscanf(line, "%%wg %d %d %d %d %d", &width, &height, &xpos, &ypos, &border) > 0){
-	  newconfig.display_width = width;
-	  newconfig.display_height = height;
-	  newconfig.xpos = xpos;
-	  newconfig.xpos = ypos;
-	  newconfig.border_width = border;
-	}
-	if (sscanf(line, "%%bg %f %f %f", &red, &green, &blue) > 0){
-	  printf("setting new background color for wkid %d to (%f %f %f)\n", wk, red, green, blue);
-	  newconfig.background_color.rgb.red = red;
-	  newconfig.background_color.rgb.green = green;
-	  newconfig.background_color.rgb.blue = blue;
-	}
-	if (sscanf(line, "%%gs %d", &use_shaders) > 0){
-	  if (use_shaders == 0){
-	    wsgl_use_shaders = 0;
-	    printf("Shaders are DISABLED by configuration\n");
-	  } else {
-	    wsgl_use_shaders = 1;
+        if (sscanf(line, "%%wg %d %d %d %d %d", &width, &height, &xpos, &ypos, &border) > 0){
+          newconfig.display_width = width;
+          newconfig.display_height = height;
+          newconfig.xpos = xpos;
+          newconfig.xpos = ypos;
+          newconfig.border_width = border;
+        }
+        if (sscanf(line, "%%bg %f %f %f", &red, &green, &blue) > 0){
+          newconfig.background_color.rgb.red = red;
+          newconfig.background_color.rgb.green = green;
+          newconfig.background_color.rgb.blue = blue;
+        }
+        if (sscanf(line, "%%gs %d", &use_shaders) > 0){
+          if (use_shaders == 0){
+            wsgl_use_shaders = 0;
+            printf("Shaders are DISABLED by configuration\n");
+          } else {
+            wsgl_use_shaders = 1;
             printf("Shaders are ENABLED by configuration\n");
           }
         }
