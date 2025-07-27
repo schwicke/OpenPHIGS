@@ -182,6 +182,7 @@ typedef struct _Phg_args_open_ws {
    unsigned int       width, height, border_width;
    int                x, y;
    Plimit             limits;
+   float              hcsf;
 } Phg_args_open_ws;
 
 typedef struct {

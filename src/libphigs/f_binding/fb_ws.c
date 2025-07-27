@@ -97,6 +97,7 @@ FTN_SUBROUTINE(popwk)(
          memset(&args, 0, sizeof(Phg_args_open_ws));
          args.width = config[ws_id].display_width;
          args.height = config[ws_id].display_height;
+	 args.hcsf = config[ws_id].hcsf;
          if (lun == 0) {
            args.conn_info.background = 0;
            args.conn_type = PHG_ARGS_CONN_OPEN;
@@ -113,7 +114,6 @@ FTN_SUBROUTINE(popwk)(
              args.conn_type = PHG_ARGS_CONN_HCOPY;
              args.width = config[ws_id].display_width*config[ws_id].hcsf;
              args.height = config[ws_id].display_height*config[ws_id].hcsf;
-             printf("Open: size %d %d\n",args.width,args.height );
              memcpy(&args.conn_info, &conn_id, sizeof(Phg_args_conn_info));
            }
            else {

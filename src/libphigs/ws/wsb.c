@@ -490,6 +490,7 @@ Ws* phg_wsb_open_ws(
     ws->display     = NULL;
     ws->drawable_id = 0;
     ws->glx_context = 0;
+    ws->hcsf = 1.0;
 
     if (args->conn_type == PHG_ARGS_CONN_HCOPY) {
 
@@ -504,6 +505,7 @@ Ws* phg_wsb_open_ws(
         strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
         strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
         lun = args->conn_info.lun;
+	ws->hcsf = (Pfloat)args->hcsf;
         /* store the output lun */
         ws->lun = lun;
         ws->display = phg_wsx_open_gl_display(NULL, &ret->err);

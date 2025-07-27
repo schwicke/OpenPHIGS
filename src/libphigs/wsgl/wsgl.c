@@ -660,6 +660,11 @@ void wsgl_render_element(
    Pgse_elem gse_elem;
    Pgcolr highlight_color;
    Ws_output_ws *ows;
+   Pfloat scalef = ws->hcsf;
+   if (scalef == 0.0){
+     scalef = 1.0;
+     printf("WARNING: Scale factor is zero, setting it to 1.0");
+   }
    update_cur_struct(ws);
    ows = &ws->out_ws;
    switch (el->eltype) {
@@ -746,7 +751,7 @@ void wsgl_render_element(
          break;
 
       case PELEM_EDGEWIDTH:
-         wsgl->cur_struct.ast.indiv_group.edge_bundle.width = PHG_FLOAT(el);
+         wsgl->cur_struct.ast.indiv_group.edge_bundle.width = PHG_FLOAT(el)*scalef;
          break;
 
       case PELEM_EDGETYPE:
@@ -775,7 +780,7 @@ void wsgl_render_element(
          break;
 
       case PELEM_MARKER_SIZE:
-         wsgl->cur_struct.ast.indiv_group.marker_bundle.size = PHG_FLOAT(el);
+         wsgl->cur_struct.ast.indiv_group.marker_bundle.size = PHG_FLOAT(el)*scalef;
          break;
 
       case PELEM_MARKER_TYPE:
@@ -863,7 +868,7 @@ void wsgl_render_element(
          break;
 
       case PELEM_LINEWIDTH:
-         wsgl->cur_struct.ast.indiv_group.line_bundle.width = PHG_FLOAT(el);
+         wsgl->cur_struct.ast.indiv_group.line_bundle.width = PHG_FLOAT(el)*scalef;
          break;
 
       case PELEM_LINETYPE:
