@@ -161,7 +161,6 @@ int phg_wsx_set_best_args(
           args[argc++] = GLX_RENDER_TYPE;
           args[argc++] = GLX_RGBA_BIT;
           args[argc++] = GLX_DRAWABLE_TYPE;
-          args[argc++] = GLX_PBUFFER_BIT;
           args[argc++] = GLX_RED_SIZE;
             args[argc++] = 8;
           args[argc++] = GLX_GREEN_SIZE;

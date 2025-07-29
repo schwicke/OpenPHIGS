@@ -196,10 +196,10 @@ int phg_wsx_setup_tool(
  */
 
 int phg_wsx_setup_tool_nodisp(
-		       Ws *ws,
-		       Phg_args_conn_info *conn_info,
-                       Phg_args_open_ws *args
-		       )
+                              Ws *ws,
+                              Phg_args_conn_info *conn_info,
+                              Phg_args_open_ws *args
+                              )
 {
   Pint err_ind;
   XVisualInfo *best_info;
@@ -215,7 +215,6 @@ int phg_wsx_setup_tool_nodisp(
   int         argc = 0;
   char        **argv = (char **)NULL;
   int screen;
-  GLint fb;
 
   XSetErrorHandler(X11ErrorHandler);
 
@@ -233,14 +232,33 @@ int phg_wsx_setup_tool_nodisp(
     attrs.border_pixel = WhitePixel(display, screen);
     attrs.background_pixel = BlackPixel(display, screen);
     ws->glx_context = glXCreateNewContext(ws->display, ws->fbc[0], GLX_RGBA_TYPE, NULL, True);
-    drawable_id = glXCreatePbuffer(ws->display, ws->fbc[0],
-                                   (int[]){GLX_PBUFFER_WIDTH,
-                                           args->width,
-                                           GLX_PBUFFER_HEIGHT,
-                                           args->height,
-                                           None});
+    /* create a dummy window to create a drawable ID */
+    drawable_id = XCreateSimpleWindow(display, RootWindow(display, best_info->screen), 0, 0, 1, 1, 0, 0, 0);
+
+    glGenFramebuffers(1, &(ws->fbuf));
+    glGenTextures(1, &(ws->colorbuf));
+    glGenRenderbuffers(1, &(ws->depthbuf));
+
+    glBindFramebuffer(GL_FRAMEBUFFER, ws->fbuf);
+    glBindTexture(GL_TEXTURE_2D, ws->colorbuf);
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGBA,
+                 args->width,
+                 args->height,
+                 0,
+                 GL_RGBA,
+                 GL_UNSIGNED_BYTE,
+                 NULL);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ws->colorbuf, 0);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, ws->depthbuf);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, args->width, args->height);
+
     if (glXMakeContextCurrent(ws->display, drawable_id, drawable_id, ws->glx_context)){
-      glReadBuffer(GL_FRONT);
       glViewport(0, 0, args->width, args->height);
       /* Initialize rendering context */
       size_hints.flags = USPosition | USSize;
@@ -258,7 +276,7 @@ int phg_wsx_setup_tool_nodisp(
       background.val.general.y = (float) green / 65535.0;
       background.val.general.z = (float) blue / 65535.0;
 
-      glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &fb);
+      glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &(ws->fbuf));
 
       if (!wsgl_init(ws, &background, NUM_SELECTABLE_STRUCTS)) {
         ERR_BUF(ws->erh, ERR900);
@@ -268,7 +286,7 @@ int phg_wsx_setup_tool_nodisp(
       else {
         status = TRUE;
       }
-      
+
       status = TRUE;
       GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
       if (status != GL_FRAMEBUFFER_COMPLETE)
@@ -280,6 +298,24 @@ int phg_wsx_setup_tool_nodisp(
     }
   }
 return status;
+}
+
+/*******************************************************************************
+ * phg_wsx_cleanup_fb
+ *
+ * DESCR:       Release window
+ * RETURNS:     N/A
+ */
+void phg_wsx_cleanup_fb(
+                        Ws *ws
+                        )
+{
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glDeleteFramebuffers(1, &(ws->fbuf));
+  glDeleteTextures(1, &(ws->colorbuf));
+  glDeleteRenderbuffers(1, &(ws->depthbuf));
 }
 
 /*******************************************************************************

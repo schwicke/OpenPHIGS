@@ -34,6 +34,7 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 #include "private/wsglP.h"
+#include "private/wsxP.h"
 #include "phconf.h"
 
 /*******************************************************************************
@@ -174,177 +175,175 @@ void popen_ws(
  */
 
 void pclose_ws(
-   Pint ws_id
-   )
+               Pint ws_id
+               )
 {
-   Ws_handle wsh;
-   Wsb_output_ws *owsb;
-   Ws_post_str *str;
-   Wst_phigs_dt *dt;
-   Psl_ws_info *wsinfo;
-   int width, height;
-   unsigned int buffer_size;
-   int error;
-   int channels;
-   int nvals;
-   int i;
-   GLubyte * pixel_buffer;
-   png_byte ** png_rows;
-   png_structp png;
-   int clean_pbuf = FALSE;
-   if (phg_ws_open(ws_id, Pfn_close_ws) != NULL) {
-      wsh = PHG_WSID(ws_id);
-      int width = wsh->type->desc_tbl.xwin_dt.tool.width;
-      int height = wsh->type->desc_tbl.xwin_dt.tool.height;
-      wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
-      dt = &wsinfo->wstype->desc_tbl.phigs_dt;
-      glFlush();
-      glFinish();
-      glPixelStorei(GL_PACK_ALIGNMENT, 1);
-      switch (dt->ws_category){
-      case PCAT_IN:
-      case PCAT_OUT:
-      case PCAT_OUTIN:
-      case PCAT_MO:
-      case PCAT_MI:
-	break;
-      case PCAT_TGA:
-	buffer_size = 3*width*height*sizeof(GLubyte);
-	pixel_buffer = (GLubyte * ) malloc(buffer_size);
-        glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context);
-	glReadPixels(0, 0, width, height, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixel_buffer);
-	error = glGetError();
-	if (error != GL_NO_ERROR ){
-	  printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
-	}
-	short header[] = {0, 2, 0, 0, 0, 0, (short) width, (short) height, 24};
-	FILE* fd = fopen(wsh->filename, "w+");
-	fwrite(&header, sizeof(header), 1, fd);
-	fwrite(pixel_buffer, buffer_size, 1, fd);
-	fclose(fd);
-	free(pixel_buffer);
-        clean_pbuf = TRUE;
-	break;
-      case PCAT_PNG:
-	png_rows = (png_byte**)malloc(height * sizeof(png_byte*));
-	channels = 3;
-	buffer_size = channels*width*height*sizeof(GLubyte);
-	pixel_buffer = (GLubyte*) malloc(buffer_size);
-	nvals = channels * width * height;
-        if (glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context)){
-          glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixel_buffer);
-          error = glGetError();
-          if (error != GL_NO_ERROR ){
-            printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
-          }
-          for (i=0; i<height; i++){
-            png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
-          }
-          png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-          if (png) {
-            png_infop info = png_create_info_struct(png);
-            if (info){
-              FILE* fd = fopen(wsh->filename, "w+");
-              setjmp(png_jmpbuf(png));
-              png_init_io(png, fd);
-              png_set_IHDR(
-                           png,
-                           info,
-                           width, height,
-                           8,
-                           PNG_COLOR_TYPE_RGB,
-                           PNG_INTERLACE_NONE,
-                           PNG_COMPRESSION_TYPE_DEFAULT,
-                           PNG_FILTER_TYPE_DEFAULT
-                           );
-              png_write_info(png, info);
-              png_write_image(png, png_rows);
-              png_write_end(png, NULL);
-              fclose(fd);
-            } else {
-              printf("PNG export error: failed to create info structure\n");
-            }
-            png_destroy_write_struct(&png, &info);
+  Ws_handle wsh;
+  Wsb_output_ws *owsb;
+  Ws_post_str *str;
+  Wst_phigs_dt *dt;
+  Psl_ws_info *wsinfo;
+  int width, height;
+  unsigned int buffer_size;
+  int error;
+  int channels;
+  int nvals;
+  int i;
+  GLubyte * pixel_buffer;
+  png_byte ** png_rows;
+  png_structp png;
+  int clean_pbuf = FALSE;
+  if (phg_ws_open(ws_id, Pfn_close_ws) != NULL) {
+    wsh = PHG_WSID(ws_id);
+    int width = wsh->type->desc_tbl.xwin_dt.tool.width;
+    int height = wsh->type->desc_tbl.xwin_dt.tool.height;
+    wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
+    dt = &wsinfo->wstype->desc_tbl.phigs_dt;
+    glFlush();
+    glFinish();
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    switch (dt->ws_category){
+    case PCAT_IN:
+    case PCAT_OUT:
+    case PCAT_OUTIN:
+    case PCAT_MO:
+    case PCAT_MI:
+      break;
+    case PCAT_TGA:
+      buffer_size = 3*width*height*sizeof(GLubyte);
+      pixel_buffer = (GLubyte * ) malloc(buffer_size);
+      glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context);
+      glReadPixels(0, 0, width, height, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixel_buffer);
+      error = glGetError();
+      if (error != GL_NO_ERROR ){
+        printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
+      }
+      short header[] = {0, 2, 0, 0, 0, 0, (short) width, (short) height, 24};
+      FILE* fd = fopen(wsh->filename, "w+");
+      fwrite(&header, sizeof(header), 1, fd);
+      fwrite(pixel_buffer, buffer_size, 1, fd);
+      fclose(fd);
+      free(pixel_buffer);
+      clean_pbuf = TRUE;
+      break;
+    case PCAT_PNG:
+      png_rows = (png_byte**)malloc(height * sizeof(png_byte*));
+      channels = 3;
+      buffer_size = channels*width*height*sizeof(GLubyte);
+      pixel_buffer = (GLubyte*) malloc(buffer_size);
+      nvals = channels * width * height;
+      if (glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context)){
+        glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixel_buffer);
+        error = glGetError();
+        if (error != GL_NO_ERROR ){
+          printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
+        }
+        for (i=0; i<height; i++){
+          png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
+        }
+        png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+        if (png) {
+          png_infop info = png_create_info_struct(png);
+          if (info){
+            FILE* fd = fopen(wsh->filename, "w+");
+            setjmp(png_jmpbuf(png));
+            png_init_io(png, fd);
+            png_set_IHDR(
+                         png,
+                         info,
+                         width, height,
+                         8,
+                         PNG_COLOR_TYPE_RGB,
+                         PNG_INTERLACE_NONE,
+                         PNG_COMPRESSION_TYPE_DEFAULT,
+                         PNG_FILTER_TYPE_DEFAULT
+                         );
+            png_write_info(png, info);
+            png_write_image(png, png_rows);
+            png_write_end(png, NULL);
+            fclose(fd);
           } else {
-            printf("PNG export error: failed to create write structure\n");
+            printf("PNG export error: failed to create info structure\n");
           }
+          png_destroy_write_struct(&png, &info);
         } else {
-             printf("Cannot make the context current.\n");
-       }
-	free(pixel_buffer);
-        free(png_rows);
-        clean_pbuf = TRUE;
-	break;
-      case PCAT_PNGA:
-	channels = 4;
-	png_rows = (png_byte**)malloc(height * sizeof(png_byte*));
-	buffer_size = channels*width*height*sizeof(GLubyte);
-	pixel_buffer = (GLubyte*) malloc(buffer_size);
-	nvals = channels * width * height;
-        glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context);
-	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixel_buffer);
-	error = glGetError();
-	if (error != GL_NO_ERROR ){
-	  printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
-	}
-	for (i=0; i<height; i++){
-	  png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
-	}
-	png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-	if (png) {
-	  png_infop info = png_create_info_struct(png);
-	  if (info){
-	    FILE* fd = fopen(wsh->filename, "w+");
-	    setjmp(png_jmpbuf(png));
-	    png_init_io(png, fd);
-	    png_set_IHDR(
-			 png,
-			 info,
-			 width, height,
-			 8,
-			 PNG_COLOR_TYPE_RGBA,
-			 PNG_INTERLACE_NONE,
-			 PNG_COMPRESSION_TYPE_DEFAULT,
-			 PNG_FILTER_TYPE_DEFAULT
-			 );
-	    png_write_info(png, info);
-	    png_write_image(png, png_rows);
-	    png_write_end(png, NULL);
-	    fclose(fd);
-	  } else {
-	    printf("PNG export error: failed to create info structure\n");
-	  }
-	  png_destroy_write_struct(&png, &info);
-	} else {
-	  printf("PNG export error: failed to create write structure\n");
-	}
-	free(pixel_buffer);
-	free(png_rows);
-        clean_pbuf = TRUE;
-	break;
-      default:
-        break;
+          printf("PNG export error: failed to create write structure\n");
+        }
+      } else {
+        printf("Cannot make the context current.\n");
       }
-      (*wsh->update)(wsh, PFLAG_PERFORM);
-      owsb = &wsh->out_ws.model.b;
-      str = owsb->posted.lowest.higher;
-      while (str->higher != NULL) {
-         phg_css_unpost(owsb->cssh, str->structh->struct_id, wsh);
-         str = str->higher;
+      free(pixel_buffer);
+      free(png_rows);
+      clean_pbuf = TRUE;
+      break;
+    case PCAT_PNGA:
+      channels = 4;
+      png_rows = (png_byte**)malloc(height * sizeof(png_byte*));
+      buffer_size = channels*width*height*sizeof(GLubyte);
+      pixel_buffer = (GLubyte*) malloc(buffer_size);
+      nvals = channels * width * height;
+      glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context);
+      glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixel_buffer);
+      error = glGetError();
+      if (error != GL_NO_ERROR ){
+        printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
       }
-      /* cleanup */
-      //glXMakeContextCurrent(wsh->display, None, None, NULL);
-      glXDestroyContext(wsh->display, wsh->glx_context);
-      if (clean_pbuf){
-        glXDestroyPbuffer(wsh->display, wsh->drawable_id);
-        XFree(wsh->fbc);
+      for (i=0; i<height; i++){
+        png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
+      }        
+      png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+      if (png) {
+        png_infop info = png_create_info_struct(png);
+        if (info){
+          FILE* fd = fopen(wsh->filename, "w+");
+          setjmp(png_jmpbuf(png));
+          png_init_io(png, fd);
+          png_set_IHDR(
+                       png,
+                       info,
+                       width, height,
+                       8,
+                       PNG_COLOR_TYPE_RGBA,
+                       PNG_INTERLACE_NONE,
+                       PNG_COMPRESSION_TYPE_DEFAULT,
+                       PNG_FILTER_TYPE_DEFAULT
+                       );
+          png_write_info(png, info);
+          png_write_image(png, png_rows);
+          png_write_end(png, NULL);
+          fclose(fd);
+        } else {
+          printf("PNG export error: failed to create info structure\n");
+        }
+        png_destroy_write_struct(&png, &info);
+      } else {
+        printf("PNG export error: failed to create write structure\n");
       }
-      (*wsh->close)(wsh);
-      phg_psl_rem_ws(PHG_PSL, ws_id);
-
-   } else {
-     printf("PCLOSEWS ERROR: workstation was not open. Ignoring function.");
-   }
+      free(pixel_buffer);
+      free(png_rows);
+      clean_pbuf = TRUE;
+      break;
+    default:
+      break;
+    }
+    (*wsh->update)(wsh, PFLAG_PERFORM);
+    owsb = &wsh->out_ws.model.b;
+    str = owsb->posted.lowest.higher;
+    while (str->higher != NULL) {
+      phg_css_unpost(owsb->cssh, str->structh->struct_id, wsh);
+      str = str->higher;
+    }
+    /* cleanup */
+    glXDestroyContext(wsh->display, wsh->glx_context);
+    if (clean_pbuf){
+      phg_wsx_cleanup_fb(wsh);
+    }
+    (*wsh->close)(wsh);
+    phg_psl_rem_ws(PHG_PSL, ws_id);
+    
+  } else {
+    printf("PCLOSEWS ERROR: workstation was not open. Ignoring function.");
+  }
 }
 
 /*******************************************************************************

@@ -510,11 +510,11 @@ Ws* phg_wsb_open_ws(
         ws->lun = lun;
         ws->display = phg_wsx_open_gl_display(NULL, &ret->err);
         if (ws->display == NULL) {
-	  ERR_BUF(ws->erh, ret->err);
-	  goto abort;
-	}
+          ERR_BUF(ws->erh, ret->err);
+          goto abort;
+        }
         if (!phg_wsx_setup_tool_nodisp(ws, NULL, args)) {
-	  ERR_BUF(ws->erh, ret->err);
+          ERR_BUF(ws->erh, ret->err);
           goto abort;
         }
     }
@@ -597,23 +597,20 @@ Ws* phg_wsb_open_ws(
       ws->ws_rect.y = args->y;
       ws->ws_rect.width = args->width;
       ws->ws_rect.height = args->height;
-      /* for screen shots double buffering does not work correctly */
-      ws->type->desc_tbl.phigs_dt.out_dt.has_double_buffer = FALSE;
-      ws->has_double_buffer = FALSE;
     } else {
       (void)XGetWindowAttributes( ws->display, ws->drawable_id, &wattr );
       WS_SET_WS_RECT( ws, &wattr )
-      ws->has_double_buffer =
-        ws->type->desc_tbl.phigs_dt.out_dt.has_double_buffer;
     }
     /* Setup workstation attributes */
     ws->current_colour_model =
         ws->type->desc_tbl.phigs_dt.out_dt.default_colour_model;
     ws->category = ws->type->desc_tbl.phigs_dt.ws_category;
     ws->out_ws.model.b.cssh = args->cssh;
+    ws->has_double_buffer =
+      ws->type->desc_tbl.phigs_dt.out_dt.has_double_buffer;
 
     if (!init_output_state(ws, args->limits)) {
-	goto abort;
+      goto abort;
     }
 
     init_update_state(ws);

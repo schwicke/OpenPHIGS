@@ -66,6 +66,16 @@ int phg_wsx_setup_tool_nodisp(
    );
 
 /*******************************************************************************
+ * phg_wsx_cleanup_fb
+ *
+ * DESCR:       Release window
+ * RETURNS:     N/A
+ */
+void phg_wsx_cleanup_fb(
+                        Ws *ws
+                        );
+
+/*******************************************************************************
  * phg_wsx_release_window
  *
  * DESCR:       Release window
