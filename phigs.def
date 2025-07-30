@@ -9,5 +9,5 @@ Enabled switches: %XX, Comment by replacing the % by some other character
 *wp 0.0 1.0 0.0 1.    position
 *wg 1200 1200 0 0 1   Window width height px py border
 %bg 0. 0. 0.          Background color R G B
-%hs 1.2               scale factor for hardcopy
+%hs 7.9               scale factor for hardcopy
 *gs 1                 Use shaders (1) or not (0)

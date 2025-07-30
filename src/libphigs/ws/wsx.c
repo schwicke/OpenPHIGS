@@ -231,10 +231,7 @@ int phg_wsx_setup_tool_nodisp(
     attrs.colormap = cmap;
     attrs.border_pixel = WhitePixel(display, screen);
     attrs.background_pixel = BlackPixel(display, screen);
-    //ws->glx_context = glXCreateNewContext(ws->display, ws->fbc[0], GLX_RGBA_TYPE, NULL, True);
     ws->glx_context = 0;
-    /* create a dummy window to create a drawable ID */
-    //drawable_id = XCreateSimpleWindow(display, RootWindow(display, best_info->screen), 0, 0, 1, 1, 0, 0, 0);
     drawable_id = 0;
     glGenFramebuffers(1, &(ws->fbuf));
     glGenTextures(1, &(ws->colorbuf));
@@ -267,6 +264,7 @@ int phg_wsx_setup_tool_nodisp(
     size_hints.width = xdt->tool.width;
     size_hints.height = xdt->tool.height;
     ws->drawable_id = drawable_id;
+
     /* set background color defaut */
     uint8_t red   = (attrs.background_pixel >> 16) & 0xFF;
     uint8_t green = (attrs.background_pixel >> 8) & 0xFF;
@@ -275,22 +273,22 @@ int phg_wsx_setup_tool_nodisp(
     background.val.general.x = (float) red / 65535.0;
     background.val.general.y = (float) green / 65535.0;
     background.val.general.z = (float) blue / 65535.0;
-    
+
     glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &(ws->fbuf));
-    
+
     if (!wsgl_init(ws, &background, NUM_SELECTABLE_STRUCTS)) {
       ERR_BUF(ws->erh, ERR900);
       free(ws);
       status = FALSE;
     }
-    //else {
-    //  status = TRUE;
-    //}
-    
-    status = TRUE;
+    else {
+      status = TRUE;
+    }
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status == GL_FRAMEBUFFER_COMPLETE){
+#ifdef DEBUG
       printf("Framebuffer complete: 0x%x\n", status);
+#endif
     } else {
       printf("Framebuffer incomplete: 0x%x\n", status);
     }
