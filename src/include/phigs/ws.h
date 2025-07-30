@@ -241,7 +241,7 @@ typedef struct _Ws {
    Widget       valuator_box;
    Widget       valuator_frame;
    GLXFBConfig  *fbc;
-   GLint        fbuf, depthbuf, colorbuf;
+   GLuint       fbuf, depthbuf, colorbuf;
 
    /* Output LUN for some work station types, e.g. to print out stuff here */
    Pint         lun;
