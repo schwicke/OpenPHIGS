@@ -217,7 +217,9 @@ void wsgl_clear(
 #ifdef DEBUG
    printf("wsgl_setup_background: Setting background to (%f %f %f)\n",  gcolr.val.general.x,gcolr.val.general.y,gcolr.val.general.z);
 #endif
-   glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
+   if (ws->drawable_id != 0){
+     glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
+   }
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    if (ws->has_double_buffer) {
 #ifdef DEBUG
@@ -250,8 +252,9 @@ void wsgl_flush(
    int clear_flag = 0;
    Wsgl_handle wsgl = ws->render_context;
 
-   glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
-
+   if (ws->drawable_id != 0){
+     glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
+   }
    if (wsgl->vp_changed || wsgl->win_changed) {
       phg_wsx_compute_ws_transform(&wsgl->cur_win, &wsgl->cur_vp, &ws_xform);
       x = (GLint)   (ws_xform.offset.x - ws_xform.scale.x);
@@ -404,7 +407,9 @@ void wsgl_begin_rendering(
    printf("Begin rendering\n");
 #endif
 
-   glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
+   if (ws->drawable_id != 0){
+     glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
+   }
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    init_rendering_state(ws);
 }
@@ -1329,8 +1334,9 @@ void wsgl_begin_pick(
 #ifdef DEBUG
    printf("Begin pick\n");
 #endif
-   glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
-
+   if (ws->drawable_id != 0){
+     glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
+   }
    glGetIntegerv(GL_VIEWPORT, vp);
    v.delta_x = ((float) vp[2] - 2.0 * ((float) box->x - (float) vp[0])) /
                box->distance;

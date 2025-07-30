@@ -341,7 +341,9 @@ void wsgl_shaders(Ws * ws){
   GLenum err;
   GLint result;
   GLchar eLog[1024] = { 0 };
-  glXMakeCurrent(ws->display, ws->drawable_id, ws->glx_context);
+  if (ws->drawable_id){
+    glXMakeCurrent(ws->display, ws->drawable_id, ws->glx_context);
+  }
 #ifdef GLEW
 #ifdef DEBUG
    printf("DEBUG: Shaders: initialising GLEW\n");

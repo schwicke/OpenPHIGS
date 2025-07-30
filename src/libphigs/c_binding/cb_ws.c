@@ -212,7 +212,7 @@ void pclose_ws(
     case PCAT_TGA:
       buffer_size = 3*width*height*sizeof(GLubyte);
       pixel_buffer = (GLubyte * ) malloc(buffer_size);
-      glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context);
+      //glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context);
       glReadPixels(0, 0, width, height, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixel_buffer);
       error = glGetError();
       if (error != GL_NO_ERROR ){
@@ -232,7 +232,7 @@ void pclose_ws(
       buffer_size = channels*width*height*sizeof(GLubyte);
       pixel_buffer = (GLubyte*) malloc(buffer_size);
       nvals = channels * width * height;
-      if (glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context)){
+      //if (glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context)){
         glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixel_buffer);
         error = glGetError();
         if (error != GL_NO_ERROR ){
@@ -269,9 +269,9 @@ void pclose_ws(
         } else {
           printf("PNG export error: failed to create write structure\n");
         }
-      } else {
-        printf("Cannot make the context current.\n");
-      }
+        //} else {
+        //printf("Cannot make the context current.\n");
+        //}
       free(pixel_buffer);
       free(png_rows);
       clean_pbuf = TRUE;
@@ -282,7 +282,7 @@ void pclose_ws(
       buffer_size = channels*width*height*sizeof(GLubyte);
       pixel_buffer = (GLubyte*) malloc(buffer_size);
       nvals = channels * width * height;
-      glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context);
+      //glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context);
       glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixel_buffer);
       error = glGetError();
       if (error != GL_NO_ERROR ){
