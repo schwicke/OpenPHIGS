@@ -131,9 +131,9 @@ void wsgl_update_projection(
 #else
       if (wsgl_use_shaders){
 #endif
-	wsgl_set_projection_matrix(wsgl->model_tran);
+        wsgl_set_projection_matrix(wsgl->model_tran);
       } else {
-	wsgl_set_matrix(wsgl->model_tran, FALSE);
+        wsgl_set_matrix(wsgl->model_tran, FALSE);
       }
    }
    else {
@@ -374,14 +374,14 @@ void wsgl_set_colr(
     if (wsgl_use_shaders){
 #endif
       glVertexAttrib4f(vCOLOR,
-		       colr->direct.rgb.red,
-		       colr->direct.rgb.green,
-		       colr->direct.rgb.blue,
-		       1.0);
+                       colr->direct.rgb.red,
+                       colr->direct.rgb.green,
+                       colr->direct.rgb.blue,
+                       1.0);
     } else {
       glColor3f(colr->direct.rgb.red,
-		colr->direct.rgb.green,
-		colr->direct.rgb.blue);
+                colr->direct.rgb.green,
+                colr->direct.rgb.blue);
     }
     break;
 
@@ -398,8 +398,8 @@ void wsgl_set_colr(
  */
 
 void wsgl_set_gcolr(
-		    Pgcolr *gcolr
-		    )
+                    Pgcolr *gcolr
+                    )
 {
   switch(gcolr->type) {
   case PINDIRECT:
@@ -413,14 +413,14 @@ void wsgl_set_gcolr(
     if (wsgl_use_shaders){
 #endif
       glVertexAttrib4f(vCOLOR,
-		       gcolr->val.general.x,
-		       gcolr->val.general.y,
-		       gcolr->val.general.z,
-		       1.0);
+                       gcolr->val.general.x,
+                       gcolr->val.general.y,
+                       gcolr->val.general.z,
+                       1.0);
     } else {
       glColor3f(gcolr->val.general.x,
-		gcolr->val.general.y,
-		gcolr->val.general.z);
+                gcolr->val.general.y,
+                gcolr->val.general.z);
     }
     break;
 
@@ -437,9 +437,9 @@ void wsgl_set_gcolr(
  */
 
 void wsgl_colr_from_gcolr(
-			  Pcoval *colr,
-			  Pgcolr *gcolr
-			  )
+                          Pcoval *colr,
+                          Pgcolr *gcolr
+                          )
 {
   switch(gcolr->type) {
   case PINDIRECT:
@@ -465,22 +465,22 @@ void wsgl_colr_from_gcolr(
  */
 
 void wsgl_set_line_ind(
-		       Ws *ws,
-		       Pattr_group *attr_group,
-		       Pint ind
-		       )
+                       Ws *ws,
+                       Pattr_group *attr_group,
+                       Pint ind
+                       )
 {
   Phg_ret ret;
 
   (*ws->inq_representation)(ws,
-			    ind,
-			    PINQ_REALIZED,
-			    PHG_ARGS_EXTLNREP,
-			    &ret);
+                            ind,
+                            PINQ_REALIZED,
+                            PHG_ARGS_EXTLNREP,
+                            &ret);
   if (ret.err == 0) {
     phg_attr_group_set_line_bundle(ws,
-				   attr_group,
-				   &ret.data.rep.extlnrep);
+                                   attr_group,
+                                   &ret.data.rep.extlnrep);
   }
 }
 
@@ -492,8 +492,8 @@ void wsgl_set_line_ind(
  */
 
 void wsgl_setup_line_attr(
-			  Ws_attr_st *ast
-			  )
+                          Ws_attr_st *ast
+                          )
 {
   Pint type;
 
@@ -557,22 +557,22 @@ void wsgl_setup_line_attr(
  */
 
 void wsgl_set_int_ind(
-		      Ws *ws,
-		      Pattr_group *attr_group,
-		      Pint ind
-		      )
+                      Ws *ws,
+                      Pattr_group *attr_group,
+                      Pint ind
+                      )
 {
   Phg_ret ret;
 
   (*ws->inq_representation)(ws,
-			    ind,
-			    PINQ_REALIZED,
-			    PHG_ARGS_EXTINTERREP,
-			    &ret);
+                            ind,
+                            PINQ_REALIZED,
+                            PHG_ARGS_EXTINTERREP,
+                            &ret);
   if (ret.err == 0) {
     phg_attr_group_set_int_bundle(ws,
-				  attr_group,
-				  &ret.data.rep.extinterrep);
+                                  attr_group,
+                                  &ret.data.rep.extinterrep);
   }
 }
 
@@ -584,8 +584,8 @@ void wsgl_set_int_ind(
  */
 
 Pgcolr* wsgl_get_int_colr(
-			  Ws_attr_st *ast
-			  )
+                          Ws_attr_st *ast
+                          )
 {
   Pgcolr *gcolr;
 
@@ -606,8 +606,8 @@ Pgcolr* wsgl_get_int_colr(
  */
 
 Pint_style wsgl_get_int_style(
-			      Ws_attr_st *ast
-			      )
+                              Ws_attr_st *ast
+                              )
 {
   Pint_style style;
 
@@ -629,8 +629,8 @@ Pint_style wsgl_get_int_style(
  */
 
 void wsgl_setup_int_style(
-			  Pint_style style
-			  )
+                          Pint_style style
+                          )
 {
   switch (style) {
   case PSTYLE_HOLLOW:
@@ -663,9 +663,9 @@ void wsgl_setup_int_style(
  */
 
 void wsgl_setup_int_attr_nocol(
-			       Ws *ws,
-			       Ws_attr_st *ast
-			       )
+                               Ws *ws,
+                               Ws_attr_st *ast
+                               )
 {
   Pint_style style;
   Pint style_ind;
@@ -680,7 +680,7 @@ void wsgl_setup_int_attr_nocol(
   }
 
   if (phg_nset_name_is_set(&ast->asf_nameset,
-			   (Pint) PASPECT_INT_STYLE_IND)) {
+                           (Pint) PASPECT_INT_STYLE_IND)) {
     style_ind = ast->indiv_group.int_bundle.style_ind;
   }
   else {
@@ -973,14 +973,14 @@ void wsgl_setup_background(
    if (wsgl_use_shaders){
 #endif
      glVertexAttrib4f(vCOLOR,
-		      wsgl->background.val.general.x,
-		      wsgl->background.val.general.y,
-		      wsgl->background.val.general.z,
-		      1.0);
+                      wsgl->background.val.general.x,
+                      wsgl->background.val.general.y,
+                      wsgl->background.val.general.z,
+                      1.0);
    } else {
      glColor3f(wsgl->background.val.general.x,
-	       wsgl->background.val.general.y,
-	       wsgl->background.val.general.z);
+               wsgl->background.val.general.y,
+               wsgl->background.val.general.z);
    }
    /* Need to restore polygon mode */
    wsgl->dev_st.int_style = -1;
