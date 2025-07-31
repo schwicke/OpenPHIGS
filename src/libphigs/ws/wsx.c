@@ -222,6 +222,7 @@ int phg_wsx_setup_tool_nodisp(
   Display *display = ws->display;
 
   /* Find matching visual */
+  status = TRUE;
   phg_wsx_find_best_visual(ws, wst, &best_info, &cmap, &err_ind);
   if (err_ind != 0) {
     ERR_BUF(ws->erh, err_ind);
@@ -234,29 +235,50 @@ int phg_wsx_setup_tool_nodisp(
     ws->glx_context = 0;
     drawable_id = 0;
     glGenFramebuffers(1, &(ws->fbuf));
-    glGenTextures(1, &(ws->colorbuf));
-    glGenRenderbuffers(1, &(ws->depthbuf));
-
     glBindFramebuffer(GL_FRAMEBUFFER, ws->fbuf);
+
+    glGenTextures(1, &(ws->colorbuf));
     glBindTexture(GL_TEXTURE_2D, ws->colorbuf);
-    glTexImage2D(GL_TEXTURE_2D,
-                 0,
-                 GL_RGBA,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
                  args->width,
                  args->height,
-                 0,
-                 GL_RGBA,
-                 GL_UNSIGNED_BYTE,
+                 0, GL_RGBA, GL_UNSIGNED_BYTE,
                  NULL);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ws->colorbuf, 0);
 
+    glGenRenderbuffers(1, &(ws->depthbuf));
     glBindRenderbuffer(GL_RENDERBUFFER, ws->depthbuf);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, args->width, args->height);
-
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, ws->depthbuf);
     glViewport(0, 0, args->width, args->height);
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+    /* check the status */
+    GLenum fbstatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    switch (fbstatus) {
+    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+      printf("Incomplete attachment\n");
+      status = FALSE;
+      break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+      printf("Missing attachment\n");
+      status = FALSE;
+      break;
+    case GL_FRAMEBUFFER_UNSUPPORTED:
+      printf("Unsupported framebuffer config\n");
+      status = FALSE;
+      break;
+#ifdef DEBUG
+    default:
+      printf("FBO status: 0x%X\n", status);
+#endif
+    }
+    /* clear the new buffers */
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     /* Initialize rendering context */
     size_hints.flags = USPosition | USSize;
     size_hints.x = xdt->tool.x;
@@ -280,17 +302,6 @@ int phg_wsx_setup_tool_nodisp(
       ERR_BUF(ws->erh, ERR900);
       free(ws);
       status = FALSE;
-    }
-    else {
-      status = TRUE;
-    }
-    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if (status == GL_FRAMEBUFFER_COMPLETE){
-#ifdef DEBUG
-      printf("Framebuffer complete: 0x%x\n", status);
-#endif
-    } else {
-      printf("Framebuffer incomplete: 0x%x\n", status);
     }
   }
   return status;
