@@ -491,6 +491,13 @@ Ws* phg_wsb_open_ws(
   ws->drawable_id = 0;
   ws->glx_context = 0;
   ws->hcsf = 1.0;
+  ws->prev_draw_fbo = 0;
+  ws->prev_read_fbo = 0;
+  glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &(ws->prev_draw_fbo));
+  glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &(ws->prev_read_fbo));
+  if (ws->prev_draw_fbo && ws->prev_read_fbo){
+    glGetIntegerv(GL_VIEWPORT, ws->old_viewport);
+  }
 
   if (args->conn_type == PHG_ARGS_CONN_HCOPY) {
 

@@ -25,8 +25,14 @@
 #include <string.h>
 #include <math.h>
 #include <png.h>
+#ifdef GLEW
+#include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glx.h>
+#else
+#include <epoxy/gl.h>
+#include <epoxy/glx.h>
+#endif
 
 #include "phg.h"
 #include "css.h"
@@ -75,7 +81,7 @@ void popen_ws(
     }
     else {
       wst = phg_wst_find(&PHG_WST_LIST, ws_type);
-      
+
       if (wst == NULL) {
         ERR_REPORT(PHG_ERH, ERR52);
       }
@@ -108,7 +114,7 @@ void popen_ws(
             memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
           }
         }
-        
+
         args.wsid = ws_id;
         args.type = wst;
         args.erh = PHG_ERH;
@@ -121,7 +127,7 @@ void popen_ws(
         args.y = config[ws_id].ypos;
         args.border_width =  config[ws_id].border_width;
         args.limits = config[ws_id].vpos;
-        
+
         /* Open workstation */
         PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);
         if (PHG_WSID(ws_id) == NULL) {
@@ -192,7 +198,7 @@ void pclose_ws(
   GLubyte * pixel_buffer;
   png_byte ** png_rows;
   png_structp png;
-  int clean_pbuf = FALSE;
+  int clean_fb = FALSE;
   if (phg_ws_open(ws_id, Pfn_close_ws) != NULL) {
     wsh = PHG_WSID(ws_id);
     int width = wsh->type->desc_tbl.xwin_dt.tool.width;
@@ -224,7 +230,7 @@ void pclose_ws(
       fwrite(pixel_buffer, buffer_size, 1, fd);
       fclose(fd);
       free(pixel_buffer);
-      clean_pbuf = TRUE;
+      clean_fb = TRUE;
       break;
     case PCAT_PNG:
       png_rows = (png_byte**)malloc(height * sizeof(png_byte*));
@@ -274,7 +280,7 @@ void pclose_ws(
         //}
       free(pixel_buffer);
       free(png_rows);
-      clean_pbuf = TRUE;
+      clean_fb = TRUE;
       break;
     case PCAT_PNGA:
       channels = 4;
@@ -290,7 +296,7 @@ void pclose_ws(
       }
       for (i=0; i<height; i++){
         png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
-      }        
+      }
       png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
       if (png) {
         png_infop info = png_create_info_struct(png);
@@ -321,7 +327,7 @@ void pclose_ws(
       }
       free(pixel_buffer);
       free(png_rows);
-      clean_pbuf = TRUE;
+      clean_fb = TRUE;
       break;
     default:
       break;
@@ -334,13 +340,23 @@ void pclose_ws(
       str = str->higher;
     }
     /* cleanup */
-    glXDestroyContext(wsh->display, wsh->glx_context);
-    if (clean_pbuf){
+    if (wsh->glx_context){
+      glXDestroyContext(wsh->display, wsh->glx_context);
+    }
+    if (clean_fb){
       phg_wsx_cleanup_fb(wsh);
+      if (wsh->prev_draw_fbo && wsh->prev_read_fbo){
+	glViewport(wsh->old_viewport[0],
+		   wsh->old_viewport[1],
+		   wsh->old_viewport[2],
+		   wsh->old_viewport[3]);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, wsh->prev_draw_fbo);
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, wsh->prev_read_fbo);
+      }
     }
     (*wsh->close)(wsh);
     phg_psl_rem_ws(PHG_PSL, ws_id);
-    
+
   } else {
     printf("PCLOSEWS ERROR: workstation was not open. Ignoring function.");
   }
