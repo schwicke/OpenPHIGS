@@ -89,7 +89,10 @@ void popen_ws(
         memset(&args, 0, sizeof(Phg_args_open_ws));
         args.width = config[ws_id].display_width;
         args.height = config[ws_id].display_height;
-	args.hcsf = config[ws_id].hcsf;
+        args.hcsf = config[ws_id].hcsf;
+#ifdef DEBUG
+        printf("cb_ws: WSID=%d type=%d scale factor %f\n", ws_id, ws_type, args.hcsf);
+#endif
         if (conn_id == NULL) {
           args.conn_type = PHG_ARGS_CONN_OPEN;
         }

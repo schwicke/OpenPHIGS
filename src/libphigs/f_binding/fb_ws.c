@@ -54,6 +54,7 @@ FTN_SUBROUTINE(popwk)(
 
    Pint ws_id = FTN_INTEGER_GET(wkid);
    Pint lun = FTN_INTEGER_GET(conid);
+   Pint ws_type = FTN_INTEGER_GET(wtype);
 
    Phg_args_conn_info conn_id;
    Pcolr_rep rep;
@@ -71,7 +72,6 @@ FTN_SUBROUTINE(popwk)(
    conn_id.lun = lun;
    conn_id.background = 0;
 
-   Pint ws_type = FTN_INTEGER_GET(wtype);
 #ifdef DEBUG
   printf("DEBUG: POPWK open %d\n", *wkid);
 #endif
@@ -97,7 +97,10 @@ FTN_SUBROUTINE(popwk)(
          memset(&args, 0, sizeof(Phg_args_open_ws));
          args.width = config[ws_id].display_width;
          args.height = config[ws_id].display_height;
-	 args.hcsf = config[ws_id].hcsf;
+         args.hcsf = config[ws_id].hcsf;
+#ifdef DEBUG
+         printf("fb_ws: WSID=%d type=%d scale factor %f\n", ws_id, ws_type, args.hcsf);
+#endif
          if (lun == 0) {
            args.conn_info.background = 0;
            args.conn_type = PHG_ARGS_CONN_OPEN;

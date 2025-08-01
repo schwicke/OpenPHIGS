@@ -237,8 +237,6 @@ C
 C     WKPSG: Grey scale    WKPSC: Color
 C     WKTGA: TGA output    WKPNG: PNG    WKPNGA: PNG with transparency
 C
-      INTEGER WKPSG, WLPSC, LUNPS, PSGREY, PSCOLO
-      PARAMETER (WKPSG=2,WKPSC=3,LUNPS=15,PSGREY=5,PSCOLO=5)
       INTEGER WKTGA, WKPNG, WKPNGA
       PARAMETER (WKTGA=4, WKPNG=6, WKPNGA=8)
 C     Output format
@@ -246,15 +244,15 @@ C     Output format
 
 C     Open PHIGS and a workstation
       WKID=1
+C     workstation ID for printing
       WKTOUT=99
+C     Create color PNG
+      WKFORM = WKPNG
       CALL POPPH(0, 1)
       CALL POPWK(WKID, 0, 3)
       CALL KYSABL(WKID)
 C     Wait for user interaction
       CALL PMSG(WKID,"Create a hard copy to file.");
-C     Create color PNG
-      WKTOUT = WKPSC
-      WKFORM = WKPNG
 C     Open output workstation
       CALL POPWK (WKTOUT, LUNPS, WKFORM)
 C     set the output filename

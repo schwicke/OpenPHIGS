@@ -33,7 +33,7 @@
 #include "private/wsglP.h"
 #include "ws.h"
 
-int max_wkid = 40;
+int max_wkid = 100;
 Pophconf config[256];
 int config_read = 0;
 
@@ -61,8 +61,28 @@ void set_defaults(Pophconf* config){
 void init_defaults(){
   int i;
   /* set default values for all workstations */
-  for (i=0; i < max_wkid; i++){
+  for (i=0; i <= max_wkid; i++){
     set_defaults(&config[i]);
+  }
+}
+
+void query_settings(){
+  int i;
+  Pophconf* cf;
+  /* set default values for all workstations */
+  for (i=0; i <= max_wkid; i++){
+    cf = &config[i];
+    if (cf->wkid >= 0){
+      printf("Workstation   ID %d:\n", cf->wkid);
+      printf("  Title:         %s\n", cf->window_title);
+      printf("  Background rgb %f %f %f\n",
+             cf->background_color.rgb.red,
+             cf->background_color.rgb.green,
+             cf->background_color.rgb.blue);
+      printf("  Width, height: %d %d\n", cf->display_width, cf->display_height);
+      printf("  Border width:  %d\n", cf->border_width);
+      printf("  Scale fact  :  %f\n", cf->hcsf);
+    }
   }
 }
 
@@ -105,6 +125,10 @@ void read_config(char * config_file){
       if (line[0] == '%'){
         /* get work station ID */
         if (sscanf(line, "%%wk %d", &wk)>0){
+          printf("New workstation id %d\n", wk);
+          if (wk > max_wkid){
+            printf("Error: maximum workstation number exceeded: %d > %d\n", wk, max_wkid);
+          }
           if (newconfig.wkid < 0){
             newconfig.wkid = wk;
             newconfig.set_window_pos = 0;
@@ -152,6 +176,7 @@ void read_config(char * config_file){
         }
         if (sscanf(line, "%%hs %f", &hcsf) > 0){
           newconfig.hcsf = hcsf;
+          printf("Scale factor  is: %f\n", hcsf);
         }
         if (sscanf(line, "%%gs %d", &use_shaders) > 0){
           if (use_shaders == 0){
@@ -167,7 +192,8 @@ void read_config(char * config_file){
     fclose(fh);
   }
   /* make sure we store the last one as well */
-  if ((newconfig.wkid >= 0) && (newconfig.wkid < max_wkid)){
+  if ((newconfig.wkid >= 0) && (newconfig.wkid <= max_wkid)){
     memcpy(&config[newconfig.wkid], &newconfig, sizeof(Pophconf));
   }
+  query_settings();
 }

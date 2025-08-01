@@ -56,8 +56,8 @@ SOFTWARE.
 extern "C" {
 #endif
 
-#define MAX_NO_OPEN_WS                         20
-#define MAX_NO_OPEN_ARFILES                    20
+#define MAX_NO_OPEN_WS                         100
+#define MAX_NO_OPEN_ARFILES                    100
 
 typedef struct {
    Pint       used;                            /* Mark if workstation is used */

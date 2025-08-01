@@ -2,15 +2,17 @@ Example Parameters for workstation 1
 
 Enabled switches: %XX, Comment by replacing the % by some other character
 
-%wk 1
+%wk 1                 workstation for rendering
 %wf fort.10           default output file name for hardcopies
 %wn OpenPHIGS         workstation name
 %wi PHIGS             workstation icon name
 %wp 0.0 1.0 0.0 1.    position
 %wg 512 512 0 0 1     Window width height px py border
 %bg 0. 0. 0.          Background color R G B
+%hs 4.
 %gs 1                 Use shaders (1) or not (0)
 
 Workstation example for output
-%wk 99
+%wk 99                Workstation for hardcopy
+%wg 512 512 0 0 1     Window width height px py border
 %hs 8.                scale factor for hardcopy

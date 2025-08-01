@@ -507,6 +507,7 @@ Ws* phg_wsb_open_ws(
     strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
     strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
     lun = args->conn_info.lun;
+    /* set scale factor for hardcopy */
     ws->hcsf = (Pfloat)args->hcsf;
     /* store the output lun */
     ws->lun = lun;
@@ -581,13 +582,6 @@ Ws* phg_wsb_open_ws(
       printf("Failed to initialise top level!");
       goto abort;
     }
-    /*
-      if (phg_cpm_toolkit_open_ws(ws)){
-      XDestroyWindow(ws->display, ws->input_overlay_window);
-      XDestroyWindow(ws->display, ws->drawable_id);
-      printf("Failed to create a popup shell!\n");
-      }
-    */
     if (!phg_ws_input_init(ws, args->input_q)) {
       XDestroyWindow(ws->display, ws->input_overlay_window);
       XDestroyWindow(ws->display, ws->drawable_id);
