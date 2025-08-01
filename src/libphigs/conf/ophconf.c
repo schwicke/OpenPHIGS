@@ -80,8 +80,15 @@ void query_settings(){
              cf->background_color.rgb.green,
              cf->background_color.rgb.blue);
       printf("  Width, height: %d %d\n", cf->display_width, cf->display_height);
+      printf("  Position x, y: %d %d\n", cf->xpos, cf->ypos);
       printf("  Border width:  %d\n", cf->border_width);
-      printf("  Scale fact  :  %f\n", cf->hcsf);
+      printf("  View port   :  (%f %f) (%f %f) \n",
+             cf->vpos.x_min,
+             cf->vpos.y_min,
+             cf->vpos.x_max,
+             cf->vpos.y_max
+             );
+      printf("  HC Scale fac : %f\n", cf->hcsf);
     }
   }
 }
@@ -104,6 +111,8 @@ void read_config(char * config_file){
 
   /* initialize output */
   newconfig.wkid = -1;
+  /* print the full config at the end or not */
+  int printconf = 0;
 
   /* defaults for updated configs */
   init_defaults();
@@ -187,6 +196,13 @@ void read_config(char * config_file){
             printf("Shaders are ENABLED by configuration\n");
           }
         }
+        if (sscanf(line, "%%pc %d", &printconf) > 0){
+          if (printconf == 0){
+            printf("Printing configuration will be suppressed\n");
+          } else {
+            printconf = 1;
+          }
+        }
       }
     }
     fclose(fh);
@@ -195,5 +211,7 @@ void read_config(char * config_file){
   if ((newconfig.wkid >= 0) && (newconfig.wkid <= max_wkid)){
     memcpy(&config[newconfig.wkid], &newconfig, sizeof(Pophconf));
   }
-  query_settings();
+  if (printconf){
+    query_settings();
+  }
 }

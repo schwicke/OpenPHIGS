@@ -1,6 +1,11 @@
 Example Parameters for workstation 1
-
 Enabled switches: %XX, Comment by replacing the % by some other character
+
+Global flags:
+%gs 1                 Use shaders (1) or not (0)
+%pc 1                 print configuration. Set to 0 to disable.
+
+Per workstation configurations
 
 %wk 1                 workstation for rendering
 %wf fort.10           default output file name for hardcopies
@@ -10,7 +15,6 @@ Enabled switches: %XX, Comment by replacing the % by some other character
 %wg 512 512 0 0 1     Window width height px py border
 %bg 0. 0. 0.          Background color R G B
 %hs 4.
-%gs 1                 Use shaders (1) or not (0)
 
 Workstation example for output
 %wk 99                Workstation for hardcopy
