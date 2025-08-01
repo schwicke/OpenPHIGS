@@ -140,4 +140,6 @@ Extensions:
 ## Versions
 * 0.0.1-1: Revised code from upstream
 * 0.0.2-1: Implement additional extend C and Fortran bindings for CERN specific purposes
-
+* 0.0.2-1: Implement additional extend C and Fortran bindings for CERN specific purposes
+* v0.1-1:  Fixes for exotic hardware
+* v0.2-1:  Introduce scale factor for hardcopies
