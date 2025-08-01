@@ -216,7 +216,7 @@ C      DATA       DROPX  / 0.4990, 0.5010, 0.5010, 0.4990, 0.4990/
       END
 
 
-      PROGRAM MESSAGE
+      PROGRAM SABLIER
 
 C     Include PHIGS enumeration file
       INCLUDE 'phigsf77.h'
@@ -242,10 +242,11 @@ C
       INTEGER WKTGA, WKPNG, WKPNGA
       PARAMETER (WKTGA=4, WKPNG=6, WKPNGA=8)
 C     Output format
-      INTEGER WKTOUT, WKFORM
+      INTEGER WKTOUT, WKFORM, ICONDI
 
 C     Open PHIGS and a workstation
       WKID=1
+      WKTOUT=99
       CALL POPPH(0, 1)
       CALL POPWK(WKID, 0, 3)
       CALL KYSABL(WKID)
@@ -254,14 +255,19 @@ C     Wait for user interaction
 C     Create color PNG
       WKTOUT = WKPSC
       WKFORM = WKPNG
-      CALL PCLWK(WKID)
 C     Open output workstation
-      CALL POPWK (WKID, LUNPS, WKFORM)
+      CALL POPWK (WKTOUT, LUNPS, WKFORM)
 C     set the output filename
-      CALL PSFNAME(WKID, "hourglass.png")
+      CALL PSFNAME(WKTOUT, "hourglass.png")
 C     draw again
-      CALL KYSABL(WKID)
+      CALL KYSABL(WKTOUT)
 C     close workstations
+      CALL PCLWK(WKTOUT)
+C     Refresh 
+      CALL PRST(WKID, ICONDI)
+C     Wait for user interaction
+      CALL PMSG(WKID,"Done. Press the button to exit.");
+C     Close the main window
       CALL PCLWK(WKID)
       STOP
       END

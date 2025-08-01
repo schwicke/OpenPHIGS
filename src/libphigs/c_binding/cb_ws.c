@@ -238,14 +238,13 @@ void pclose_ws(
       buffer_size = channels*width*height*sizeof(GLubyte);
       pixel_buffer = (GLubyte*) malloc(buffer_size);
       nvals = channels * width * height;
-      //if (glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context)){
-        glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixel_buffer);
-        error = glGetError();
-        if (error != GL_NO_ERROR ){
-          printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
-        }
-        for (i=0; i<height; i++){
-          png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
+      glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixel_buffer);
+      error = glGetError();
+      if (error != GL_NO_ERROR ){
+	printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
+      }
+      for (i=0; i<height; i++){
+	png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
         }
         png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
         if (png) {
@@ -275,10 +274,7 @@ void pclose_ws(
         } else {
           printf("PNG export error: failed to create write structure\n");
         }
-        //} else {
-        //printf("Cannot make the context current.\n");
-        //}
-      free(pixel_buffer);
+	free(pixel_buffer);
       free(png_rows);
       clean_fb = TRUE;
       break;
@@ -345,13 +341,22 @@ void pclose_ws(
     }
     if (clean_fb){
       phg_wsx_cleanup_fb(wsh);
+#ifdef DEBUG
+      printf("Restoring view port %d %d %d %d",
+	     wsh->old_viewport[0],
+	     wsh->old_viewport[1],
+	     wsh->old_viewport[2],
+	     wsh->old_viewport[3]);
+#endif
+      glViewport(wsh->old_viewport[0],
+		 wsh->old_viewport[1],
+		 wsh->old_viewport[2],
+		 wsh->old_viewport[3]);
       if (wsh->prev_draw_fbo && wsh->prev_read_fbo){
-	glViewport(wsh->old_viewport[0],
-		   wsh->old_viewport[1],
-		   wsh->old_viewport[2],
-		   wsh->old_viewport[3]);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, wsh->prev_draw_fbo);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, wsh->prev_read_fbo);
+      } else {
+	printf("Previous FBO not set\n");
       }
     }
     (*wsh->close)(wsh);
