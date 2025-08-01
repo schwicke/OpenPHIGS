@@ -242,8 +242,7 @@ typedef struct _Ws {
    Widget       valuator_frame;
    GLXFBConfig  *fbc;
    GLuint       fbuf, depthbuf, colorbuf;
-   GLint        prev_draw_fbo, prev_read_fbo;
-   GLint old_viewport[4];
+   GLint        old_viewport[4];
 
    /* Output LUN for some work station types, e.g. to print out stuff here */
    Pint         lun;

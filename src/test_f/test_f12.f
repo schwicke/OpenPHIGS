@@ -253,6 +253,8 @@ C     Create color PNG
       CALL KYSABL(WKID)
 C     Wait for user interaction
       CALL PMSG(WKID,"Create a hard copy to file.");
+C     Refresh 
+      CALL PRST(WKID, ICONDI)
 C     Open output workstation
       CALL POPWK (WKTOUT, LUNPS, WKFORM)
 C     set the output filename

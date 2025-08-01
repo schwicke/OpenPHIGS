@@ -491,8 +491,6 @@ Ws* phg_wsb_open_ws(
   ws->drawable_id = 0;
   ws->glx_context = 0;
   ws->hcsf = 1.0;
-  ws->prev_draw_fbo = 0;
-  ws->prev_read_fbo = 0;
 
   if (args->conn_type == PHG_ARGS_CONN_HCOPY) {
 

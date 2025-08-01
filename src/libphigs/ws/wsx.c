@@ -225,11 +225,8 @@ int phg_wsx_setup_tool_nodisp(
   status = TRUE;
 
   /* save the current context */
-  glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &(ws->prev_draw_fbo));
-  glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &(ws->prev_read_fbo));
   glGetIntegerv(GL_VIEWPORT, ws->old_viewport);
 #ifdef DEBUG
-  printf("Saved bindings %d %d\n", ws->prev_draw_fbo, ws->prev_read_fbo);
   printf("Saved view port %d %d %d %d\n", ws->old_viewport[0], ws->old_viewport[1], ws->old_viewport[2], ws->old_viewport[3]);
 #endif
   phg_wsx_find_best_visual(ws, wst, &best_info, &cmap, &err_ind);

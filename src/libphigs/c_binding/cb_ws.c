@@ -346,21 +346,15 @@ void pclose_ws(
       phg_wsx_cleanup_fb(wsh);
 #ifdef DEBUG
       printf("Restoring view port %d %d %d %d",
-	     wsh->old_viewport[0],
-	     wsh->old_viewport[1],
-	     wsh->old_viewport[2],
-	     wsh->old_viewport[3]);
+             wsh->old_viewport[0],
+             wsh->old_viewport[1],
+             wsh->old_viewport[2],
+             wsh->old_viewport[3]);
 #endif
       glViewport(wsh->old_viewport[0],
-		 wsh->old_viewport[1],
-		 wsh->old_viewport[2],
-		 wsh->old_viewport[3]);
-      if (wsh->prev_draw_fbo && wsh->prev_read_fbo){
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, wsh->prev_draw_fbo);
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, wsh->prev_read_fbo);
-      } else {
-	printf("Previous FBO not set\n");
-      }
+                 wsh->old_viewport[1],
+                 wsh->old_viewport[2],
+                 wsh->old_viewport[3]);
     }
     (*wsh->close)(wsh);
     phg_psl_rem_ws(PHG_PSL, ws_id);
