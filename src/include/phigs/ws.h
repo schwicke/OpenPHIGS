@@ -240,9 +240,13 @@ typedef struct _Ws {
    Widget       valuator_shell;
    Widget       valuator_box;
    Widget       valuator_frame;
+   GLXFBConfig  *fbc;
+   GLuint       fbuf, depthbuf, colorbuf;
+   GLint        old_viewport[4];
 
    /* Output LUN for some work station types, e.g. to print out stuff here */
-   Pint           lun;
+   Pint         lun;
+   Pfloat       hcsf;
    /* File name */
    char         filename[512];
    void         (*close)(

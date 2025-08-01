@@ -53,6 +53,29 @@ int phg_wsx_setup_tool(
    );
 
 /*******************************************************************************
+ * phg_wsx_setup_tool_nodisp
+ *
+ * DESCR:       Create window
+ * RETURNS:     TRUE or FALSE
+ */
+
+int phg_wsx_setup_tool_nodisp(
+   Ws *ws,
+   Phg_args_conn_info *conn_info,
+   Phg_args_open_ws *args
+   );
+
+/*******************************************************************************
+ * phg_wsx_cleanup_fb
+ *
+ * DESCR:       Release window
+ * RETURNS:     N/A
+ */
+void phg_wsx_cleanup_fb(
+                        Ws *ws
+                        );
+
+/*******************************************************************************
  * phg_wsx_release_window
  *
  * DESCR:       Release window
@@ -85,6 +108,22 @@ Display* phg_wsx_open_gl_display(
    char *name,
    Pint *err_ind
    );
+
+/*******************************************************************************
+ * phg_wsx_set_best_args
+ *
+ * DESCR:	Find best matching visual
+ * RETURNS:	status as true or false
+ *              Fills args array
+ */
+
+int phg_wsx_set_best_args(
+   Ws *ws,
+   Wst *wst,
+   int* args,
+   int* rargc,
+   int* err_ind
+);
 
 /*******************************************************************************
  * phg_wsx_find_best_visual
@@ -194,4 +233,3 @@ int phg_wstx_init(
 #endif /* __cplusplus */
 
 #endif /* _wsxP_h */
-

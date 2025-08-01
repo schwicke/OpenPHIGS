@@ -53,7 +53,6 @@ static void init_output_ws_dt(
    wsdt->ws_class             = PCLASS_RASTER;
    wsdt->deferral_mode        = PDEFER_ASAP;
    wsdt->modification_mode    = PMODE_UQUM;
-
    switch (ws_type) {
       case PWST_OUTPUT_TRUE:
       case PWST_OUTIN_TRUE:

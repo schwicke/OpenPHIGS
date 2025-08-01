@@ -64,8 +64,6 @@ CDECK  ID>, KYSABL.
       PARAMETER (TFNTPS = 3, EFNTPS = 7, NMARKS=12, NMSIZS=10)
       REAL       PTOUT      , CROTST     , PSWITH
       PARAMETER (PTOUT = 0.01, CROTST = 4., PSWITH = 2.)
-      CHARACTER(LEN=*) CONFIL          , ERRFIL
-      PARAMETER    (CONFIL = 'GPHIGS.def', ERRFIL = 'ERRPHIGS')
 *
 *      COLOR LOOK UP TABLE DEFINITION
 *
@@ -184,7 +182,7 @@ C      DATA       DROPX  / 0.4990, 0.5010, 0.5010, 0.4990, 0.4990/
       IYEL=6
       IMAG=7
       ICYAN=8
-
+      CALL PSLWSC(1.)
       CALL PSFCM (0)
       CALL PSVWI (NVWGEN)
       CALL PSIS (PSOLID)
@@ -218,7 +216,7 @@ C      DATA       DROPX  / 0.4990, 0.5010, 0.5010, 0.4990, 0.4990/
       END
 
 
-      PROGRAM MESSAGE
+      PROGRAM SABLIER
 
 C     Include PHIGS enumeration file
       INCLUDE 'phigsf77.h'
@@ -239,23 +237,24 @@ C
 C     WKPSG: Grey scale    WKPSC: Color
 C     WKTGA: TGA output    WKPNG: PNG    WKPNGA: PNG with transparency
 C
-      INTEGER WKPSG, WLPSC, LUNPS, PSGREY, PSCOLO
-      PARAMETER (WKPSG=2,WKPSC=3,LUNPS=15,PSGREY=5,PSCOLO=5)
       INTEGER WKTGA, WKPNG, WKPNGA
       PARAMETER (WKTGA=4, WKPNG=6, WKPNGA=8)
 C     Output format
-      INTEGER WKTOUT, WKFORM
+      INTEGER WKTOUT, WKFORM, ICONDI
 
 C     Open PHIGS and a workstation
       WKID=1
+C     workstation ID for printing
+      WKTOUT=99
+C     Create color PNG
+      WKFORM = WKPNG
       CALL POPPH(0, 1)
       CALL POPWK(WKID, 0, 3)
-      CALL KYSABL(1)
+      CALL KYSABL(WKID)
 C     Wait for user interaction
       CALL PMSG(WKID,"Create a hard copy to file.");
-C     Create color PNG
-      WKTOUT = WKPSC
-      WKFORM = WKPNG
+C     Refresh 
+      CALL PRST(WKID, ICONDI)
 C     Open output workstation
       CALL POPWK (WKTOUT, LUNPS, WKFORM)
 C     set the output filename
@@ -264,6 +263,11 @@ C     draw again
       CALL KYSABL(WKTOUT)
 C     close workstations
       CALL PCLWK(WKTOUT)
+C     Refresh 
+      CALL PRST(WKID, ICONDI)
+C     Wait for user interaction
+      CALL PMSG(WKID,"Done. Press the button to exit.");
+C     Close the main window
       CALL PCLWK(WKID)
       STOP
       END

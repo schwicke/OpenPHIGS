@@ -54,6 +54,7 @@ FTN_SUBROUTINE(popwk)(
 
    Pint ws_id = FTN_INTEGER_GET(wkid);
    Pint lun = FTN_INTEGER_GET(conid);
+   Pint ws_type = FTN_INTEGER_GET(wtype);
 
    Phg_args_conn_info conn_id;
    Pcolr_rep rep;
@@ -71,7 +72,6 @@ FTN_SUBROUTINE(popwk)(
    conn_id.lun = lun;
    conn_id.background = 0;
 
-   Pint ws_type = FTN_INTEGER_GET(wtype);
 #ifdef DEBUG
   printf("DEBUG: POPWK open %d\n", *wkid);
 #endif
@@ -95,27 +95,35 @@ FTN_SUBROUTINE(popwk)(
       }
       else {
          memset(&args, 0, sizeof(Phg_args_open_ws));
+         args.width = config[ws_id].display_width;
+         args.height = config[ws_id].display_height;
+         args.hcsf = config[ws_id].hcsf;
+#ifdef DEBUG
+         printf("fb_ws: WSID=%d type=%d scale factor %f\n", ws_id, ws_type, args.hcsf);
+#endif
          if (lun == 0) {
-	   args.conn_info.background = 0;
-	   args.conn_type = PHG_ARGS_CONN_OPEN;
+           args.conn_info.background = 0;
+           args.conn_type = PHG_ARGS_CONN_OPEN;
          }
-	 else {
-	   if (
-	       ws_type == PWST_HCOPY_TRUE ||
-	       ws_type == PWST_HCOPY_TRUE_DB ||
-	       ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
-	       ws_type == PWST_HCOPY_TRUE_RGB_PNG_DB ||
-	       ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
-	       ws_type == PWST_HCOPY_TRUE_RGBA_PNG_DB
-	       ) {
-	     args.conn_type = PHG_ARGS_CONN_HCOPY;
-	     memcpy(&args.conn_info, &conn_id, sizeof(Phg_args_conn_info));
-	   }
-	   else {
-	     args.conn_type = PHG_ARGS_CONN_DRAWABLE;
-	     memcpy(&args.conn_info, &conn_id, sizeof(Phg_args_conn_info));
-	   }
-	 }
+         else {
+           if (
+               ws_type == PWST_HCOPY_TRUE ||
+               ws_type == PWST_HCOPY_TRUE_DB ||
+               ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
+               ws_type == PWST_HCOPY_TRUE_RGB_PNG_DB ||
+               ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
+               ws_type == PWST_HCOPY_TRUE_RGBA_PNG_DB
+               ) {
+             args.conn_type = PHG_ARGS_CONN_HCOPY;
+             args.width = config[ws_id].display_width*config[ws_id].hcsf;
+             args.height = config[ws_id].display_height*config[ws_id].hcsf;
+             memcpy(&args.conn_info, &conn_id, sizeof(Phg_args_conn_info));
+           }
+           else {
+             args.conn_type = PHG_ARGS_CONN_DRAWABLE;
+             memcpy(&args.conn_info, &conn_id, sizeof(Phg_args_conn_info));
+           }
+         }
          args.wsid = ws_id;
          args.type = wst;
          args.erh = PHG_ERH;
@@ -126,12 +134,8 @@ FTN_SUBROUTINE(popwk)(
          args.icon_name = config[ws_id].window_icon;
          args.x = config[ws_id].xpos;
          args.y = config[ws_id].ypos;
-         args.width = config[ws_id].display_width;
-         args.height = config[ws_id].display_height;
          args.border_width =  config[ws_id].border_width;
          args.limits = config[ws_id].vpos;
-
-         printf("Opening WS %d width %d height %d\n", ws_id, args.width, args.height);
 
          /* Open workstation */
          PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);
@@ -142,22 +146,21 @@ FTN_SUBROUTINE(popwk)(
             /* Add workstation to info list */
             phg_psl_add_ws(PHG_PSL, ws_id, NULL, wst);
          }
-	 /* predefine some colors */
-	 pxset_color_map(ws_id);
-	 /* set background as specified in configuration file */
-	 pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
-	 /* init output file name */
-	 wsh = PHG_WSID(ws_id);
-	 if (strlen(config[ws_id].filename) == 0){
-	   sprintf(filename, "fort.%d", lun);
-	   strncpy(wsh->filename, filename, strlen(filename));
-	   (wsh->filename)[strlen(filename)] = '\0';
-	 } else {
-	   strncpy(wsh->filename, config[ws_id].filename, strlen(config[ws_id].filename));
-	   (wsh->filename)[strlen(config[ws_id].filename)] = '\0';
-	 }
-	 printf("fb_ws: Hardcopy to %s\n", wsh->filename);
-	 wsgl_clear(wsh);
+         /* predefine some colors */
+         pxset_color_map(ws_id);
+         /* set background as specified in configuration file */
+         pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
+         /* init output file name */
+         wsh = PHG_WSID(ws_id);
+         if (strlen(config[ws_id].filename) == 0){
+           sprintf(filename, "fort.%d", lun);
+           strncpy(wsh->filename, filename, strlen(filename));
+           (wsh->filename)[strlen(filename)] = '\0';
+         } else {
+           strncpy(wsh->filename, config[ws_id].filename, strlen(config[ws_id].filename));
+           (wsh->filename)[strlen(config[ws_id].filename)] = '\0';
+         }
+         wsgl_clear(wsh);
       }
    }
    ERR_FLUSH(PHG_ERH);

@@ -57,6 +57,9 @@ where X is a floating point number between 0. (fully transparent) and 1. (fully 
 ## Migration notes and extensions
 Some notes on differences with respect to other implementations.
 
+### Workstation numbers
+Workstation numbers can be in the range from 0 to 99.
+
 ### Workstation types
 * 0 PWST_OUTPUT_TRUE                 Output only on GL display
 * 1 PWST_OUTIN_TRUE                  Input/Output on GL display
@@ -65,9 +68,9 @@ Some notes on differences with respect to other implementations.
 * 4 PWST_HCOPY_TRUE                  Hardcopy to file as TGA
 * 5 PWST_HCOPY_TRUE_DB               Hardcopy to file as TGA
 * 6 PWST_HCOPY_TRUE_RGB_PNG          Hardcopy to file as PNG RGB only
-* 7 PWST_HCOPY_TRUE_RGB_PNG_DB       Hardcopy to file as PNG RGB only
+* 7 PWST_HCOPY_TRUE_RGB_PNG_DB       Hardcopy to file as PNG RGB only, same as 6
 * 8 PWST_HCOPY_TRUE_RGBA_PNG         Hardcopy to file as PNG with Alpha channel
-* 9 PWST_HCOPY_TRUE_RGBA_PNG_DB      Hardcopy to file as PNG with Alpha channel
+* 9 PWST_HCOPY_TRUE_RGBA_PNG_DB      Hardcopy to file as PNG with Alpha channel, same as 6
 
 Notes:
  * There is no support for PostScript at the moment.
@@ -99,6 +102,7 @@ Openphigs behaviour on echo modes is summarized below.
   * low label
   * high label
   These should be encoded
+
 Extensions:
 * echo mode 2:
   * as echo mode 1 but places the window on top of the main window

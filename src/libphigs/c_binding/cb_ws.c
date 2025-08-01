@@ -25,8 +25,14 @@
 #include <string.h>
 #include <math.h>
 #include <png.h>
+#ifdef GLEW
+#include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glx.h>
+#else
+#include <epoxy/gl.h>
+#include <epoxy/glx.h>
+#endif
 
 #include "phg.h"
 #include "css.h"
@@ -34,6 +40,7 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 #include "private/wsglP.h"
+#include "private/wsxP.h"
 #include "phconf.h"
 
 /*******************************************************************************
@@ -44,125 +51,129 @@
  */
 
 void popen_ws(
-   Pint ws_id,
-   Phg_args_conn_info *conn_id,
-   Pint ws_type
-   )
+              Pint ws_id,
+              Phg_args_conn_info *conn_id,
+              Pint ws_type
+              )
 {
-   Wst *wst;
-   Ws_handle wsh;
-   Psl_ws_info *wsinfo;
-   Wst_phigs_dt *dt;
-   Phg_args_open_ws args;
-   Phg_ret ret;
-   Pcolr_rep rep;
-   char* filename;
-   /* read default configuration file if not read yet */
-   if (! config_read){
-     config_read = 1;
-     read_config("phigs.def");
-   };
-   if (phg_entry_check(PHG_ERH, ERR2, Pfn_open_ws)) {
-      if ((ws_id < 0) || (ws_id > MAX_NO_OPEN_WS)) {
-         ERR_REPORT(PHG_ERH, ERR65);
-      }
-      else if (phg_psl_inq_ws_open(PHG_PSL, ws_id)) {
-         ERR_REPORT(PHG_ERH, ERR53);
-      }
-      else if (!phg_psl_ws_free_slot(PHG_PSL)) {
-         ERR_REPORT(PHG_ERH, ERR63);
+  Wst *wst;
+  Ws_handle wsh;
+  Psl_ws_info *wsinfo;
+  Wst_phigs_dt *dt;
+  Phg_args_open_ws args;
+  Phg_ret ret;
+  Pcolr_rep rep;
+  char* filename;
+  /* read default configuration file if not read yet */
+  if (! config_read){
+    config_read = 1;
+    read_config("phigs.def");
+  };
+  if (phg_entry_check(PHG_ERH, ERR2, Pfn_open_ws)) {
+    if ((ws_id < 0) || (ws_id > MAX_NO_OPEN_WS)) {
+      ERR_REPORT(PHG_ERH, ERR65);
+    }
+    else if (phg_psl_inq_ws_open(PHG_PSL, ws_id)) {
+      ERR_REPORT(PHG_ERH, ERR53);
+    }
+    else if (!phg_psl_ws_free_slot(PHG_PSL)) {
+      ERR_REPORT(PHG_ERH, ERR63);
+    }
+    else {
+      wst = phg_wst_find(&PHG_WST_LIST, ws_type);
+
+      if (wst == NULL) {
+        ERR_REPORT(PHG_ERH, ERR52);
       }
       else {
-         wst = phg_wst_find(&PHG_WST_LIST, ws_type);
+        memset(&args, 0, sizeof(Phg_args_open_ws));
+        args.width = config[ws_id].display_width;
+        args.height = config[ws_id].display_height;
+        args.hcsf = config[ws_id].hcsf;
+#ifdef DEBUG
+        printf("cb_ws: WSID=%d type=%d scale factor %f\n", ws_id, ws_type, args.hcsf);
+#endif
+        if (conn_id == NULL) {
+          args.conn_type = PHG_ARGS_CONN_OPEN;
+        }
+        else {
+          args.conn_info.background = 0;
+          if (
+              ws_type == PWST_HCOPY_TRUE ||
+              ws_type == PWST_HCOPY_TRUE_DB ||
+              ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
+              ws_type == PWST_HCOPY_TRUE_RGB_PNG_DB ||
+              ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
+              ws_type == PWST_HCOPY_TRUE_RGBA_PNG_DB
+              ) {
+            args.conn_type = PHG_ARGS_CONN_HCOPY;
+            args.width = config[ws_id].display_width*config[ws_id].hcsf;
+            args.height = config[ws_id].display_height*config[ws_id].hcsf;
+            /* color index zero is background */
+            memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
+          }
+          else {
+            args.conn_type = PHG_ARGS_CONN_DRAWABLE;
+            memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
+          }
+        }
 
-         if (wst == NULL) {
-            ERR_REPORT(PHG_ERH, ERR52);
-         }
-         else {
-            memset(&args, 0, sizeof(Phg_args_open_ws));
+        args.wsid = ws_id;
+        args.type = wst;
+        args.erh = PHG_ERH;
+        args.cssh = PHG_CSS;
+        args.memory = 8192;
+        args.input_q = PHG_INPUT_Q;
+        args.window_name = config[ws_id].window_title;
+        args.icon_name = config[ws_id].window_icon;
+        args.x = config[ws_id].xpos;
+        args.y = config[ws_id].ypos;
+        args.border_width =  config[ws_id].border_width;
+        args.limits = config[ws_id].vpos;
 
-            if (conn_id == NULL) {
-               args.conn_type = PHG_ARGS_CONN_OPEN;
-            }
-	    else {
-	      args.conn_info.background = 0;
-	      if (
-		  ws_type == PWST_HCOPY_TRUE ||
-		  ws_type == PWST_HCOPY_TRUE_DB ||
-		  ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
-		  ws_type == PWST_HCOPY_TRUE_RGB_PNG_DB ||
-		  ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
-		  ws_type == PWST_HCOPY_TRUE_RGBA_PNG_DB
-		  ) {
-		args.conn_type = PHG_ARGS_CONN_HCOPY;
-		/* color index zero is background */
-		memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
-	      }
-	      else {
-		args.conn_type = PHG_ARGS_CONN_DRAWABLE;
-		memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
-	      }
-	    }
-
-            args.wsid = ws_id;
-            args.type = wst;
-            args.erh = PHG_ERH;
-            args.cssh = PHG_CSS;
-            args.memory = 8192;
-            args.input_q = PHG_INPUT_Q;
-            args.window_name = config[ws_id].window_title;
-            args.icon_name = config[ws_id].window_icon;
-            args.x = config[ws_id].xpos;
-            args.y = config[ws_id].ypos;
-            args.width = config[ws_id].display_width;
-            args.height = config[ws_id].display_height;
-            args.border_width =  config[ws_id].border_width;
-            args.limits = config[ws_id].vpos;
-
-            /* Open workstation */
-            PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);
-            if (PHG_WSID(ws_id) == NULL) {
-               ERR_REPORT(PHG_ERH, ERR900);
-            }
-            else {
-               /* Add workstation to info list */
-               phg_psl_add_ws(PHG_PSL, ws_id, NULL, wst);
-            }
-	    /* predefine some colors */
-	    pxset_color_map(ws_id);
-	    /* set background as specified in configuration file */
-	    pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
-	    wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
-	    dt = &wsinfo->wstype->desc_tbl.phigs_dt;
-	    /* init the file name */
-            wsh = PHG_WSID(ws_id);
-	    if (strlen(config[ws_id].filename) == 0){
-	      switch (dt->ws_category){
-	      case PCAT_TGA:
-		strcpy(wsh->filename, "output.tga");
-		break;
-	      case PCAT_PNG:
-	      case PCAT_PNGA:
-		strcpy(wsh->filename, "output.png");
-		break;
-	      case PCAT_IN:
-	      case PCAT_OUT:
-	      case PCAT_OUTIN:
-	      case PCAT_MO:
-	      case PCAT_MI:
-		break;
-	      default:
-		break;
-	      }
-	    } else {
-	      printf("cb_ws: Hardcopy to %s\n", wsh->filename);
-              strncpy(wsh->filename, config[ws_id].filename, sizeof(wsh->filename));
-	    }
-	    wsgl_clear(wsh);
-         }
+        /* Open workstation */
+        PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);
+        if (PHG_WSID(ws_id) == NULL) {
+          ERR_REPORT(PHG_ERH, ERR900);
+        }
+        else {
+          /* Add workstation to info list */
+          phg_psl_add_ws(PHG_PSL, ws_id, NULL, wst);
+        }
+        /* predefine some colors */
+        pxset_color_map(ws_id);
+        /* set background as specified in configuration file */
+        pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
+        wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
+        dt = &wsinfo->wstype->desc_tbl.phigs_dt;
+        /* init the file name */
+        wsh = PHG_WSID(ws_id);
+        if (strlen(config[ws_id].filename) == 0){
+          switch (dt->ws_category){
+          case PCAT_TGA:
+            strcpy(wsh->filename, "output.tga");
+            break;
+          case PCAT_PNG:
+          case PCAT_PNGA:
+            strcpy(wsh->filename, "output.png");
+            break;
+          case PCAT_IN:
+          case PCAT_OUT:
+          case PCAT_OUTIN:
+          case PCAT_MO:
+          case PCAT_MI:
+            break;
+          default:
+            break;
+          }
+        } else {
+          strncpy(wsh->filename, config[ws_id].filename, sizeof(wsh->filename));
+        }
+        wsgl_clear(wsh);
       }
-      ERR_FLUSH(PHG_ERH);
-   }
+    }
+    ERR_FLUSH(PHG_ERH);
+  }
 }
 
 /*******************************************************************************
@@ -173,159 +184,184 @@ void popen_ws(
  */
 
 void pclose_ws(
-   Pint ws_id
-   )
+               Pint ws_id
+               )
 {
-   Ws_handle wsh;
-   Wsb_output_ws *owsb;
-   Ws_post_str *str;
-   Wst_phigs_dt *dt;
-   Psl_ws_info *wsinfo;
-   int width, height;
-   unsigned int buffer_size;
-   int error;
-   int channels;
-   int nvals;
-   int i;
-   GLubyte * pixel_buffer;
-   png_byte ** png_rows;
-   png_structp png;
-   if (phg_ws_open(ws_id, Pfn_close_ws) != NULL) {
-      wsh = PHG_WSID(ws_id);
-      int width = wsh->type->desc_tbl.xwin_dt.tool.width;
-      int height = wsh->type->desc_tbl.xwin_dt.tool.height;
-      wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
-      dt = &wsinfo->wstype->desc_tbl.phigs_dt;
+  Ws_handle wsh;
+  Wsb_output_ws *owsb;
+  Ws_post_str *str;
+  Wst_phigs_dt *dt;
+  Psl_ws_info *wsinfo;
+  int width, height;
+  unsigned int buffer_size;
+  int error;
+  int channels;
+  int nvals;
+  int i;
+  GLubyte * pixel_buffer;
+  png_byte ** png_rows;
+  png_structp png;
+  int clean_fb = FALSE;
+  if (phg_ws_open(ws_id, Pfn_close_ws) != NULL) {
+    wsh = PHG_WSID(ws_id);
+    int width = wsh->type->desc_tbl.xwin_dt.tool.width;
+    int height = wsh->type->desc_tbl.xwin_dt.tool.height;
+    wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
+    dt = &wsinfo->wstype->desc_tbl.phigs_dt;
+    glFlush();
+    glFinish();
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    switch (dt->ws_category){
+    case PCAT_IN:
+    case PCAT_OUT:
+    case PCAT_OUTIN:
+    case PCAT_MO:
+    case PCAT_MI:
+      break;
+    case PCAT_TGA:
+      buffer_size = 3*width*height*sizeof(GLubyte);
+      pixel_buffer = (GLubyte * ) malloc(buffer_size);
+      //glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context);
+      glReadPixels(0, 0, width, height, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixel_buffer);
+      error = glGetError();
+      if (error != GL_NO_ERROR ){
+        printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
+      }
+      short header[] = {0, 2, 0, 0, 0, 0, (short) width, (short) height, 24};
+      FILE* fd = fopen(wsh->filename, "w+");
+      fwrite(&header, sizeof(header), 1, fd);
+      fwrite(pixel_buffer, buffer_size, 1, fd);
+      fclose(fd);
+      free(pixel_buffer);
+      clean_fb = TRUE;
+      break;
+    case PCAT_PNG:
       png_rows = (png_byte**)malloc(height * sizeof(png_byte*));
-      glFlush();
-      glFinish();
-      glPixelStorei(GL_PACK_ALIGNMENT, 1);
-      switch (dt->ws_category){
-      case PCAT_IN:
-      case PCAT_OUT:
-      case PCAT_OUTIN:
-      case PCAT_MO:
-      case PCAT_MI:
-	break;
-      case PCAT_TGA:
-	buffer_size = 3*width*height*sizeof(GLubyte);
-	pixel_buffer = (GLubyte * ) malloc(buffer_size);
-	glReadPixels(0, 0, width, height, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixel_buffer);
-	error = glGetError();
-	if (error != GL_NO_ERROR ){
-	  printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
-	}
-	short header[] = {0, 2, 0, 0, 0, 0, (short) width, (short) height, 24};
-	printf("DEBUG writing to %s\n", wsh->filename);
-	FILE* fd = fopen(wsh->filename, "w+");
-	fwrite(&header, sizeof(header), 1, fd);
-	fwrite(pixel_buffer, buffer_size, 1, fd);
-	fclose(fd);
-	printf("DEBUG wrote %s\n", wsh->filename);
-	free(pixel_buffer);
-	break;
-      case PCAT_PNG:
-	channels = 3;
-	buffer_size = channels*width*height*sizeof(GLubyte);
-	pixel_buffer = (GLubyte*) malloc(buffer_size);
-	nvals = channels * width * height;
-	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixel_buffer);
-	error = glGetError();
-	if (error != GL_NO_ERROR ){
-	  printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
-	}
-	for (i=0; i<height; i++){
-	  png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
-	}
-	png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-	if (png) {
-	  png_infop info = png_create_info_struct(png);
-	  if (info){
-	    FILE* fd = fopen(wsh->filename, "w+");
-	    setjmp(png_jmpbuf(png));
-	    png_init_io(png, fd);
-	    png_set_IHDR(
-			 png,
-			 info,
-			 width, height,
-			 8,
-			 PNG_COLOR_TYPE_RGB,
-			 PNG_INTERLACE_NONE,
-			 PNG_COMPRESSION_TYPE_DEFAULT,
-			 PNG_FILTER_TYPE_DEFAULT
-			 );
-	    png_write_info(png, info);
-	    png_write_image(png, png_rows);
-	    png_write_end(png, NULL);
-	    fclose(fd);
-	  } else {
-	    printf("PNG export error: failed to create info structure\n");
-	  }
-	  png_destroy_write_struct(&png, &info);
-	} else {
-	  printf("PNG export error: failed to create write structure\n");
-	}
-	free(pixel_buffer);
-	break;
-      case PCAT_PNGA:
-	channels = 4;
-	buffer_size = channels*width*height*sizeof(GLubyte);
-	pixel_buffer = (GLubyte*) malloc(buffer_size);
-	nvals = channels * width * height;
-	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixel_buffer);
-	error = glGetError();
-	if (error != GL_NO_ERROR ){
-	  printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
-	}
-	for (i=0; i<height; i++){
-	  png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
-	}
-	png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-	if (png) {
-	  png_infop info = png_create_info_struct(png);
-	  if (info){
-	    FILE* fd = fopen(wsh->filename, "w+");
-	    setjmp(png_jmpbuf(png));
-	    png_init_io(png, fd);
-	    png_set_IHDR(
-			 png,
-			 info,
-			 width, height,
-			 8,
-			 PNG_COLOR_TYPE_RGBA,
-			 PNG_INTERLACE_NONE,
-			 PNG_COMPRESSION_TYPE_DEFAULT,
-			 PNG_FILTER_TYPE_DEFAULT
-			 );
-	    png_write_info(png, info);
-	    png_write_image(png, png_rows);
-	    png_write_end(png, NULL);
-	    fclose(fd);
-	  } else {
-	    printf("PNG export error: failed to create info structure\n");
-	  }
-	  png_destroy_write_struct(&png, &info);
-	} else {
-	  printf("PNG export error: failed to create write structure\n");
-	}
-	free(pixel_buffer);
-	break;
-      default:
-	break;
+      channels = 3;
+      buffer_size = channels*width*height*sizeof(GLubyte);
+      pixel_buffer = (GLubyte*) malloc(buffer_size);
+      nvals = channels * width * height;
+      glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixel_buffer);
+      error = glGetError();
+      if (error != GL_NO_ERROR ){
+	printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
       }
+      for (i=0; i<height; i++){
+	png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
+        }
+        png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+        if (png) {
+          png_infop info = png_create_info_struct(png);
+          if (info){
+            FILE* fd = fopen(wsh->filename, "w+");
+            setjmp(png_jmpbuf(png));
+            png_init_io(png, fd);
+            png_set_IHDR(
+                         png,
+                         info,
+                         width, height,
+                         8,
+                         PNG_COLOR_TYPE_RGB,
+                         PNG_INTERLACE_NONE,
+                         PNG_COMPRESSION_TYPE_DEFAULT,
+                         PNG_FILTER_TYPE_DEFAULT
+                         );
+            png_write_info(png, info);
+            png_write_image(png, png_rows);
+            png_write_end(png, NULL);
+            fclose(fd);
+          } else {
+            printf("PNG export error: failed to create info structure\n");
+          }
+          png_destroy_write_struct(&png, &info);
+        } else {
+          printf("PNG export error: failed to create write structure\n");
+        }
+	free(pixel_buffer);
       free(png_rows);
-      (*wsh->update)(wsh, PFLAG_PERFORM);
-      owsb = &wsh->out_ws.model.b;
-      str = owsb->posted.lowest.higher;
-      while (str->higher != NULL) {
-         phg_css_unpost(owsb->cssh, str->structh->struct_id, wsh);
-         str = str->higher;
+      clean_fb = TRUE;
+      break;
+    case PCAT_PNGA:
+      channels = 4;
+      png_rows = (png_byte**)malloc(height * sizeof(png_byte*));
+      buffer_size = channels*width*height*sizeof(GLubyte);
+      pixel_buffer = (GLubyte*) malloc(buffer_size);
+      nvals = channels * width * height;
+      //glXMakeContextCurrent(wsh->display, wsh->drawable_id, wsh->drawable_id, wsh->glx_context);
+      glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixel_buffer);
+      error = glGetError();
+      if (error != GL_NO_ERROR ){
+        printf("PCLOSEWS ERROR: glReadPixel returned error code %d\n", error);
       }
-      (*wsh->close)(wsh);
-      phg_psl_rem_ws(PHG_PSL, ws_id);
-   } else {
-     printf("PCLOSEWS ERROR: workstation was not open. Ignoring function.");
-   }
+      for (i=0; i<height; i++){
+        png_rows[i] = &(pixel_buffer[ (height - i - 1) * width * channels]);
+      }
+      png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+      if (png) {
+        png_infop info = png_create_info_struct(png);
+        if (info){
+          FILE* fd = fopen(wsh->filename, "w+");
+          setjmp(png_jmpbuf(png));
+          png_init_io(png, fd);
+          png_set_IHDR(
+                       png,
+                       info,
+                       width, height,
+                       8,
+                       PNG_COLOR_TYPE_RGBA,
+                       PNG_INTERLACE_NONE,
+                       PNG_COMPRESSION_TYPE_DEFAULT,
+                       PNG_FILTER_TYPE_DEFAULT
+                       );
+          png_write_info(png, info);
+          png_write_image(png, png_rows);
+          png_write_end(png, NULL);
+          fclose(fd);
+        } else {
+          printf("PNG export error: failed to create info structure\n");
+        }
+        png_destroy_write_struct(&png, &info);
+      } else {
+        printf("PNG export error: failed to create write structure\n");
+      }
+      free(pixel_buffer);
+      free(png_rows);
+      clean_fb = TRUE;
+      break;
+    default:
+      break;
+    }
+    (*wsh->update)(wsh, PFLAG_PERFORM);
+    owsb = &wsh->out_ws.model.b;
+    str = owsb->posted.lowest.higher;
+    while (str->higher != NULL) {
+      phg_css_unpost(owsb->cssh, str->structh->struct_id, wsh);
+      str = str->higher;
+    }
+    /* cleanup */
+    if (wsh->glx_context){
+      glXDestroyContext(wsh->display, wsh->glx_context);
+    }
+    if (clean_fb){
+      phg_wsx_cleanup_fb(wsh);
+#ifdef DEBUG
+      printf("Restoring view port %d %d %d %d",
+             wsh->old_viewport[0],
+             wsh->old_viewport[1],
+             wsh->old_viewport[2],
+             wsh->old_viewport[3]);
+#endif
+      glViewport(wsh->old_viewport[0],
+                 wsh->old_viewport[1],
+                 wsh->old_viewport[2],
+                 wsh->old_viewport[3]);
+    }
+    (*wsh->close)(wsh);
+    phg_psl_rem_ws(PHG_PSL, ws_id);
+
+  } else {
+    printf("PCLOSEWS ERROR: workstation was not open. Ignoring function.");
+  }
 }
 
 /*******************************************************************************
