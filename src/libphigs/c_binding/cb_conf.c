@@ -19,9 +19,32 @@
 *******************************************************************************/
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "phconf.h"
 
-/* configuration file name */
-void pxset_conf_file_name(char * name) {
+/*******************************************************************************
+ * pxset_conf_file_name
+ *
+ * DESCR:       set the configuration path and name
+ * RETURNS:     N/A
+ */
+void pxset_conf_file_name(
+                          char * name){
   read_config(name);
+}
+
+void pxset_conf_hcsf(
+                     Pint wkid,
+                     Pfloat hcsf
+                     ){
+  if (wkid >=0 && wkid <100){
+    if (hcsf > 0. && hcsf <= 32){
+      config[wkid].hcsf = hcsf;
+    } else {
+      printf("ERROR: configuration error. Ignoring unreasonable scale factor of: %f\n", hcsf);
+    }
+  } else {
+    printf("FATAL: configuration error. Work station ID out of range: %d\n", wkid);
+    exit(1);
+  }
 }

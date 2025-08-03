@@ -76,11 +76,6 @@ Notes:
  * There is no support for PostScript at the moment.
  * The hardcopy types are available in Fortran. C-Bindings have not been tested with them
 
-### (Extension) Display/Color
-There is some support for transparency.
-* PSALCH(REAL VALUE): set ALPHA channel to Value. Value is between 0(fully transparent) and 1 (opaque). Added to the current structure.
-* pset_alpha_channel(float value): C-Binding for PSALCH. Added to the current structure.
-
 ### Input devices
 Openphigs behaviour on echo modes is summarized below.
 
@@ -137,9 +132,21 @@ Extensions:
   * as 4 but
   * echo area is given as a fraction of the root window
 
+## Extensions
+### There is some support for transparency.
+#### Fortran bindings
+* PXNDEF(STRING NAME): set the configuration location and file name
+* PXHCSF(INTEGER IWK, REAL VALUE): Set hardcopy scale factor for workstation ID WKID. Must be set before the workstation is being opened
+
+* PSALCH(REAL VALUE): set ALPHA channel to Value. Value is between 0(fully transparent) and 1 (opaque). Added to the current structure.
+#### C-bindings
+* pxset_conf_file_name(char* path): set the configuration location and file name
+* pxset_conf_hcsf(WKID, float value): Set hardcopy scale factor for workstation ID WKID. Must be set before the workstation is being opened
+
+* pset_alpha_channel(float value): C-Binding for PSALCH. Added to the current structure.
+
 ## Versions
 * 0.0.1-1: Revised code from upstream
-* 0.0.2-1: Implement additional extend C and Fortran bindings for CERN specific purposes
 * 0.0.2-1: Implement additional extend C and Fortran bindings for CERN specific purposes
 * v0.1-1:  Fixes for exotic hardware
 * v0.2-1:  Introduce scale factor for hardcopies
