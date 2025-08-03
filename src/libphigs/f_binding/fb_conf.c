@@ -35,8 +35,8 @@
  */
 #define MAXLEN 4096
 FTN_SUBROUTINE(pxndef)(
-		       FTN_CHARACTER(NAME)
-		       )
+                       FTN_CHARACTER(NAME)
+                       )
 {
   char name[MAXLEN+1];
   char * filename = FTN_CHARACTER_GET(NAME);
@@ -57,9 +57,9 @@ FTN_SUBROUTINE(pxndef)(
  * RETURNS:     N/A
  */
 FTN_SUBROUTINE(pxhcsf)(
-		      FTN_INTEGER(wkid),
-		      FTN_REAL(hcsf)
-		       )
+                       FTN_INTEGER(wkid),
+                       FTN_REAL(hcsf)
+                       )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pfloat hc_sf = FTN_REAL_GET(hcsf);

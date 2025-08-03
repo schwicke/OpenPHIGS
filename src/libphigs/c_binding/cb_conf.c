@@ -29,16 +29,14 @@
  * RETURNS:     N/A
  */
 void pxset_conf_file_name(
-			  char * name)
-{
+                          char * name){
   read_config(name);
 }
 
-
 void pxset_conf_hcsf(
-		Pint wkid,
-		Pfloat hcsf
-		){
+                     Pint wkid,
+                     Pfloat hcsf
+                     ){
   if (wkid >=0 && wkid <100){
     if (hcsf > 0. && hcsf <= 32){
       config[wkid].hcsf = hcsf;
