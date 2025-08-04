@@ -4154,7 +4154,7 @@ void pmessage(
 void pxset_conf_file_name(
                           char * name
                           );
-  
+
 /*******************************************************************************
  *set hardcopy scale factor
  *
@@ -4166,7 +4166,17 @@ void pxset_conf_hcsf(
                      Pint wkid,
                      Pfloat hcsf
                      );
-  
+
+/*******************************************************************************
+ * pxinq_conf_hcsf
+ *
+ * DESCR:       inquire the hardcopy scale factor
+ * RETURNS:     current hard copy scale factor for given workstation
+ */
+Pint pxinq_conf_hcsf(
+                     Pint wkid
+                     );
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
