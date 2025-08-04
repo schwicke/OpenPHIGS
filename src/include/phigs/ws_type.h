@@ -61,12 +61,10 @@ extern "C" {
 #define PWST_OUTIN_TRUE                  1
 #define PWST_OUTPUT_TRUE_DB              2
 #define PWST_OUTIN_TRUE_DB               3
-#define PWST_HCOPY_TRUE                  4
-#define PWST_HCOPY_TRUE_DB               5
-#define PWST_HCOPY_TRUE_RGB_PNG          6
-#define PWST_HCOPY_TRUE_RGB_PNG_DB       7
-#define PWST_HCOPY_TRUE_RGBA_PNG         8
-#define PWST_HCOPY_TRUE_RGBA_PNG_DB      9
+#define PWST_HCOPY_TRUE_TGA              4
+#define PWST_HCOPY_TRUE_RGB_PNG          5
+#define PWST_HCOPY_TRUE_RGBA_PNG         6
+#define PWST_HCOPY_TRUE_EPS              7
 
 /* Default tables */
 #define WST_MIN_PREDEF_LINE_REPS         1

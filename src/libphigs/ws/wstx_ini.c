@@ -56,22 +56,18 @@ static void init_output_ws_dt(
    switch (ws_type) {
       case PWST_OUTPUT_TRUE:
       case PWST_OUTIN_TRUE:
-      case PWST_HCOPY_TRUE:
+      case PWST_HCOPY_TRUE_TGA:
       case PWST_HCOPY_TRUE_RGBA_PNG:
       case PWST_HCOPY_TRUE_RGB_PNG:
+      case PWST_HCOPY_TRUE_EPS:
          wsdt->default_colour_model = PMODEL_RGB;
          wsdt->has_double_buffer    = FALSE;
          break;
-
       case PWST_OUTPUT_TRUE_DB:
       case PWST_OUTIN_TRUE_DB:
-      case PWST_HCOPY_TRUE_DB:
-      case PWST_HCOPY_TRUE_RGBA_PNG_DB:
-      case PWST_HCOPY_TRUE_RGB_PNG_DB:
          wsdt->default_colour_model = PMODEL_RGB;
          wsdt->has_double_buffer    = TRUE;
          break;
-
       default:
          wsdt->default_colour_model = PINDIRECT;
          wsdt->has_double_buffer    = FALSE;
@@ -148,7 +144,7 @@ static void init_views(
     Wst_phigs_dt *ws_dt
     )
 {
-    int	i;
+    int        i;
     Pview_rep3 *view;
 
     view = ws_dt->default_views;
@@ -262,7 +258,7 @@ static void init_views(
      */
     memcpy(view[5].ori_matrix,
            view[4].ori_matrix,
-	   sizeof(Pmatrix3));
+           sizeof(Pmatrix3));
     view[5].map_matrix[0][0] =  0.5 / sqrt(2.0);
     view[5].map_matrix[1][1] =  0.5 / sqrt(2.0);
     view[5].map_matrix[0][2] = -0.025;
@@ -282,8 +278,8 @@ static void init_views(
 /*******************************************************************************
  * init_devices
  *
- * DESCR:	Helper function to initialize input devices
- * RETURNS:	TRUE or FALSE
+ * DESCR:       Helper function to initialize input devices
+ * RETURNS:     TRUE or FALSE
  */
 
 int init_devices(
@@ -384,8 +380,8 @@ int init_devices(
 /*******************************************************************************
  * phg_wstx_create
  *
- * DESCR:	Create workstation type
- * RETURNS:	Pointer to workstation type or NULL
+ * DESCR:       Create workstation type
+ * RETURNS:     Pointer to workstation type or NULL
  */
 
 Wst* phg_wstx_create(
@@ -417,33 +413,19 @@ Wst* phg_wstx_create(
          break;
 
       case PCAT_TGA:
-
-         if (double_buffer) {
-            ws_type = PWST_HCOPY_TRUE_DB;
-         }
-         else {
-            ws_type = PWST_HCOPY_TRUE;
-         }
+         ws_type = PWST_HCOPY_TRUE_TGA;
          break;
 
       case PCAT_PNG:
-
-         if (double_buffer) {
-            ws_type = PWST_HCOPY_TRUE_RGB_PNG_DB;
-         }
-         else {
-            ws_type = PWST_HCOPY_TRUE_RGB_PNG;
-         }
+         ws_type = PWST_HCOPY_TRUE_RGB_PNG;
          break;
 
       case PCAT_PNGA:
+         ws_type = PWST_HCOPY_TRUE_RGBA_PNG;
+         break;
 
-         if (double_buffer) {
-            ws_type = PWST_HCOPY_TRUE_RGBA_PNG_DB;
-         }
-         else {
-            ws_type = PWST_HCOPY_TRUE_RGBA_PNG;
-         }
+      case PCAT_EPS:
+         ws_type = PWST_HCOPY_TRUE_EPS;
          break;
 
       default:
@@ -464,8 +446,8 @@ Wst* phg_wstx_create(
 /*******************************************************************************
  * phg_wstx_init
  *
- * DESCR:	Initialize workstation type
- * RETURNS:	TRUE or FALSE
+ * DESCR:       Initialize workstation type
+ * RETURNS:     TRUE or FALSE
  */
 
 int phg_wstx_init(
