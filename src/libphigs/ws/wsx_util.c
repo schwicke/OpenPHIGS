@@ -23,11 +23,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-/*
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glx.h>
-*/
 #ifdef GLEW
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -135,29 +130,10 @@ int phg_wsx_set_best_args(
    int status = 0;
    /* Select workstation type */
    switch (wst->ws_type) {
-      case PWST_HCOPY_TRUE:
+      case PWST_HCOPY_TRUE_TGA:
       case PWST_HCOPY_TRUE_RGBA_PNG:
       case PWST_HCOPY_TRUE_RGB_PNG:
-          args[argc++] = GLX_RENDER_TYPE;
-          args[argc++] = GLX_RGBA_BIT;
-          args[argc++] = GLX_DRAWABLE_TYPE;
-          args[argc++] = GLX_WINDOW_BIT|GLX_PIXMAP_BIT;
-          args[argc++] = GLX_RED_SIZE;
-            args[argc++] = 8;
-          args[argc++] = GLX_GREEN_SIZE;
-            args[argc++] = 8;
-          args[argc++] = GLX_BLUE_SIZE;
-            args[argc++] = 8;
-          args[argc++] = GLX_ALPHA_SIZE;
-            args[argc++] = 8;
-          args[argc++] = GLX_DEPTH_SIZE;
-          args[argc++] = 24;
-          args[argc] = None;
-          status = 2;
-	  break;
-      case PWST_HCOPY_TRUE_DB:
-      case PWST_HCOPY_TRUE_RGBA_PNG_DB:
-      case PWST_HCOPY_TRUE_RGB_PNG_DB:
+      case PWST_HCOPY_TRUE_EPS:
           args[argc++] = GLX_RENDER_TYPE;
           args[argc++] = GLX_RGBA_BIT;
           args[argc++] = GLX_DRAWABLE_TYPE;

@@ -99,12 +99,10 @@ void popen_ws(
         else {
           args.conn_info.background = 0;
           if (
-              ws_type == PWST_HCOPY_TRUE ||
-              ws_type == PWST_HCOPY_TRUE_DB ||
+              ws_type == PWST_HCOPY_TRUE_TGA ||
               ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
-              ws_type == PWST_HCOPY_TRUE_RGB_PNG_DB ||
               ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
-              ws_type == PWST_HCOPY_TRUE_RGBA_PNG_DB
+              ws_type == PWST_HCOPY_TRUE_EPS
               ) {
             args.conn_type = PHG_ARGS_CONN_HCOPY;
             args.width = config[ws_id].display_width*config[ws_id].hcsf;

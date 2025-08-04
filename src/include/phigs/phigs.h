@@ -160,7 +160,8 @@ typedef enum {
    PCAT_MI,
    PCAT_TGA,
    PCAT_PNG,
-   PCAT_PNGA
+   PCAT_PNGA,
+   PCAT_EPS
 } Pws_cat;
 
 typedef enum {

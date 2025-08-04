@@ -65,12 +65,10 @@ Workstation numbers can be in the range from 0 to 99.
 * 1 PWST_OUTIN_TRUE                  Input/Output on GL display
 * 2 PWST_OUTPUT_TRUE_DB              Output only on GL, buffered
 * 3 PWST_OUTIN_TRUE_DB               Input/Output on GL display, buffered
-* 4 PWST_HCOPY_TRUE                  Hardcopy to file as TGA
-* 5 PWST_HCOPY_TRUE_DB               Hardcopy to file as TGA
-* 6 PWST_HCOPY_TRUE_RGB_PNG          Hardcopy to file as PNG RGB only
-* 7 PWST_HCOPY_TRUE_RGB_PNG_DB       Hardcopy to file as PNG RGB only, same as 6
-* 8 PWST_HCOPY_TRUE_RGBA_PNG         Hardcopy to file as PNG with Alpha channel
-* 9 PWST_HCOPY_TRUE_RGBA_PNG_DB      Hardcopy to file as PNG with Alpha channel, same as 6
+* 4 PWST_HCOPY_TRUE_TGA              Hardcopy to file as TGA
+* 5 PWST_HCOPY_TRUE_RGB_PNG          Hardcopy to file as PNG RGB only
+* 6 PWST_HCOPY_TRUE_RGBA_PNG         Hardcopy to file as PNG with Alpha channel
+* 7 PWST_HCOPY_TRUE_EPS              Hardcopy to file as Encapsulated PostScript
 
 Notes:
  * There is no support for PostScript at the moment.
