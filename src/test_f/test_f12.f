@@ -241,6 +241,9 @@ C
       PARAMETER (WKTGA=4, WKPNG=6, WKPNGA=8)
 C     Output format
       INTEGER WKTOUT, WKFORM, ICONDI
+      INTEGER LUNPS
+C     Default output LUN
+      PARAMETER (LUNPS=20)
 
 C     Open PHIGS and a workstation
       WKID=1
