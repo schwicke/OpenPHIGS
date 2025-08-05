@@ -219,7 +219,7 @@ void phg_wsx_find_best_visual(
        *visual_info = glXChooseVisual(dpy, DefaultScreen(dpy), args);
        if (*visual_info == NULL) {
          *err_ind = ERRN205;
-         printf("Failed to get visual info\n");
+         printf("ERROR: Failed to get visual info\n");
        } else {
          /* NOTE: Only call this for true colour */
          *cmap = get_sharable_colormap(*visual_info, dpy);
@@ -233,7 +233,7 @@ void phg_wsx_find_best_visual(
          *visual_info = glXGetVisualFromFBConfig(dpy, ws->fbc[0]);
          *err_ind = 0;
        } else {
-         printf("Failed to get visual info for pbuffer\n");
+         printf("ERROR: Failed to get visual info for frame buffer\n");
          *err_ind = ERRN205;
        }
        break;
@@ -288,7 +288,7 @@ void phg_wsx_pixel_colour(
    if (ws->display) {
      XQueryColor(ws->display, cmap, &color);
    } else {
-     printf("OpenPHIGS FATAL: DISPLAY is NULL!!!!");
+     printf("ERROR: OpenPHIGS DISPLAY is not set");
    }
    gcolr->type = PMODEL_RGB;
    gcolr->val.general.x = (float) color.red / 65535.0;
@@ -309,7 +309,7 @@ void phg_wsx_update_ws_rect(
 {
    XWindowAttributes wattr;
 #ifdef DEBUGINP
-  printf("Setting window attributes.\n");
+  printf("DEBUG: Setting window attributes.\n");
 #endif
   memset(&wattr, 0, sizeof(XWindowAttributes));
   XGetWindowAttributes(ws->display, ws->drawable_id, &wattr);

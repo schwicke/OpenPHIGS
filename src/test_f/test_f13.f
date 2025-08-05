@@ -238,19 +238,20 @@ C     WKPSG: Grey scale    WKPSC: Color
 C     WKTGA: TGA output    WKPNG: PNG    WKPNGA: PNG with transparency
 C
       INTEGER WKTGA, WKPNG, WKPNGA
-      PARAMETER (WKTGA=4, WKPNG=5, WKPNGA=6)
+      PARAMETER (WKTGA=4, WKPNG=5, WKPNGA=6, WKEPS=7)
 C     Output format
       INTEGER WKTOUT, WKFORM, ICONDI
       INTEGER LUNPS
 C     Default output LUN
       PARAMETER (LUNPS=20)
-
+C     Define redraw flag
+      ICONDI = 0
 C     Open PHIGS and a workstation
       WKID=1
 C     workstation ID for printing
-      WKTOUT=99
+      WKTOUT=95
 C     Create color PNG
-      WKFORM = WKPNG
+      WKFORM = WKEPS
       CALL POPPH(0, 1)
       CALL POPWK(WKID, 0, 3)
       CALL KYSABL(WKID)
@@ -261,7 +262,7 @@ C     Refresh
 C     Open output workstation
       CALL POPWK (WKTOUT, LUNPS, WKFORM)
 C     set the output filename
-      CALL PSFNAME(WKTOUT, "hourglass.png")
+      CALL PSFNAME(WKTOUT, "hourglass.eps")
 C     draw again
       CALL KYSABL(WKTOUT)
 C     close workstations
