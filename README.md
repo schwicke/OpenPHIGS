@@ -138,6 +138,8 @@ Extensions:
 * PXQHCSF(INTEGER IWK, REAL VALUE): Inquire the current scale factor for workstation ID WKID. The value is returned in the second argument.
 
 * PSALCH(REAL VALUE): set ALPHA channel to Value. Value is between 0(fully transparent) and 1 (opaque). Added to the current structure.
+* PSFNAME(INTEGER IWK, CHARACTER FNAME): set output file name for workstation ID IWK
+
 #### C-bindings
 * pxset_conf_file_name(char* path): set the configuration location and file name
 * pxset_conf_hcsf(WKID, Pfloat value): Set hardcopy scale factor for workstation ID WKID. Must be set before the workstation is being opened
