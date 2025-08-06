@@ -849,8 +849,8 @@ void phg_wsb_traverse_all_postings(
                                    Ws *ws
                                    )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
-  Ws_post_str		*post_str, *end;
+  Wsb_output_ws *owsb = &ws->out_ws.model.b;
+  Ws_post_str   *post_str, *end;
 
   WSB_CHECK_POSTED(&owsb->posted);
   if( WSB_SOME_POSTED(&owsb->posted) ) {

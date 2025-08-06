@@ -161,7 +161,9 @@ typedef enum {
    PCAT_TGA,
    PCAT_PNG,
    PCAT_PNGA,
-   PCAT_EPS
+   PCAT_EPS,
+   PCAT_PDF,
+   PCAT_SVG
 } Pws_cat;
 
 typedef enum {

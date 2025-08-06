@@ -65,6 +65,8 @@ extern "C" {
 #define PWST_HCOPY_TRUE_RGB_PNG          5
 #define PWST_HCOPY_TRUE_RGBA_PNG         6
 #define PWST_HCOPY_TRUE_EPS              7
+#define PWST_HCOPY_TRUE_PDF              8
+#define PWST_HCOPY_TRUE_SVG              9
 
 /* Default tables */
 #define WST_MIN_PREDEF_LINE_REPS         1
