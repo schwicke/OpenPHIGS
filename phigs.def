@@ -39,21 +39,21 @@ Workstation example for output pnga
 
 Workstation example for output eps
 %wk 96                Workstation for hardcopy
-%wg 595 842 0 0 1     Window width height px py border
+%wg 2480 3508 0 0 1   Window width height px py border
 %wp 0.0 1.0 0.0 1.    position
 %hs 1.                scale factor for hardcopy
 %bg 0. 0. 0.          Background color R G B
 
 Workstation example for output pdf
 %wk 95                Workstation for hardcopy
-%wg 595 842 0 0 1     Window width height px py border
+%wg 2480 3508 0 0 1     Window width height px py border
 %wp 0.0 1.0 0.0 1.    position
 %hs 1.                scale factor for hardcopy
 %bg 0. 0. 0.          Background color R G B
 
 Workstation example for output svg
 %wk 94                Workstation for hardcopy
-%wg 595 842 0 0 1     Window width height px py border
+%wg 2480 2480 0 0 1   Window width height px py border
 %wp 0.0 1.0 0.0 1.    position
 %hs 1.                scale factor for hardcopy
 %bg 0. 0. 0.          Background color R G B

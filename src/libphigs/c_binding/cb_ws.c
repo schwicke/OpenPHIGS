@@ -364,7 +364,7 @@ void pclose_ws(
       int buffsize = 1024*1024*1024;
       wsh->fd = fopen(wsh->filename, "wb");
       gl2psBeginPage("Title", "OpenPHIGS", NULL, gl2ps, GL2PS_BSP_SORT,
-                     GL2PS_DRAW_BACKGROUND | GL2PS_USE_CURRENT_VIEWPORT| GL2PS_SIMPLE_LINE_OFFSET,
+                     GL2PS_DRAW_BACKGROUND | GL2PS_USE_CURRENT_VIEWPORT| GL2PS_SIMPLE_LINE_OFFSET|GL2PS_OCCLUSION_CULL|GL2PS_TIGHT_BOUNDING_BOX,
                      GL_RGBA, 0, NULL, 0, 0, 0, buffsize, wsh->fd, NULL);
       /* redfine colors and redraw */
       int ctrl_flag = 0;
