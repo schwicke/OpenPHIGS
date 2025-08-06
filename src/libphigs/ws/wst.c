@@ -154,6 +154,8 @@ Wst_phigs_dt* phg_wst_check_set_rep(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_MO)) {
             ERR_REPORT(PHG_ERH, ERR59);
             dt = NULL;

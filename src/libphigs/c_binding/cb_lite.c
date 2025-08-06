@@ -68,6 +68,8 @@ void pinq_light_src_rep( ws_id, index, type, err_ind, rep)
              dt->ws_category == PCAT_PNG ||
              dt->ws_category == PCAT_PNGA ||
              dt->ws_category == PCAT_EPS ||
+             dt->ws_category == PCAT_PDF ||
+             dt->ws_category == PCAT_SVG ||
              dt->ws_category == PCAT_OUTIN ||
              dt->ws_category == PCAT_MO) ) {
         *err_ind = ERR59;

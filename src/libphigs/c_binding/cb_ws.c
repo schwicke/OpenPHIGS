@@ -44,7 +44,6 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-extern short int wsgl_use_shaders;
 short int wsgl_use_shaders_settings;
 
 /*******************************************************************************
@@ -74,6 +73,7 @@ void popen_ws(
     read_config("phigs.def");
   };
   /* save the current shader settings */
+  printf("popen_ws: %d %d\n", wsgl_use_shaders, wsgl_use_shaders_settings);
   wsgl_use_shaders_settings = wsgl_use_shaders;
   if (phg_entry_check(PHG_ERH, ERR2, Pfn_open_ws)) {
     if ((ws_id < 0) || (ws_id > MAX_NO_OPEN_WS)) {
@@ -108,7 +108,9 @@ void popen_ws(
               ws_type == PWST_HCOPY_TRUE_TGA ||
               ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
               ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
-              ws_type == PWST_HCOPY_TRUE_EPS
+              ws_type == PWST_HCOPY_TRUE_EPS ||
+              ws_type == PWST_HCOPY_TRUE_PDF ||
+              ws_type == PWST_HCOPY_TRUE_SVG
               ) {
             args.conn_type = PHG_ARGS_CONN_HCOPY;
             args.width = config[ws_id].display_width*config[ws_id].hcsf;
@@ -122,7 +124,8 @@ void popen_ws(
           }
         }
         /* switch off shaders for EPS export */
-        if (ws_type == PWST_HCOPY_TRUE_EPS){
+        if (ws_type == PWST_HCOPY_TRUE_EPS  || ws_type == PWST_HCOPY_TRUE_PDF || ws_type == PWST_HCOPY_TRUE_SVG ){
+          //          printf("popen_ws: switch off shaders\n");
           wsgl_use_shaders_settings = wsgl_use_shaders;
           wsgl_use_shaders = 0;
         }
@@ -167,7 +170,12 @@ void popen_ws(
             break;
           case PCAT_EPS:
             strcpy(wsh->filename, "output.eps");
-            wsgl_use_shaders = 0;
+            break;
+          case PCAT_PDF:
+            strcpy(wsh->filename, "output.pdf");
+            break;
+          case PCAT_SVG:
+            strcpy(wsh->filename, "output.svg");
             break;
           case PCAT_IN:
           case PCAT_OUT:
@@ -214,6 +222,7 @@ void pclose_ws(
   png_byte ** png_rows;
   png_structp png;
   int clean_fb = FALSE;
+  int gl2ps = 0;
   if (phg_ws_open(ws_id, Pfn_close_ws) != NULL) {
     wsh = PHG_WSID(ws_id);
     int width = wsh->type->desc_tbl.xwin_dt.tool.width;
@@ -223,6 +232,7 @@ void pclose_ws(
     glFlush();
     glFinish();
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    
     switch (dt->ws_category){
     case PCAT_IN:
     case PCAT_OUT:
@@ -338,12 +348,23 @@ void pclose_ws(
       free(png_rows);
       clean_fb = TRUE;
       break;
-
     case PCAT_EPS:
+      gl2ps = GL2PS_EPS;
+      break;
+    case PCAT_PDF:
+      gl2ps = GL2PS_PDF;
+      break;
+    case PCAT_SVG:
+      gl2ps = GL2PS_SVG;
+      break;
+    default:
+      break;
+    }
+    if (gl2ps){
       int buffsize = 1024*1024*1024;
       wsh->fd = fopen(wsh->filename, "wb");
-      gl2psBeginPage("Title", "OpenPHIGS", NULL, GL2PS_EPS, GL2PS_BSP_SORT,
-                     GL2PS_DRAW_BACKGROUND | GL2PS_USE_CURRENT_VIEWPORT,
+      gl2psBeginPage("Title", "OpenPHIGS", NULL, gl2ps, GL2PS_BSP_SORT,
+                     GL2PS_DRAW_BACKGROUND | GL2PS_USE_CURRENT_VIEWPORT| GL2PS_SIMPLE_LINE_OFFSET,
                      GL_RGBA, 0, NULL, 0, 0, 0, buffsize, wsh->fd, NULL);
       /* redfine colors and redraw */
       int ctrl_flag = 0;
@@ -358,8 +379,6 @@ void pclose_ws(
       /* restore original shader settings */
       wsgl_use_shaders = wsgl_use_shaders_settings;
       clean_fb = TRUE;
-    default:
-      break;
     }
     (*wsh->update)(wsh, PFLAG_PERFORM);
     owsb = &wsh->out_ws.model.b;
@@ -641,6 +660,8 @@ void pset_hlhsr_mode(
             dt->ws_category == PCAT_PNG ||
             dt->ws_category == PCAT_PNGA ||
             dt->ws_category == PCAT_EPS ||
+            dt->ws_category == PCAT_PDF ||
+            dt->ws_category == PCAT_SVG ||
             dt->ws_category == PCAT_OUTIN ||
             dt->ws_category == PCAT_MO)) {
          ERR_REPORT(PHG_ERH, ERR59);
@@ -912,6 +933,8 @@ void predraw_all_structs(
          case PCAT_PNG:
          case PCAT_PNGA:
          case PCAT_EPS:
+         case PCAT_PDF:
+         case PCAT_SVG:
          case PCAT_MO:
             wsh = PHG_WSID(ws_id);
             (*wsh->redraw_all)(wsh, ctrl_flag);
@@ -948,6 +971,8 @@ void pupd_ws(
          case PCAT_PNG:
          case PCAT_PNGA:
          case PCAT_EPS:
+         case PCAT_PDF:
+         case PCAT_SVG:
          case PCAT_MO:
             wsh = PHG_WSID(ws_id);
             (*wsh->update)(wsh, regen_flag);
@@ -987,6 +1012,8 @@ void pset_disp_upd_st(
          case PCAT_PNG:
          case PCAT_PNGA:
          case PCAT_EPS:
+         case PCAT_PDF:
+         case PCAT_SVG:
          case PCAT_MO:
             wsh = PHG_WSID(ws_id);
             (*wsh->set_disp_update_state)(wsh, def_mode, mod_mode);
@@ -1059,6 +1086,8 @@ void pset_light_src_rep(
             dt->ws_category == PCAT_PNG ||
             dt->ws_category == PCAT_PNGA ||
             dt->ws_category == PCAT_EPS ||
+            dt->ws_category == PCAT_PDF ||
+            dt->ws_category == PCAT_SVG ||
             dt->ws_category == PCAT_OUTIN ||
             dt->ws_category == PCAT_MO)) {
          ERR_REPORT(PHG_ERH, ERR59);
@@ -1339,6 +1368,8 @@ void pinq_list_line_inds(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -1389,6 +1420,8 @@ void pinq_list_marker_inds(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -1439,6 +1472,8 @@ void pinq_list_text_inds(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -1489,6 +1524,8 @@ void pinq_list_int_inds(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -1539,6 +1576,8 @@ void pinq_list_edge_inds(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -1589,6 +1628,8 @@ void pinq_list_colr_inds(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -1640,6 +1681,8 @@ void pinq_line_rep(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -1706,6 +1749,8 @@ void pinq_marker_rep(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -1772,6 +1817,8 @@ void pinq_text_rep(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -1840,6 +1887,8 @@ void pinq_int_rep(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -1906,6 +1955,8 @@ void pinq_edge_rep(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -1973,6 +2024,8 @@ void pinq_colr_rep(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;
@@ -2035,6 +2088,8 @@ static void inq_filter(
                dt->ws_category == PCAT_PNG ||
                dt->ws_category == PCAT_PNGA ||
                dt->ws_category == PCAT_EPS ||
+               dt->ws_category == PCAT_PDF ||
+               dt->ws_category == PCAT_SVG ||
                dt->ws_category == PCAT_OUTIN ||
                dt->ws_category == PCAT_MO)) {
             *err_ind = ERR59;

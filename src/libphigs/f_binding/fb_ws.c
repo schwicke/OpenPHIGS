@@ -35,7 +35,6 @@
 #include "util/ftn.h"
 #include "phconf.h"
 
-extern short int wsgl_use_shaders;
 extern short int wsgl_use_shaders_settings;
 /*******************************************************************************
  * popwk
@@ -68,6 +67,8 @@ FTN_SUBROUTINE(popwk)(
      config_read = 1;
      read_config("phigs.def");
    };
+   /* save the current shader settings */
+   wsgl_use_shaders_settings = wsgl_use_shaders;
    /* init filename to zero */
    bzero(filename, 512);
    conn_id.lun = lun;
@@ -111,7 +112,9 @@ FTN_SUBROUTINE(popwk)(
                ws_type == PWST_HCOPY_TRUE_TGA ||
                ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
                ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
-               ws_type == PWST_HCOPY_TRUE_EPS
+               ws_type == PWST_HCOPY_TRUE_EPS ||
+               ws_type == PWST_HCOPY_TRUE_PDF ||
+               ws_type == PWST_HCOPY_TRUE_SVG
                ) {
              args.conn_type = PHG_ARGS_CONN_HCOPY;
              args.width = config[ws_id].display_width*config[ws_id].hcsf;
@@ -124,7 +127,7 @@ FTN_SUBROUTINE(popwk)(
            }
          }
          /* switch off shaders for EPS export */
-         if (ws_type == PWST_HCOPY_TRUE_EPS){
+         if (ws_type == PWST_HCOPY_TRUE_EPS || ws_type == PWST_HCOPY_TRUE_PDF || ws_type == PWST_HCOPY_TRUE_SVG ){
            wsgl_use_shaders_settings = wsgl_use_shaders;
            wsgl_use_shaders = 0;
          }
@@ -549,6 +552,8 @@ FTN_SUBROUTINE(pqvwr)(
             dt->ws_category == PCAT_PNG ||
             dt->ws_category == PCAT_PNGA ||
             dt->ws_category == PCAT_EPS ||
+            dt->ws_category == PCAT_PDF ||
+            dt->ws_category == PCAT_SVG ||
             dt->ws_category == PCAT_OUTIN ||
             dt->ws_category == PCAT_MO)) {
         *err_ind = ERR59;
@@ -650,6 +655,8 @@ FTN_SUBROUTINE(pqwkt)(
             dt->ws_category == PCAT_PNG ||
             dt->ws_category == PCAT_PNGA ||
             dt->ws_category == PCAT_EPS  ||
+            dt->ws_category == PCAT_PDF  ||
+            dt->ws_category == PCAT_SVG  ||
             dt->ws_category == PCAT_OUTIN ||
             dt->ws_category == PCAT_MO)) {
         *err_ind = ERR59;
@@ -733,6 +740,8 @@ FTN_SUBROUTINE(pqwkt3)(
             dt->ws_category == PCAT_PNG ||
             dt->ws_category == PCAT_PNGA ||
             dt->ws_category == PCAT_EPS ||
+            dt->ws_category == PCAT_PDF ||
+            dt->ws_category == PCAT_SVG ||
             dt->ws_category == PCAT_OUTIN ||
             dt->ws_category == PCAT_MO)) {
         *err_ind = ERR59;
@@ -823,6 +832,8 @@ FTN_SUBROUTINE(pqpost)(
             dt->ws_category == PCAT_PNG ||
             dt->ws_category == PCAT_PNGA ||
             dt->ws_category == PCAT_EPS ||
+            dt->ws_category == PCAT_PDF ||
+            dt->ws_category == PCAT_SVG ||
             dt->ws_category == PCAT_OUTIN ||
             dt->ws_category == PCAT_MO)) {
         *err_ind = ERR59;
