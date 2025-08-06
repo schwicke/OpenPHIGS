@@ -4144,6 +4144,29 @@ void pmessage(
 	      char* message
 	      );
 
+/*******************************************************************************
+ * Extension: set config file name
+ *
+ * DESCR:       set config file name
+ * RETURNS:     N/A
+ * Note: extending the standard
+ */
+void pxset_conf_file_name(
+			  char * name
+			  );
+  
+/*******************************************************************************
+* Extension: set hardcopy scale factor
+*
+* DESCR:       set harcopy scale factor for workstation
+* RETURNS:     N/A
+* Note: extending the standard
+*/
+void pxset_conf_hcsf(
+		     Pint wkid,
+		     Pfloat hcsf
+		     );
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

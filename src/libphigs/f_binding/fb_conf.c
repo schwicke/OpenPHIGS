@@ -49,3 +49,19 @@ FTN_SUBROUTINE(pxndef)(
     printf("WARNING: Configuration file name is too long\n");
   }
 }
+
+/*******************************************************************************
+ * pxhcsf
+ *
+ * DESCR:       set the hardcopy scale factor for workstation
+ * RETURNS:     N/A
+ */
+FTN_SUBROUTINE(pxhcsf)(
+		      FTN_INTEGER(wkid),
+		      FTN_REAL(hcsf)
+		       )
+{
+  Pint ws_id = FTN_INTEGER_GET(wkid);
+  Pfloat hc_sf = FTN_REAL_GET(hcsf);
+  pxset_conf_hcsf(ws_id, hc_sf);
+}
