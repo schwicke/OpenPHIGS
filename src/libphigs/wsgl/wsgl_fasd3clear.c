@@ -37,19 +37,19 @@
  */
 
 static void priv_clear_area3_points(
-   Pint num_vertices,
-   Ppoint3 *points
-   )
+                                    Pint num_vertices,
+                                    Ppoint3 *points
+                                    )
 {
-   Pint i;
+  Pint i;
 
-   glBegin(GL_POLYGON);
-   for (i = 0; i < num_vertices; i++) {
-      glVertex3f(points[i].x,
-                 points[i].y,
-                 points[i].z);
-   }
-   glEnd();
+  glBegin(GL_POLYGON);
+  for (i = 0; i < num_vertices; i++) {
+    glVertex3f(points[i].x,
+               points[i].y,
+               points[i].z);
+  }
+  glEnd();
 }
 
 /*******************************************************************************
@@ -60,19 +60,19 @@ static void priv_clear_area3_points(
  */
 
 static void priv_clear_area3_ptcolrs(
-   Pint num_vertices,
-   Pptco3 *ptcolrs
-   )
+                                     Pint num_vertices,
+                                     Pptco3 *ptcolrs
+                                     )
 {
-   Pint i;
+  Pint i;
 
-   glBegin(GL_POLYGON);
-   for (i = 0; i < num_vertices; i++) {
-      glVertex3f(ptcolrs[i].point.x,
-                 ptcolrs[i].point.y,
-                 ptcolrs[i].point.z);
-   }
-   glEnd();
+  glBegin(GL_POLYGON);
+  for (i = 0; i < num_vertices; i++) {
+    glVertex3f(ptcolrs[i].point.x,
+               ptcolrs[i].point.y,
+               ptcolrs[i].point.z);
+  }
+  glEnd();
 }
 
 /*******************************************************************************
@@ -83,19 +83,19 @@ static void priv_clear_area3_ptcolrs(
  */
 
 static void priv_clear_area3_ptnorms(
-   Pint num_vertices,
-   Pptnorm3 *ptnorms
-   )
+                                     Pint num_vertices,
+                                     Pptnorm3 *ptnorms
+                                     )
 {
-   Pint i;
+  Pint i;
 
-   glBegin(GL_POLYGON);
-   for (i = 0; i < num_vertices; i++) {
-      glVertex3f(ptnorms[i].point.x,
-                 ptnorms[i].point.y,
-                 ptnorms[i].point.z);
-   }
-   glEnd();
+  glBegin(GL_POLYGON);
+  for (i = 0; i < num_vertices; i++) {
+    glVertex3f(ptnorms[i].point.x,
+               ptnorms[i].point.y,
+               ptnorms[i].point.z);
+  }
+  glEnd();
 }
 
 /*******************************************************************************
@@ -107,19 +107,19 @@ static void priv_clear_area3_ptnorms(
  */
 
 static void priv_clear_area3_ptconorms(
-   Pint num_vertices,
-   Pptconorm3 *ptconorms
-   )
+                                       Pint num_vertices,
+                                       Pptconorm3 *ptconorms
+                                       )
 {
-   Pint i;
+  Pint i;
 
-   glBegin(GL_POLYGON);
-   for (i = 0; i < num_vertices; i++) {
-      glVertex3f(ptconorms[i].point.x,
-                 ptconorms[i].point.y,
-                 ptconorms[i].point.z);
-   }
-   glEnd();
+  glBegin(GL_POLYGON);
+  for (i = 0; i < num_vertices; i++) {
+    glVertex3f(ptconorms[i].point.x,
+               ptconorms[i].point.y,
+               ptconorms[i].point.z);
+  }
+  glEnd();
 }
 
 /*******************************************************************************
@@ -130,81 +130,80 @@ static void priv_clear_area3_ptconorms(
  */
 
 void wsgl_clear_area_set3_data(
-   Ws *ws,
-   void *pdata,
-   Ws_attr_st *ast
-   )
+                               Ws *ws,
+                               void *pdata,
+                               Ws_attr_st *ast
+                               )
 {
-   Pint i;
-   Pfasd3 fasd3;
-   Pedge_data_list edata;
-   Pfacet_vdata_list3 vdata;
+  Pint i;
+  Pfasd3 fasd3;
+  Pedge_data_list edata;
+  Pfacet_vdata_list3 vdata;
 
-   fasd3.edata = &edata;
-   fasd3.vdata = &vdata;
-   fasd3_head(&fasd3, pdata);
+  fasd3.edata = &edata;
+  fasd3.vdata = &vdata;
+  fasd3_head(&fasd3, pdata);
 
-   glPolygonOffset(WS_CLEAR_AREA_OFFSET, wsgl_get_edge_width(ast));
-   glEnable(GL_POLYGON_OFFSET_FILL);
-   wsgl_setup_background(ws);
+  glPolygonOffset(WS_CLEAR_AREA_OFFSET, wsgl_get_edge_width(ast));
+  glEnable(GL_POLYGON_OFFSET_FILL);
+  wsgl_setup_background(ws);
 
-   switch (fasd3.vflag) {
-      case PVERT_COORD:
-         for (i = 0; i < fasd3.nfa; i++) {
-            priv_clear_area3_points(fasd3.vdata->num_vertices,
-                                    fasd3.vdata->vertex_data.points);
+  switch (fasd3.vflag) {
+  case PVERT_COORD:
+    for (i = 0; i < fasd3.nfa; i++) {
+      priv_clear_area3_points(fasd3.vdata->num_vertices,
+                              fasd3.vdata->vertex_data.points);
 
-            /* Advance to next set of data */
-            fasd3_next_vdata3(&fasd3);
-            if (fasd3.eflag == PEDGE_VISIBILITY) {
-               fasd3_next_edata(&fasd3);
-            }
-         }
-         break;
+      /* Advance to next set of data */
+      fasd3_next_vdata3(&fasd3);
+      if (fasd3.eflag == PEDGE_VISIBILITY) {
+        fasd3_next_edata(&fasd3);
+      }
+    }
+    break;
 
-      case PVERT_COORD_COLOUR:
-         for (i = 0; i < fasd3.nfa; i++) {
-            priv_clear_area3_ptcolrs(fasd3.vdata->num_vertices,
-                                     fasd3.vdata->vertex_data.ptcolrs);
+  case PVERT_COORD_COLOUR:
+    for (i = 0; i < fasd3.nfa; i++) {
+      priv_clear_area3_ptcolrs(fasd3.vdata->num_vertices,
+                               fasd3.vdata->vertex_data.ptcolrs);
 
-            /* Advance to next set of data */
-            fasd3_next_vdata3(&fasd3);
-            if (fasd3.eflag == PEDGE_VISIBILITY) {
-               fasd3_next_edata(&fasd3);
-            }
-         }
-         break;
+      /* Advance to next set of data */
+      fasd3_next_vdata3(&fasd3);
+      if (fasd3.eflag == PEDGE_VISIBILITY) {
+        fasd3_next_edata(&fasd3);
+      }
+    }
+    break;
 
-      case PVERT_COORD_NORMAL:
-         for (i = 0; i < fasd3.nfa; i++) {
-            priv_clear_area3_ptnorms(fasd3.vdata->num_vertices,
-                                     fasd3.vdata->vertex_data.ptnorms);
+  case PVERT_COORD_NORMAL:
+    for (i = 0; i < fasd3.nfa; i++) {
+      priv_clear_area3_ptnorms(fasd3.vdata->num_vertices,
+                               fasd3.vdata->vertex_data.ptnorms);
 
-            /* Advance to next set of data */
-            fasd3_next_vdata3(&fasd3);
-            if (fasd3.eflag == PEDGE_VISIBILITY) {
-               fasd3_next_edata(&fasd3);
-            }
-         }
-         break;
+      /* Advance to next set of data */
+      fasd3_next_vdata3(&fasd3);
+      if (fasd3.eflag == PEDGE_VISIBILITY) {
+        fasd3_next_edata(&fasd3);
+      }
+    }
+    break;
 
-      case PVERT_COORD_COLOUR_NORMAL:
-         for (i = 0; i < fasd3.nfa; i++) {
-            priv_clear_area3_ptconorms(fasd3.vdata->num_vertices,
-                                       fasd3.vdata->vertex_data.ptconorms);
+  case PVERT_COORD_COLOUR_NORMAL:
+    for (i = 0; i < fasd3.nfa; i++) {
+      priv_clear_area3_ptconorms(fasd3.vdata->num_vertices,
+                                 fasd3.vdata->vertex_data.ptconorms);
 
-            /* Advance to next set of data */
-            fasd3_next_vdata3(&fasd3);
-            if (fasd3.eflag == PEDGE_VISIBILITY) {
-               fasd3_next_edata(&fasd3);
-            }
-         }
-         break;
+      /* Advance to next set of data */
+      fasd3_next_vdata3(&fasd3);
+      if (fasd3.eflag == PEDGE_VISIBILITY) {
+        fasd3_next_edata(&fasd3);
+      }
+    }
+    break;
 
-      default:
-         break;
-   }
+  default:
+    break;
+  }
 
-   glDisable(GL_POLYGON_OFFSET_FILL);
+  glDisable(GL_POLYGON_OFFSET_FILL);
 }
-
