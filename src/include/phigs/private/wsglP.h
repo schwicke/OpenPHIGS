@@ -3,7 +3,7 @@
 *
 *   This file is part of Open PHIGS
 *   Copyright (C) 2014 Surplus Users Ham Society
-*             (C) 2022-2023 CERN
+*             (C) 2022-2025 CERN
 *
 *   Open PHIGS is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Lesser General Public License as published by
@@ -118,6 +118,26 @@ typedef struct _Wsgl {
    GLuint          *select_buf;
    Ws_dev_st       dev_st;
 } Wsgl;
+
+/* record geometry */
+typedef enum {
+    GEOM_LINE,
+    GEOM_FACE
+} GeomType;
+
+typedef struct {
+    GeomType type;
+    int* indices;
+    int count;
+} Geometry;
+
+static float* vertices = NULL;
+static int vertex_count = 0;
+
+static Geometry* geometries = NULL;
+static int geom_count = 0;
+
+static int record_geom = FALSE;
 
 /*******************************************************************************
  * wsgl_init
@@ -1209,11 +1229,34 @@ void wsgl_anno_text_rel(
  * DESCR:	Initialise shaders
  * RETURNS:	N/A
  */
-
-  void wsgl_shaders(Ws * ws);
+void wsgl_shaders(Ws * ws);
 
 extern Phg_font *fnt_fonts[];
 extern unsigned char *wsgl_hatch_tbl[];
+
+/*******************************************************************************
+ * wsgl_add_vertex(float x, float y, float z)
+ *
+ * DESCR:       add 3d vertex
+ * RETURNS:     Non zero or zero on error
+ */
+int wsgl_add_vertex(float x, float y, float z);
+
+/*******************************************************************************
+ * wsgl_add_geometry(GeomType type, const int* verts, int count)
+ *
+ * DESCR:       add 3d geometry
+ * RETURNS:     Non zero or zero on error
+ */
+void wsgl_add_geometry(GeomType type, const int* verts, int count);
+
+/*******************************************************************************
+ * wsgl_clear_geometry()
+ *
+ * DESCR:       cleanup geometry records
+ * RETURNS:     Non zero or zero on error
+ */
+void wsgl_clear_geometry();
 
 #ifdef __cplusplus
 }
