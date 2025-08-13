@@ -44,6 +44,8 @@ static void priv_clear_area3_points(
   Pint i;
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -51,14 +53,18 @@ static void priv_clear_area3_points(
                points[i].y,
                points[i].z);
     if (record_geom){
-      wsgl_add_vertex(points[i].x,
-                 points[i].y,
-                 points[i].z);
+      vertex_indices[n_vertices] = wsgl_add_vertex(points[i].x,
+                                                   points[i].y,
+                                                   points[i].z);
       n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
     }
   }
   if (record_geom){
-    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
 }
@@ -78,6 +84,8 @@ static void priv_clear_area3_ptcolrs(
   Pint i;
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -85,14 +93,18 @@ static void priv_clear_area3_ptcolrs(
                ptcolrs[i].point.y,
                ptcolrs[i].point.z);
     if (record_geom){
-      wsgl_add_vertex(ptcolrs[i].point.x,
-                      ptcolrs[i].point.y,
-                      ptcolrs[i].point.z); 
+      vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[i].point.x,
+                                                   ptcolrs[i].point.y,
+                                                   ptcolrs[i].point.z); 
       n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
     }
   }
   if (record_geom){
-    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
 }

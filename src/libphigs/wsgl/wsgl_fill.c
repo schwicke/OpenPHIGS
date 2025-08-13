@@ -42,20 +42,26 @@ void priv_fill_area(
   int i;
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < point_list->num_points; i++) {
     glVertex2f(point_list->points[i].x,
                point_list->points[i].y);
     if (record_geom){
-      wsgl_add_vertex(point_list->points[i].x,
-                      point_list->points[i].y,
-                      0.0);
+      vertex_indices[n_vertices] = wsgl_add_vertex(point_list->points[i].x,
+                                                   point_list->points[i].y,
+                                                   0.0);
       n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
     }
   }
   if (record_geom){
-    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
 }
@@ -106,6 +112,8 @@ void priv_fill_area3(
   int i;
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < point_list->num_points; i++) {
@@ -113,14 +121,18 @@ void priv_fill_area3(
                point_list->points[i].y,
                point_list->points[i].z);
     if (record_geom){
-      wsgl_add_vertex(point_list->points[i].x,
-                      point_list->points[i].y,
-                      point_list->points[i].z);
+      vertex_indices[n_vertices] = wsgl_add_vertex(point_list->points[i].x,
+                                                   point_list->points[i].y,
+                                                   point_list->points[i].z);
       n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
     }
   }
   if (record_geom){
-    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
 }
@@ -174,6 +186,7 @@ void wsgl_fill_area3(
   if (wsgl_setup_int_attr_plus(ws, ast)) {
     priv_normal3(&norm, &point_list);
     glNormal3f(norm.delta_x, norm.delta_y, norm.delta_z);
+    wsgl_set_current_normal(norm.delta_x, norm.delta_y, norm.delta_z);
   }
   priv_fill_area3(&point_list);
   glDisable(GL_POLYGON_OFFSET_LINE);
@@ -206,6 +219,7 @@ void wsgl_back_area3(
   if (wsgl_setup_back_int_attr_plus(ws, ast)) {
     priv_normal3(&norm, &point_list);
     glNormal3f(norm.delta_x, norm.delta_y, norm.delta_z);
+    wsgl_set_current_normal(norm.delta_x, norm.delta_y, norm.delta_z);
   }
   priv_fill_area3(&point_list);
   glDisable(GL_POLYGON_OFFSET_LINE);
@@ -272,6 +286,7 @@ void wsgl_fill_area_set3(
   if (wsgl_setup_int_attr_plus(ws, ast)) {
     priv_normal3(&norm, &point_list);
     glNormal3f(norm.delta_x, norm.delta_y, norm.delta_z);
+    wsgl_set_current_normal(norm.delta_x, norm.delta_y, norm.delta_z);
   }
 
   for (i = 0; i < num_lists; i++) {

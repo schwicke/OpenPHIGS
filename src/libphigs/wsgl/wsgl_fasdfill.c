@@ -49,6 +49,8 @@ static void priv_fill_area_points(
   Pint i;
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -56,14 +58,18 @@ static void priv_fill_area_points(
                points[i].y,
                0.0);
     if (record_geom){
-      wsgl_add_vertex(points[i].x,
-                      points[i].y,
-                      0.0);
+      vertex_indices[n_vertices] = wsgl_add_vertex(points[i].x,
+                                                   points[i].y,
+                                                   0.0);
       n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
     }
   }
   if (record_geom){
-    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
 }
@@ -86,6 +92,8 @@ static void priv_fill_area_ptcolrs(
   Pint i;
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -94,14 +102,18 @@ static void priv_fill_area_ptcolrs(
                ptcolrs[i].point.y,
                0.0);
     if (record_geom){
-      wsgl_add_vertex(ptcolrs[i].point.x,
-                      ptcolrs[i].point.y,
-                      0.0);
+      vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[i].point.x,
+                                                   ptcolrs[i].point.y,
+                                                   0.0);
       n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
     }
   }
   if (record_geom){
-    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
 }
@@ -124,6 +136,8 @@ static void priv_back_area_ptcolrs(
   Pint i;
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -132,14 +146,18 @@ static void priv_back_area_ptcolrs(
                ptcolrs[i].point.y,
                0.0);
     if (record_geom){
-      wsgl_add_vertex(ptcolrs[i].point.x,
-                      ptcolrs[i].point.y,
-                      0.0);
+      vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[i].point.x,
+                                                   ptcolrs[i].point.y,
+                                                   0.0);
       n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
     }
   }
   if (record_geom){
-    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
 }
@@ -159,25 +177,33 @@ static void priv_fill_area_ptnorms(
   Pint i;
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
     glNormal3f(ptnorms[i].norm.delta_x,
                ptnorms[i].norm.delta_y,
                0.0);
+    wsgl_set_current_normal(ptnorms[i].norm.delta_x,
+                            ptnorms[i].norm.delta_y,
+                            0.0);
     glVertex3f(ptnorms[i].point.x,
                ptnorms[i].point.y,
                0.0);
-    /* FIXME normals */
     if (record_geom){
-      wsgl_add_vertex(ptnorms[i].point.x,
-                      ptnorms[i].point.y,
-                      0.0);
+      vertex_indices[n_vertices] = wsgl_add_vertex(ptnorms[i].point.x,
+                                                   ptnorms[i].point.y,
+                                                   0.0);
       n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
     }
   }
   if (record_geom){
-    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
 }
@@ -201,6 +227,8 @@ static void priv_fill_area_ptconorms(
   Pint i;
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -208,19 +236,25 @@ static void priv_fill_area_ptconorms(
     glNormal3f(ptconorms[i].norm.delta_x,
                ptconorms[i].norm.delta_y,
                0.0);
+    wsgl_set_current_normal(ptconorms[i].norm.delta_x,
+                            ptconorms[i].norm.delta_y,
+                            0.0);
     glVertex3f(ptconorms[i].point.x,
                ptconorms[i].point.y,
                0.0);
-    /* FIXME: normals */
     if (record_geom){
-      wsgl_add_vertex(ptconorms[i].point.x,
-                      ptconorms[i].point.y,
-                      0.0);
+      vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[i].point.x,
+                                                   ptconorms[i].point.y,
+                                                   0.0);
       n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
     }
   }
   if (record_geom){
-    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
  glEnd();
 }
@@ -244,6 +278,8 @@ static void priv_back_area_ptconorms(
   Pint i;
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -251,18 +287,25 @@ static void priv_back_area_ptconorms(
     glNormal3f(ptconorms[i].norm.delta_x,
                ptconorms[i].norm.delta_y,
                0.0);
+    wsgl_set_current_normal(ptconorms[i].norm.delta_x,
+                            ptconorms[i].norm.delta_y,
+                            0.0);
     glVertex3f(ptconorms[i].point.x,
                ptconorms[i].point.y,
                0.0);
     if (record_geom){
-      wsgl_add_vertex(ptconorms[i].point.x,
-                      ptconorms[i].point.y,
-                      0.0);
+      vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[i].point.x,
+                                                   ptconorms[i].point.y,
+                                                   0.0);
       n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
     }
   }
   if (record_geom){
-    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
 }
@@ -303,9 +346,6 @@ void wsgl_fill_area_set_data_front(
                           fasd3.colr_type,
                           &fasd3.fdata.conorm.colr,
                           ast);
-      glNormal3f(fasd3.fdata.conorm.norm.delta_x,
-                 fasd3.fdata.conorm.norm.delta_y,
-                 fasd3.fdata.conorm.norm.delta_z);
       for (i = 0; i < fasd3.nfa; i++) {
         priv_fill_area_points(fasd3.vdata->num_vertices,
                               fasd3.vdata->vertex_data.points);
@@ -504,6 +544,9 @@ void wsgl_fill_area_set_data_back(
       glNormal3f(fasd3.fdata.conorm.norm.delta_x,
                  fasd3.fdata.conorm.norm.delta_y,
                  fasd3.fdata.conorm.norm.delta_z);
+      wsgl_set_current_normal(fasd3.fdata.conorm.norm.delta_x,
+                              fasd3.fdata.conorm.norm.delta_y,
+                              fasd3.fdata.conorm.norm.delta_z);
       for (i = 0; i < fasd3.nfa; i++) {
         priv_fill_area_points(fasd3.vdata->num_vertices,
                               fasd3.vdata->vertex_data.points);
@@ -521,6 +564,9 @@ void wsgl_fill_area_set_data_back(
       glNormal3f(fasd3.fdata.norm.delta_x,
                  fasd3.fdata.norm.delta_y,
                  fasd3.fdata.norm.delta_z);
+      wsgl_set_current_normal(fasd3.fdata.norm.delta_x,
+                              fasd3.fdata.norm.delta_y,
+                              fasd3.fdata.norm.delta_z);
       for (i = 0; i < fasd3.nfa; i++) {
         priv_fill_area_points(fasd3.vdata->num_vertices,
                               fasd3.vdata->vertex_data.points);
@@ -539,6 +585,7 @@ void wsgl_fill_area_set_data_back(
                                ast);
       fasd3_normal3(&norm, &fasd3);
       glNormal3f(norm.delta_x, norm.delta_y, norm.delta_z);
+      wsgl_set_current_normal(norm.delta_x, norm.delta_y, norm.delta_z);
       for (i = 0; i < fasd3.nfa; i++) {
         priv_fill_area_points(fasd3.vdata->num_vertices,
                               fasd3.vdata->vertex_data.points);
@@ -555,6 +602,7 @@ void wsgl_fill_area_set_data_back(
       wsgl_setup_back_int_colr(ws, fasd3.colr_type, &colr, ast);
       fasd3_normal3(&norm, &fasd3);
       glNormal3f(norm.delta_x, norm.delta_y, norm.delta_z);
+      wsgl_set_current_normal(norm.delta_x, norm.delta_y, norm.delta_z);
       for (i = 0; i < fasd3.nfa; i++) {
         priv_fill_area_points(fasd3.vdata->num_vertices,
                               fasd3.vdata->vertex_data.points);
@@ -573,6 +621,9 @@ void wsgl_fill_area_set_data_back(
       glNormal3f(fasd3.fdata.norm.delta_x,
                  fasd3.fdata.norm.delta_y,
                  fasd3.fdata.norm.delta_z);
+      wsgl_set_current_normal(fasd3.fdata.norm.delta_x,
+                              fasd3.fdata.norm.delta_y,
+                              fasd3.fdata.norm.delta_z);
       for (i = 0; i < fasd3.nfa; i++) {
         priv_back_area_ptcolrs(ws,
                                fasd3.colr_type,
@@ -590,6 +641,7 @@ void wsgl_fill_area_set_data_back(
     else {
       fasd3_normal3(&norm, &fasd3);
       glNormal3f(norm.delta_x, norm.delta_y, norm.delta_z);
+      wsgl_set_current_normal(norm.delta_x, norm.delta_y, norm.delta_z);
       for (i = 0; i < fasd3.nfa; i++) {
         priv_back_area_ptcolrs(ws,
                                fasd3.colr_type,

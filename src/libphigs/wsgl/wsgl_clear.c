@@ -42,20 +42,26 @@ static void priv_clear_area3(
   int i;
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
   glBegin(GL_POLYGON);
   for (i = 0; i < point_list->num_points; i++) {
     glVertex3f(point_list->points[i].x,
                point_list->points[i].y,
                point_list->points[i].z);
     if (record_geom){
-      wsgl_add_vertex(point_list->points[i].x,
-                 point_list->points[i].y,
-                 point_list->points[i].z);
+      vertex_indices[n_vertices] = wsgl_add_vertex(point_list->points[i].x,
+                                                   point_list->points[i].y,
+                                                   point_list->points[i].z);
       n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
     }
   };
   if (record_geom){
-    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
 }

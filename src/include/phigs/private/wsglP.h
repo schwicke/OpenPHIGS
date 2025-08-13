@@ -128,18 +128,30 @@ typedef enum {
 typedef struct {
     GeomType type;
     int* indices;
+    int* norms;
     int count;
 } Geometry;
 
-static float* vertices = NULL;
+static Ppoint3 * vertices = NULL;
+static Ppoint3 * normals = NULL;
 static int vertex_count = 0;
+static int normal_count = 0;
 
 static Geometry* geometries = NULL;
 static int geom_count = 0;
+static Ppoint3 current_normal;
 
 static int record_geom = FALSE;
+static int normal_valid = FALSE;
 
 #define MAX_VERTICES 500
+/*******************************************************************************
+ * wsgl_set_current_normal(float x, float y, float z)
+ *
+ * DESCR:       add 3d vertex
+ * RETURNS:     Non zero or zero on error
+ */
+  void wsgl_set_current_normal(float x, float y, float z);
 
 /*******************************************************************************
  * wsgl_add_vertex(float x, float y, float z)
@@ -150,12 +162,20 @@ static int record_geom = FALSE;
   int wsgl_add_vertex(float x, float y, float z);
 
 /*******************************************************************************
- * wsgl_add_geometry(float x, float y, float z)
+ * wsgl_add_normal(float x, float y, float z)
+ *
+ * DESCR:       add 3d vertex
+ * RETURNS:     Non zero or zero on error
+ */
+  int wsgl_add_normal(float x, float y, float z);
+
+/*******************************************************************************
+ * wsgl_add_geometry(GeomType type, const int* verts, const int* norms, int count)
  *
  * DESCR:       add 3d geometry
  * RETURNS:     Non zero or zero on error
  */
-  void wsgl_add_geometry(GeomType type, const int* verts, int count);  
+  void wsgl_add_geometry(GeomType type, const int* verts, const int* norms, int count);
 
 /*******************************************************************************
  * wsgl_export_obj(const char* filename)
@@ -1266,30 +1286,6 @@ void wsgl_shaders(Ws * ws);
 
 extern Phg_font *fnt_fonts[];
 extern unsigned char *wsgl_hatch_tbl[];
-
-/*******************************************************************************
- * wsgl_add_vertex(float x, float y, float z)
- *
- * DESCR:       add 3d vertex
- * RETURNS:     Non zero or zero on error
- */
-int wsgl_add_vertex(float x, float y, float z);
-
-/*******************************************************************************
- * wsgl_add_geometry(GeomType type, const int* verts, int count)
- *
- * DESCR:       add 3d geometry
- * RETURNS:     Non zero or zero on error
- */
-void wsgl_add_geometry(GeomType type, const int* verts, int count);
-
-/*******************************************************************************
- * wsgl_clear_geometry()
- *
- * DESCR:       cleanup geometry records
- * RETURNS:     Non zero or zero on error
- */
-void wsgl_clear_geometry();
 
 #ifdef __cplusplus
 }

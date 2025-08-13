@@ -36,21 +36,53 @@
 #include "private/wsglP.h"
 
 /*******************************************************************************
+ * wsgl_set_current_normal(float x, float y, float z)
+ *
+ * DESCR:       add 3d vertex
+ * RETURNS:     Non zero or zero on error
+ */
+void wsgl_set_current_normal(float x, float y, float z) {
+  current_normal.x = x;
+  current_normal.y = y;
+  current_normal.z = z;
+  normal_valid = TRUE;
+};
+
+/*******************************************************************************
  * wsgl_add_vertex(float x, float y, float z)
  *
  * DESCR:       add 3d vertex
  * RETURNS:     Non zero or zero on error
  */
 int wsgl_add_vertex(float x, float y, float z) {
-    vertices = realloc(vertices, sizeof(float) * 3 * (vertex_count + 1));
+    vertices = realloc(vertices, sizeof(Ppoint3) * (vertex_count + 1));
     if (!vertices) {
         fprintf(stderr, "Out of memory adding vertex\n");
         exit(1);
     }
-    vertices[3 * vertex_count + 0] = x;
-    vertices[3 * vertex_count + 1] = y;
-    vertices[3 * vertex_count + 2] = z;
-    return ++vertex_count; // OBJ indices are 1-based
+    vertices[vertex_count].x = x;
+    vertices[vertex_count].y = y;
+    vertices[vertex_count].z = z;
+    return ++vertex_count;
+}
+
+/*******************************************************************************
+ * wsgl_add_normal(float x, float y, float z)
+ *
+ * DESCR:       add 3d vertex
+ * RETURNS:     Non zero or zero on error
+ */
+int wsgl_add_normal(float x, float y, float z) {
+    normals = realloc(normals, sizeof(Ppoint3) * (vertex_count + 1));
+    if (!normals) {
+        fprintf(stderr, "Out of memory adding normal\n");
+        exit(1);
+    }
+
+    normals[vertex_count].x = current_normal.x;
+    normals[vertex_count].y = current_normal.y;
+    normals[vertex_count].z = current_normal.z;
+    return ++normal_count;
 }
 
 /*******************************************************************************
@@ -59,7 +91,7 @@ int wsgl_add_vertex(float x, float y, float z) {
  * DESCR:       add 3d geometry
  * RETURNS:     Non zero or zero on error
  */
-void wsgl_add_geometry(GeomType type, const int* verts, int count) {
+void wsgl_add_geometry(GeomType type, const int* verts, const int* norms, int count) {
     geometries = realloc(geometries, sizeof(Geometry) * (geom_count + 1));
     if (!geometries) {
         fprintf(stderr, "Out of memory adding geometry\n");
@@ -70,6 +102,10 @@ void wsgl_add_geometry(GeomType type, const int* verts, int count) {
     geometries[geom_count].count = count;
     geometries[geom_count].indices = malloc(sizeof(int) * count);
     memcpy(geometries[geom_count].indices, verts, sizeof(int) * count);
+    if (norms != NULL)
+      memcpy(geometries[geom_count].norms, norms, sizeof(int) * count);
+    else
+      geometries[geom_count].norms = NULL;
     geom_count++;
 }
 
@@ -86,19 +122,37 @@ void wsgl_export_obj(const char* filename) {
   }
 
   for (int i = 0; i < vertex_count; ++i) {
+    fprintf(f, "vn %f %f %f\n",
+            normals[i].x,
+            normals[i].y,
+            normals[i].z);
+  }
+  for (int i = 0; i < normal_count; ++i) {
     fprintf(f, "v %f %f %f\n",
-            vertices[i * 3 + 0],
-            vertices[i * 3 + 1],
-            vertices[i * 3 + 2]);
+            vertices[i].x,
+            vertices[i].y,
+            vertices[i].z);
   }
 
   for (int i = 0; i < geom_count; ++i) {
-    fprintf(f, (geometries[i].type == GEOM_FACE) ? "f" : "l");
-    for (int j = 0; j < geometries[i].count; ++j)
-      fprintf(f, " %d", geometries[i].indices[j]);
+    switch (geometries[i].type) {
+    case GEOM_FACE: 
+      fprintf(f, "f");
+      for (int j = 0; j < geometries[i].count; ++j)
+        fprintf(f, " %d//%d", geometries[i].indices[j], geometries[i].norms[j]);
+        break;
+    case GEOM_LINE:
+      fprintf(f, "l");
+      for (int j = 0; j < geometries[i].count; ++j)
+        fprintf(f, " %d", geometries[i].indices[j]);
+      break;
+    default:
+      printf("ERROR: Unknown geometry type detected. Ignoring");
+      continue;
+    }
     fprintf(f, "\n");
   }
-
+  
   fclose(f);
 }
 
@@ -114,6 +168,11 @@ void wsgl_clear_geometry() {
     vertices = NULL;
     vertex_count = 0;
   }
+  if (normals != NULL){
+    free(normals);
+    normals = NULL;
+    normal_count = 0;
+  }
   if (geom_count > 0){
     for (int i = 0; i < geom_count; ++i)
       free(geometries[i].indices);
@@ -121,4 +180,8 @@ void wsgl_clear_geometry() {
     geometries = NULL;
     geom_count = 0;
   }
+  normal_valid = FALSE;
+  current_normal.x = 0.0;
+  current_normal.y = 0.0;
+  current_normal.z = 1.0;
 }

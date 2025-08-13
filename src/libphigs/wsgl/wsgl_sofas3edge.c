@@ -60,13 +60,13 @@ static void priv_edges_points(
                    points[vert2].y,
                    points[vert2].z);
         if (record_geom){
-          wsgl_add_vertex(points[vert1].x,
-                          points[vert1].y,
-                          points[vert1].z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(points[vert1].x,
+                                                       points[vert1].y,
+                                                       points[vert1].z);
           n_vertices ++;
-          wsgl_add_vertex(points[vert2].x,
-                          points[vert2].y,
-                          points[vert2].z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(points[vert2].x,
+                                                       points[vert2].y,
+                                                       points[vert2].z);
           n_vertices ++;
         }
       }
@@ -82,13 +82,13 @@ static void priv_edges_points(
                    points[vert2].y,
                    points[vert2].z);
         if (record_geom){
-          wsgl_add_vertex(points[vert1].x,
-                          points[vert1].y,
-                          points[vert1].z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(points[vert1].x,
+                                                       points[vert1].y,
+                                                       points[vert1].z);
           n_vertices ++;
-          wsgl_add_vertex(points[vert2].x,
-                          points[vert2].y,
-                          points[vert2].z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(points[vert2].x,
+                                                       points[vert2].y,
+                                                       points[vert2].z);
           n_vertices ++;
         }
       }
@@ -104,19 +104,19 @@ static void priv_edges_points(
                    points[vert2].y,
                    points[vert2].z);
         if (record_geom){
-          wsgl_add_vertex(points[vert1].x,
-                          points[vert1].y,
-                          points[vert1].z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(points[vert1].x,
+                                                       points[vert1].y,
+                                                       points[vert1].z);
           n_vertices ++;
-          wsgl_add_vertex(points[vert2].x,
-                          points[vert2].y,
-                          points[vert2].z);
+          vertex_indices[n_vertices] =  wsgl_add_vertex(points[vert2].x,
+                                                        points[vert2].y,
+                                                        points[vert2].z);
           n_vertices ++;
         }
       }
     }
     if (record_geom){
-      wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+      wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
     }
     glEnd();
   }
@@ -128,14 +128,14 @@ static void priv_edges_points(
                  points[vert1].y,
                  points[vert1].z);
       if (record_geom){
-        wsgl_add_vertex(points[vert1].x,
-                        points[vert1].y,
-                        points[vert1].z);
+        vertex_indices[n_vertices] = wsgl_add_vertex(points[vert1].x,
+                                                     points[vert1].y,
+                                                     points[vert1].z);
         n_vertices ++;
       }
     }
     if (record_geom){
-      wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+      wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
     }
     glEnd();
   }
@@ -172,13 +172,13 @@ static void priv_edges_ptcolrs(
                    ptcolrs[vert2].point.y,
                    ptcolrs[vert2].point.z);
         if (record_geom){
-          wsgl_add_vertex(ptcolrs[vert1].point.x,
-                          ptcolrs[vert1].point.y,
-                          ptcolrs[vert1].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[vert1].point.x,
+                                                       ptcolrs[vert1].point.y,
+                                                       ptcolrs[vert1].point.z);
           n_vertices ++;
-          wsgl_add_vertex(ptcolrs[vert2].point.x,
-                          ptcolrs[vert2].point.y,
-                          ptcolrs[vert2].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[vert2].point.x,
+                                                       ptcolrs[vert2].point.y,
+                                                       ptcolrs[vert2].point.z);
           n_vertices ++;
         }
       }
@@ -194,13 +194,13 @@ static void priv_edges_ptcolrs(
                    ptcolrs[vert2].point.y,
                    ptcolrs[vert2].point.z);
         if (record_geom){
-          wsgl_add_vertex(ptcolrs[vert1].point.x,
-                          ptcolrs[vert1].point.y,
-                          ptcolrs[vert1].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[vert1].point.x,
+                                                       ptcolrs[vert1].point.y,
+                                                       ptcolrs[vert1].point.z);
           n_vertices ++;
-          wsgl_add_vertex(ptcolrs[vert2].point.x,
-                          ptcolrs[vert2].point.y,
-                          ptcolrs[vert2].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[vert2].point.x,
+                                                       ptcolrs[vert2].point.y,
+                                                       ptcolrs[vert2].point.z);
           n_vertices ++;
         }
       }
@@ -216,19 +216,19 @@ static void priv_edges_ptcolrs(
                    ptcolrs[vert2].point.y,
                    ptcolrs[vert2].point.z);
         if (record_geom){
-          wsgl_add_vertex(ptcolrs[vert1].point.x,
-                          ptcolrs[vert1].point.y,
-                          ptcolrs[vert1].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[vert1].point.x,
+                                                       ptcolrs[vert1].point.y,
+                                                       ptcolrs[vert1].point.z);
           n_vertices ++;
-          wsgl_add_vertex(ptcolrs[vert2].point.x,
-                          ptcolrs[vert2].point.y,
-                          ptcolrs[vert2].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[vert2].point.x,
+                                                       ptcolrs[vert2].point.y,
+                                                       ptcolrs[vert2].point.z);
           n_vertices ++;
         }
       }
     }
     if (record_geom){
-      wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+      wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
     }
     glEnd();
   }
@@ -240,14 +240,14 @@ static void priv_edges_ptcolrs(
                  ptcolrs[vert1].point.y,
                  ptcolrs[vert1].point.z);
       if (record_geom){
-        wsgl_add_vertex(ptcolrs[vert1].point.x,
-                        ptcolrs[vert1].point.y,
-                        ptcolrs[vert1].point.z);
+        vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[vert1].point.x,
+                                                     ptcolrs[vert1].point.y,
+                                                     ptcolrs[vert1].point.z);
         n_vertices ++;
       }
     }
     if (record_geom){
-      wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+      wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
     }
     glEnd();
   }
@@ -284,13 +284,13 @@ static void priv_edges_ptnorms(
                    ptnorms[vert2].point.y,
                    ptnorms[vert2].point.z);
         if (record_geom){
-          wsgl_add_vertex(ptnorms[vert1].point.x,
-                          ptnorms[vert1].point.y,
-                          ptnorms[vert1].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptnorms[vert1].point.x,
+                                                       ptnorms[vert1].point.y,
+                                                       ptnorms[vert1].point.z);
           n_vertices ++;
-          wsgl_add_vertex(ptnorms[vert2].point.x,
-                          ptnorms[vert2].point.y,
-                          ptnorms[vert2].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptnorms[vert2].point.x,
+                                                       ptnorms[vert2].point.y,
+                                                       ptnorms[vert2].point.z);
           n_vertices ++;
         }
       }
@@ -306,13 +306,13 @@ static void priv_edges_ptnorms(
                    ptnorms[vert2].point.y,
                    ptnorms[vert2].point.z);
         if (record_geom){
-          wsgl_add_vertex(ptnorms[vert1].point.x,
-                          ptnorms[vert1].point.y,
-                          ptnorms[vert1].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptnorms[vert1].point.x,
+                                                       ptnorms[vert1].point.y,
+                                                       ptnorms[vert1].point.z);
           n_vertices ++;
-          wsgl_add_vertex(ptnorms[vert2].point.x,
-                          ptnorms[vert2].point.y,
-                          ptnorms[vert2].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptnorms[vert2].point.x,
+                                                       ptnorms[vert2].point.y,
+                                                       ptnorms[vert2].point.z);
           n_vertices ++;
         }
       }
@@ -328,19 +328,19 @@ static void priv_edges_ptnorms(
                    ptnorms[vert2].point.y,
                    ptnorms[vert2].point.z);
         if (record_geom){
-          wsgl_add_vertex(ptnorms[vert1].point.x,
-                          ptnorms[vert1].point.y,
-                          ptnorms[vert1].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptnorms[vert1].point.x,
+                                                       ptnorms[vert1].point.y,
+                                                       ptnorms[vert1].point.z);
           n_vertices ++;
-          wsgl_add_vertex(ptnorms[vert2].point.x,
-                          ptnorms[vert2].point.y,
-                          ptnorms[vert2].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptnorms[vert2].point.x,
+                                                       ptnorms[vert2].point.y,
+                                                       ptnorms[vert2].point.z);
           n_vertices ++;
         }
       }
     }
     if (record_geom){
-      wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+      wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
     }
     glEnd();
   }
@@ -352,14 +352,14 @@ static void priv_edges_ptnorms(
                  ptnorms[vert1].point.y,
                  ptnorms[vert1].point.z);
       if (record_geom){
-        wsgl_add_vertex(ptnorms[vert1].point.x,
-                        ptnorms[vert1].point.y,
-                        ptnorms[vert1].point.z);
+        vertex_indices[n_vertices] = wsgl_add_vertex(ptnorms[vert1].point.x,
+                                                     ptnorms[vert1].point.y,
+                                                     ptnorms[vert1].point.z);
         n_vertices ++;
       }
     }
     if (record_geom){
-      wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+      wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
     }
     glEnd();
   }
@@ -396,13 +396,13 @@ static void priv_edges_ptconorms(
                    ptconorms[vert2].point.y,
                    ptconorms[vert2].point.z);
         if (record_geom){
-          wsgl_add_vertex(ptconorms[vert1].point.x,
-                          ptconorms[vert1].point.y,
-                          ptconorms[vert1].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[vert1].point.x,
+                                                       ptconorms[vert1].point.y,
+                                                       ptconorms[vert1].point.z);
           n_vertices ++;
-          wsgl_add_vertex(ptconorms[vert2].point.x,
-                          ptconorms[vert2].point.y,
-                          ptconorms[vert2].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[vert2].point.x,
+                                                       ptconorms[vert2].point.y,
+                                                       ptconorms[vert2].point.z);
           n_vertices ++;
         }
       }
@@ -418,13 +418,13 @@ static void priv_edges_ptconorms(
                    ptconorms[vert2].point.y,
                    ptconorms[vert2].point.z);
         if (record_geom){
-          wsgl_add_vertex(ptconorms[vert1].point.x,
-                          ptconorms[vert1].point.y,
-                          ptconorms[vert1].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[vert1].point.x,
+                                                       ptconorms[vert1].point.y,
+                                                       ptconorms[vert1].point.z);
           n_vertices ++;
-          wsgl_add_vertex(ptconorms[vert2].point.x,
-                          ptconorms[vert2].point.y,
-                          ptconorms[vert2].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[vert2].point.x,
+                                                       ptconorms[vert2].point.y,
+                                                       ptconorms[vert2].point.z);
           n_vertices ++;
         }
       }
@@ -440,19 +440,19 @@ static void priv_edges_ptconorms(
                    ptconorms[vert2].point.y,
                    ptconorms[vert2].point.z);
         if (record_geom){
-          wsgl_add_vertex(ptconorms[vert1].point.x,
-                          ptconorms[vert1].point.y,
-                          ptconorms[vert1].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[vert1].point.x,
+                                                       ptconorms[vert1].point.y,
+                                                       ptconorms[vert1].point.z);
           n_vertices ++;
-          wsgl_add_vertex(ptconorms[vert2].point.x,
-                          ptconorms[vert2].point.y,
-                          ptconorms[vert2].point.z);
+          vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[vert2].point.x,
+                                                       ptconorms[vert2].point.y,
+                                                       ptconorms[vert2].point.z);
           n_vertices ++;
         }
       }
     }
     if (record_geom){
-      wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+      wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
     }
     glEnd();
   }
@@ -464,14 +464,14 @@ static void priv_edges_ptconorms(
                  ptconorms[vert1].point.y,
                  ptconorms[vert1].point.z);
       if (record_geom){
-        wsgl_add_vertex(ptconorms[vert1].point.x,
-                        ptconorms[vert1].point.y,
-                        ptconorms[vert1].point.z);
+        vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[vert1].point.x,
+                                                     ptconorms[vert1].point.y,
+                                                     ptconorms[vert1].point.z);
         n_vertices ++;
       }
     }
     if (record_geom){
-      wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+      wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
     }
     glEnd();
   }

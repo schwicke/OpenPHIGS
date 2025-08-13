@@ -451,14 +451,14 @@ static void wsgl_text_string(
           glVertex2f(pos.x + spath->points[z].x * char_ht * char_expan,
                      pos.y + spath->points[z].y * char_ht);
           if (record_geom){
-            wsgl_add_vertex(pos.x + spath->points[z].x * char_ht * char_expan,
-                            pos.y + spath->points[z].y * char_ht,
-                            0.0);
+            vertex_indices[n_vertices] = wsgl_add_vertex(pos.x + spath->points[z].x * char_ht * char_expan,
+                                                         pos.y + spath->points[z].y * char_ht,
+                                                         0.0);
             n_vertices ++;
           }
         }
         if (record_geom){
-          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
         }
         glEnd();
       }
@@ -525,12 +525,12 @@ static void wsgl_text_string3(
                                pos.y + spath->points[z].y * char_ht,
                                pos.z, &pwc);
           if (record_geom){
-            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            vertex_indices[n_vertices] = wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
             n_vertices ++;
           }
         }
         if (record_geom){
-          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
         }
         glEnd();
       }
@@ -598,12 +598,12 @@ static void wsgl_anno_text_string3(
                                pos.y + spath->points[z].y * char_ht,
                                pos.z, &pwc);
           if (record_geom){
-            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            vertex_indices[n_vertices] = wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
             n_vertices ++;
           }
         }
         if (record_geom){
-          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
         }
         glEnd();
       }
@@ -670,13 +670,13 @@ static void wsgl_text_char(
           glVertex2f(pos.x + spath->points[z].x * char_ht * char_expan,
                      pos.y + spath->points[z].y * char_ht);
           if (record_geom){
-            wsgl_add_vertex(pos.x + spath->points[z].x * char_ht * char_expan,
-                            pos.y + spath->points[z].y * char_ht, 0.);
+            vertex_indices[n_vertices] = wsgl_add_vertex(pos.x + spath->points[z].x * char_ht * char_expan,
+                                                         pos.y + spath->points[z].y * char_ht, 0.);
             n_vertices ++;
           }
         }
         if (record_geom){
-          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
         }
         glEnd();
       }
@@ -767,12 +767,12 @@ static void wsgl_text_char3(
                                pos.y + spath->points[z].y * char_ht,
                                pos.z, &pwc);
           if (record_geom){
-            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            vertex_indices[n_vertices] = wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
             n_vertices ++;
           }
         }
         if (record_geom){
-          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
         }
         glEnd();
       }
@@ -863,12 +863,12 @@ static void wsgl_anno_text_char3(
                                pos.y + spath->points[z].y * char_ht,
                                pos.z, &pwc);
           if (record_geom){
-            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            vertex_indices[n_vertices] = wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
             n_vertices ++;
           }
         }
         if (record_geom){
-          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
         }
         glEnd();
       }
@@ -961,13 +961,13 @@ static void wsgl_text_stroke(
           glVertex2f(pos.x + pt.x * char_ht * char_expan,
                      pos.y + pt.y * char_ht);
           if (record_geom){
-            wsgl_add_vertex(pos.x + pt.x * char_ht * char_expan,
-                            pos.y + pt.y * char_ht, 0.);
+            vertex_indices[n_vertices] = wsgl_add_vertex(pos.x + pt.x * char_ht * char_expan,
+                                                         pos.y + pt.y * char_ht, 0.);
             n_vertices ++;
           }
         }
         if (record_geom){
-          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
         }
         glEnd();
       }
@@ -1077,12 +1077,12 @@ static void wsgl_text_stroke3(
                                pos.y + pt.y * char_ht,
                                pos.y, &pwc);
           if (record_geom){
-            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            vertex_indices[n_vertices] = wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
             n_vertices ++;
           }
         }
         if (record_geom){
-          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
         }
         glEnd();
       }
@@ -1191,12 +1191,12 @@ static void wsgl_anno_text_stroke3(
                                pos.y + pt.y * char_ht,
                                pos.z, &pwc);
           if (record_geom){
-            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            vertex_indices[n_vertices] = wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
             n_vertices ++;
           }
         }
         if (record_geom){
-          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
         }
         glEnd();
       }
