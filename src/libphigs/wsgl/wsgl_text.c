@@ -41,7 +41,8 @@ void wsgl_text_vertex3tcs(
                           Pmatrix3 tcs2wc,
                           Pfloat x,
                           Pfloat y,
-                          Pfloat z
+                          Pfloat z,
+                          Ppoint3 * pwcb
                           ){
   Ppoint3 point3, pwc;
   point3.x = x;
@@ -49,6 +50,7 @@ void wsgl_text_vertex3tcs(
   point3.z = z;
   phg_tranpt3(&point3, tcs2wc, &pwc);
   glVertex3f(pwc.x, pwc.y, pwc.z);
+  *pwcb = pwc;
 }
 
 /*******************************************************************************
@@ -419,6 +421,8 @@ static void wsgl_text_string(
   Ppoint_list *spath;
   Ppoint pos, posa;
   int j, z;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   wsgl_setup_text_attr(ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
@@ -446,6 +450,15 @@ static void wsgl_text_string(
         for(z = 0; z < spath->num_points; z++) {
           glVertex2f(pos.x + spath->points[z].x * char_ht * char_expan,
                      pos.y + spath->points[z].y * char_ht);
+          if (record_geom){
+            wsgl_add_vertex(pos.x + spath->points[z].x * char_ht * char_expan,
+                            pos.y + spath->points[z].y * char_ht,
+                            0.0);
+            n_vertices ++;
+          }
+        }
+        if (record_geom){
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
         }
         glEnd();
       }
@@ -477,6 +490,10 @@ static void wsgl_text_string3(
   Ppoint_list *spath;
   Ppoint3 posa, pos;
   int j, z;
+  Ppoint3 pwc;
+
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   wsgl_setup_text_attr(ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
@@ -506,12 +523,18 @@ static void wsgl_text_string3(
           wsgl_text_vertex3tcs(tmatrix,
                                pos.x + spath->points[z].x * char_ht * char_expan,
                                pos.y + spath->points[z].y * char_ht,
-                               pos.z);
+                               pos.z, &pwc);
+          if (record_geom){
+            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            n_vertices ++;
+          }
+        }
+        if (record_geom){
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
         }
         glEnd();
       }
     }
-
     pos.x += ch->right * char_ht * char_expan;
   }
 }
@@ -539,6 +562,10 @@ static void wsgl_anno_text_string3(
   Ppoint_list *spath;
   Ppoint3 pos, posa;
   int j, z;
+  Ppoint3 pwc;
+
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   wsgl_setup_text_attr(ast, &fnt, &char_expan);
   char_ht = ast->anno_char_ht;
@@ -569,7 +596,14 @@ static void wsgl_anno_text_string3(
           wsgl_text_vertex3tcs(vrc2wc,
                                pos.x + spath->points[z].x * char_ht * char_expan,
                                pos.y + spath->points[z].y * char_ht,
-                               pos.z);
+                               pos.z, &pwc);
+          if (record_geom){
+            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            n_vertices ++;
+          }
+        }
+        if (record_geom){
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
         }
         glEnd();
       }
@@ -604,6 +638,9 @@ static void wsgl_text_char(
   Ppoint pos, posa;
   int j, z;
 
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
+
   wsgl_setup_text_attr(ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
   char_space = wsgl_get_char_space(ast);
@@ -632,6 +669,14 @@ static void wsgl_text_char(
         for(z = 0; z < spath->num_points; z++) {
           glVertex2f(pos.x + spath->points[z].x * char_ht * char_expan,
                      pos.y + spath->points[z].y * char_ht);
+          if (record_geom){
+            wsgl_add_vertex(pos.x + spath->points[z].x * char_ht * char_expan,
+                            pos.y + spath->points[z].y * char_ht, 0.);
+            n_vertices ++;
+          }
+        }
+        if (record_geom){
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
         }
         glEnd();
       }
@@ -683,6 +728,10 @@ static void wsgl_text_char3(
   Ppoint_list *spath;
   Ppoint3 posa, pos;
   int j, z;
+  Ppoint3 pwc;
+
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   wsgl_setup_text_attr(ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
@@ -716,7 +765,14 @@ static void wsgl_text_char3(
                                tmatrix,
                                pos.x + spath->points[z].x * char_ht * char_expan,
                                pos.y + spath->points[z].y * char_ht,
-                               pos.z);
+                               pos.z, &pwc);
+          if (record_geom){
+            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            n_vertices ++;
+          }
+        }
+        if (record_geom){
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
         }
         glEnd();
       }
@@ -768,6 +824,10 @@ static void wsgl_anno_text_char3(
   Ppoint_list *spath;
   Ppoint3 pos, posa;
   int j, z;
+  Ppoint3 pwc;
+
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   wsgl_setup_text_attr(ast, &fnt, &char_expan);
   char_ht = ast->anno_char_ht;
@@ -801,7 +861,14 @@ static void wsgl_anno_text_char3(
                                vrc2wc,
                                pos.x + spath->points[z].x * char_ht * char_expan,
                                pos.y + spath->points[z].y * char_ht,
-                               pos.z);
+                               pos.z, &pwc);
+          if (record_geom){
+            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            n_vertices ++;
+          }
+        }
+        if (record_geom){
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
         }
         glEnd();
       }
@@ -854,6 +921,8 @@ static void wsgl_text_stroke(
   int j, z;
   Pvec *up;
   Pvec right;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   wsgl_setup_text_attr(ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
@@ -891,6 +960,14 @@ static void wsgl_text_stroke(
             spath->points[z].y * up->delta_y;
           glVertex2f(pos.x + pt.x * char_ht * char_expan,
                      pos.y + pt.y * char_ht);
+          if (record_geom){
+            wsgl_add_vertex(pos.x + pt.x * char_ht * char_expan,
+                            pos.y + pt.y * char_ht, 0.);
+            n_vertices ++;
+          }
+        }
+        if (record_geom){
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
         }
         glEnd();
       }
@@ -953,6 +1030,10 @@ static void wsgl_text_stroke3(
   int j, z;
   Pvec *up;
   Pvec right;
+  Ppoint3 pwc;
+
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   wsgl_setup_text_attr(ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
@@ -994,7 +1075,14 @@ static void wsgl_text_stroke3(
           wsgl_text_vertex3tcs(tmatrix,
                                pos.x + pt.x * char_ht * char_expan,
                                pos.y + pt.y * char_ht,
-                               pos.y);
+                               pos.y, &pwc);
+          if (record_geom){
+            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            n_vertices ++;
+          }
+        }
+        if (record_geom){
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
         }
         glEnd();
       }
@@ -1057,6 +1145,10 @@ static void wsgl_anno_text_stroke3(
   int j, z;
   Pvec *up;
   Pvec right;
+  Ppoint3 pwc;
+
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   wsgl_setup_text_attr(ast, &fnt, &char_expan);
   char_ht = ast->anno_char_ht;
@@ -1097,7 +1189,14 @@ static void wsgl_anno_text_stroke3(
           wsgl_text_vertex3tcs(vrc2wc,
                                pos.x + pt.x * char_ht * char_expan,
                                pos.y + pt.y * char_ht,
-                               pos.z);
+                               pos.z, &pwc);
+          if (record_geom){
+            wsgl_add_vertex(pwc.x, pwc.y, pwc.z);
+            n_vertices ++;
+          }
+        }
+        if (record_geom){
+          wsgl_add_geometry(GEOM_LINE, vertex_indices, n_vertices);
         }
         glEnd();
       }

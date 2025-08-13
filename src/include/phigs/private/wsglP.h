@@ -139,6 +139,39 @@ static int geom_count = 0;
 
 static int record_geom = FALSE;
 
+#define MAX_VERTICES 500
+
+/*******************************************************************************
+ * wsgl_add_vertex(float x, float y, float z)
+ *
+ * DESCR:       add 3d vertex
+ * RETURNS:     Non zero or zero on error
+ */
+  int wsgl_add_vertex(float x, float y, float z);
+
+/*******************************************************************************
+ * wsgl_add_geometry(float x, float y, float z)
+ *
+ * DESCR:       add 3d geometry
+ * RETURNS:     Non zero or zero on error
+ */
+  void wsgl_add_geometry(GeomType type, const int* verts, int count);  
+
+/*******************************************************************************
+ * wsgl_export_obj(const char* filename)
+ * DESCR:       export as OBJ file
+ * RETURNS:     Non zero or zero on error
+ */
+
+  void wsgl_export_obj(const char* filename);
+/*******************************************************************************
+ * wsgl_clear_geometry()
+ *
+ * DESCR:       cleanup geometry records
+ * RETURNS:     Non zero or zero on error
+ */
+  void wsgl_clear_geometry();
+
 /*******************************************************************************
  * wsgl_init
  *

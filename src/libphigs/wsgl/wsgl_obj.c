@@ -84,21 +84,21 @@ void wsgl_export_obj(const char* filename) {
     perror("fopen");
     return;
   }
-  
+
   for (int i = 0; i < vertex_count; ++i) {
     fprintf(f, "v %f %f %f\n",
             vertices[i * 3 + 0],
             vertices[i * 3 + 1],
             vertices[i * 3 + 2]);
   }
-  
+
   for (int i = 0; i < geom_count; ++i) {
     fprintf(f, (geometries[i].type == GEOM_FACE) ? "f" : "l");
     for (int j = 0; j < geometries[i].count; ++j)
       fprintf(f, " %d", geometries[i].indices[j]);
     fprintf(f, "\n");
   }
-  
+
   fclose(f);
 }
 
@@ -109,13 +109,16 @@ void wsgl_export_obj(const char* filename) {
  * RETURNS:     Non zero or zero on error
  */
 void wsgl_clear_geometry() {
+  if (vertices != NULL){
     free(vertices);
     vertices = NULL;
     vertex_count = 0;
-
+  }
+  if (geom_count > 0){
     for (int i = 0; i < geom_count; ++i)
-        free(geometries[i].indices);
+      free(geometries[i].indices);
     free(geometries);
     geometries = NULL;
     geom_count = 0;
+  }
 }

@@ -47,12 +47,23 @@ static void priv_clear_area_points(
                                    )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
     glVertex3f(points[i].x,
                points[i].y,
-               0);
+               0.);
+    if (record_geom){
+      wsgl_add_vertex(points[i].x,
+                      points[i].y,
+                      0.);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
@@ -70,12 +81,23 @@ static void priv_clear_area_ptcolrs(
                                     )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
     glVertex3f(ptcolrs[i].point.x,
                ptcolrs[i].point.y,
                0.0);
+    if (record_geom){
+      wsgl_add_vertex(ptcolrs[i].point.x,
+                      ptcolrs[i].point.y,
+                      0.0);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
@@ -93,12 +115,23 @@ static void priv_clear_area_ptnorms(
                                     )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
     glVertex3f(ptnorms[i].point.x,
                ptnorms[i].point.y,
-               0);
+               0.0);
+    if (record_geom){
+      wsgl_add_vertex(ptnorms[i].point.x,
+                      ptnorms[i].point.y,
+                      0.0);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
@@ -117,12 +150,23 @@ static void priv_clear_area_ptconorms(
                                       )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
     glVertex3f(ptconorms[i].point.x,
                ptconorms[i].point.y,
                0.0);
+    if (record_geom){
+      wsgl_add_vertex(ptconorms[i].point.x,
+                      ptconorms[i].point.y,
+                      0.0);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
@@ -209,6 +253,5 @@ void wsgl_clear_area_set_data(
   default:
     break;
   }
-
   glDisable(GL_POLYGON_OFFSET_FILL);
 }

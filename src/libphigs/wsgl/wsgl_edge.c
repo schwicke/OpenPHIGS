@@ -40,11 +40,22 @@ void priv_edge_area(
                     )
 {
   int i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_LINE_LOOP);
   for (i = 0; i < point_list->num_points; i++) {
     glVertex2f(point_list->points[i].x,
                point_list->points[i].y);
+    if (record_geom){
+      wsgl_add_vertex(point_list->points[i].x,
+                 point_list->points[i].y,
+                 0.);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
@@ -61,12 +72,23 @@ void priv_edge_area3(
                      )
 {
   int i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_LINE_LOOP);
   for (i = 0; i < point_list->num_points; i++) {
     glVertex3f(point_list->points[i].x,
                point_list->points[i].y,
                point_list->points[i].z);
+    if (record_geom){
+      wsgl_add_vertex(point_list->points[i].x,
+                 point_list->points[i].y,
+                 point_list->points[i].z);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }

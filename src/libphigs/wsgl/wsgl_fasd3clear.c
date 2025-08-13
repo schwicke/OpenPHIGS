@@ -42,12 +42,23 @@ static void priv_clear_area3_points(
                                     )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
     glVertex3f(points[i].x,
                points[i].y,
                points[i].z);
+    if (record_geom){
+      wsgl_add_vertex(points[i].x,
+                 points[i].y,
+                 points[i].z);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
@@ -65,12 +76,23 @@ static void priv_clear_area3_ptcolrs(
                                      )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
     glVertex3f(ptcolrs[i].point.x,
                ptcolrs[i].point.y,
                ptcolrs[i].point.z);
+    if (record_geom){
+      wsgl_add_vertex(ptcolrs[i].point.x,
+                      ptcolrs[i].point.y,
+                      ptcolrs[i].point.z); 
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }

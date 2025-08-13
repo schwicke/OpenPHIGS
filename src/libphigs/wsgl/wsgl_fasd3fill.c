@@ -3,7 +3,7 @@
 *
 *   This file is part of Open PHIGS
 *   Copyright (C) 2014 Surplus Users Ham Society
-*             (C) 2022-2023 CERN
+*             (C) 2022-2025 CERN
 *
 *   Open PHIGS is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Lesser General Public License as published by
@@ -45,12 +45,23 @@ static void priv_fill_area3_points(
                                    )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
     glVertex3f(points[i].x,
                points[i].y,
                points[i].z);
+    if (record_geom){
+      wsgl_add_vertex(points[i].x,
+                      points[i].y,
+                      points[i].z);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
@@ -71,6 +82,8 @@ static void priv_fill_area3_ptcolrs(
                                     )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -78,6 +91,15 @@ static void priv_fill_area3_ptcolrs(
     glVertex3f(ptcolrs[i].point.x,
                ptcolrs[i].point.y,
                ptcolrs[i].point.z);
+    if (record_geom){
+      wsgl_add_vertex(ptcolrs[i].point.x,
+                      ptcolrs[i].point.y,
+                      ptcolrs[i].point.z);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
@@ -98,6 +120,8 @@ static void priv_back_area3_ptcolrs(
                                     )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -105,6 +129,15 @@ static void priv_back_area3_ptcolrs(
     glVertex3f(ptcolrs[i].point.x,
                ptcolrs[i].point.y,
                ptcolrs[i].point.z);
+    if (record_geom){
+      wsgl_add_vertex(ptcolrs[i].point.x,
+                      ptcolrs[i].point.y,
+                      ptcolrs[i].point.z);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
@@ -122,6 +155,8 @@ static void priv_fill_area3_ptnorms(
                                     )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -131,6 +166,19 @@ static void priv_fill_area3_ptnorms(
     glVertex3f(ptnorms[i].point.x,
                ptnorms[i].point.y,
                ptnorms[i].point.z);
+    if (record_geom){
+      wsgl_add_vertex(ptnorms[i].norm.delta_x,
+                      ptnorms[i].norm.delta_y,
+                      ptnorms[i].norm.delta_z);
+      n_vertices ++;
+      wsgl_add_vertex(ptnorms[i].point.x,
+                      ptnorms[i].point.y,
+                      ptnorms[i].point.z);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
@@ -152,6 +200,8 @@ static void priv_fill_area3_ptconorms(
                                       )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -162,6 +212,21 @@ static void priv_fill_area3_ptconorms(
     glVertex3f(ptconorms[i].point.x,
                ptconorms[i].point.y,
                ptconorms[i].point.z);
+    if (record_geom){
+      wsgl_add_vertex(ptconorms[i].norm.delta_x,
+                      ptconorms[i].norm.delta_y,
+                      ptconorms[i].norm.delta_z);
+      n_vertices ++;
+    }
+    if (record_geom){
+      wsgl_add_vertex(ptconorms[i].point.x,
+                      ptconorms[i].point.y,
+                      ptconorms[i].point.z);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
@@ -183,6 +248,8 @@ static void priv_back_area3_ptconorms(
                                       )
 {
   Pint i;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
 
   glBegin(GL_POLYGON);
   for (i = 0; i < num_vertices; i++) {
@@ -193,6 +260,21 @@ static void priv_back_area3_ptconorms(
     glVertex3f(ptconorms[i].point.x,
                ptconorms[i].point.y,
                ptconorms[i].point.z);
+    if (record_geom){
+      wsgl_add_vertex(ptconorms[i].norm.delta_x,
+                      ptconorms[i].norm.delta_y,
+                      ptconorms[i].norm.delta_z);
+      n_vertices ++;
+    }
+    if (record_geom){
+      wsgl_add_vertex(ptconorms[i].point.x,
+                      ptconorms[i].point.y,
+                      ptconorms[i].point.z);
+      n_vertices ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, n_vertices);
   }
   glEnd();
 }
