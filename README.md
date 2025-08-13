@@ -61,16 +61,17 @@ Some notes on differences with respect to other implementations.
 Workstation numbers can be in the range from 0 to 99.
 
 ### Workstation types
-* 0 PWST_OUTPUT_TRUE                 Output only on GL display
-* 1 PWST_OUTIN_TRUE                  Input/Output on GL display
-* 2 PWST_OUTPUT_TRUE_DB              Output only on GL, buffered
-* 3 PWST_OUTIN_TRUE_DB               Input/Output on GL display, buffered
-* 4 PWST_HCOPY_TRUE_TGA              Hardcopy to file as TGA
-* 5 PWST_HCOPY_TRUE_RGB_PNG          Hardcopy to file as PNG RGB only
-* 6 PWST_HCOPY_TRUE_RGBA_PNG         Hardcopy to file as PNG with Alpha channel
-* 7 PWST_HCOPY_TRUE_EPS              Hardcopy to file as Encapsulated PostScript, no shaders
-* 8 PWST_HCOPY_TRUE_PDF              Hardcopy to file as PDF, no shaders
-* 9 PWST_HCOPY_TRUE_SVG              Hardcopy to file as SVG, no shaders
+* 0  PWST_OUTPUT_TRUE                 Output only on GL display
+* 1  PWST_OUTIN_TRUE                  Input/Output on GL display
+* 2  PWST_OUTPUT_TRUE_DB              Output only on GL, buffered
+* 3  PWST_OUTIN_TRUE_DB               Input/Output on GL display, buffered
+* 4  PWST_HCOPY_TRUE_TGA              Hardcopy to file as TGA
+* 5  PWST_HCOPY_TRUE_RGB_PNG          Hardcopy to file as PNG RGB only
+* 6  PWST_HCOPY_TRUE_RGBA_PNG         Hardcopy to file as PNG with Alpha channel
+* 7  PWST_HCOPY_TRUE_EPS              Hardcopy to file as Encapsulated PostScript, no shaders
+* 8  PWST_HCOPY_TRUE_PDF              Hardcopy to file as PDF, no shaders
+* 9  PWST_HCOPY_TRUE_SVG              Hardcopy to file as SVG, no shaders
+* 10 PWST_HCOPY_TRUE_OBJ              Export geometry as OBJ
 
 Notes:
  * There is no support for PostScript at the moment.

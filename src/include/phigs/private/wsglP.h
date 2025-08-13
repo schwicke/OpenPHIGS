@@ -132,19 +132,19 @@ typedef struct {
     int count;
 } Geometry;
 
-static Ppoint3 * vertices = NULL;
-static Ppoint3 * normals = NULL;
-static int vertex_count = 0;
-static int normal_count = 0;
+extern Ppoint3 * vertices;
+extern Ppoint3 * normals;
+extern int vertex_count;
+extern int normal_count;
 
-static Geometry* geometries = NULL;
-static int geom_count = 0;
-static Ppoint3 current_normal;
+extern Geometry* geometries;
+extern int geom_count;
+extern Ppoint3 current_normal;
 
-static int record_geom = FALSE;
-static int normal_valid = FALSE;
+extern int record_geom;
+extern int normal_valid;
 
-#define MAX_VERTICES 500
+#define MAX_VERTICES 500000
 /*******************************************************************************
  * wsgl_set_current_normal(float x, float y, float z)
  *

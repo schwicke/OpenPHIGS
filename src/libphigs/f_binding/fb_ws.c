@@ -36,6 +36,7 @@
 #include "phconf.h"
 
 extern short int wsgl_use_shaders_settings;
+extern int record_geom;
 /*******************************************************************************
  * popwk
  *
@@ -108,13 +109,15 @@ FTN_SUBROUTINE(popwk)(
            args.conn_type = PHG_ARGS_CONN_OPEN;
          }
          else {
+           record_geom = FALSE;
            if (
                ws_type == PWST_HCOPY_TRUE_TGA ||
                ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
                ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
                ws_type == PWST_HCOPY_TRUE_EPS ||
                ws_type == PWST_HCOPY_TRUE_PDF ||
-               ws_type == PWST_HCOPY_TRUE_SVG
+               ws_type == PWST_HCOPY_TRUE_SVG ||
+               ws_type == PWST_HCOPY_TRUE_OBJ
                ) {
              args.conn_type = PHG_ARGS_CONN_HCOPY;
              args.width = config[ws_id].display_width*config[ws_id].hcsf;
@@ -126,10 +129,17 @@ FTN_SUBROUTINE(popwk)(
              memcpy(&args.conn_info, &conn_id, sizeof(Phg_args_conn_info));
            }
          }
-         /* switch off shaders for EPS export */
-         if (ws_type == PWST_HCOPY_TRUE_EPS || ws_type == PWST_HCOPY_TRUE_PDF || ws_type == PWST_HCOPY_TRUE_SVG ){
+         switch (ws_type){
+         case PWST_HCOPY_TRUE_EPS:
+         case PWST_HCOPY_TRUE_PDF:
+         case PWST_HCOPY_TRUE_SVG:
+           /* switch off shaders for gl2ps exports */
            wsgl_use_shaders_settings = wsgl_use_shaders;
            wsgl_use_shaders = 0;
+           break;
+         case  PWST_HCOPY_TRUE_OBJ:
+           printf("fb_ws: switch Recording ON\n");
+           record_geom = TRUE;
          }
          args.wsid = ws_id;
          args.type = wst;
@@ -269,8 +279,8 @@ FTN_SUBROUTINE(pupost)(
  */
 
 FTN_SUBROUTINE(pupast)(
-		       FTN_INTEGER(wkid)
-		       )
+                       FTN_INTEGER(wkid)
+                       )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
 #ifdef DEBUG
@@ -307,12 +317,12 @@ FTN_SUBROUTINE(prst)(
  */
 
 FTN_SUBROUTINE(pswkw)(
-		      FTN_INTEGER(wkid),
-		      FTN_REAL(xmin),
-		      FTN_REAL(xmax),
-		      FTN_REAL(ymin),
-		      FTN_REAL(ymax)
-		      )
+                      FTN_INTEGER(wkid),
+                      FTN_REAL(xmin),
+                      FTN_REAL(xmax),
+                      FTN_REAL(ymin),
+                      FTN_REAL(ymax)
+                      )
 {
   Pint wk_id = FTN_INTEGER_GET(wkid);
 #ifdef DEBUG
@@ -360,8 +370,8 @@ FTN_SUBROUTINE(pswkw3)(
  */
 
 FTN_SUBROUTINE(pclwk)(
-		       FTN_INTEGER(wkid)
-		       )
+                      FTN_INTEGER(wkid)
+                      )
 {
 #ifdef DEBUG
   printf("DEBUG: close work station %d\n", FTN_INTEGER_GET(wkid));
@@ -554,6 +564,7 @@ FTN_SUBROUTINE(pqvwr)(
             dt->ws_category == PCAT_EPS ||
             dt->ws_category == PCAT_PDF ||
             dt->ws_category == PCAT_SVG ||
+            dt->ws_category == PCAT_OBJ ||
             dt->ws_category == PCAT_OUTIN ||
             dt->ws_category == PCAT_MO)) {
         *err_ind = ERR59;
@@ -657,6 +668,7 @@ FTN_SUBROUTINE(pqwkt)(
             dt->ws_category == PCAT_EPS  ||
             dt->ws_category == PCAT_PDF  ||
             dt->ws_category == PCAT_SVG  ||
+            dt->ws_category == PCAT_OBJ ||
             dt->ws_category == PCAT_OUTIN ||
             dt->ws_category == PCAT_MO)) {
         *err_ind = ERR59;
@@ -742,6 +754,7 @@ FTN_SUBROUTINE(pqwkt3)(
             dt->ws_category == PCAT_EPS ||
             dt->ws_category == PCAT_PDF ||
             dt->ws_category == PCAT_SVG ||
+            dt->ws_category == PCAT_OBJ ||
             dt->ws_category == PCAT_OUTIN ||
             dt->ws_category == PCAT_MO)) {
         *err_ind = ERR59;
@@ -834,6 +847,7 @@ FTN_SUBROUTINE(pqpost)(
             dt->ws_category == PCAT_EPS ||
             dt->ws_category == PCAT_PDF ||
             dt->ws_category == PCAT_SVG ||
+            dt->ws_category == PCAT_OBJ ||
             dt->ws_category == PCAT_OUTIN ||
             dt->ws_category == PCAT_MO)) {
         *err_ind = ERR59;

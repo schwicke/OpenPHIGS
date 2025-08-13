@@ -62,6 +62,7 @@ static void init_output_ws_dt(
       case PWST_HCOPY_TRUE_EPS:
       case PWST_HCOPY_TRUE_PDF:
       case PWST_HCOPY_TRUE_SVG:
+      case PWST_HCOPY_TRUE_OBJ:
          wsdt->default_colour_model = PMODEL_RGB;
          wsdt->has_double_buffer    = FALSE;
          break;
@@ -436,6 +437,10 @@ Wst* phg_wstx_create(
 
       case PCAT_SVG:
          ws_type = PWST_HCOPY_TRUE_SVG;
+         break;
+
+      case PCAT_OBJ:
+         ws_type = PWST_HCOPY_TRUE_OBJ;
          break;
 
       default:
