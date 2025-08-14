@@ -32,12 +32,11 @@
  * DESCR:       Text
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(ptx)(
-		    FTN_REAL(px),
-		    FTN_REAL(py),
-		    FTN_CHARACTER(chars)
-   )
+                    FTN_REAL(px),
+                    FTN_REAL(py),
+                    FTN_CHARACTER(chars)
+                    )
 {
   Phg_args_add_el args;
   Pint len;
@@ -57,18 +56,18 @@ FTN_SUBROUTINE(ptx)(
       args.el_type = PELEM_TEXT;
       args.el_size = sizeof(Ppoint) + len + 1;
       if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-	ERR_REPORT(PHG_ERH, ERR900);
+        ERR_REPORT(PHG_ERH, ERR900);
       }
       else {
-	args.el_data = PHG_SCRATCH.buf;
-	data = (Ppoint *) args.el_data;
-	text_pos.x = FTN_REAL_GET(px);
-	text_pos.y = FTN_REAL_GET(py);
-	memcpy(data, &text_pos, sizeof(Ppoint));
-	char_string = (char *) &data[1];
-	strncpy(char_string, FTN_CHARACTER_GET(chars), len);
-	char_string[len] = '\0';
-	phg_add_el(PHG_CSS, &args);
+        args.el_data = PHG_SCRATCH.buf;
+        data = (Ppoint *) args.el_data;
+        text_pos.x = FTN_REAL_GET(px);
+        text_pos.y = FTN_REAL_GET(py);
+        memcpy(data, &text_pos, sizeof(Ppoint));
+        char_string = (char *) &data[1];
+        strncpy(char_string, FTN_CHARACTER_GET(chars), len);
+        char_string[len] = '\0';
+        phg_add_el(PHG_CSS, &args);
       }
     }
   }
@@ -80,16 +79,15 @@ FTN_SUBROUTINE(ptx)(
  * DESCR:       TEXT 3
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(ptx3)(
-		    FTN_REAL(px),
-		    FTN_REAL(py),
-		    FTN_REAL(pz),
-		    FTN_REAL_ARRAY(tdx),
-		    FTN_REAL_ARRAY(tdy),
-		    FTN_REAL_ARRAY(tdz),
-		    FTN_CHARACTER(chars)
-   )
+                     FTN_REAL(px),
+                     FTN_REAL(py),
+                     FTN_REAL(pz),
+                     FTN_REAL_ARRAY(tdx),
+                     FTN_REAL_ARRAY(tdy),
+                     FTN_REAL_ARRAY(tdz),
+                     FTN_CHARACTER(chars)
+                     )
 {
 
   Phg_args_add_el args;
@@ -130,7 +128,6 @@ FTN_SUBROUTINE(ptx3)(
  * DESCR:       Set text font
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(pstxfn)(
                        FTN_INTEGER(font)
                        )
@@ -148,7 +145,6 @@ FTN_SUBROUTINE(pstxfn)(
  * DESCR:       Set text precision
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(pstxpr)(
                        FTN_INTEGER(prec)
                        )
@@ -166,10 +162,9 @@ FTN_SUBROUTINE(pstxpr)(
  * DESCR:       Set text path
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(pstxp)(
-                       FTN_INTEGER(txp)
-                       )
+                      FTN_INTEGER(txp)
+                      )
 {
   Ptext_path tpath = (Ptext_path)FTN_INTEGER_GET(txp);
 #ifdef DEBUG
@@ -184,7 +179,6 @@ FTN_SUBROUTINE(pstxp)(
  * DESCR:       Set text alignment
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(pstxal)(
                        FTN_INTEGER(txalh),
                        FTN_INTEGER(txalv)
@@ -205,7 +199,6 @@ FTN_SUBROUTINE(pstxal)(
  * DESCR:       Set text colour index
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(pstxci)(
                        FTN_INTEGER(coli)
                        )
@@ -222,10 +215,9 @@ FTN_SUBROUTINE(pstxci)(
  * DESCR:       Set text index
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(pstxi)(
-		      FTN_INTEGER(txi)
-                       )
+                      FTN_INTEGER(txi)
+                      )
 {
 #ifdef DEBUG
   printf("DEBUG PSTXCI text color index called %d\n", (int)*txi);
@@ -239,14 +231,13 @@ FTN_SUBROUTINE(pstxi)(
  * DESCR:       Annotation text relative
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(patr)(
-		     FTN_REAL(rpx),
-		     FTN_REAL(rpy),
-		     FTN_REAL(apx),
-		     FTN_REAL(apy),
-		     FTN_CHARACTER(chars)
-		     ){
+                     FTN_REAL(rpx),
+                     FTN_REAL(rpy),
+                     FTN_REAL(apx),
+                     FTN_REAL(apy),
+                     FTN_CHARACTER(chars)
+                     ){
   Ppoint ref_point;
   Pvec offset;
   int len = FTN_CHARACTER_LEN(chars);
@@ -266,16 +257,15 @@ FTN_SUBROUTINE(patr)(
  * DESCR:       ANNOTATION TEXT RELATIVE 3
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(patr3)(
-		     FTN_REAL(rpx),
-		     FTN_REAL(rpy),
-		     FTN_REAL(rpz),
-		     FTN_REAL(apx),
-		     FTN_REAL(apy),
-		     FTN_REAL(apz),
-		     FTN_CHARACTER(chars)
-		     ){
+                      FTN_REAL(rpx),
+                      FTN_REAL(rpy),
+                      FTN_REAL(rpz),
+                      FTN_REAL(apx),
+                      FTN_REAL(apy),
+                      FTN_REAL(apz),
+                      FTN_CHARACTER(chars)
+                      ){
   Ppoint3 ref_point;
   Pvec3 offset;
   int len = FTN_CHARACTER_LEN(chars);
@@ -298,9 +288,8 @@ FTN_SUBROUTINE(patr3)(
  * DESCR:       Set annotation text character height
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(psatch)(
-		      FTN_REAL(atchh)
+                       FTN_REAL(atchh)
                        )
 {
 #ifdef DEBUG
@@ -315,7 +304,6 @@ FTN_SUBROUTINE(psatch)(
  * DESCR:
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(psatal)(
                        FTN_INTEGER(atalh),
                        FTN_INTEGER(atalv)
@@ -336,10 +324,9 @@ FTN_SUBROUTINE(psatal)(
  * DESCR:       Set annotation text path
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(psatp)(
-                       FTN_INTEGER(path)
-                       )
+                      FTN_INTEGER(path)
+                      )
 {
   Ptext_path tpath = (Ptext_path)FTN_INTEGER_GET(path);
 #ifdef DEBUG

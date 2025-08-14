@@ -32,60 +32,57 @@
 /*******************************************************************************
  * popst
  *
- * DESCR:	Opens a structure for appending or editing.
- * RETURNS:	N/A
+ * DESCR:   Opens a structure for appending or editing.
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(popst)(
-   FTN_INTEGER(strid)
-   )
+                      FTN_INTEGER(strid)
+                      )
 {
-   Pint struct_id = FTN_INTEGER_GET(strid);
+  Pint struct_id = FTN_INTEGER_GET(strid);
 
-   if (phg_entry_check(PHG_ERH, ERR6, Pfn_open_struct)) {
-      if (PSL_STRUCT_STATE(PHG_PSL) == PSTRUCT_ST_STCL) {
-         if (phg_css_open_struct(PHG_CSS, struct_id) != NULL) {
-            PSL_STRUCT_STATE(PHG_PSL) = PSTRUCT_ST_STOP;
-            PSL_OPEN_STRUCT(PHG_PSL) = struct_id;
-         }
-         ERR_FLUSH(PHG_ERH);
+  if (phg_entry_check(PHG_ERH, ERR6, Pfn_open_struct)) {
+    if (PSL_STRUCT_STATE(PHG_PSL) == PSTRUCT_ST_STCL) {
+      if (phg_css_open_struct(PHG_CSS, struct_id) != NULL) {
+        PSL_STRUCT_STATE(PHG_PSL) = PSTRUCT_ST_STOP;
+        PSL_OPEN_STRUCT(PHG_PSL) = struct_id;
       }
-      else {
-         ERR_REPORT(PHG_ERH, ERR6);
-      }
-   }
+      ERR_FLUSH(PHG_ERH);
+    }
+    else {
+      ERR_REPORT(PHG_ERH, ERR6);
+    }
+  }
 }
 
 /*******************************************************************************
  * pclst
  *
- * DESCR:	Closes a previously opened structure.
- * RETURNS:	N/A
+ * DESCR:   Closes a previously opened structure.
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pclst)(
-   void
-   )
+                      void
+                      )
 {
 
-   if (phg_entry_check(PHG_ERH, ERR5, Pfn_close_struct)) {
-      if (PSL_STRUCT_STATE(PHG_PSL) == PSTRUCT_ST_STOP) {
-         phg_close_struct(PHG_CSS);
-         PSL_STRUCT_STATE(PHG_PSL) = PSTRUCT_ST_STCL;
-      }
-      else {
-         ERR_REPORT(PHG_ERH, ERR5);
-      }
-   }
+  if (phg_entry_check(PHG_ERH, ERR5, Pfn_close_struct)) {
+    if (PSL_STRUCT_STATE(PHG_PSL) == PSTRUCT_ST_STOP) {
+      phg_close_struct(PHG_CSS);
+      PSL_STRUCT_STATE(PHG_PSL) = PSTRUCT_ST_STCL;
+    }
+    else {
+      ERR_REPORT(PHG_ERH, ERR5);
+    }
+  }
 }
 
 /*******************************************************************************
  * pdel
  *
  * DESCR:       Delete element
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pdel)(void)
 {
 #ifdef DEBUG
@@ -98,12 +95,11 @@ FTN_SUBROUTINE(pdel)(void)
  * pdst
  *
  * DESCR:       Delete structure
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pdst)(
-     FTN_INTEGER(strid)
-)
+                     FTN_INTEGER(strid)
+                     )
 {
   Pint struct_id = FTN_INTEGER_GET(strid);
 #ifdef DEBUG
@@ -116,12 +112,11 @@ FTN_SUBROUTINE(pdst)(
  * posep
  *
  * DESCR:       Offset element pointer
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(posep)(
-		      FTN_INTEGER(epo)
-		      )
+                      FTN_INTEGER(epo)
+                      )
 {
   Pint delta = FTN_INTEGER_GET(epo);
 #ifdef DEBUG
@@ -134,12 +129,11 @@ FTN_SUBROUTINE(posep)(
  * psep
  *
  * DESCR:       Set element pointer
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psep)(
-		      FTN_INTEGER(pos)
-		      )
+                     FTN_INTEGER(pos)
+                     )
 {
   Pint elem_ptr_value = FTN_INTEGER_GET(pos);
 #ifdef DEBUG
@@ -152,14 +146,13 @@ FTN_SUBROUTINE(psep)(
  * pseplb
  *
  * DESCR:       Set element pointer at label
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
 
 FTN_SUBROUTINE(pseplb)(
-		      FTN_INTEGER(label)
-		      )
+                       FTN_INTEGER(label)
+                       )
 {
-
   Pint label_id = FTN_INTEGER_GET(label);
 #ifdef DEBUG
   printf("DEBUG: PSEPLB: move element to label %d\n", label_id);
@@ -170,13 +163,12 @@ FTN_SUBROUTINE(pseplb)(
 /*******************************************************************************
  * psedm
  *
- * DESCR:       Set edit mode 
- * RETURNS:	N/A
+ * DESCR:       Set edit mode
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psedm)(
-		      FTN_INTEGER(editmode)
-		      )
+                      FTN_INTEGER(editmode)
+                      )
 {
   Pedit_mode emode = (Pedit_mode) FTN_INTEGER_GET(editmode);
 #ifdef DEBUG
@@ -189,13 +181,12 @@ FTN_SUBROUTINE(psedm)(
  * pqedm
  *
  * DESCR:       Inquire edit mode
- * RETURNS:	error, mode
+ * RETURNS:   error, mode
  */
-
 FTN_SUBROUTINE(pqedm)(
-		      Pint *err,
-		      Pedit_mode* editmode
-		      )
+                      Pint *err,
+                      Pedit_mode* editmode
+                      )
 {
 #ifdef DEBUG
   printf("DEBUG: PQEDM: edit mode is %d\n", *editmode);
@@ -207,21 +198,20 @@ FTN_SUBROUTINE(pqedm)(
  * pels
  *
  * DESCR:       element search
- * RETURNS:	error, status, element position
+ * RETURNS:   error, status, element position
  */
-
 FTN_SUBROUTINE(pels)(
-		     FTN_INTEGER(strid),
-		     FTN_INTEGER(strtep),
-		     FTN_INTEGER(srcdir),
-		     FTN_INTEGER(eisn),
-		     FTN_INTEGER_ARRAY(eis),
-		     FTN_INTEGER(eesn),
-		     FTN_INTEGER_ARRAY(ees),
-		     Pint *errind,
-		     Psearch_status* status,
-		     Pint *fndep
-		     )
+                     FTN_INTEGER(strid),
+                     FTN_INTEGER(strtep),
+                     FTN_INTEGER(srcdir),
+                     FTN_INTEGER(eisn),
+                     FTN_INTEGER_ARRAY(eis),
+                     FTN_INTEGER(eesn),
+                     FTN_INTEGER_ARRAY(ees),
+                     Pint *errind,
+                     Psearch_status* status,
+                     Pint *fndep
+                     )
 {
   Struct_handle structp;
   Pint struct_id = FTN_INTEGER_GET(strid);
@@ -251,14 +241,13 @@ FTN_SUBROUTINE(pels)(
  * pqstst
  *
  * DESCR:       Inquire structure status
- * RETURNS:	error index, structure status index
+ * RETURNS:   error index, structure status index
  */
-
 FTN_SUBROUTINE(pqstst)(
-		     FTN_INTEGER(strid),
-		     Pint* err_ind,
-		     Pstruct_status* strsti
-		     ) {
+                       FTN_INTEGER(strid),
+                       Pint* err_ind,
+                       Pstruct_status* strsti
+                       ) {
   Pint struct_id = FTN_INTEGER_GET(strid);
   Pint struct_elem;
   pinq_struct_status(struct_id, err_ind, strsti);
@@ -268,25 +257,24 @@ FTN_SUBROUTINE(pqstst)(
  * pqeco
  *
  * DESCR:       Inquire element content
- * RETURNS:	error indicator, num ints, ints array, num float, float array, 
- *              num strings, array of string lengths, character string entries 
+ * RETURNS:   error indicator, num ints, ints array, num float, float array,
+ *              num strings, array of string lengths, character string entries
  */
-
 FTN_SUBROUTINE(pqeco)(
-		      FTN_INTEGER(strid),
-		      FTN_INTEGER(elenum),
-		      FTN_INTEGER(iil1),
-		      FTN_INTEGER(irl1),
-		      FTN_INTEGER(isl1),
-		      FTN_INTEGER(err_ind),
-		      FTN_INTEGER(il),
-		      FTN_INTEGER_ARRAY(ia),
-		      FTN_INTEGER(rl),
-		      FTN_REAL_ARRAY(ra),
-		      FTN_INTEGER(sl),
-		      FTN_INTEGER_ARRAY(lstr),
-		      char* str
-		      ) {
+                      FTN_INTEGER(strid),
+                      FTN_INTEGER(elenum),
+                      FTN_INTEGER(iil1),
+                      FTN_INTEGER(irl1),
+                      FTN_INTEGER(isl1),
+                      FTN_INTEGER(err_ind),
+                      FTN_INTEGER(il),
+                      FTN_INTEGER_ARRAY(ia),
+                      FTN_INTEGER(rl),
+                      FTN_REAL_ARRAY(ra),
+                      FTN_INTEGER(sl),
+                      FTN_INTEGER_ARRAY(lstr),
+                      char* str
+                      ) {
   int struct_id = FTN_INTEGER_GET(strid);
   int elem_num = FTN_INTEGER_GET(elenum);
   int iil = FTN_INTEGER_GET(iil1);
@@ -309,10 +297,10 @@ FTN_SUBROUTINE(pqeco)(
     phg_css_inq_el_type_size(PHG_CSS, struct_id, elem_num, &ret);
     if (ret.err != 0) {
       if ( !(structp = CSS_STRUCT_EXISTS(PHG_CSS, struct_id)) ) {
-	printf("Could not find struct_id %d\n", struct_id);
+        printf("Could not find struct_id %d\n", struct_id);
       } else {
-	printf("Dumping structure %d\n", struct_id);
-	phg_css_print_struct(structp, 0);
+        printf("Dumping structure %d\n", struct_id);
+        phg_css_print_struct(structp, 0);
       }
       printf("PQECO ERROR: cannot estimate element type and size %d\n", elem_num);
       *err_ind = ret.err;
@@ -320,86 +308,86 @@ FTN_SUBROUTINE(pqeco)(
       elem_type = ret.data.el_type_size.type;
       phg_css_inq_el_content(PHG_CSS, 0, -1, &ret);
       if (ret.err == 0) {
-	if (ret.data.el_info.op != PELEM_NIL) {
-	  pcreate_store(err_ind, &store);
-	  el_info = ret.data.el_info.el_head;
-	  size = phg_cb_store_el_size(el_info);
-	  if (phg_cb_resize_store(store, size, err_ind)) {
-	    phg_cb_store_el_data(el_info, store->buf,
-				 &store->data.elem_data);
-	    elem_data = &(store->data.elem_data);
-	  }
-	  *err_ind = ret.err;
-	  *il = 0;
-	  *rl = 0;
-	  *sl = 0;
-	  if (*err_ind == 0){
-	    if (iil == 1){
-	      switch (elem_type) {
-	      case PELEM_INT_COLR_IND:
-	      case PELEM_LINE_COLR_IND:
-	      case PELEM_MARKER_COLR_IND:
-	      case PELEM_EDGE_COLR_IND:
-	      case PELEM_TEXT_COLR_IND:
-	      case PELEM_LABEL:
-		*ia = elem_data->int_data;
-		*il = 1;
-		break;
-	      case PELEM_INT_COLR:
-	      case PELEM_BACK_INT_COLR:
-	      case PELEM_LINE_COLR:
-	      case PELEM_MARKER_COLR:
-	      case PELEM_EDGE_COLR:
-	      case PELEM_TEXT_COLR:
-		if (elem_data->colr.type == PINDIRECT){
-		  *ia = elem_data->colr.val.ind;
-		  *il = 1;
-		} else {
-		  *err_ind=4;
-		  printf("ERROR in PQECO: Integer requested but colr type is not indirect: %d elem_type %d\n", (int)elem_data->colr.type, (int)elem_type);
-		}
+        if (ret.data.el_info.op != PELEM_NIL) {
+          pcreate_store(err_ind, &store);
+          el_info = ret.data.el_info.el_head;
+          size = phg_cb_store_el_size(el_info);
+          if (phg_cb_resize_store(store, size, err_ind)) {
+            phg_cb_store_el_data(el_info, store->buf,
+                                 &store->data.elem_data);
+            elem_data = &(store->data.elem_data);
+          }
+          *err_ind = ret.err;
+          *il = 0;
+          *rl = 0;
+          *sl = 0;
+          if (*err_ind == 0){
+            if (iil == 1){
+              switch (elem_type) {
+              case PELEM_INT_COLR_IND:
+              case PELEM_LINE_COLR_IND:
+              case PELEM_MARKER_COLR_IND:
+              case PELEM_EDGE_COLR_IND:
+              case PELEM_TEXT_COLR_IND:
+              case PELEM_LABEL:
+                *ia = elem_data->int_data;
+                *il = 1;
+                break;
+              case PELEM_INT_COLR:
+              case PELEM_BACK_INT_COLR:
+              case PELEM_LINE_COLR:
+              case PELEM_MARKER_COLR:
+              case PELEM_EDGE_COLR:
+              case PELEM_TEXT_COLR:
+                if (elem_data->colr.type == PINDIRECT){
+                  *ia = elem_data->colr.val.ind;
+                  *il = 1;
+                } else {
+                  *err_ind=4;
+                  printf("ERROR in PQECO: Integer requested but colr type is not indirect: %d elem_type %d\n", (int)elem_data->colr.type, (int)elem_type);
+                }
 #ifdef DEBUG
-		printf("PQECO returning indirect color %d\n", *ia);
+                printf("PQECO returning indirect color %d\n", *ia);
 #endif
-		break;
-	      default:
-		css_print_eltype(elem_type);
-		printf("ERROR in PQECO: unknown element type %d. Ignoring function\n", (int)elem_type);
-		*err_ind = 2;
-	      }
-	    } else if (irl == 1){
-	      *rl = 1;
-	      *ra = elem_data->float_data;
-	    } else if (isl > 0) {
-	      printf("ERROR in PQECO: Strings not yet implemented. Ignoring function\n");
-	      *err_ind = 3;
-	    } else {
-	      switch (elem_type) {
-	      case PELEM_INT_COLR:
-	      case PELEM_BACK_INT_COLR:
-	      case PELEM_LINE_COLR:
-	      case PELEM_MARKER_COLR:
-	      case PELEM_EDGE_COLR:
-	      case PELEM_TEXT_COLR:
-		if (elem_data->colr.type == PMODEL_RGB){
-		  ra[0] = elem_data->colr.val.general.x;
-		  ra[1] = elem_data->colr.val.general.y;
-		  ra[3] = elem_data->colr.val.general.z;
-		  *rl = 3;
-		} else {
-		  *err_ind=4;
-		  printf("ERROR in PQECO: RGB requested but colr type is not RGB: %d elem_type %d\n", (int)elem_data->colr.type, (int)elem_type);
-		}
-		break;
-	      default:
-		css_print_eltype(elem_type);
-		printf("ERROR in PQECO: unknown element type %d. Ignoring function\n", (int)elem_type);
-		*err_ind = 2;
-	      }
-	    }
-	  }
-	  pdel_store(store);
-	}
+                break;
+              default:
+                css_print_eltype(elem_type);
+                printf("ERROR in PQECO: unknown element type %d. Ignoring function\n", (int)elem_type);
+                *err_ind = 2;
+              }
+            } else if (irl == 1){
+              *rl = 1;
+              *ra = elem_data->float_data;
+            } else if (isl > 0) {
+              printf("ERROR in PQECO: Strings not yet implemented. Ignoring function\n");
+              *err_ind = 3;
+            } else {
+              switch (elem_type) {
+              case PELEM_INT_COLR:
+              case PELEM_BACK_INT_COLR:
+              case PELEM_LINE_COLR:
+              case PELEM_MARKER_COLR:
+              case PELEM_EDGE_COLR:
+              case PELEM_TEXT_COLR:
+                if (elem_data->colr.type == PMODEL_RGB){
+                  ra[0] = elem_data->colr.val.general.x;
+                  ra[1] = elem_data->colr.val.general.y;
+                  ra[3] = elem_data->colr.val.general.z;
+                  *rl = 3;
+                } else {
+                  *err_ind=4;
+                  printf("ERROR in PQECO: RGB requested but colr type is not RGB: %d elem_type %d\n", (int)elem_data->colr.type, (int)elem_type);
+                }
+                break;
+              default:
+                css_print_eltype(elem_type);
+                printf("ERROR in PQECO: unknown element type %d. Ignoring function\n", (int)elem_type);
+                *err_ind = 2;
+              }
+            }
+          }
+          pdel_store(store);
+        }
       }
     }
   }
@@ -409,9 +397,8 @@ FTN_SUBROUTINE(pqeco)(
  * dumpstr
  *
  * DESCR:       Print structure as string
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(dumpstr)(FTN_INTEGER(strid)){
   Struct_handle structp;
   Pint struct_id = FTN_INTEGER_GET(strid);
@@ -427,9 +414,8 @@ FTN_SUBROUTINE(dumpstr)(FTN_INTEGER(strid)){
  * pcelst
  *
  * DESCR:       Copy all elements from structure
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pcelst)(FTN_INTEGER(strid)){
   Pint struct_id = FTN_INTEGER_GET(strid);
   pcopy_all_elems_struct(struct_id);
@@ -439,9 +425,8 @@ FTN_SUBROUTINE(pcelst)(FTN_INTEGER(strid)){
  * pdas
  *
  * DESCR:       Delete all structures
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pdas)(){
   pdel_all_structs();
 }
@@ -450,9 +435,8 @@ FTN_SUBROUTINE(pdas)(){
  * pqstrs
  *
  * DESCR:       Inquire structure state value
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pqstrs)(Pint* strsta){
   pinq_struct_st(strsta);
 }

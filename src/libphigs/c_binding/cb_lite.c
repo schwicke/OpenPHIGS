@@ -37,7 +37,6 @@
  * DESCR:       inquire light source respresentation
  * RETURNS:     N/A
  */
-
 void pinq_light_src_rep( ws_id, index, type, err_ind, rep)
      Pint  ws_id;
      Pint  index;

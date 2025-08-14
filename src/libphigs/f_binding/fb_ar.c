@@ -26,4 +26,3 @@
 #include <private/phgP.h>
 #include <util/ftn.h>
 /* nothing here yet */
-

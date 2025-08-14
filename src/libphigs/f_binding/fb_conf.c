@@ -57,8 +57,8 @@ FTN_SUBROUTINE(pxndef)(
  * RETURNS:     N/A
  */
 FTN_SUBROUTINE(pxshcsf)(
-                       FTN_INTEGER(wkid),
-                       FTN_REAL(hcsf)
+                        FTN_INTEGER(wkid),
+                        FTN_REAL(hcsf)
                        )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
@@ -73,9 +73,9 @@ FTN_SUBROUTINE(pxshcsf)(
  * RETURNS:     current scale factor for workstation wkid
  */
 FTN_SUBROUTINE(pxqhcsf)(
-                       FTN_INTEGER(wkid),
-                       float *hcsf
-                       )
+                        FTN_INTEGER(wkid),
+                        float *hcsf
+                        )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   *hcsf = pxinq_conf_hcsf(ws_id);

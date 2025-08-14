@@ -33,14 +33,13 @@
  * DESCR:       Build transformation matrix 3
  * RETURNS:     error index, transformation matrix
  */
-
 FTN_SUBROUTINE(pbltm3)(
-		       FTN_REAL(xo), FTN_REAL(yo), FTN_REAL(zo),
-		       FTN_REAL(dx), FTN_REAL(dy), FTN_REAL(dz),
-		       FTN_REAL(phix), FTN_REAL(phiy), FTN_REAL(phiz),
-		       FTN_REAL(fx), FTN_REAL(fy), FTN_REAL(fz),
-		       int* err_ind, Pfloat *xfrmt
-  )
+                       FTN_REAL(xo), FTN_REAL(yo), FTN_REAL(zo),
+                       FTN_REAL(dx), FTN_REAL(dy), FTN_REAL(dz),
+                       FTN_REAL(phix), FTN_REAL(phiy), FTN_REAL(phiz),
+                       FTN_REAL(fx), FTN_REAL(fy), FTN_REAL(fz),
+                       int* err_ind, Pfloat *xfrmt
+                       )
 {
   Ppoint3 opoint;
   Pvec3 dpoint;
@@ -64,11 +63,11 @@ FTN_SUBROUTINE(pbltm3)(
   fpoint.delta_z = FTN_REAL_GET(fz);
 
   pbuild_tran_matrix3(&opoint, &dpoint,
-		      FTN_REAL_GET(phix),
-		      FTN_REAL_GET(phiy),
-		      FTN_REAL_GET(phiz),
-		      &fpoint,
-		      err_ind, x);
+                      FTN_REAL_GET(phix),
+                      FTN_REAL_GET(phiy),
+                      FTN_REAL_GET(phiz),
+                      &fpoint,
+                      err_ind, x);
   for (i=0; i<4; i++){
     for (j=0; j<4; j++){
       xfrmt[4*j+i] = (float)x[i][j];
@@ -92,20 +91,19 @@ FTN_SUBROUTINE(pbltm3)(
  * DESCR:       EVALUATE VIEW MAPPING MATRIX 3
  * RETURNS:     error index, view mapping matrix
  */
-
 FTN_SUBROUTINE(pevmm3)(
-		       FTN_REAL_ARRAY(vwwnlm),
-		       FTN_REAL_ARRAY(pjvplm),
-		       FTN_INTEGER(pjtype),
-		       FTN_REAL(pjrx),
-		       FTN_REAL(pjry),
-		       FTN_REAL(pjrz),
-		       FTN_REAL(vp),
-		       FTN_REAL(bp),
-		       FTN_REAL(fp),
-		       int * err_ind,
-		       Pfloat * vwmpmt
-  )
+                       FTN_REAL_ARRAY(vwwnlm),
+                       FTN_REAL_ARRAY(pjvplm),
+                       FTN_INTEGER(pjtype),
+                       FTN_REAL(pjrx),
+                       FTN_REAL(pjry),
+                       FTN_REAL(pjrz),
+                       FTN_REAL(vp),
+                       FTN_REAL(bp),
+                       FTN_REAL(fp),
+                       int * err_ind,
+                       Pfloat * vwmpmt
+                       )
 {
   Pproj_type proj_type;
   Pview_map3 map;
@@ -164,13 +162,12 @@ FTN_SUBROUTINE(pevmm3)(
  * DESCR:       Evaluate view orientation matrix 3
  * RETURNS:     Error index, orientation matrix
  */
-
 FTN_SUBROUTINE(pevom3)(
-		       FTN_REAL(vwrx), FTN_REAL(vwry), FTN_REAL(vwrz),
-		       FTN_REAL(vpnx), FTN_REAL(vpny), FTN_REAL(vpnz),
-		       FTN_REAL(vupx), FTN_REAL(vupy), FTN_REAL(vupz),
-		       int* err_ind, Pfloat * vwormt
-  )
+                       FTN_REAL(vwrx), FTN_REAL(vwry), FTN_REAL(vwrz),
+                       FTN_REAL(vpnx), FTN_REAL(vpny), FTN_REAL(vpnz),
+                       FTN_REAL(vupx), FTN_REAL(vupy), FTN_REAL(vupz),
+                       int* err_ind, Pfloat * vwormt
+                       )
 {
   Ppoint3 vrp;
   Pvec3 vpn;
@@ -208,7 +205,6 @@ FTN_SUBROUTINE(pevom3)(
     printf("    %f %f %f %f\n", vwormt[12],vwormt[13],vwormt[14],vwormt[15]);
   }
 #endif
-
 }
 
 /*******************************************************************************
@@ -217,11 +213,10 @@ FTN_SUBROUTINE(pevom3)(
  * DESCR:       SET LOCAL TRANSFORMATION 3
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(pslmt3)(
-		       float * xfrmt,
-		       FTN_INTEGER(ctype)
-		       )
+                       float * xfrmt,
+                       FTN_INTEGER(ctype)
+                       )
 {
   Phg_args_add_el args;
   Pint *data;
@@ -230,7 +225,6 @@ FTN_SUBROUTINE(pslmt3)(
 #ifdef DEBUG
   printf("DEBUG: pslmt3 called\n");
 #endif
-
   for (i=0; i<4; i++){
     for (j=0; j<4; j++){
       x[j][i] = xfrmt[4*i+j];
@@ -244,14 +238,14 @@ FTN_SUBROUTINE(pslmt3)(
       args.el_type = PELEM_LOCAL_MODEL_TRAN3;
       args.el_size = sizeof(Pint) + 16 * sizeof(Pfloat);
       if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-	ERR_REPORT(PHG_ERH, ERR900);
+        ERR_REPORT(PHG_ERH, ERR900);
       }
       else {
-	args.el_data = PHG_SCRATCH.buf;
-	data = (Pint *) args.el_data;
-	data[0] = (Pint) FTN_INTEGER_GET(ctype);
-	phg_mat_unpack((Pfloat *) &data[1], x);
-	phg_add_el(PHG_CSS, &args);
+        args.el_data = PHG_SCRATCH.buf;
+        data = (Pint *) args.el_data;
+        data[0] = (Pint) FTN_INTEGER_GET(ctype);
+        phg_mat_unpack((Pfloat *) &data[1], x);
+        phg_add_el(PHG_CSS, &args);
       }
     }
   }

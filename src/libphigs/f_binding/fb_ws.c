@@ -1,5 +1,5 @@
 /******************************************************************************
-*   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER
+*   Do NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER
 *
 *   This file is part of Open PHIGS
 *   Copyright (C) 2014 Surplus Users Ham Society
@@ -40,183 +40,183 @@ extern int record_geom;
 /*******************************************************************************
  * popwk
  *
- * DESCR:	Open workstation
- * RETURNS:	N/A
+ * DESCR:   Open workstation
+ * RETURNS:   N/A
  */
 
 FTN_SUBROUTINE(popwk)(
-   FTN_INTEGER(wkid),
-   FTN_INTEGER(conid),
-   FTN_INTEGER(wtype)
-   )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(conid),
+                      FTN_INTEGER(wtype)
+                      )
 {
-   Wst *wst;
-   Ws_handle wsh;
-   Phg_args_open_ws args;
-   Phg_ret ret;
+  Wst *wst;
+  Ws_handle wsh;
+  Phg_args_open_ws args;
+  Phg_ret ret;
 
-   Pint ws_id = FTN_INTEGER_GET(wkid);
-   Pint lun = FTN_INTEGER_GET(conid);
-   Pint ws_type = FTN_INTEGER_GET(wtype);
+  Pint ws_id = FTN_INTEGER_GET(wkid);
+  Pint lun = FTN_INTEGER_GET(conid);
+  Pint ws_type = FTN_INTEGER_GET(wtype);
 
-   Phg_args_conn_info conn_id;
-   Pcolr_rep rep;
-   char filename[512];
+  Phg_args_conn_info conn_id;
+  Pcolr_rep rep;
+  char filename[512];
 
-   /* read default configuration file if not read yet */
-   if (! config_read){
-     config_read = 1;
-     read_config("phigs.def");
-   };
-   /* save the current shader settings */
-   wsgl_use_shaders_settings = wsgl_use_shaders;
-   /* init filename to zero */
-   bzero(filename, 512);
-   conn_id.lun = lun;
-   conn_id.background = 0;
+  /* read default configuration file if not read yet */
+  if (! config_read){
+    config_read = 1;
+    read_config("phigs.def");
+  };
+  /* save the current shader settings */
+  wsgl_use_shaders_settings = wsgl_use_shaders;
+  /* init filename to zero */
+  bzero(filename, 512);
+  conn_id.lun = lun;
+  conn_id.background = 0;
 
 #ifdef DEBUG
   printf("DEBUG: POPWK open %d\n", *wkid);
 #endif
 
-   ERR_SET_CUR_FUNC(PHG_ERH, Pfn_open_ws);
+  ERR_SET_CUR_FUNC(PHG_ERH, Pfn_open_ws);
 
-   if ((ws_id < 0) || (ws_id > MAX_NO_OPEN_WS)) {
-      ERR_REPORT(PHG_ERH, ERR65);
-   }
-   else if (phg_psl_inq_ws_open(PHG_PSL, ws_id)) {
-      ERR_REPORT(PHG_ERH, ERR53);
-   }
-   else if (!phg_psl_ws_free_slot(PHG_PSL)) {
-      ERR_REPORT(PHG_ERH, ERR63);
-   }
-   else {
-      wst = phg_wst_find(&PHG_WST_LIST, ws_type);
+  if ((ws_id < 0) || (ws_id > MAX_NO_OPEN_WS)) {
+    ERR_REPORT(PHG_ERH, ERR65);
+  }
+  else if (phg_psl_inq_ws_open(PHG_PSL, ws_id)) {
+    ERR_REPORT(PHG_ERH, ERR53);
+  }
+  else if (!phg_psl_ws_free_slot(PHG_PSL)) {
+    ERR_REPORT(PHG_ERH, ERR63);
+  }
+  else {
+    wst = phg_wst_find(&PHG_WST_LIST, ws_type);
 
-      if (wst == NULL) {
-         ERR_REPORT(PHG_ERH, ERR52);
+    if (wst == NULL) {
+      ERR_REPORT(PHG_ERH, ERR52);
+    }
+    else {
+      memset(&args, 0, sizeof(Phg_args_open_ws));
+      args.width = config[ws_id].display_width;
+      args.height = config[ws_id].display_height;
+      args.hcsf = config[ws_id].hcsf;
+#ifdef DEBUG
+      printf("fb_ws: WSID=%d type=%d scale factor %f\n", ws_id, ws_type, args.hcsf);
+#endif
+      if (lun == 0) {
+        args.conn_info.background = 0;
+        args.conn_type = PHG_ARGS_CONN_OPEN;
       }
       else {
-         memset(&args, 0, sizeof(Phg_args_open_ws));
-         args.width = config[ws_id].display_width;
-         args.height = config[ws_id].display_height;
-         args.hcsf = config[ws_id].hcsf;
-#ifdef DEBUG
-         printf("fb_ws: WSID=%d type=%d scale factor %f\n", ws_id, ws_type, args.hcsf);
-#endif
-         if (lun == 0) {
-           args.conn_info.background = 0;
-           args.conn_type = PHG_ARGS_CONN_OPEN;
-         }
-         else {
-           record_geom = FALSE;
-           if (
-               ws_type == PWST_HCOPY_TRUE_TGA ||
-               ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
-               ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
-               ws_type == PWST_HCOPY_TRUE_EPS ||
-               ws_type == PWST_HCOPY_TRUE_PDF ||
-               ws_type == PWST_HCOPY_TRUE_SVG ||
-               ws_type == PWST_HCOPY_TRUE_OBJ
-               ) {
-             args.conn_type = PHG_ARGS_CONN_HCOPY;
-             args.width = config[ws_id].display_width*config[ws_id].hcsf;
-             args.height = config[ws_id].display_height*config[ws_id].hcsf;
-             memcpy(&args.conn_info, &conn_id, sizeof(Phg_args_conn_info));
-           }
-           else {
-             args.conn_type = PHG_ARGS_CONN_DRAWABLE;
-             memcpy(&args.conn_info, &conn_id, sizeof(Phg_args_conn_info));
-           }
-         }
-         switch (ws_type){
-         case PWST_HCOPY_TRUE_EPS:
-         case PWST_HCOPY_TRUE_PDF:
-         case PWST_HCOPY_TRUE_SVG:
-           /* switch off shaders for gl2ps exports */
-           wsgl_use_shaders_settings = wsgl_use_shaders;
-           wsgl_use_shaders = 0;
-           break;
-         case  PWST_HCOPY_TRUE_OBJ:
-           printf("fb_ws: switch Recording ON\n");
-           record_geom = TRUE;
-         }
-         args.wsid = ws_id;
-         args.type = wst;
-         args.erh = PHG_ERH;
-         args.cssh = PHG_CSS;
-         args.memory = 8192;
-         args.input_q = PHG_INPUT_Q;
-         args.window_name = config[ws_id].window_title;
-         args.icon_name = config[ws_id].window_icon;
-         args.x = config[ws_id].xpos;
-         args.y = config[ws_id].ypos;
-         args.border_width =  config[ws_id].border_width;
-         args.limits = config[ws_id].vpos;
-
-         /* Open workstation */
-         PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);
-         if (PHG_WSID(ws_id) == NULL) {
-            ERR_REPORT(PHG_ERH, ERR900);
-         }
-         else {
-            /* Add workstation to info list */
-            phg_psl_add_ws(PHG_PSL, ws_id, NULL, wst);
-         }
-         /* predefine some colors */
-         pxset_color_map(ws_id);
-         /* set background as specified in configuration file */
-         pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
-         /* init output file name */
-         wsh = PHG_WSID(ws_id);
-         if (strlen(config[ws_id].filename) == 0){
-           sprintf(filename, "fort.%d", lun);
-           strncpy(wsh->filename, filename, strlen(filename));
-           (wsh->filename)[strlen(filename)] = '\0';
-         } else {
-           strncpy(wsh->filename, config[ws_id].filename, strlen(config[ws_id].filename));
-           (wsh->filename)[strlen(config[ws_id].filename)] = '\0';
-         }
-         wsgl_clear(wsh);
+        record_geom = FALSE;
+        if (
+            ws_type == PWST_HCOPY_TRUE_TGA ||
+            ws_type == PWST_HCOPY_TRUE_RGB_PNG ||
+            ws_type == PWST_HCOPY_TRUE_RGBA_PNG ||
+            ws_type == PWST_HCOPY_TRUE_EPS ||
+            ws_type == PWST_HCOPY_TRUE_PDF ||
+            ws_type == PWST_HCOPY_TRUE_SVG ||
+            ws_type == PWST_HCOPY_TRUE_OBJ
+            ) {
+          args.conn_type = PHG_ARGS_CONN_HCOPY;
+          args.width = config[ws_id].display_width*config[ws_id].hcsf;
+          args.height = config[ws_id].display_height*config[ws_id].hcsf;
+          memcpy(&args.conn_info, &conn_id, sizeof(Phg_args_conn_info));
+        }
+        else {
+          args.conn_type = PHG_ARGS_CONN_DRAWABLE;
+          memcpy(&args.conn_info, &conn_id, sizeof(Phg_args_conn_info));
+        }
       }
-   }
-   ERR_FLUSH(PHG_ERH);
+      switch (ws_type){
+      case PWST_HCOPY_TRUE_EPS:
+      case PWST_HCOPY_TRUE_PDF:
+      case PWST_HCOPY_TRUE_SVG:
+        /* switch off shaders for gl2ps exports */
+        wsgl_use_shaders_settings = wsgl_use_shaders;
+        wsgl_use_shaders = 0;
+        break;
+      case  PWST_HCOPY_TRUE_OBJ:
+        printf("fb_ws: switch Recording ON\n");
+        record_geom = TRUE;
+      }
+      args.wsid = ws_id;
+      args.type = wst;
+      args.erh = PHG_ERH;
+      args.cssh = PHG_CSS;
+      args.memory = 8192;
+      args.input_q = PHG_INPUT_Q;
+      args.window_name = config[ws_id].window_title;
+      args.icon_name = config[ws_id].window_icon;
+      args.x = config[ws_id].xpos;
+      args.y = config[ws_id].ypos;
+      args.border_width =  config[ws_id].border_width;
+      args.limits = config[ws_id].vpos;
+
+      /* Open workstation */
+      PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);
+      if (PHG_WSID(ws_id) == NULL) {
+        ERR_REPORT(PHG_ERH, ERR900);
+      }
+      else {
+        /* Add workstation to info list */
+        phg_psl_add_ws(PHG_PSL, ws_id, NULL, wst);
+      }
+      /* predefine some colors */
+      pxset_color_map(ws_id);
+      /* set background as specified in configuration file */
+      pset_colr_rep(ws_id, 0, &(config[ws_id].background_color));
+      /* init output file name */
+      wsh = PHG_WSID(ws_id);
+      if (strlen(config[ws_id].filename) == 0){
+        sprintf(filename, "fort.%d", lun);
+        strncpy(wsh->filename, filename, strlen(filename));
+        (wsh->filename)[strlen(filename)] = '\0';
+      } else {
+        strncpy(wsh->filename, config[ws_id].filename, strlen(config[ws_id].filename));
+        (wsh->filename)[strlen(config[ws_id].filename)] = '\0';
+      }
+      wsgl_clear(wsh);
+    }
+  }
+  ERR_FLUSH(PHG_ERH);
 }
 
 /*******************************************************************************
  * ppost
  *
- * DESCR:	Post structure
- * RETURNS:	N/A
+ * DESCR:   Post structure
+ * RETURNS:   N/A
  */
 
 FTN_SUBROUTINE(ppost)(
-   FTN_INTEGER(wkid),
-   FTN_INTEGER(strid),
-   FTN_REAL(priort)
-   )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(strid),
+                      FTN_REAL(priort)
+                      )
 {
-   int status;
-   Ws_handle wsh;
-   Css_handle cssh;
-   Struct_handle structp;
+  int status;
+  Ws_handle wsh;
+  Css_handle cssh;
+  Struct_handle structp;
 
 #ifdef DEBUG
   printf("DEBUG: PPOST structure to %d\n", *wkid);
 #endif
 
-   Pint ws_id = FTN_INTEGER_GET(wkid);
-   Pint struct_id = FTN_INTEGER_GET(strid);
-   Pfloat priority = FTN_REAL_GET()priort;
+  Pint ws_id = FTN_INTEGER_GET(wkid);
+  Pint struct_id = FTN_INTEGER_GET(strid);
+  Pfloat priority = FTN_REAL_GET()priort;
 
-   if (phg_ws_open(ws_id, Pfn_post_struct) != NULL) {
-      wsh = PHG_WSID(ws_id);
-      cssh = wsh->out_ws.model.b.cssh;
-      structp = phg_css_post(cssh, struct_id, wsh, &status);
-      if (structp != NULL) {
-         (*wsh->post)(wsh, structp, priority, !status);
-      }
-   }
+  if (phg_ws_open(ws_id, Pfn_post_struct) != NULL) {
+    wsh = PHG_WSID(ws_id);
+    cssh = wsh->out_ws.model.b.cssh;
+    structp = phg_css_post(cssh, struct_id, wsh, &status);
+    if (structp != NULL) {
+      (*wsh->post)(wsh, structp, priority, !status);
+    }
+  }
 }
 
 /*******************************************************************************
@@ -227,28 +227,28 @@ FTN_SUBROUTINE(ppost)(
  */
 
 FTN_SUBROUTINE(pscr)(
-   FTN_INTEGER(wkid),
-   FTN_INTEGER(ci),
-   FTN_INTEGER(nccs),
-   FTN_REAL_ARRAY(cspec)
-   )
+                     FTN_INTEGER(wkid),
+                     FTN_INTEGER(ci),
+                     FTN_INTEGER(nccs),
+                     FTN_REAL_ARRAY(cspec)
+                     )
 {
-   Pint ws_id = FTN_INTEGER_GET(wkid);
-   Pint ind = FTN_INTEGER_GET(ci);
-   Pint ncc = FTN_INTEGER_GET(nccs);
-   Pcolr_rep rep;
+  Pint ws_id = FTN_INTEGER_GET(wkid);
+  Pint ind = FTN_INTEGER_GET(ci);
+  Pint ncc = FTN_INTEGER_GET(nccs);
+  Pcolr_rep rep;
 #ifdef DEBUG
-   printf("DEBUG: PSCR workstation color representation %d\n", *wkid);
+  printf("DEBUG: PSCR workstation color representation %d\n", *wkid);
 #endif
-   if (ncc == 3) {
-     rep.rgb.red   = FTN_REAL_ARRAY_GET(cspec, 0);
-     rep.rgb.green = FTN_REAL_ARRAY_GET(cspec, 1);
-     rep.rgb.blue  = FTN_REAL_ARRAY_GET(cspec, 2);
-   }
-   else {
-     rep.rgb.red = rep.rgb.green = rep.rgb.blue = FTN_REAL_ARRAY_GET(cspec, 0);
-   }
-   pset_colr_rep(ws_id, ind, &rep);
+  if (ncc == 3) {
+    rep.rgb.red   = FTN_REAL_ARRAY_GET(cspec, 0);
+    rep.rgb.green = FTN_REAL_ARRAY_GET(cspec, 1);
+    rep.rgb.blue  = FTN_REAL_ARRAY_GET(cspec, 2);
+  }
+  else {
+    rep.rgb.red = rep.rgb.green = rep.rgb.blue = FTN_REAL_ARRAY_GET(cspec, 0);
+  }
+  pset_colr_rep(ws_id, ind, &rep);
 }
 
 /*******************************************************************************
@@ -259,9 +259,9 @@ FTN_SUBROUTINE(pscr)(
  */
 
 FTN_SUBROUTINE(pupost)(
-		       FTN_INTEGER(wkid),
-		       FTN_INTEGER(strid)
-)
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(strid)
+                       )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint struct_id = FTN_INTEGER_GET(strid);
@@ -387,15 +387,15 @@ FTN_SUBROUTINE(pclwk)(
  */
 
 FTN_SUBROUTINE(psvwr3)(
-		       FTN_INTEGER(wkid),
-		       FTN_INTEGER(viewi),
-		       Pfloat* vwormti,
-		       Pfloat* vwmpmti,
-		       FTN_REAL_ARRAY(vwcplm),
-		       FTN_INTEGER(xclipi),
-		       FTN_INTEGER(bclipi),
-		       FTN_INTEGER(fclipi)
-		       )
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(viewi),
+                       Pfloat* vwormti,
+                       Pfloat* vwmpmti,
+                       FTN_REAL_ARRAY(vwcplm),
+                       FTN_INTEGER(xclipi),
+                       FTN_INTEGER(bclipi),
+                       FTN_INTEGER(fclipi)
+                       )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint vrep = FTN_INTEGER_GET(viewi);
@@ -428,8 +428,8 @@ FTN_SUBROUTINE(psvwr3)(
     rep.index = vrep;
     for (i=0; i<4; i++){
       for (j=0; j<4; j++){
-	rep.bundl.viewrep.ori_matrix[i][j] = (Pfloat)vwormti[i+4*j];
-	rep.bundl.viewrep.map_matrix[i][j] = (Pfloat)vwmpmti[i+4*j];
+        rep.bundl.viewrep.ori_matrix[i][j] = (Pfloat)vwormti[i+4*j];
+        rep.bundl.viewrep.map_matrix[i][j] = (Pfloat)vwmpmti[i+4*j];
       }
     }
     rep.bundl.viewrep.clip_limit.x_min = FTN_REAL_ARRAY_GET(vwcplm, 0);
@@ -466,12 +466,12 @@ FTN_SUBROUTINE(psvwr3)(
  */
 
 FTN_SUBROUTINE(pqhrm)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(err_ind),
-		      FTN_INTEGER(hupd),
-		      FTN_INTEGER(chrm),
-		      FTN_INTEGER(rhrm)
-		      )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(err_ind),
+                      FTN_INTEGER(hupd),
+                      FTN_INTEGER(chrm),
+                      FTN_INTEGER(rhrm)
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Ws_handle wsh;
@@ -509,18 +509,18 @@ FTN_SUBROUTINE(pqhrm)(
  */
 
 FTN_SUBROUTINE(pqvwr)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(viewi),
-		      FTN_INTEGER(curq),
-		      FTN_INTEGER(err_ind),
-		      int* vwupd,
-		      Pfloat* vwormt,
-		      Pfloat* vwmpmt,
-		      Pfloat* vwcplm ,
-		      int * xyclip,
-		      int* bclip,
-		      int* fclip
-)
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(viewi),
+                      FTN_INTEGER(curq),
+                      FTN_INTEGER(err_ind),
+                      int* vwupd,
+                      Pfloat* vwormt,
+                      Pfloat* vwmpmt,
+                      Pfloat* vwcplm ,
+                      int * xyclip,
+                      int* bclip,
+                      int* fclip
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint index = FTN_INTEGER_GET(viewi);
@@ -627,14 +627,14 @@ FTN_SUBROUTINE(pqvwr)(
  */
 
 FTN_SUBROUTINE(pqwkt)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(err_ind),
-		      FTN_INTEGER(tus),
-		      Pfloat*rwindo,
-		      Pfloat*cwindo,
-		      Pfloat*rviewp,
-		      Pfloat*cviewp
-)
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(err_ind),
+                      FTN_INTEGER(tus),
+                      Pfloat*rwindo,
+                      Pfloat*cwindo,
+                      Pfloat*rviewp,
+                      Pfloat*cviewp
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
 
@@ -679,7 +679,7 @@ FTN_SUBROUTINE(pqwkt)(
         if (ret.err) {
           *err_ind = ret.err;
         } else {
-          Wsb_output_ws	*owsb = &wsh->out_ws.model.b;
+          Wsb_output_ws   *owsb = &wsh->out_ws.model.b;
           if (owsb->ws_window_pending || owsb->ws_viewport_pending) {*tus = 1;} else {*tus = 0;};
           rwindo[0] = owsb->req_ws_window.x_min;
           rwindo[1] = owsb->req_ws_window.x_max;
@@ -717,14 +717,14 @@ FTN_SUBROUTINE(pqwkt)(
  */
 
 FTN_SUBROUTINE(pqwkt3)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(err_ind),
-		      FTN_INTEGER(tus),
-		      Pfloat* rwindo,
-		      Pfloat* cwindo,
-		      Pfloat* rviewp,
-		      Pfloat* cviewp
-)
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(err_ind),
+                       FTN_INTEGER(tus),
+                       Pfloat* rwindo,
+                       Pfloat* cwindo,
+                       Pfloat* rviewp,
+                       Pfloat* cviewp
+                       )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
 
@@ -761,7 +761,7 @@ FTN_SUBROUTINE(pqwkt3)(
       }
       else {
         wsh = PHG_WSID(ws_id);
-        Wsb_output_ws	*owsb = &wsh->out_ws.model.b;
+        Wsb_output_ws   *owsb = &wsh->out_ws.model.b;
         if (owsb->ws_window_pending || owsb->ws_viewport_pending) {*tus = 1;} else {*tus = 0;};
         rwindo[0] = owsb->req_ws_window.x_min;
         rwindo[1] = owsb->req_ws_window.x_max;
@@ -805,13 +805,13 @@ FTN_SUBROUTINE(pqwkt3)(
  */
 
 FTN_SUBROUTINE(pqpost)(
-		       FTN_INTEGER(wkid),
-		       FTN_INTEGER(n),
-		       FTN_INTEGER(err_ind),
-		       FTN_INTEGER(number),
-		       FTN_INTEGER(strid),
-		       FTN_REAL(priort)
-		       )
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(n),
+                       FTN_INTEGER(err_ind),
+                       FTN_INTEGER(number),
+                       FTN_INTEGER(strid),
+                       FTN_REAL(priort)
+                       )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint num = FTN_INTEGER_GET(n);
@@ -888,12 +888,12 @@ FTN_SUBROUTINE(pqpost)(
  */
 
 FTN_SUBROUTINE(pqwkpo)(
-		       FTN_INTEGER(strid),
-		       FTN_INTEGER(n),
-		       FTN_INTEGER(err_ind),
-		       FTN_INTEGER(ol),
-		       FTN_INTEGER(wkid)
-		       )
+                       FTN_INTEGER(strid),
+                       FTN_INTEGER(n),
+                       FTN_INTEGER(err_ind),
+                       FTN_INTEGER(ol),
+                       FTN_INTEGER(wkid)
+                       )
 {
   /*
 This needs to loop over all work stations and all their posted structures, and if the given structure is found,
@@ -914,45 +914,43 @@ FIXME: this one does not seem to find anything for some reason.
 #endif
   if (!phg_entry_check(PHG_ERH, 0, Pfn_INQUIRY)) {
     *err_ind = ERR2;
-  }
-  else
-    {
-      nwk = PHG_WST_LIST.count;
-      matches = 0;
-      *err_ind = 1;
-      for (ws_id = 0; ws_id<nwk; ws_id++){
-        wsh = PHG_WSID(ws_id);
-	if (wsh != NULL){
-	  ows = &wsh->out_ws.model.b;
-	  posted = ows->posted;
-	  current =  &posted.highest;
-	  while (current != NULL) {
-	    if (current->structh != NULL) {
-	      if (current->structh->struct_id == struct_id) {
-		wkids[matches] = ws_id;
-		matches += 1;
-	      }
-	    }
-	    current = current->lower;
-	  }
-	}
-      }
-      if (matches>0 && num<=matches){
-	*err_ind = 0;
-	*ol = matches;
-	*wkid = wkids[num-1];
-#ifdef DEBUG
-	printf("PQWKPO: Found %d matches. Returning %d\n", *ol, *wkid);
-#endif
-      } else {
-	*err_ind = ERR201;
-	*ol = 0;
-	*wkid = 0;
-#ifdef DEBUG
-	printf("PQWKPO: No matches found.\n");
-#endif
+  } else {
+    nwk = PHG_WST_LIST.count;
+    matches = 0;
+    *err_ind = 1;
+    for (ws_id = 0; ws_id<nwk; ws_id++){
+      wsh = PHG_WSID(ws_id);
+      if (wsh != NULL){
+        ows = &wsh->out_ws.model.b;
+        posted = ows->posted;
+        current =  &posted.highest;
+        while (current != NULL) {
+          if (current->structh != NULL) {
+            if (current->structh->struct_id == struct_id) {
+              wkids[matches] = ws_id;
+              matches += 1;
+            }
+          }
+          current = current->lower;
+        }
       }
     }
+    if (matches>0 && num<=matches){
+      *err_ind = 0;
+      *ol = matches;
+      *wkid = wkids[num-1];
+#ifdef DEBUG
+      printf("PQWKPO: Found %d matches. Returning %d\n", *ol, *wkid);
+#endif
+    } else {
+      *err_ind = ERR201;
+      *ol = 0;
+      *wkid = 0;
+#ifdef DEBUG
+      printf("PQWKPO: No matches found.\n");
+#endif
+    }
+  }
 }
 
 /*******************************************************************************
@@ -963,9 +961,9 @@ FIXME: this one does not seem to find anything for some reason.
  */
 
 FTN_SUBROUTINE(puwk)(
-		       FTN_INTEGER(wkid),
-		       FTN_INTEGER(regfl)
-		      )
+                     FTN_INTEGER(wkid),
+                     FTN_INTEGER(regfl)
+                     )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pregen_flag regen_flag = FTN_INTEGER_GET(regfl);
@@ -978,14 +976,13 @@ FTN_SUBROUTINE(puwk)(
  * DESCR:       Set polymarker representation
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(pspmr)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(pmi),
-		      FTN_INTEGER(mtype),
-		      FTN_REAL(mszsf),
-		      FTN_INTEGER(coli)
-		      ){
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(pmi),
+                      FTN_INTEGER(mtype),
+                      FTN_REAL(mszsf),
+                      FTN_INTEGER(coli)
+                      ){
   Pint wk_id = FTN_INTEGER_GET(wkid);
   Pint pind  = FTN_INTEGER_GET(pmi);
   Pint ptype = FTN_INTEGER_GET(mtype);
@@ -1003,12 +1000,12 @@ FTN_SUBROUTINE(pspmr)(
  */
 
 FTN_SUBROUTINE(psplr)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(pli),
-		      FTN_INTEGER(ltyp),
-		      FTN_REAL(lwidth),
-		      FTN_INTEGER(coli)
-		      ){
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(pli),
+                      FTN_INTEGER(ltyp),
+                      FTN_REAL(lwidth),
+                      FTN_INTEGER(coli)
+                      ){
   Pint wk_id = FTN_INTEGER_GET(wkid);
   Pint lind  = FTN_INTEGER_GET(pli);
   Pint ltype = FTN_INTEGER_GET(ltyp);
@@ -1026,13 +1023,13 @@ FTN_SUBROUTINE(psplr)(
  */
 
 FTN_SUBROUTINE(psedr)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(edi),
-		      FTN_INTEGER(edflag),
-		      FTN_INTEGER(edtype),
-		      FTN_REAL(ewidth),
-		      FTN_INTEGER(coli)
-		      ){
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(edi),
+                      FTN_INTEGER(edflag),
+                      FTN_INTEGER(edtype),
+                      FTN_REAL(ewidth),
+                      FTN_INTEGER(coli)
+                      ){
   Pint wk_id = FTN_INTEGER_GET(wkid);
   Pint eind  = FTN_INTEGER_GET(edi);
   Pint eflag = FTN_INTEGER_GET(edflag);
@@ -1051,12 +1048,12 @@ FTN_SUBROUTINE(psedr)(
  */
 
 FTN_SUBROUTINE(psir)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(ii),
-		      FTN_INTEGER(ints),
-		      FTN_INTEGER(styli),
-		      FTN_INTEGER(coli)
-		      ){
+                     FTN_INTEGER(wkid),
+                     FTN_INTEGER(ii),
+                     FTN_INTEGER(ints),
+                     FTN_INTEGER(styli),
+                     FTN_INTEGER(coli)
+                     ){
   Pint wk_id = FTN_INTEGER_GET(wkid);
   Pint iii  = FTN_INTEGER_GET(ii);
   Pint iints = FTN_INTEGER_GET(ints);
@@ -1074,14 +1071,14 @@ FTN_SUBROUTINE(psir)(
  */
 
 FTN_SUBROUTINE(pstxr)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(txi),
-		      FTN_INTEGER(font),
-		      FTN_INTEGER(prec),
-		      FTN_REAL(chxp),
-		      FTN_REAL(chsp),
-		      FTN_INTEGER(coli)
-		      ){
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(txi),
+                      FTN_INTEGER(font),
+                      FTN_INTEGER(prec),
+                      FTN_REAL(chxp),
+                      FTN_REAL(chsp),
+                      FTN_INTEGER(coli)
+                      ){
   Pint wk_id = FTN_INTEGER_GET(wkid);
   Pint tind  = FTN_INTEGER_GET(txi);
   Pint tfont = FTN_INTEGER_GET(font);
@@ -1101,9 +1098,9 @@ FTN_SUBROUTINE(pstxr)(
  */
 
 FTN_SUBROUTINE(pswkv3)(
-		       FTN_INTEGER(wkid),
-		       FTN_REAL_ARRAY(wkvp)
-		      )
+                       FTN_INTEGER(wkid),
+                       FTN_REAL_ARRAY(wkvp)
+                       )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Plimit3 lim3;
@@ -1124,10 +1121,10 @@ FTN_SUBROUTINE(pswkv3)(
  */
 
 FTN_SUBROUTINE(psdus)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(defmod),
-		      FTN_INTEGER(modmod)
-		      ){
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(defmod),
+                      FTN_INTEGER(modmod)
+                      ){
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pdefer_mode def_mod = (Pdefer_mode) FTN_INTEGER_GET(defmod);
   Pmod_mode mod_mod = (Pmod_mode) FTN_INTEGER_GET(modmod);
@@ -1142,14 +1139,14 @@ FTN_SUBROUTINE(psdus)(
  */
 
 FTN_SUBROUTINE(pqcr)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(coli),
-		      FTN_INTEGER(ccsbsz),
-		      FTN_INTEGER(rtype),
-		      int* err_ind,
-		      int* ol,
-		      float* cspec
-		      ){
+                     FTN_INTEGER(wkid),
+                     FTN_INTEGER(coli),
+                     FTN_INTEGER(ccsbsz),
+                     FTN_INTEGER(rtype),
+                     int* err_ind,
+                     int* ol,
+                     float* cspec
+                     ){
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint colr_ind = FTN_INTEGER_GET(coli);
   Pinq_type type = (Pinq_type) FTN_INTEGER_GET(rtype);
@@ -1178,12 +1175,12 @@ FTN_SUBROUTINE(pqcr)(
  */
 
 FTN_SUBROUTINE(pqcf)(
-		     FTN_INTEGER(wtype),
-		     int* errind,
-		     int* ncoli,
-		     int* cola,
-		     int* npci,
-		     float* cc) {
+                     FTN_INTEGER(wtype),
+                     int* errind,
+                     int* ncoli,
+                     int* cola,
+                     int* npci,
+                     float* cc) {
   printf("WARNING: pqcf called for WSTYPE: %d. Returning DUMMY values\n", FTN_INTEGER_GET(wtype));
   *errind = 0;
   *ncoli = 15;
@@ -1207,9 +1204,9 @@ FTN_SUBROUTINE(pqcf)(
  */
 
 FTN_SUBROUTINE(pmsg)(
-		     FTN_INTEGER(wkid),
-		     FTN_CHARACTER(msg)
-		     ){
+                     FTN_INTEGER(wkid),
+                     FTN_CHARACTER(msg)
+                     ){
   char buffer[100];
   Pint ws_id = FTN_INTEGER_GET(wkid);
   char * message = FTN_CHARACTER_GET(msg);
@@ -1219,11 +1216,11 @@ FTN_SUBROUTINE(pmsg)(
   pmessage(ws_id, buffer);
 }
 
-/*
+/********************************
  *
  *  extensions to the Standard
  *
-*/
+ *********************************/
 
 /*******************************************************************************
  * pslsr
@@ -1232,14 +1229,13 @@ FTN_SUBROUTINE(pmsg)(
  * RETURNS:     N/A
  * NOTES:       Not part of the standard
  */
-
 FTN_SUBROUTINE(pslsr)(
-		       FTN_INTEGER(wkid),
-		       FTN_INTEGER(lsi),
-		       FTN_INTEGER(lstyp),
-		       FTN_INTEGER(ldr),
-		       char* data
-		       )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(lsi),
+                      FTN_INTEGER(lstyp),
+                      FTN_INTEGER(ldr),
+                      char* data
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint light_src_ind = FTN_INTEGER_GET(lsi);
@@ -1309,7 +1305,6 @@ FTN_SUBROUTINE(pslsr)(
     light_src_rep.rec.positional = poslight;
     pset_light_src_rep(ws_id, light_src_ind, & light_src_rep);
     break;
-
   default:
     printf("ERROR in pslsr: light type %d not yet implemented. Ignorning function.\n", type);
     break;
@@ -1322,10 +1317,9 @@ FTN_SUBROUTINE(pslsr)(
  * DESCR:       Set color map
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(pxscm)(
-		       FTN_INTEGER(wkid)
-		      )
+                      FTN_INTEGER(wkid)
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   pxset_color_map(ws_id);
@@ -1338,7 +1332,6 @@ FTN_SUBROUTINE(pxscm)(
  * RETURNS:     N/A
  * NOTES:       extension
  */
-
 FTN_SUBROUTINE(psfname)(
                         FTN_INTEGER(wkid),
                         FTN_CHARACTER(fname)

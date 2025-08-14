@@ -36,9 +36,8 @@
  * pslss
  *
  * DESCR:       set light source state
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pslss)(
                       FTN_INTEGER(nacti),
                       FTN_INTEGER_ARRAY(acti),
@@ -73,12 +72,11 @@ FTN_SUBROUTINE(pslss)(
  * psism
  *
  * DESCR:       set interior shading method
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psism)(
-		      FTN_INTEGER(ism1)
-		      ){
+                      FTN_INTEGER(ism1)
+                      ){
   Pint ism = FTN_INTEGER_GET(ism1);
   pset_int_shad_meth(ism);
 }
@@ -87,12 +85,11 @@ FTN_SUBROUTINE(psism)(
  * psbism
  *
  * DESCR:       set back interior shading method
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psbism)(
-		      FTN_INTEGER(ism1)
-		      ){
+                       FTN_INTEGER(ism1)
+                       ){
   Pint ism = FTN_INTEGER_GET(ism1);
   pset_back_int_shad_meth(ism);
 }
@@ -101,12 +98,11 @@ FTN_SUBROUTINE(psbism)(
  * psrfeq
  *
  * DESCR:       set reflectance equation
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psrfeq)(
-		      FTN_INTEGER(refl_model1)
-		      ){
+                       FTN_INTEGER(refl_model1)
+                       ){
   Pint refl_model = FTN_INTEGER_GET(refl_model1);
   pset_refl_eqn(refl_model);
 }
@@ -115,12 +111,11 @@ FTN_SUBROUTINE(psrfeq)(
  * psbrfm
  *
  * DESCR:       set back reflectance equation
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psbrfm)(
-		      FTN_INTEGER(refl_model1)
-		      ){
+                       FTN_INTEGER(refl_model1)
+                       ){
   Pint refl_model = FTN_INTEGER_GET(refl_model1);
   pset_back_refl_eqn(refl_model);
 }
@@ -129,14 +124,13 @@ FTN_SUBROUTINE(psbrfm)(
  * psrfp
  *
  * DESCR:       set reflectance properties
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psrfp)(
-		      FTN_INTEGER(refl_type1),
-		      FTN_INTEGER(refl_len1),
-		      char* datarec
-		      ){
+                      FTN_INTEGER(refl_type1),
+                      FTN_INTEGER(refl_len1),
+                      char* datarec
+                      ){
   Pint refl_type = FTN_INTEGER_GET(refl_type1);
   int refl_len = FTN_INTEGER_GET(refl_len1);
   int* here = (int*)datarec;
@@ -159,10 +153,10 @@ FTN_SUBROUTINE(psrfp)(
     refl_properties.specular_exp = fp[3];
 #ifdef DEBUG
     printf("PSRFP: Reflectance %f %f %f %f",
-	   refl_properties.ambient_coef,
-	   refl_properties.diffuse_coef,
-	   refl_properties.specular_coef,
-	   refl_properties.specular_exp);
+           refl_properties.ambient_coef,
+           refl_properties.diffuse_coef,
+           refl_properties.specular_coef,
+           refl_properties.specular_exp);
 #endif
     if (col_type ==  PMODEL_RGB){
       refl_properties.specular_colr.val.general.x = fp[4];
@@ -179,280 +173,278 @@ FTN_SUBROUTINE(psrfp)(
  * pfas3d
  *
  * DESCR:       fill area set 3
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pfas3d)(
-		      FTN_INTEGER(fflag1),
-                      FTN_INTEGER(eflag1),
-                      FTN_INTEGER(vflag1),
-		      FTN_INTEGER(colr_type1),
-		      FTN_INTEGER(ncc1),
-		      FTN_INTEGER(fcoli1),
-		      FTN_REAL_ARRAY(fcolr),
-		      FTN_REAL(fnx),
-		      FTN_REAL(fny),
-		      FTN_REAL(fnz),
-		      FTN_INTEGER(fdlen),
-		      FTN_REAL_ARRAY(fdata1),
-		      FTN_INTEGER(npl),
-		      FTN_INTEGER_ARRAY(ixa),
-		      FTN_INTEGER_ARRAY(edata),
-		      FTN_REAL_ARRAY(pxa),
-                      FTN_REAL_ARRAY(pya),
-                      FTN_REAL_ARRAY(pza),
-		      FTN_INTEGER_ARRAY(vcoli),
-		      FTN_REAL_ARRAY(vcolr),
-		      FTN_REAL_ARRAY(vnxa),
-                      FTN_REAL_ARRAY(vnya),
-                      FTN_REAL_ARRAY(vnza),
-		      FTN_INTEGER(vdn),
-		      FTN_REAL_ARRAY(vdata1)
-		 )
+                       FTN_INTEGER(fflag1),
+                       FTN_INTEGER(eflag1),
+                       FTN_INTEGER(vflag1),
+                       FTN_INTEGER(colr_type1),
+                       FTN_INTEGER(ncc1),
+                       FTN_INTEGER(fcoli1),
+                       FTN_REAL_ARRAY(fcolr),
+                       FTN_REAL(fnx),
+                       FTN_REAL(fny),
+                       FTN_REAL(fnz),
+                       FTN_INTEGER(fdlen),
+                       FTN_REAL_ARRAY(fdata1),
+                       FTN_INTEGER(npl),
+                       FTN_INTEGER_ARRAY(ixa),
+                       FTN_INTEGER_ARRAY(edata),
+                       FTN_REAL_ARRAY(pxa),
+                       FTN_REAL_ARRAY(pya),
+                       FTN_REAL_ARRAY(pza),
+                       FTN_INTEGER_ARRAY(vcoli),
+                       FTN_REAL_ARRAY(vcolr),
+                       FTN_REAL_ARRAY(vnxa),
+                       FTN_REAL_ARRAY(vnya),
+                       FTN_REAL_ARRAY(vnza),
+                       FTN_INTEGER(vdn),
+                       FTN_REAL_ARRAY(vdata1)
+                       )
 {
-   Pint fflag = FTN_INTEGER_GET(fflag1);
-   Pint eflag = FTN_INTEGER_GET(eflag1);
-   Pint vflag = FTN_INTEGER_GET(vflag1);
-   Pint colr_type = FTN_INTEGER_GET(colr_type1);
-   Pint ncc = FTN_INTEGER_GET(ncc1);
-   Pint nfa = FTN_INTEGER_GET(npl);
+  Pint fflag = FTN_INTEGER_GET(fflag1);
+  Pint eflag = FTN_INTEGER_GET(eflag1);
+  Pint vflag = FTN_INTEGER_GET(vflag1);
+  Pint colr_type = FTN_INTEGER_GET(colr_type1);
+  Pint ncc = FTN_INTEGER_GET(ncc1);
+  Pint nfa = FTN_INTEGER_GET(npl);
 
-   Phg_args_add_el args;
-   Pint i, j;
-   unsigned facet_size, vertex_size;
-   Pint *data;
-   char *tp;
-   Pint num_vertices;
-   Ppoint3 vbuffer[MAX_ARRAY_SIZE];
-   Pptco3   cbuffer[MAX_ARRAY_SIZE];
-   Pptnorm3 nbuffer[MAX_ARRAY_SIZE];
-   Pptconorm3 cnbuffer[MAX_ARRAY_SIZE];
+  Phg_args_add_el args;
+  Pint i, j;
+  unsigned facet_size, vertex_size;
+  Pint *data;
+  char *tp;
+  Pint num_vertices;
+  Ppoint3 vbuffer[MAX_ARRAY_SIZE];
+  Pptco3   cbuffer[MAX_ARRAY_SIZE];
+  Pptnorm3 nbuffer[MAX_ARRAY_SIZE];
+  Pptconorm3 cnbuffer[MAX_ARRAY_SIZE];
 
-   Pcoval coval;
-   Pvec3 vec3;
-   Pconorm3 conorm;
+  Pcoval coval;
+  Pvec3 vec3;
+  Pconorm3 conorm;
 
 #ifdef DEBUG
   printf("DEBUG: PFAS3D called. NFA is set to %d\n", nfa);
 #endif
-   if (phg_entry_check(PHG_ERH, 0, Pfn_fill_area_set3_data)) {
-     if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
-       ERR_REPORT(PHG_ERH, ERR5);
-     }
-     else {
-       switch (fflag) {
-       case PFACET_COLOUR:
-	 facet_size = sizeof(Pcoval);
-	 break;
+  if (phg_entry_check(PHG_ERH, 0, Pfn_fill_area_set3_data)) {
+    if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
+      ERR_REPORT(PHG_ERH, ERR5);
+    }
+    else {
+      switch (fflag) {
+      case PFACET_COLOUR:
+        facet_size = sizeof(Pcoval);
+        break;
 
-       case PFACET_NORMAL:
-	 facet_size = sizeof(Pvec3);
-	 break;
+      case PFACET_NORMAL:
+        facet_size = sizeof(Pvec3);
+        break;
 
-       case PFACET_COLOUR_NORMAL:
-	 facet_size = sizeof(Pconorm3);
-	 break;
+      case PFACET_COLOUR_NORMAL:
+        facet_size = sizeof(Pconorm3);
+        break;
 
-       default:
-	 facet_size = 0;
-	 break;
-       }
-       switch (vflag) {
-       case PVERT_COORD:
-	 vertex_size = sizeof(Ppoint3);
-	 break;
+      default:
+        facet_size = 0;
+        break;
+      }
+      switch (vflag) {
+      case PVERT_COORD:
+        vertex_size = sizeof(Ppoint3);
+        break;
 
-       case PVERT_COORD_COLOUR:
-	 vertex_size = sizeof(Pptco3);
-	 break;
+      case PVERT_COORD_COLOUR:
+        vertex_size = sizeof(Pptco3);
+        break;
 
-       case PVERT_COORD_NORMAL:
-	 vertex_size = sizeof(Pptnorm3);
-	 break;
+      case PVERT_COORD_NORMAL:
+        vertex_size = sizeof(Pptnorm3);
+        break;
 
-       case PVERT_COORD_COLOUR_NORMAL:
-	 vertex_size = sizeof(Pptconorm3);
-	 break;
+      case PVERT_COORD_COLOUR_NORMAL:
+        vertex_size = sizeof(Pptconorm3);
+        break;
 
-       default:
-	 vertex_size = 0;
-	 break;
-       }
-       args.el_type = PELEM_FILL_AREA_SET3_DATA;
-       args.el_size = 5 * sizeof(Pint) + facet_size;
+      default:
+        vertex_size = 0;
+        break;
+      }
+      args.el_type = PELEM_FILL_AREA_SET3_DATA;
+      args.el_size = 5 * sizeof(Pint) + facet_size;
 
-       if (eflag == PEDGE_VISIBILITY) {
-	 for (i = 0; i < nfa; i++) {
-	   args.el_size += sizeof(Pint);   /* Pint num_edges */
-	   args.el_size += ixa[i] * sizeof(Pedge_flag);
-	 }
-       }
+      if (eflag == PEDGE_VISIBILITY) {
+        for (i = 0; i < nfa; i++) {
+          args.el_size += sizeof(Pint);   /* Pint num_edges */
+          args.el_size += ixa[i] * sizeof(Pedge_flag);
+        }
+      }
 
-       for (i = 0; i < nfa; i++) {
-	 args.el_size += sizeof(Pint);      /* Pint num_vertices */
-	 args.el_size += ixa[i] * vertex_size;
-       }
+      for (i = 0; i < nfa; i++) {
+        args.el_size += sizeof(Pint);      /* Pint num_vertices */
+        args.el_size += ixa[i] * vertex_size;
+      }
 
-       if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-	 ERR_REPORT(PHG_ERH, ERR900);
-       }
-       else {
-	 args.el_data = PHG_SCRATCH.buf;
-	 data = (Pint *) args.el_data;
-	 data[0] = fflag;
-	 data = &data[1];
-	 data[0] = eflag;
-	 data = &data[1];
-	 data[0] = vflag;
-	 data = &data[1];
-	 data[0] = colr_type;
-	 tp = (char *) &data[1];
-	 switch(fflag) {
-	 case PFACET_COLOUR:
-	   coval.ind = FTN_INTEGER_GET(fcoli1);
-	   memcpy(tp, &coval, sizeof(Pcoval));
-	   tp += sizeof(Pcoval);
-	   break;
+      if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
+        ERR_REPORT(PHG_ERH, ERR900);
+      }
+      else {
+        args.el_data = PHG_SCRATCH.buf;
+        data = (Pint *) args.el_data;
+        data[0] = fflag;
+        data = &data[1];
+        data[0] = eflag;
+        data = &data[1];
+        data[0] = vflag;
+        data = &data[1];
+        data[0] = colr_type;
+        tp = (char *) &data[1];
+        switch(fflag) {
+        case PFACET_COLOUR:
+          coval.ind = FTN_INTEGER_GET(fcoli1);
+          memcpy(tp, &coval, sizeof(Pcoval));
+          tp += sizeof(Pcoval);
+          break;
 
-	 case PFACET_NORMAL:
-	   vec3.delta_x = FTN_REAL_ARRAY_GET(fcolr, 0);
-	   vec3.delta_y = FTN_REAL_ARRAY_GET(fcolr, 1);
-	   vec3.delta_z = FTN_REAL_ARRAY_GET(fcolr, 2);
-	   memcpy(tp, &vec3, sizeof(Pvec3));
-	   tp += sizeof(Pvec3);
-	   break;
+        case PFACET_NORMAL:
+          vec3.delta_x = FTN_REAL_ARRAY_GET(fcolr, 0);
+          vec3.delta_y = FTN_REAL_ARRAY_GET(fcolr, 1);
+          vec3.delta_z = FTN_REAL_ARRAY_GET(fcolr, 2);
+          memcpy(tp, &vec3, sizeof(Pvec3));
+          tp += sizeof(Pvec3);
+          break;
 
-	 case PFACET_COLOUR_NORMAL:
-	   conorm.colr.ind = FTN_INTEGER_GET(fcoli1);
-	   conorm.norm.delta_x = FTN_REAL_GET(fnx);
-	   conorm.norm.delta_y = FTN_REAL_GET(fny);
-	   conorm.norm.delta_z = FTN_REAL_GET(fnz);
-	   memcpy(tp, &conorm, sizeof(Pconorm3));
-	   tp += sizeof(Pconorm3);
-	   break;
+        case PFACET_COLOUR_NORMAL:
+          conorm.colr.ind = FTN_INTEGER_GET(fcoli1);
+          conorm.norm.delta_x = FTN_REAL_GET(fnx);
+          conorm.norm.delta_y = FTN_REAL_GET(fny);
+          conorm.norm.delta_z = FTN_REAL_GET(fnz);
+          memcpy(tp, &conorm, sizeof(Pconorm3));
+          tp += sizeof(Pconorm3);
+          break;
 
-	 default:
-	   break;
-	 }
+        default:
+          break;
+        }
 
-	 data = (Pint *) tp;
-	 data[0] = nfa;
-	 tp = (char *) &data[1];
+        data = (Pint *) tp;
+        data[0] = nfa;
+        tp = (char *) &data[1];
 
-	 if (eflag == PEDGE_VISIBILITY) {
-	   for (i = 0; i < nfa; i++) {
-	     num_vertices = ixa[i];
-	     data = (Pint *) tp;
-	     data[0] = num_vertices;
-	     tp = (char *) &data[1];
-	     memcpy(tp, &edata[0],
-		    sizeof(Pedge_flag) * num_vertices);
-	     tp += sizeof(Pedge_flag) * num_vertices;
-	   }
-	 }
-	 for (i = 0; i < nfa; i++) {
-	   num_vertices = ixa[i];
-	   data = (Pint *) tp;
-	   data[0] = num_vertices;
-	   tp = (char *) &data[1];
+        if (eflag == PEDGE_VISIBILITY) {
+          for (i = 0; i < nfa; i++) {
+            num_vertices = ixa[i];
+            data = (Pint *) tp;
+            data[0] = num_vertices;
+            tp = (char *) &data[1];
+            memcpy(tp, &edata[0],
+                   sizeof(Pedge_flag) * num_vertices);
+            tp += sizeof(Pedge_flag) * num_vertices;
+          }
+        }
+        for (i = 0; i < nfa; i++) {
+          num_vertices = ixa[i];
+          data = (Pint *) tp;
+          data[0] = num_vertices;
+          tp = (char *) &data[1];
 
-	   switch (vflag) {
-	   case PVERT_COORD:
-	     for (j=0; j<num_vertices; j++){
-	       vbuffer[j].x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
-	       vbuffer[j].y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
-	       vbuffer[j].z = FTN_REAL_ARRAY_GET(pza, j+num_vertices*i);
-	     }
-	     memcpy(tp, &vbuffer[0],
-		    num_vertices * sizeof(Ppoint3));
-	     tp += num_vertices * sizeof(Ppoint3);
-	     break;
+          switch (vflag) {
+          case PVERT_COORD:
+            for (j=0; j<num_vertices; j++){
+              vbuffer[j].x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
+              vbuffer[j].y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
+              vbuffer[j].z = FTN_REAL_ARRAY_GET(pza, j+num_vertices*i);
+            }
+            memcpy(tp, &vbuffer[0],
+                   num_vertices * sizeof(Ppoint3));
+            tp += num_vertices * sizeof(Ppoint3);
+            break;
 
-	   case PVERT_COORD_COLOUR:
-	     for (j=0; j<num_vertices; j++){
-	       cbuffer[j].colr.ind = FTN_INTEGER_ARRAY_GET(vcoli, j+num_vertices*i);
-	       cbuffer[j].point.x  = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
-	       cbuffer[j].point.y  = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
-	       cbuffer[j].point.z  = FTN_REAL_ARRAY_GET(pza, j+num_vertices*i);
-	     }
-	     memcpy(tp, &cbuffer[0],
-		    num_vertices * sizeof(Pptco3));
-	     tp += num_vertices * sizeof(Pptco3);
-	     break;
+          case PVERT_COORD_COLOUR:
+            for (j=0; j<num_vertices; j++){
+              cbuffer[j].colr.ind = FTN_INTEGER_ARRAY_GET(vcoli, j+num_vertices*i);
+              cbuffer[j].point.x  = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
+              cbuffer[j].point.y  = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
+              cbuffer[j].point.z  = FTN_REAL_ARRAY_GET(pza, j+num_vertices*i);
+            }
+            memcpy(tp, &cbuffer[0],
+                   num_vertices * sizeof(Pptco3));
+            tp += num_vertices * sizeof(Pptco3);
+            break;
 
-	   case PVERT_COORD_NORMAL:
-	     for (j=0; j<num_vertices; j++){
-	       nbuffer[j].point.x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
-	       nbuffer[j].point.y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
-	       nbuffer[j].point.z = FTN_REAL_ARRAY_GET(pza, j+num_vertices*i);
-	       nbuffer[j].norm.delta_x = FTN_REAL_ARRAY_GET(vnxa, j+num_vertices*i);
-	       nbuffer[j].norm.delta_y = FTN_REAL_ARRAY_GET(vnya, j+num_vertices*i);
-	       nbuffer[j].norm.delta_z = FTN_REAL_ARRAY_GET(vnza, j+num_vertices*i);
-	     }
-	     memcpy(tp, &nbuffer[0],
-		    num_vertices * sizeof(Pptnorm3));
-	     tp += num_vertices * sizeof(Pptnorm3);
-	     break;
+          case PVERT_COORD_NORMAL:
+            for (j=0; j<num_vertices; j++){
+              nbuffer[j].point.x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
+              nbuffer[j].point.y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
+              nbuffer[j].point.z = FTN_REAL_ARRAY_GET(pza, j+num_vertices*i);
+              nbuffer[j].norm.delta_x = FTN_REAL_ARRAY_GET(vnxa, j+num_vertices*i);
+              nbuffer[j].norm.delta_y = FTN_REAL_ARRAY_GET(vnya, j+num_vertices*i);
+              nbuffer[j].norm.delta_z = FTN_REAL_ARRAY_GET(vnza, j+num_vertices*i);
+            }
+            memcpy(tp, &nbuffer[0],
+                   num_vertices * sizeof(Pptnorm3));
+            tp += num_vertices * sizeof(Pptnorm3);
+            break;
 
-	   case PVERT_COORD_COLOUR_NORMAL:
-	     for (j=0; j<num_vertices; j++){
-	       cnbuffer[j].colr.ind    = FTN_INTEGER_ARRAY_GET(vcoli, j+num_vertices*i);
-	       cnbuffer[j].point.x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
-	       cnbuffer[j].point.y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
-	       cnbuffer[j].point.z = FTN_REAL_ARRAY_GET(pza, j+num_vertices*i);
+          case PVERT_COORD_COLOUR_NORMAL:
+            for (j=0; j<num_vertices; j++){
+              cnbuffer[j].colr.ind    = FTN_INTEGER_ARRAY_GET(vcoli, j+num_vertices*i);
+              cnbuffer[j].point.x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
+              cnbuffer[j].point.y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
+              cnbuffer[j].point.z = FTN_REAL_ARRAY_GET(pza, j+num_vertices*i);
 
-	       cnbuffer[j].norm.delta_x = FTN_REAL_ARRAY_GET(vnxa, j+num_vertices*i);
-	       cnbuffer[j].norm.delta_y = FTN_REAL_ARRAY_GET(vnya, j+num_vertices*i);
-	       cnbuffer[j].norm.delta_z = FTN_REAL_ARRAY_GET(vnza, j+num_vertices*i);
-	     }
-	     memcpy(tp, &cnbuffer[0],
-		    num_vertices * sizeof(Pptconorm3));
-	     tp += num_vertices * sizeof(Pptconorm3);
-	     break;
+              cnbuffer[j].norm.delta_x = FTN_REAL_ARRAY_GET(vnxa, j+num_vertices*i);
+              cnbuffer[j].norm.delta_y = FTN_REAL_ARRAY_GET(vnya, j+num_vertices*i);
+              cnbuffer[j].norm.delta_z = FTN_REAL_ARRAY_GET(vnza, j+num_vertices*i);
+            }
+            memcpy(tp, &cnbuffer[0],
+                   num_vertices * sizeof(Pptconorm3));
+            tp += num_vertices * sizeof(Pptconorm3);
+            break;
 
-	   default:
-	     break;
-	   }
-	 }
-	 phg_add_el(PHG_CSS, &args);
-       }
-     }
-   }
+          default:
+            break;
+          }
+        }
+        phg_add_el(PHG_CSS, &args);
+      }
+    }
+  }
 }
 
 /*******************************************************************************
  * pfas3d
  *
  * DESCR:       fill area set
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pfasd)(
-		      FTN_INTEGER(fflag1),
-		      FTN_INTEGER(eflag1),
-		      FTN_INTEGER(vflag1),
-		      FTN_INTEGER(colr_type1),
-		      FTN_INTEGER(ncc1),
-		      FTN_INTEGER(fcoli1),
-		      FTN_REAL_ARRAY(fcolr),
-		      FTN_REAL(fnx),
-		      FTN_REAL(fny),
-		      FTN_REAL(fnz), //Facet normal data(MC)
-		      FTN_INTEGER(fdlen),
-		      FTN_REAL_ARRAY(fdata), // fdata[fdlen]
-		      FTN_INTEGER(npl), // Number of points list
-		      FTN_INTEGER_ARRAY(ixa), // ixa[npl] end indices for point lists
-		      FTN_INTEGER_ARRAY(edata), // edge data
-		      FTN_REAL_ARRAY(pxa),
-		      FTN_REAL_ARRAY(pya),
-		      FTN_INTEGER_ARRAY(vcoli),
-		      FTN_REAL_ARRAY(vcolr),
-		      FTN_REAL_ARRAY(vnxa),
-		      FTN_REAL_ARRAY(vnya),
-		      FTN_REAL_ARRAY(vnza),
-		      FTN_INTEGER(vdn),
-		      FTN_REAL_ARRAY(vdata)
-		      )
+                      FTN_INTEGER(fflag1),
+                      FTN_INTEGER(eflag1),
+                      FTN_INTEGER(vflag1),
+                      FTN_INTEGER(colr_type1),
+                      FTN_INTEGER(ncc1),
+                      FTN_INTEGER(fcoli1),
+                      FTN_REAL_ARRAY(fcolr),
+                      FTN_REAL(fnx),
+                      FTN_REAL(fny),
+                      FTN_REAL(fnz), //Facet normal data(MC)
+                      FTN_INTEGER(fdlen),
+                      FTN_REAL_ARRAY(fdata), // fdata[fdlen]
+                      FTN_INTEGER(npl), // Number of points list
+                      FTN_INTEGER_ARRAY(ixa), // ixa[npl] end indices for point lists
+                      FTN_INTEGER_ARRAY(edata), // edge data
+                      FTN_REAL_ARRAY(pxa),
+                      FTN_REAL_ARRAY(pya),
+                      FTN_INTEGER_ARRAY(vcoli),
+                      FTN_REAL_ARRAY(vcolr),
+                      FTN_REAL_ARRAY(vnxa),
+                      FTN_REAL_ARRAY(vnya),
+                      FTN_REAL_ARRAY(vnza),
+                      FTN_INTEGER(vdn),
+                      FTN_REAL_ARRAY(vdata)
+                      )
 {
   Pint fflag = FTN_INTEGER_GET(fflag1);
   Pint eflag = FTN_INTEGER_GET(eflag1);
@@ -487,178 +479,177 @@ FTN_SUBROUTINE(pfasd)(
     else {
       switch (fflag) {
       case PFACET_COLOUR:
-	facet_size = sizeof(Pcoval);
-	break;
+        facet_size = sizeof(Pcoval);
+        break;
 
       case PFACET_NORMAL:
-	facet_size = sizeof(Pvec3);
-	break;
+        facet_size = sizeof(Pvec3);
+        break;
 
       case PFACET_COLOUR_NORMAL:
-	facet_size = sizeof(Pconorm3);
-	break;
+        facet_size = sizeof(Pconorm3);
+        break;
 
       default:
-	facet_size = 0;
-	break;
+        facet_size = 0;
+        break;
       }
       switch (vflag) {
       case PVERT_COORD:
-	vertex_size = sizeof(Ppoint3);
-	break;
+        vertex_size = sizeof(Ppoint3);
+        break;
 
       case PVERT_COORD_COLOUR:
-	vertex_size = sizeof(Pptco3);
-	break;
+        vertex_size = sizeof(Pptco3);
+        break;
 
       case PVERT_COORD_NORMAL:
-	vertex_size = sizeof(Pptnorm3);
-	break;
+        vertex_size = sizeof(Pptnorm3);
+        break;
 
       case PVERT_COORD_COLOUR_NORMAL:
-	vertex_size = sizeof(Pptconorm3);
-	break;
+        vertex_size = sizeof(Pptconorm3);
+        break;
 
       default:
-	vertex_size = 0;
-	break;
+        vertex_size = 0;
+        break;
       }
       args.el_type = PELEM_FILL_AREA_SET3_DATA;
       args.el_size = 5 * sizeof(Pint) + facet_size;
 
       if (eflag == PEDGE_VISIBILITY) {
-	for (i = 0; i < nfa; i++) {
-	  args.el_size += sizeof(Pint);   /* Pint num_edges */
-	  args.el_size += ixa[i] * sizeof(Pedge_flag);
-	}
+        for (i = 0; i < nfa; i++) {
+          args.el_size += sizeof(Pint);   /* Pint num_edges */
+          args.el_size += ixa[i] * sizeof(Pedge_flag);
+        }
       }
 
       for (i = 0; i < nfa; i++) {
-	args.el_size += sizeof(Pint);      /* Pint num_vertices */
-	args.el_size += ixa[i] * vertex_size;
+        args.el_size += sizeof(Pint);      /* Pint num_vertices */
+        args.el_size += ixa[i] * vertex_size;
       }
 
       if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-	ERR_REPORT(PHG_ERH, ERR900);
+        ERR_REPORT(PHG_ERH, ERR900);
       }
       else {
-	args.el_data = PHG_SCRATCH.buf;
-	data = (Pint *) args.el_data;
-	data[0] = fflag;
-	data = &data[1];
-	data[0] = eflag;
-	data = &data[1];
-	data[0] = vflag;
-	data = &data[1];
-	data[0] = colr_type;
-	tp = (char *) &data[1];
-	switch(fflag) {
-	case PFACET_COLOUR:
-	  coval.ind = FTN_INTEGER_GET(fcoli1);//Facet colour index
-	  memcpy(tp, &coval, sizeof(Pcoval));
-	  tp += sizeof(Pcoval);
-	  break;
+        args.el_data = PHG_SCRATCH.buf;
+        data = (Pint *) args.el_data;
+        data[0] = fflag;
+        data = &data[1];
+        data[0] = eflag;
+        data = &data[1];
+        data[0] = vflag;
+        data = &data[1];
+        data[0] = colr_type;
+        tp = (char *) &data[1];
+        switch(fflag) {
+        case PFACET_COLOUR:
+          coval.ind = FTN_INTEGER_GET(fcoli1);//Facet colour index
+          memcpy(tp, &coval, sizeof(Pcoval));
+          tp += sizeof(Pcoval);
+          break;
 
-	case PFACET_NORMAL:
-	  vec3.delta_x = FTN_REAL_ARRAY_GET(fcolr, 0);//Facet colour values
-	  vec3.delta_y = FTN_REAL_ARRAY_GET(fcolr, 1);
-	  vec3.delta_z = FTN_REAL_ARRAY_GET(fcolr, 2);
-	  memcpy(tp, &vec3, sizeof(Pvec3));
-	  tp += sizeof(Pvec3);
-	  break;
+        case PFACET_NORMAL:
+          vec3.delta_x = FTN_REAL_ARRAY_GET(fcolr, 0);//Facet colour values
+          vec3.delta_y = FTN_REAL_ARRAY_GET(fcolr, 1);
+          vec3.delta_z = FTN_REAL_ARRAY_GET(fcolr, 2);
+          memcpy(tp, &vec3, sizeof(Pvec3));
+          tp += sizeof(Pvec3);
+          break;
 
-	case PFACET_COLOUR_NORMAL:
-	  conorm.colr.ind = FTN_INTEGER_GET(fcoli1);
-	  conorm.norm.delta_x = FTN_REAL_GET(fnx);
-	  conorm.norm.delta_y = FTN_REAL_GET(fny);
-	  conorm.norm.delta_z = FTN_REAL_GET(fnz);
-	  memcpy(tp, &conorm, sizeof(Pconorm3));
-	  tp += sizeof(Pconorm3);
-	  break;
+        case PFACET_COLOUR_NORMAL:
+          conorm.colr.ind = FTN_INTEGER_GET(fcoli1);
+          conorm.norm.delta_x = FTN_REAL_GET(fnx);
+          conorm.norm.delta_y = FTN_REAL_GET(fny);
+          conorm.norm.delta_z = FTN_REAL_GET(fnz);
+          memcpy(tp, &conorm, sizeof(Pconorm3));
+          tp += sizeof(Pconorm3);
+          break;
 
-	default:
-	  break;
-	}
+        default:
+          break;
+        }
 
-	data = (Pint *) tp;
-	data[0] = nfa;
-	tp = (char *) &data[1];
-	if (eflag == PEDGE_VISIBILITY) {
-	  for (i = 0; i < nfa; i++) {
-	    num_vertices = ixa[i];
-	    data = (Pint *) tp;
-	    data[0] = num_vertices;
-	    tp = (char *) &data[1];
-	    memcpy(tp, &edata[0],
-		   sizeof(Pedge_flag) * num_vertices);
-	    tp += sizeof(Pedge_flag) * num_vertices;
-	  }
-	}
-	for (i = 0; i < nfa; i++) {
-	  num_vertices = ixa[i];
-	  data = (Pint *) tp;
-	  data[0] = num_vertices;
-	  tp = (char *) &data[1];
+        data = (Pint *) tp;
+        data[0] = nfa;
+        tp = (char *) &data[1];
+        if (eflag == PEDGE_VISIBILITY) {
+          for (i = 0; i < nfa; i++) {
+            num_vertices = ixa[i];
+            data = (Pint *) tp;
+            data[0] = num_vertices;
+            tp = (char *) &data[1];
+            memcpy(tp, &edata[0],
+                   sizeof(Pedge_flag) * num_vertices);
+            tp += sizeof(Pedge_flag) * num_vertices;
+          }
+        }
+        for (i = 0; i < nfa; i++) {
+          num_vertices = ixa[i];
+          data = (Pint *) tp;
+          data[0] = num_vertices;
+          tp = (char *) &data[1];
 
-	  switch (vflag) {
-	  case PVERT_COORD:
-	    // here
-	    for (j=0; j<num_vertices; j++){
-	      vbuffer[j].x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
-	      vbuffer[j].y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
-	      vbuffer[j].z = 0.0;
-	    }
-	    memcpy(tp, &vbuffer[0],
-		   num_vertices * sizeof(Ppoint3));
-	    tp += num_vertices * sizeof(Ppoint3);
-	    break;
+          switch (vflag) {
+          case PVERT_COORD:
+            for (j=0; j<num_vertices; j++){
+              vbuffer[j].x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
+              vbuffer[j].y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
+              vbuffer[j].z = 0.0;
+            }
+            memcpy(tp, &vbuffer[0],
+                   num_vertices * sizeof(Ppoint3));
+            tp += num_vertices * sizeof(Ppoint3);
+            break;
 
-	  case PVERT_COORD_COLOUR:
-	    for (j=0; j<num_vertices; j++){
-	      cbuffer[j].colr.ind = FTN_INTEGER_ARRAY_GET(vcoli, j+num_vertices*i);
-	      cbuffer[j].point.x  = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
-	      cbuffer[j].point.y  = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
-	      cbuffer[j].point.z  = 0.0;
-	    }
-	    memcpy(tp, &cbuffer[0],
-		   num_vertices * sizeof(Pptco3));
-	    tp += num_vertices * sizeof(Pptco3);
-	    break;
+          case PVERT_COORD_COLOUR:
+            for (j=0; j<num_vertices; j++){
+              cbuffer[j].colr.ind = FTN_INTEGER_ARRAY_GET(vcoli, j+num_vertices*i);
+              cbuffer[j].point.x  = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
+              cbuffer[j].point.y  = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
+              cbuffer[j].point.z  = 0.0;
+            }
+            memcpy(tp, &cbuffer[0],
+                   num_vertices * sizeof(Pptco3));
+            tp += num_vertices * sizeof(Pptco3);
+            break;
 
-	  case PVERT_COORD_NORMAL:
-	    for (j=0; j<num_vertices; j++){
-	      nbuffer[j].point.x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
-	      nbuffer[j].point.y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
-	      nbuffer[j].point.z = 0.0;
-	      nbuffer[j].norm.delta_x = FTN_REAL_ARRAY_GET(vnxa, j+num_vertices*i);
-	      nbuffer[j].norm.delta_y = FTN_REAL_ARRAY_GET(vnya, j+num_vertices*i);
-	      nbuffer[j].norm.delta_z = FTN_REAL_ARRAY_GET(vnza, j+num_vertices*i);
-	    }
-	    memcpy(tp, &nbuffer[0],
-		   num_vertices * sizeof(Pptnorm3));
-	    tp += num_vertices * sizeof(Pptnorm3);
-	    break;
+          case PVERT_COORD_NORMAL:
+            for (j=0; j<num_vertices; j++){
+              nbuffer[j].point.x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
+              nbuffer[j].point.y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
+              nbuffer[j].point.z = 0.0;
+              nbuffer[j].norm.delta_x = FTN_REAL_ARRAY_GET(vnxa, j+num_vertices*i);
+              nbuffer[j].norm.delta_y = FTN_REAL_ARRAY_GET(vnya, j+num_vertices*i);
+              nbuffer[j].norm.delta_z = FTN_REAL_ARRAY_GET(vnza, j+num_vertices*i);
+            }
+            memcpy(tp, &nbuffer[0],
+                   num_vertices * sizeof(Pptnorm3));
+            tp += num_vertices * sizeof(Pptnorm3);
+            break;
 
-	  case PVERT_COORD_COLOUR_NORMAL:
-	    for (j=0; j<num_vertices; j++){
-	      cnbuffer[j].colr.ind    = FTN_INTEGER_ARRAY_GET(vcoli, j+num_vertices*i);
-	      cnbuffer[j].point.x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
-	      cnbuffer[j].point.y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
-	      cnbuffer[j].point.z = 0.0;
-	      cnbuffer[j].norm.delta_x = FTN_REAL_ARRAY_GET(vnxa, j+num_vertices*i);
-	      cnbuffer[j].norm.delta_y = FTN_REAL_ARRAY_GET(vnya, j+num_vertices*i);
-	      cnbuffer[j].norm.delta_z = FTN_REAL_ARRAY_GET(vnza, j+num_vertices*i);
-	    }
-	    memcpy(tp, &cnbuffer[0],
-		   num_vertices * sizeof(Pptconorm3));
-	    tp += num_vertices * sizeof(Pptconorm3);
-	    break;
+          case PVERT_COORD_COLOUR_NORMAL:
+            for (j=0; j<num_vertices; j++){
+              cnbuffer[j].colr.ind    = FTN_INTEGER_ARRAY_GET(vcoli, j+num_vertices*i);
+              cnbuffer[j].point.x = FTN_REAL_ARRAY_GET(pxa, j+num_vertices*i);
+              cnbuffer[j].point.y = FTN_REAL_ARRAY_GET(pya, j+num_vertices*i);
+              cnbuffer[j].point.z = 0.0;
+              cnbuffer[j].norm.delta_x = FTN_REAL_ARRAY_GET(vnxa, j+num_vertices*i);
+              cnbuffer[j].norm.delta_y = FTN_REAL_ARRAY_GET(vnya, j+num_vertices*i);
+              cnbuffer[j].norm.delta_z = FTN_REAL_ARRAY_GET(vnza, j+num_vertices*i);
+            }
+            memcpy(tp, &cnbuffer[0],
+                   num_vertices * sizeof(Pptconorm3));
+            tp += num_vertices * sizeof(Pptconorm3);
+            break;
 
-	  default:
-	    break;
-	  }
-	}
-	phg_add_el(PHG_CSS, &args);
+          default:
+            break;
+          }
+        }
+        phg_add_el(PHG_CSS, &args);
       }
     }
   }
@@ -668,12 +659,11 @@ FTN_SUBROUTINE(pfasd)(
  * psfcm
  *
  * DESCR:       set facet culling mode
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psfcm)(
-		 FTN_INTEGER(imode)
-		 )
+                      FTN_INTEGER(imode)
+                      )
 {
   Pint cul_mode = FTN_INTEGER_GET(imode);
   pset_face_cull_mode(cul_mode);
@@ -683,12 +673,11 @@ FTN_SUBROUTINE(psfcm)(
  * psfdm
  *
  * DESCR:       set facet distinguishing mode
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psfdm)(
-		 FTN_INTEGER(mode)
-		 )
+                      FTN_INTEGER(mode)
+                      )
 {
   Pint dist_mode = FTN_INTEGER_GET(mode);
   pset_face_disting_mode(dist_mode);
@@ -698,12 +687,12 @@ FTN_SUBROUTINE(psfdm)(
  * psalch
  *
  * DESCR:       set alpha channel
- * RETURNS:	N/A
+ * RETURNS:   N/A
+ * NOTE: Extemsion
  */
-
 FTN_SUBROUTINE(psalch)(
-		 FTN_REAL(alpha_channel)
-		 )
+                       FTN_REAL(alpha_channel)
+                       )
 {
   Pfloat alpha = FTN_REAL_GET(alpha_channel);
   pset_alpha_channel(alpha);
@@ -713,12 +702,11 @@ FTN_SUBROUTINE(psalch)(
  * psbis
  *
  * DESCR:       set back interior style
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psbis)(
-                       FTN_INTEGER(istyle)
-                       )
+                      FTN_INTEGER(istyle)
+                      )
 {
   Pint_style interior_style = (Pint_style) FTN_INTEGER_GET(istyle);
 #ifdef DEBUG
@@ -731,15 +719,14 @@ FTN_SUBROUTINE(psbis)(
  * psbic
  *
  * DESCR:       set back interior color
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psbic)(
-		      FTN_INTEGER(ityp),
-		      FTN_INTEGER(incc),
-		      FTN_INTEGER(icol),
-		      FTN_REAL_ARRAY(rcolr)
-                       )
+                      FTN_INTEGER(ityp),
+                      FTN_INTEGER(incc),
+                      FTN_INTEGER(icol),
+                      FTN_REAL_ARRAY(rcolr)
+                      )
 {
   Pint colr_typ = FTN_INTEGER_GET(ityp);
   Pint colr_ind = FTN_INTEGER_GET(icol);
@@ -769,12 +756,11 @@ FTN_SUBROUTINE(psbic)(
  * psii
  *
  * DESCR:       set interior index
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psii)(
-		 FTN_INTEGER(ii)
-		 )
+                     FTN_INTEGER(ii)
+                     )
 {
   Pint iindex = FTN_INTEGER_GET(ii);
   pset_int_ind(iindex);
@@ -784,13 +770,12 @@ FTN_SUBROUTINE(psii)(
  * pres
  *
  * DESCR:       remove name set
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pres)(
-		 FTN_INTEGER(num),
-		 FTN_INTEGER_ARRAY(set)
-		 )
+                     FTN_INTEGER(num),
+                     FTN_INTEGER_ARRAY(set)
+                     )
 {
   int n;
   Pint_list names;
@@ -803,12 +788,11 @@ FTN_SUBROUTINE(pres)(
  * psisi
  *
  * DESCR:       set interior style index
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psisi)(
-		 FTN_INTEGER(ii)
-		 )
+                      FTN_INTEGER(ii)
+                      )
 {
   Pint iindex = FTN_INTEGER_GET(ii);
   pset_int_style_ind(iindex);

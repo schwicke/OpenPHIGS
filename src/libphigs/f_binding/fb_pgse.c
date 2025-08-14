@@ -32,12 +32,11 @@
  * DESCR:	Extension: set highlighting colour
  * RETURNS:	N/A
  */
-
 FTN_SUBROUTINE(pxshlc)(
-    FTN_INTEGER(ctype),
-    FTN_INTEGER(ncc),
-    FTN_INTEGER(coli),
-    FTN_REAL_ARRAY(colr))
+                       FTN_INTEGER(ctype),
+                       FTN_INTEGER(ncc),
+                       FTN_INTEGER(coli),
+                       FTN_REAL_ARRAY(colr))
 {
 #ifdef DEBUG
   printf("pxshlc: set highlighting color\n");

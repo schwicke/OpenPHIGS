@@ -39,18 +39,17 @@
  *              max display volume size (DC)
  *              max display volume size in raster units
  */
-
 FTN_SUBROUTINE(pqdsp3)(
-		       FTN_INTEGER(wstype),
-		       Pint* err_ind,
-		       Pint * dcunit,
-		       Pfloat * dx,
-		       Pfloat * dy,
-		       Pfloat * dz,
-		       Pint * rx,
-		       Pint * ry,
-		       Pint * rz
-		       ){
+                       FTN_INTEGER(wstype),
+                       Pint* err_ind,
+                       Pint * dcunit,
+                       Pfloat * dx,
+                       Pfloat * dy,
+                       Pfloat * dz,
+                       Pint * rx,
+                       Pint * ry,
+                       Pint * rz
+                       ){
   Pint ws_type = FTN_INTEGER_GET(wstype);
   Pdisp_space_size3 size;
   pinq_disp_space_size3(ws_type, err_ind, &size);

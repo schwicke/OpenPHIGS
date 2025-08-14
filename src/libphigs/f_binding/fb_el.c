@@ -31,57 +31,55 @@
 /*******************************************************************************
  * ppl
  *
- * DESCR:	Creates a new element - Polyline
- * RETURNS:	N/A
+ * DESCR:   Creates a new element - Polyline
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(ppl)(
-   FTN_INTEGER(n),
-   FTN_REAL_ARRAY(pxa),
-   FTN_REAL_ARRAY(pya)
-   )
+                    FTN_INTEGER(n),
+                    FTN_REAL_ARRAY(pxa),
+                    FTN_REAL_ARRAY(pya)
+                    )
 {
-   Phg_args_add_el args;
-   Pint *data;
-   Pint i, num_points;
-   Ppoint *points;
+  Phg_args_add_el args;
+  Pint *data;
+  Pint i, num_points;
+  Ppoint *points;
 #ifdef DEBUG
   printf("DEBUG: PPL create poly line\n");
 #endif
 
-   if (phg_entry_check(PHG_ERH, ERR5, Pfn_polyline)) {
-      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
-         ERR_REPORT(PHG_ERH, ERR5);
+  if (phg_entry_check(PHG_ERH, ERR5, Pfn_polyline)) {
+    if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
+      ERR_REPORT(PHG_ERH, ERR5);
+    }
+    else {
+      num_points = FTN_INTEGER_GET(n);
+      args.el_type = PELEM_POLYLINE;
+      args.el_size = sizeof(Pint) + sizeof(Ppoint) * num_points;
+      if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
+        ERR_REPORT(PHG_ERH, ERR900);
       }
       else {
-         num_points = FTN_INTEGER_GET(n);
-         args.el_type = PELEM_POLYLINE;
-         args.el_size = sizeof(Pint) + sizeof(Ppoint) * num_points;
-         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-            ERR_REPORT(PHG_ERH, ERR900);
-         }
-         else {
-            args.el_data = PHG_SCRATCH.buf;
-            data = (Pint *) args.el_data;
-            data[0] = num_points;
-            points = (Ppoint *) &data[1];
-            for (i = 0; i < num_points; i++) {
-               points[i].x = FTN_REAL_ARRAY_GET(pxa, i);
-               points[i].y = FTN_REAL_ARRAY_GET(pya, i);
-            }
-            phg_add_el(PHG_CSS, &args);
-         }
+        args.el_data = PHG_SCRATCH.buf;
+        data = (Pint *) args.el_data;
+        data[0] = num_points;
+        points = (Ppoint *) &data[1];
+        for (i = 0; i < num_points; i++) {
+          points[i].x = FTN_REAL_ARRAY_GET(pxa, i);
+          points[i].y = FTN_REAL_ARRAY_GET(pya, i);
+        }
+        phg_add_el(PHG_CSS, &args);
       }
-   }
+    }
+  }
 }
 
 /*******************************************************************************
  * ppl3
  *
- * DESCR:	Creates a new element - Polyline 3
- * RETURNS:	N/A
+ * DESCR:   Creates a new element - Polyline 3
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(ppl3)(
                      FTN_INTEGER(n),
                      FTN_REAL_ARRAY(pxa),
@@ -130,10 +128,9 @@ FTN_SUBROUTINE(ppl3)(
  * DESCR:       Creates a new element - Line Color Attribute
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(psplci)(
-		       FTN_INTEGER(coli)
-		       )
+                       FTN_INTEGER(coli)
+                       )
 {
   Pint colr_ind = FTN_INTEGER_GET(coli);
 #ifdef DEBUG
@@ -148,10 +145,9 @@ FTN_SUBROUTINE(psplci)(
  * DESCR:       Creates a new element - Line Type Attribute
  * RETURNS:     N/A
  */
-
 FTN_SUBROUTINE(psln)(
-   FTN_INTEGER(ltype)
-   )
+                     FTN_INTEGER(ltype)
+                     )
 {
   Pint linetype = FTN_INTEGER_GET(ltype);
 #ifdef DEBUG
@@ -168,8 +164,8 @@ FTN_SUBROUTINE(psln)(
  */
 
 FTN_SUBROUTINE(pslwsc)(
-		       FTN_REAL(lwidth)
-		       )
+                       FTN_REAL(lwidth)
+                       )
 {
   Phg_args_add_el args;
   Pfloat linewidth = FTN_REAL_GET(lwidth);
@@ -187,40 +183,40 @@ FTN_SUBROUTINE(pslwsc)(
  */
 
 FTN_SUBROUTINE(pschh)(
-   FTN_REAL(chh)
-   )
+                      FTN_REAL(chh)
+                      )
 {
-   Phg_args_add_el args;
-   Pfloat char_ht;
+  Phg_args_add_el args;
+  Pfloat char_ht;
 #ifdef DEBUG
   printf("DEBUG: PSCHH character height\n");
 #endif
 
-   if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_char_ht)) {
-      if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
-         ERR_REPORT(PHG_ERH, ERR5);
+  if (phg_entry_check(PHG_ERH, ERR5, Pfn_set_char_ht)) {
+    if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
+      ERR_REPORT(PHG_ERH, ERR5);
+    }
+    else {
+      args.el_type = PELEM_CHAR_HT;
+      args.el_size = sizeof(Pfloat);
+      if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
+        ERR_REPORT(PHG_ERH, ERR900);
       }
       else {
-         args.el_type = PELEM_CHAR_HT;
-         args.el_size = sizeof(Pfloat);
-         if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-            ERR_REPORT(PHG_ERH, ERR900);
-         }
-         else {
-            args.el_data = PHG_SCRATCH.buf;
-            char_ht = FTN_REAL_GET(chh);
-            memcpy(args.el_data, &char_ht, args.el_size);
-            phg_add_el(PHG_CSS, &args);
-         }
+        args.el_data = PHG_SCRATCH.buf;
+        char_ht = FTN_REAL_GET(chh);
+        memcpy(args.el_data, &char_ht, args.el_size);
+        phg_add_el(PHG_CSS, &args);
       }
-   }
+    }
+  }
 }
 
 /*******************************************************************************
  * pads
  *
- * DESCR:	add names to set
- * RETURNS:	N/A
+ * DESCR:   add names to set
+ * RETURNS:   N/A
  */
 
 FTN_SUBROUTINE(pads)(
@@ -244,13 +240,12 @@ FTN_SUBROUTINE(pads)(
 /*******************************************************************************
  * psvwi
  *
- * DESCR:	set view index
- * RETURNS:	N/A
+ * DESCR:   set view index
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psvwi)(
-                       FTN_INTEGER(viewi)
-                       )
+                      FTN_INTEGER(viewi)
+                      )
 {
   Pint view_index = FTN_INTEGER_GET(viewi);
 #ifdef DEBUG
@@ -262,13 +257,12 @@ FTN_SUBROUTINE(psvwi)(
 /*******************************************************************************
  * psici
  *
- * DESCR:	set interior colour index
- * RETURNS:	N/A
+ * DESCR:   set interior colour index
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psici)(
-                       FTN_INTEGER(coli)
-                       )
+                      FTN_INTEGER(coli)
+                      )
 {
   Pint colr_ind = FTN_INTEGER_GET(coli);
 #ifdef DEBUG
@@ -280,13 +274,12 @@ FTN_SUBROUTINE(psici)(
 /*******************************************************************************
  * psis
  *
- * DESCR:	set interior style
- * RETURNS:	N/A
+ * DESCR:   set interior style
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psis)(
-                       FTN_INTEGER(ints)
-                       )
+                     FTN_INTEGER(ints)
+                     )
 {
   Pint_style interior_style = (Pint_style) FTN_INTEGER_GET(ints);
 #ifdef DEBUG
@@ -298,10 +291,9 @@ FTN_SUBROUTINE(psis)(
 /*******************************************************************************
  * pschup
  *
- * DESCR:	set character up vector
- * RETURNS:	N/A
+ * DESCR:   set character up vector
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pschup)(
                        FTN_REAL(chux),
                        FTN_REAL(chuy)
@@ -319,8 +311,8 @@ FTN_SUBROUTINE(pschup)(
 /*******************************************************************************
  * psatcu
  *
- * DESCR:	set annotation text character up vector
- * RETURNS:	N/A
+ * DESCR:   set annotation text character up vector
+ * RETURNS:   N/A
  */
 
 FTN_SUBROUTINE(psatcu)(
@@ -340,15 +332,15 @@ FTN_SUBROUTINE(psatcu)(
 /*******************************************************************************
  * pfa
  *
- * DESCR:	fill area
- * RETURNS:	N/A
+ * DESCR:   fill area
+ * RETURNS:   N/A
  */
 
 FTN_SUBROUTINE(pfa)(
-                       FTN_INTEGER(n),
-                       FTN_REAL_ARRAY(pxa),
-                       FTN_REAL_ARRAY(pya)
-                       )
+                    FTN_INTEGER(n),
+                    FTN_REAL_ARRAY(pxa),
+                    FTN_REAL_ARRAY(pya)
+                    )
 {
 #ifdef DEBUG
   printf("DEBUG: PFA pfill area called\n");
@@ -366,18 +358,18 @@ FTN_SUBROUTINE(pfa)(
       args.el_type = PELEM_FILL_AREA;
       args.el_size = sizeof(Pint) + sizeof(Ppoint) * num_points;
       if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-	ERR_REPORT(PHG_ERH, ERR900);
+        ERR_REPORT(PHG_ERH, ERR900);
       }
       else {
-	args.el_data = PHG_SCRATCH.buf;
-	data = (Pint *) args.el_data;
-	data[0] = num_points;
-	point = (Ppoint*) &data[1];
-	for (i=0; i<num_points;i++){
-	  point[i].x = FTN_REAL_ARRAY_GET(pxa, i);
-	  point[i].y = FTN_REAL_ARRAY_GET(pya, i);
-	}
-	phg_add_el(PHG_CSS, &args);
+        args.el_data = PHG_SCRATCH.buf;
+        data = (Pint *) args.el_data;
+        data[0] = num_points;
+        point = (Ppoint*) &data[1];
+        for (i=0; i<num_points;i++){
+          point[i].x = FTN_REAL_ARRAY_GET(pxa, i);
+          point[i].y = FTN_REAL_ARRAY_GET(pya, i);
+        }
+        phg_add_el(PHG_CSS, &args);
       }
     }
   }
@@ -386,16 +378,15 @@ FTN_SUBROUTINE(pfa)(
 /*******************************************************************************
  * pfa
  *
- * DESCR:	fill area 3
- * RETURNS:	N/A
+ * DESCR:   fill area 3
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pfa3)(
-                       FTN_INTEGER(n),
-                       FTN_REAL_ARRAY(pxa),
-                       FTN_REAL_ARRAY(pya),
-                       FTN_REAL_ARRAY(pza)
-                       )
+                     FTN_INTEGER(n),
+                     FTN_REAL_ARRAY(pxa),
+                     FTN_REAL_ARRAY(pya),
+                     FTN_REAL_ARRAY(pza)
+                     )
 {
 #ifdef DEBUG
   printf("DEBUG: PFA3 fill area called\n");
@@ -413,19 +404,19 @@ FTN_SUBROUTINE(pfa3)(
       args.el_type = PELEM_FILL_AREA3;
       args.el_size = sizeof(Pint) + sizeof(Ppoint3) * num_points;
       if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-	ERR_REPORT(PHG_ERH, ERR900);
+        ERR_REPORT(PHG_ERH, ERR900);
       }
       else {
-	args.el_data = PHG_SCRATCH.buf;
-	data = (Pint *) args.el_data;
-	data[0] = num_points;
-	point = (Ppoint3*) &data[1];
-	for (i=0; i<num_points;i++){
-	  point[i].x = FTN_REAL_ARRAY_GET(pxa, i);
-	  point[i].y = FTN_REAL_ARRAY_GET(pya, i);
-	  point[i].z = FTN_REAL_ARRAY_GET(pza, i);
-	}
-	phg_add_el(PHG_CSS, &args);
+        args.el_data = PHG_SCRATCH.buf;
+        data = (Pint *) args.el_data;
+        data[0] = num_points;
+        point = (Ppoint3*) &data[1];
+        for (i=0; i<num_points;i++){
+          point[i].x = FTN_REAL_ARRAY_GET(pxa, i);
+          point[i].y = FTN_REAL_ARRAY_GET(pya, i);
+          point[i].z = FTN_REAL_ARRAY_GET(pza, i);
+        }
+        phg_add_el(PHG_CSS, &args);
       }
     }
   }
@@ -434,13 +425,12 @@ FTN_SUBROUTINE(pfa3)(
 /*******************************************************************************
  * plb
  *
- * DESCR:	label
- * RETURNS:	N/A
+ * DESCR:   label
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(plb)(
-     FTN_INTEGER(label)
-)
+                    FTN_INTEGER(label)
+                    )
 {
   Pint label_id = FTN_INTEGER_GET(label);
 #ifdef DEBUG
@@ -452,13 +442,12 @@ FTN_SUBROUTINE(plb)(
 /*******************************************************************************
  * psedfg
  *
- * DESCR:	set edge flag
- * RETURNS:	N/A
+ * DESCR:   set edge flag
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psedfg)(
-     FTN_INTEGER(flag)
-)
+                       FTN_INTEGER(flag)
+                       )
 {
   Pint edge_flag = FTN_INTEGER_GET(flag);
 #ifdef DEBUG
@@ -470,15 +459,15 @@ FTN_SUBROUTINE(psedfg)(
 /*******************************************************************************
  * ppm
  *
- * DESCR:	polymarker
- * RETURNS:	N/A
+ * DESCR:   polymarker
+ * RETURNS:   N/A
  */
 
 FTN_SUBROUTINE(ppm)(
-		    FTN_INTEGER(n),
-		    FTN_REAL_ARRAY(pxa),
-		    FTN_REAL_ARRAY(pya)
-)
+                    FTN_INTEGER(n),
+                    FTN_REAL_ARRAY(pxa),
+                    FTN_REAL_ARRAY(pya)
+                    )
 {
   int num_points = FTN_INTEGER_GET(n);
   Ppoint points[num_points];
@@ -499,16 +488,15 @@ FTN_SUBROUTINE(ppm)(
 /*******************************************************************************
  * ppm
  *
- * DESCR:	polymarker 3
- * RETURNS:	N/A
+ * DESCR:   polymarker 3
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(ppm3)(
-		    FTN_INTEGER(n),
-		    FTN_REAL_ARRAY(pxa),
-		    FTN_REAL_ARRAY(pya),
-		    FTN_REAL_ARRAY(pza)
-)
+                     FTN_INTEGER(n),
+                     FTN_REAL_ARRAY(pxa),
+                     FTN_REAL_ARRAY(pya),
+                     FTN_REAL_ARRAY(pza)
+                     )
 {
   int num_points = FTN_INTEGER_GET(n);
   Ppoint3 points[num_points];
@@ -527,13 +515,12 @@ FTN_SUBROUTINE(ppm3)(
 /*******************************************************************************
  * psewsc
  *
- * DESCR:	set edgewidth scale factor
- * RETURNS:	N/A
+ * DESCR:   set edgewidth scale factor
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psewsc)(
-                        FTN_REAL(ewidth)
-                        )
+                       FTN_REAL(ewidth)
+                       )
 {
   Pfloat esfr = FTN_REAL_GET(ewidth);
 #ifdef DEBUG
@@ -546,12 +533,11 @@ FTN_SUBROUTINE(psewsc)(
  * psmksc
  *
  * DESCR:       set marker size scale factor
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psmksc)(
-		       FTN_REAL(mszsf)
-		       )
+                       FTN_REAL(mszsf)
+                       )
 {
   Pfloat pmsf = FTN_REAL_GET(mszsf);
 #ifdef DEBUG
@@ -564,12 +550,11 @@ FTN_SUBROUTINE(psmksc)(
  * pspmi
  *
  * DESCR:       set polymarker index
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pspmi)(
-		       FTN_INTEGER(pmi)
-		       )
+                      FTN_INTEGER(pmi)
+                      )
 {
   Pint pindex = FTN_INTEGER_GET(pmi);
 #ifdef DEBUG
@@ -583,12 +568,11 @@ FTN_SUBROUTINE(pspmi)(
  * pspmci
  *
  * DESCR:       set polymarker colour index
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pspmci)(
-		       FTN_INTEGER(coli)
-		       )
+                       FTN_INTEGER(coli)
+                       )
 {
   Pint colr_ind = FTN_INTEGER_GET(coli);
 #ifdef DEBUG
@@ -602,12 +586,11 @@ FTN_SUBROUTINE(pspmci)(
  * psmk
  *
  * DESCR:       set marker type
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psmk)(
-		       FTN_INTEGER(mtype)
-		       )
+                     FTN_INTEGER(mtype)
+                     )
 {
   Pint marker_type = FTN_INTEGER_GET(mtype);
 #ifdef DEBUG
@@ -620,12 +603,11 @@ FTN_SUBROUTINE(psmk)(
  * pexst
  *
  * DESCR:       execute structure
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pexst)(
-		      FTN_INTEGER(strid)
-		      )
+                      FTN_INTEGER(strid)
+                      )
 {
   Pint str_id = FTN_INTEGER_GET(strid);
 #ifdef DEBUG
@@ -638,12 +620,11 @@ FTN_SUBROUTINE(pexst)(
  * psgmt3
  *
  * DESCR:       set global transformation 3
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psgmt3)(
-		       float* xfrmt
-		       )
+                       float* xfrmt
+                       )
 {
   Pmatrix3 global_tran;
   int i, j;
@@ -662,13 +643,12 @@ FTN_SUBROUTINE(psgmt3)(
  * pshrm
  *
  * DESCR:       set hlhsr mode
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pshrm)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(hrm)
-		      )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(hrm)
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint mode = FTN_INTEGER_GET(hrm);
@@ -682,12 +662,11 @@ FTN_SUBROUTINE(pshrm)(
  * pshrid
  *
  * DESCR:       set hlhsr identifier
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pshrid)(
-		      FTN_INTEGER(hrid)
-		      )
+                       FTN_INTEGER(hrid)
+                       )
 {
   Pint hrmode = FTN_INTEGER_GET(hrid);
 #ifdef DEBUG
@@ -704,12 +683,11 @@ FTN_SUBROUTINE(pshrid)(
  * pspkid
  *
  * DESCR:       set pick identifier
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pspkid)(
-		 FTN_INTEGER(pkid)
-		 )
+                       FTN_INTEGER(pkid)
+                       )
 {
   Pint pk_id = FTN_INTEGER_GET(pkid);
   pset_pick_id(pk_id);
@@ -719,12 +697,11 @@ FTN_SUBROUTINE(pspkid)(
  * pschsp
  *
  * DESCR:       set character spacing
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pschsp)(
-		 FTN_REAL(chsp)
-		 )
+                       FTN_REAL(chsp)
+                       )
 {
   Pfloat ch_sp = FTN_REAL_GET(chsp);
   pset_char_space(ch_sp);
@@ -734,12 +711,11 @@ FTN_SUBROUTINE(pschsp)(
  * pschxp
  *
  * DESCR:       set character expansion factor
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pschxp)(
-		 FTN_REAL(chxp)
-		 )
+                       FTN_REAL(chxp)
+                       )
 {
   Pfloat ch_xp = FTN_REAL_GET(chxp);
   pset_char_expan(ch_xp);
@@ -749,12 +725,11 @@ FTN_SUBROUTINE(pschxp)(
  * psedi
  *
  * DESCR:       set edge index
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psedi)(
-		 FTN_INTEGER(edi)
-		 )
+                      FTN_INTEGER(edi)
+                      )
 {
   Pint edge_index = FTN_INTEGER_GET(edi);
   pset_edge_ind(edge_index);
@@ -764,13 +739,12 @@ FTN_SUBROUTINE(psedi)(
  * psiasf
  *
  * DESCR:       set individual asf
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psiasf)(
-		       FTN_INTEGER(attr),
-		       FTN_INTEGER(val)
-		 )
+                       FTN_INTEGER(attr),
+                       FTN_INTEGER(val)
+                       )
 {
   Paspect attrid = (Paspect) FTN_INTEGER_GET(attr);
   Pasf asfval = (Pasf) FTN_INTEGER_GET(val);
@@ -781,12 +755,11 @@ FTN_SUBROUTINE(psiasf)(
  * psmcli
  *
  * DESCR:       set modelling clipping indicator
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psmcli)(
-		 FTN_INTEGER(mclipi)
-		 )
+                       FTN_INTEGER(mclipi)
+                       )
 {
   Pint clipi = FTN_INTEGER_GET(mclipi);
   pset_model_clip_ind(clipi);
@@ -796,14 +769,13 @@ FTN_SUBROUTINE(psmcli)(
  * psmcv3
  *
  * DESCR:       set modelling clipping volume 3
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psmcv3)(
-		       FTN_INTEGER(op),
-		       FTN_INTEGER(nhalfs),
-		       FTN_REAL_ARRAY(halfsp)
-		 )
+                       FTN_INTEGER(op),
+                       FTN_INTEGER(nhalfs),
+                       FTN_REAL_ARRAY(halfsp)
+                       )
 {
   Pint iop = FTN_INTEGER_GET(op);
   Pint num = FTN_INTEGER_GET(nhalfs);
@@ -828,12 +800,11 @@ FTN_SUBROUTINE(psmcv3)(
  * psedci
  *
  * DESCR:       set edge colour index
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psedci)(
-     FTN_INTEGER(coli)
-)
+                       FTN_INTEGER(coli)
+                       )
 {
   Pint colr_ind = FTN_INTEGER_GET(coli);
 #ifdef DEBUG

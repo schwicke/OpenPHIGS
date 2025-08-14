@@ -26,13 +26,13 @@
 #include "private/cbP.h"
 
 void pgse(
-	  Pgse_type gse_type,
-	  Pgse_data *gse_data
-	  )
+          Pgse_type gse_type,
+          Pgse_data *gse_data
+          )
 {
   Phg_args_add_el args;
   Pgse_elem gse_elem;
-  
+
   if (phg_entry_check(PHG_ERH, ERR5, Pfn_gse)) {
     if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
       ERR_REPORT(PHG_ERH, ERR5);
@@ -43,36 +43,36 @@ void pgse(
       gse_elem.gse_type = gse_type;
       switch (gse_type) {
       case PGSE_ID_NO_OPERATION:
-	elem_size += sizeof(int);
-	gse_elem.gse_size = sizeof(int);
-	memcpy(&gse_elem.gse_data, gse_data, sizeof(int));
-	break;
+        elem_size += sizeof(int);
+        gse_elem.gse_size = sizeof(int);
+        memcpy(&gse_elem.gse_data, gse_data, sizeof(int));
+        break;
       case PGSE_ID_HIGHLIGHT_COLOR:
-	elem_size += sizeof(Pgcolr);
-	gse_elem.gse_size = sizeof(Pgcolr);
-	memcpy(&gse_elem.gse_data, gse_data, sizeof(Pgcolr));
-	break;
+        elem_size += sizeof(Pgcolr);
+        gse_elem.gse_size = sizeof(Pgcolr);
+        memcpy(&gse_elem.gse_data, gse_data, sizeof(Pgcolr));
+        break;
       };
       args.el_size = elem_size;
       if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
-	ERR_REPORT(PHG_ERH, ERR900);
+        ERR_REPORT(PHG_ERH, ERR900);
       }
       else {
-	args.el_data = PHG_SCRATCH.buf;
-	Pgse_elem *data = (Pgse_elem *) args.el_data;
-	memcpy(data, &gse_elem, sizeof(Pgse_elem));
-	phg_add_el(PHG_CSS, &args);
+        args.el_data = PHG_SCRATCH.buf;
+        Pgse_elem *data = (Pgse_elem *) args.el_data;
+        memcpy(data, &gse_elem, sizeof(Pgse_elem));
+        phg_add_el(PHG_CSS, &args);
       }
     }
   }
 }
 
 void pxset_highlight_colr  (
-			    Pgcolr *colr
-			    )
+                            Pgcolr *colr
+                            )
 {
   Pgse_data  gse_data;
-  
-  memcpy(&gse_data.colr.highlight_colr, colr, sizeof(Pgcolr));  
+
+  memcpy(&gse_data.colr.highlight_colr, colr, sizeof(Pgcolr));
   pgse(PGSE_ID_HIGHLIGHT_COLOR, &gse_data);
 }

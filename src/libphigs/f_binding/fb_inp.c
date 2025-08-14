@@ -32,9 +32,8 @@
  * pprec
  *
  * DESCR:       pack data record
- * RETURNS:	error, length, data record
+ * RETURNS:   error, length, data record
  */
-
 FTN_SUBROUTINE(pprec)(
                       FTN_INTEGER(il),
                       FTN_INTEGER_ARRAY(ia),
@@ -130,21 +129,20 @@ FTN_SUBROUTINE(pprec)(
  * pinlc3
  *
  * DESCR:       initialize locator 3
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pinlc3)(
-                     FTN_INTEGER(wkid),
-                     FTN_INTEGER(lcdnr),
-                     FTN_INTEGER(iviewi),
-                     FTN_REAL(ipx),
-                     FTN_REAL(ipy),
-                     FTN_REAL(ipz),
-                     FTN_INTEGER(pet1),
-                     FTN_REAL_ARRAY(evol),
-                     FTN_INTEGER(ldr),
-                     char* datrec
-                     )
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(lcdnr),
+                       FTN_INTEGER(iviewi),
+                       FTN_REAL(ipx),
+                       FTN_REAL(ipy),
+                       FTN_REAL(ipz),
+                       FTN_INTEGER(pet1),
+                       FTN_REAL_ARRAY(evol),
+                       FTN_INTEGER(ldr),
+                       char* datrec
+                       )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint loc_num = FTN_INTEGER_GET(lcdnr);
@@ -175,20 +173,18 @@ FTN_SUBROUTINE(pinlc3)(
 
 };
 
-
 /*******************************************************************************
  * pspkm
  *
  * DESCR:       set pick mode
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pspkm)(
-              FTN_INTEGER(wkid),
-              FTN_INTEGER(pkdnr),
-              FTN_INTEGER(mode),
-              FTN_INTEGER(esw)
-              )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(pkdnr),
+                      FTN_INTEGER(mode),
+                      FTN_INTEGER(esw)
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint pick_num = FTN_INTEGER_GET(pkdnr);
@@ -205,15 +201,14 @@ FTN_SUBROUTINE(pspkm)(
  * pwait
  *
  * DESCR:       await event
- * RETURNS:	work station, class, number
+ * RETURNS:   work station, class, number
  */
-
 FTN_SUBROUTINE(pwait)(
-              FTN_REAL(tout),
-              Pint *wkid,
-              Pin_class *icl,
-              Pint *idnr
-              )
+                      FTN_REAL(tout),
+                      Pint *wkid,
+                      Pin_class *icl,
+                      Pint *idnr
+                      )
 {
   Pfloat timeout = FTN_REAL_GET(tout);
   pawait_event(timeout, wkid, icl, idnr);
@@ -223,15 +218,14 @@ FTN_SUBROUTINE(pwait)(
  * pslcm
  *
  * DESCR:       set locator mode
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pslcm)(
-              FTN_INTEGER(wkid),
-              FTN_INTEGER(lcdnr),
-              FTN_INTEGER(mode),
-              FTN_INTEGER(echo)
-              )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(lcdnr),
+                      FTN_INTEGER(mode),
+                      FTN_INTEGER(echo)
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint dev_id = FTN_INTEGER_GET(lcdnr);
@@ -244,23 +238,22 @@ FTN_SUBROUTINE(pslcm)(
  * pinlc
  *
  * DESCR:       initialize locator
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pinlc)(
-                     FTN_INTEGER(wkid),
-                     FTN_INTEGER(lcdnr),
-                     FTN_INTEGER(iviewi),
-                     FTN_REAL(ipx),
-                     FTN_REAL(ipy),
-                     FTN_INTEGER(pet1),
-                     FTN_REAL(xmin),
-                     FTN_REAL(xmax),
-                     FTN_REAL(ymin),
-                     FTN_REAL(ymax),
-                     FTN_INTEGER(ldr),
-                     char* datrec
-                     )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(lcdnr),
+                      FTN_INTEGER(iviewi),
+                      FTN_REAL(ipx),
+                      FTN_REAL(ipy),
+                      FTN_INTEGER(pet1),
+                      FTN_REAL(xmin),
+                      FTN_REAL(xmax),
+                      FTN_REAL(ymin),
+                      FTN_REAL(ymax),
+                      FTN_INTEGER(ldr),
+                      char* datrec
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint loc_num = FTN_INTEGER_GET(lcdnr);
@@ -288,24 +281,22 @@ FTN_SUBROUTINE(pinlc)(
   data.pets.pet_r1.unused = 0;
   /* FIXME check if the data is being used */
   pinit_loc3(ws_id, loc_num, init_view_ind, &location, pet, &lim, &data);
-
 };
 
 /*******************************************************************************
  * pspkft
  *
  * DESCR:       set pick filter
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pspkft)(
-		       FTN_INTEGER(wkid),
-		       FTN_INTEGER(pkdnr),
-		       FTN_INTEGER(isn),
-		       Pint *is,
-		       FTN_INTEGER(esn),
-		       Pint *es
-		       )
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(pkdnr),
+                       FTN_INTEGER(isn),
+                       Pint *is,
+                       FTN_INTEGER(esn),
+                       Pint *es
+                       )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint pick_dev =  FTN_INTEGER_GET(pkdnr);
@@ -333,16 +324,15 @@ FTN_SUBROUTINE(pspkft)(
  * pshlft
  *
  * DESCR:       set highlighting filter
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pshlft)(
-		       FTN_INTEGER(wkid),
-		       FTN_INTEGER(isn),
-		       Pint *is,
-		       FTN_INTEGER(esn),
-		       Pfloat *es
-		       )
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(isn),
+                       Pint *is,
+                       FTN_INTEGER(esn),
+                       Pfloat *es
+                       )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint isn1 = FTN_INTEGER_GET(isn);
@@ -369,24 +359,23 @@ FTN_SUBROUTINE(pshlft)(
  * pinpk
  *
  * DESCR:       initialize pick
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pinpk)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(pkdnr),
-		      FTN_INTEGER(istat),
-		      FTN_INTEGER(ippd),
-		      FTN_INTEGER_ARRAY(pp),
-		      FTN_INTEGER(pet1),
-		      FTN_REAL(xmin),
-		      FTN_REAL(xmax),
-		      FTN_REAL(ymin),
-		      FTN_REAL(ymax),
-		      FTN_INTEGER(ndr1),
-		      char* datrec,
-		      FTN_INTEGER(ppordr)
-              )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(pkdnr),
+                      FTN_INTEGER(istat),
+                      FTN_INTEGER(ippd),
+                      FTN_INTEGER_ARRAY(pp),
+                      FTN_INTEGER(pet1),
+                      FTN_REAL(xmin),
+                      FTN_REAL(xmax),
+                      FTN_REAL(ymin),
+                      FTN_REAL(ymax),
+                      FTN_INTEGER(ndr1),
+                      char* datrec,
+                      FTN_INTEGER(ppordr)
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint pick_num = FTN_INTEGER_GET(pkdnr);
@@ -422,15 +411,14 @@ FTN_SUBROUTINE(pinpk)(
  * pgtpk
  *
  * DESCR:       get pick
- * RETURNS:	state, depth, path
+ * RETURNS:   state, depth, path
  */
-
 FTN_SUBROUTINE(pgtpk)(
-              FTN_INTEGER(ippd),
-              Pin_status *stat,
-              Pint *ppd,
-              Pint *pp
-              )
+                      FTN_INTEGER(ippd),
+                      Pin_status *stat,
+                      Pint *ppd,
+                      Pint *pp
+                      )
 {
   Pint depth = FTN_INTEGER_GET(ippd);
   Ppick_path_elem  path_list[10];
@@ -448,24 +436,23 @@ FTN_SUBROUTINE(pgtpk)(
     pp[3*i] = pick.path_list[i].struct_id;
     pp[3*i+1] = pick.path_list[i].pick_id;
     pp[3*i+2] = pick.path_list[i].elem_pos;
-  };
+  }
 }
 
 /*******************************************************************************
  * prqpk
  *
  * DESCR:       request pick
- * RETURNS:	state, depth, path
+ * RETURNS:   state, depth, path
  */
-
 FTN_SUBROUTINE(prqpk)(
-              FTN_INTEGER(wkid),
-              FTN_INTEGER(pkdnr),
-              FTN_INTEGER(ippd),
-              Pint *stat,
-              Pint *ppd,
-              Pint *pp
-              )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(pkdnr),
+                      FTN_INTEGER(ippd),
+                      Pint *stat,
+                      Pint *ppd,
+                      Pint *pp
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint pick_num = FTN_INTEGER_GET(pkdnr);
@@ -491,17 +478,16 @@ FTN_SUBROUTINE(prqpk)(
  * psmpk
  *
  * DESCR:       sample pick
- * RETURNS:	status, depth and path
+ * RETURNS:   status, depth and path
  */
-
 FTN_SUBROUTINE(psmpk)(
-              FTN_INTEGER(wkid),
-              FTN_INTEGER(pkdnr),
-              FTN_INTEGER(ippd),
-              Pin_status *stat,
-              Pint *ppd,
-              Pint *pp
-              )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(pkdnr),
+                      FTN_INTEGER(ippd),
+                      Pin_status *stat,
+                      Pint *ppd,
+                      Pint *pp
+                      )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint pick_num = FTN_INTEGER_GET(pkdnr);
@@ -530,16 +516,15 @@ FTN_SUBROUTINE(psmpk)(
  * psmlc
  *
  * DESCR:       sample locator
- * RETURNS:	view index, current point in WC
+ * RETURNS:   view index, current point in WC
  */
-
 FTN_SUBROUTINE(psmlc)(
-              FTN_INTEGER(wkid),
-              FTN_INTEGER(lcdnr),
-              int *viewi,
-              float *lpx,
-              float *lpy
-              )
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(lcdnr),
+                      int *viewi,
+                      float *lpx,
+                      float *lpy
+                      )
 {
   Pint    ws_id = FTN_INTEGER_GET(wkid);
   Pint    loc_dev = FTN_INTEGER_GET(lcdnr);
@@ -553,17 +538,16 @@ FTN_SUBROUTINE(psmlc)(
  * psmlc3
  *
  * DESCR:       sample locator 3
- * RETURNS:	view index, current point in WC
+ * RETURNS:   view index, current point in WC
  */
-
 FTN_SUBROUTINE(psmlc3)(
-              FTN_INTEGER(wkid),
-              FTN_INTEGER(lcdnr),
-              int *viewi,
-              float *lpx,
-              float *lpy,
-              float *lpz
-              )
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(lcdnr),
+                       int *viewi,
+                       float *lpx,
+                       float *lpy,
+                       float *lpz
+                       )
 {
   Pint    ws_id = FTN_INTEGER_GET(wkid);
   Pint    loc_dev = FTN_INTEGER_GET(lcdnr);
@@ -578,17 +562,16 @@ FTN_SUBROUTINE(psmlc3)(
  * prqlc3
  *
  * DESCR:       request locator 3
- * RETURNS:	status, view index, point in WC
+ * RETURNS:   status, view index, point in WC
  */
-
 FTN_SUBROUTINE(prqlc3)(
-		       FTN_INTEGER(wkid),
-		       FTN_INTEGER(lcdnr),
-		       Pint* stat,
-		       Pint* viewi,
-		       Pfloat *px,
-		       Pfloat *py,
-		       Pfloat *pz) {
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(lcdnr),
+                       Pint* stat,
+                       Pint* viewi,
+                       Pfloat *px,
+                       Pfloat *py,
+                       Pfloat *pz) {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint loc_dev = FTN_INTEGER_GET(lcdnr);
   Ppoint3 pos;
@@ -602,15 +585,14 @@ FTN_SUBROUTINE(prqlc3)(
  * psmst
  *
  * DESCR:       sample string
- * RETURNS:	string length, string
+ * RETURNS:   string length, string
  */
-
 FTN_SUBROUTINE(psmst)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(stdnr),
-		      int* lostr,
-		      char* str
-		      ){
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(stdnr),
+                      int* lostr,
+                      char* str
+                      ){
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint string_dev = FTN_INTEGER_GET(stdnr);
   psample_string(ws_id, string_dev, str);
@@ -621,15 +603,14 @@ FTN_SUBROUTINE(psmst)(
  * psstm
  *
  * DESCR:       set string mode
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psstm)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(stdnr),
-		      FTN_INTEGER(mode),
-		      FTN_INTEGER(esw)
-		      ){
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(stdnr),
+                      FTN_INTEGER(mode),
+                      FTN_INTEGER(esw)
+                      ){
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint string_dev = FTN_INTEGER_GET(stdnr);
   Pint opmode = FTN_INTEGER_GET(mode);
@@ -641,21 +622,20 @@ FTN_SUBROUTINE(psstm)(
  * pinst
  *
  * DESCR:       initialize string
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pinst)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(stdnr),
-		      FTN_INTEGER(lstr),
-		      char *istr,
-		      FTN_INTEGER(ipet),
-		      FTN_REAL(xmin),
-		      FTN_REAL(xmax),
-		      FTN_REAL(ymin),
-		      FTN_REAL(ymax),
-		      FTN_INTEGER(ldr),
-		      char* datrec){
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(stdnr),
+                      FTN_INTEGER(lstr),
+                      char *istr,
+                      FTN_INTEGER(ipet),
+                      FTN_REAL(xmin),
+                      FTN_REAL(xmax),
+                      FTN_REAL(ymin),
+                      FTN_REAL(ymax),
+                      FTN_INTEGER(ldr),
+                      char* datrec){
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint string_dev = FTN_INTEGER_GET(stdnr);
   Pint ilen = FTN_INTEGER_GET(lstr);
@@ -693,18 +673,17 @@ FTN_SUBROUTINE(pinst)(
  * pinst3
  *
  * DESCR:       initialize string 3
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pinst3)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(stdnr),
-		      FTN_INTEGER(lstr),
-		      char*istr,
-		      FTN_INTEGER(ipet),
-		      FTN_REAL_ARRAY(evol),
-		      FTN_INTEGER(ldr),
-		      char* datrec){
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(stdnr),
+                       FTN_INTEGER(lstr),
+                       char*istr,
+                       FTN_INTEGER(ipet),
+                       FTN_REAL_ARRAY(evol),
+                       FTN_INTEGER(ldr),
+                       char* datrec){
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint string_dev = FTN_INTEGER_GET(stdnr);
   Pint ilen = FTN_INTEGER_GET(lstr);
@@ -742,15 +721,14 @@ FTN_SUBROUTINE(pinst3)(
  * prqst
  *
  * DESCR:       request string
- * RETURNS:	status, length, string
+ * RETURNS:   status, length, string
  */
-
 FTN_SUBROUTINE(prqst)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(stdnr),
-		      int * stat,
-		      int * length,
-		      char * string)
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(stdnr),
+                      int * stat,
+                      int * length,
+                      char * string)
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint string_dev = FTN_INTEGER_GET(stdnr);
@@ -762,18 +740,17 @@ FTN_SUBROUTINE(prqst)(
  * pinch3
  *
  * DESCR:       initialize choice 3
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pinch3)(
-		       FTN_INTEGER(wkid),
-		       FTN_INTEGER(chdnr),
-		       FTN_INTEGER(istat),
-		       FTN_INTEGER(ichnr),
-		       FTN_INTEGER(ipet),
-		       FTN_REAL_ARRAY(evol),
-		       FTN_INTEGER(ldr),
-		       char * datrec)
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(chdnr),
+                       FTN_INTEGER(istat),
+                       FTN_INTEGER(ichnr),
+                       FTN_INTEGER(ipet),
+                       FTN_REAL_ARRAY(evol),
+                       FTN_INTEGER(ldr),
+                       char * datrec)
 {
 # define MAX_PROMPTS 32
   Pint ws_id = FTN_INTEGER_GET(wkid);
@@ -858,15 +835,14 @@ FTN_SUBROUTINE(pinch3)(
  * pschm
  *
  * DESCR:       set choice mode
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pschm)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(chdnr),
-		      FTN_INTEGER(mode),
-		      FTN_INTEGER(esw)
-		      ){
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(chdnr),
+                      FTN_INTEGER(mode),
+                      FTN_INTEGER(esw)
+                      ){
   Pint ws_id =  FTN_INTEGER_GET(wkid);
   Pint choice_dev = FTN_INTEGER_GET(chdnr);
   Pint imode = FTN_INTEGER_GET(mode);
@@ -878,9 +854,8 @@ FTN_SUBROUTINE(pschm)(
  * pgtch
  *
  * DESCR:       get choice
- * RETURNS:	status, choice number
+ * RETURNS:   status, choice number
  */
-
 FTN_SUBROUTINE(pgtch)(
                       Pint* stat,
                       Pint* chnr) {
@@ -895,15 +870,14 @@ FTN_SUBROUTINE(pgtch)(
  * prqch
  *
  * DESCR:       request choice
- * RETURNS:	status, choice number
+ * RETURNS:   status, choice number
  */
-
 FTN_SUBROUTINE(prqch)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(chdnr),
-		      Pint *stat,
-		      Pint *chnr
-		      ) {
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(chdnr),
+                      Pint *stat,
+                      Pint *chnr
+                      ) {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint choice_dev = FTN_INTEGER_GET(chdnr);
   preq_choice(ws_id, choice_dev, (Pin_status*)stat, chnr);
@@ -913,17 +887,16 @@ FTN_SUBROUTINE(prqch)(
  * pinvl3
  *
  * DESCR:       initialize valuators 3
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pinvl3)(
-		       FTN_INTEGER(wkid),
-		       FTN_INTEGER(vldnr),
-		       FTN_REAL(ival),
-		       FTN_INTEGER(ipet),
-		       FTN_REAL_ARRAY(evol),
-		       FTN_INTEGER(ldr),
-		       char* datrec) {
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(vldnr),
+                       FTN_REAL(ival),
+                       FTN_INTEGER(ipet),
+                       FTN_REAL_ARRAY(evol),
+                       FTN_INTEGER(ldr),
+                       char* datrec) {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint val_dev = FTN_INTEGER_GET(vldnr);
   Pfloat init_value =FTN_REAL_GET(ival);
@@ -997,11 +970,11 @@ FTN_SUBROUTINE(pinvl3)(
     if (l1 > 0){
       buffer = (char*) malloc((l1+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l1*sizeof(char));
-	buffer[l1] = '\0';
-	val_data_rec.pets.pet_u1.label = buffer;
+        strncpy(buffer, &cp[0], l1*sizeof(char));
+        buffer[l1] = '\0';
+        val_data_rec.pets.pet_u1.label = buffer;
       } else {
-	val_data_rec.pets.pet_u1.label = WST_DEFAULT_VALUATOR_LABEL;
+        val_data_rec.pets.pet_u1.label = WST_DEFAULT_VALUATOR_LABEL;
       }
       cp += l1*sizeof(char);
     } else {
@@ -1010,11 +983,11 @@ FTN_SUBROUTINE(pinvl3)(
     if (l2 > 0){
       buffer = (char*) malloc((l2+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l2*sizeof(char));
-	buffer[l2] = '\0';
-	val_data_rec.pets.pet_u1.format = buffer;
+        strncpy(buffer, &cp[0], l2*sizeof(char));
+        buffer[l2] = '\0';
+        val_data_rec.pets.pet_u1.format = buffer;
       } else {
-	val_data_rec.pets.pet_u1.format = WST_DEFAULT_VALUATOR_FORMAT;
+        val_data_rec.pets.pet_u1.format = WST_DEFAULT_VALUATOR_FORMAT;
       }
       cp += l2*sizeof(char);
     } else {
@@ -1023,11 +996,11 @@ FTN_SUBROUTINE(pinvl3)(
     if (l3 > 0){
       buffer = (char*) malloc((l3+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l3*sizeof(char));
-	buffer[l3] = '\0';
-	val_data_rec.pets.pet_u1.low_label = buffer;
+        strncpy(buffer, &cp[0], l3*sizeof(char));
+        buffer[l3] = '\0';
+        val_data_rec.pets.pet_u1.low_label = buffer;
       } else {
-	val_data_rec.pets.pet_u1.low_label = WST_DEFAULT_VALUATOR_LOW_LABEL;
+        val_data_rec.pets.pet_u1.low_label = WST_DEFAULT_VALUATOR_LOW_LABEL;
       }
       cp += l3*sizeof(char);
     } else {
@@ -1036,11 +1009,11 @@ FTN_SUBROUTINE(pinvl3)(
     if (l4 > 0){
       buffer = (char*) malloc((l4+1)*sizeof(char));
       if (buffer != NULL){
-	strncpy(buffer, &cp[0], l4*sizeof(char));
-	buffer[l4] = '\0';
-	val_data_rec.pets.pet_u1.high_label = buffer;
+        strncpy(buffer, &cp[0], l4*sizeof(char));
+        buffer[l4] = '\0';
+        val_data_rec.pets.pet_u1.high_label = buffer;
       } else {
-	val_data_rec.pets.pet_u1.high_label = WST_DEFAULT_VALUATOR_HIGH_LABEL;
+        val_data_rec.pets.pet_u1.high_label = WST_DEFAULT_VALUATOR_HIGH_LABEL;
       }
       cp += l4*sizeof(char);
     } else {
@@ -1054,15 +1027,14 @@ FTN_SUBROUTINE(pinvl3)(
  * psvlm
  *
  * DESCR:       set valuator mode
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(psvlm)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(vldnr),
-		      FTN_INTEGER(mode),
-		      FTN_INTEGER(esw)
-		      ){
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(vldnr),
+                      FTN_INTEGER(mode),
+                      FTN_INTEGER(esw)
+                      ){
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint valdev = FTN_INTEGER_GET(vldnr);
   Pint imode = FTN_INTEGER_GET(mode);
@@ -1075,11 +1047,10 @@ FTN_SUBROUTINE(psvlm)(
  * pgtvl
  *
  * DESCR:       get valuator
- * RETURNS:	value (float)
+ * RETURNS:   value (float)
  */
-
 FTN_SUBROUTINE(pgtvl)(
-		      float* val) {
+                      float* val) {
   Pfloat valuator;
   pget_val(&valuator);
   *val = valuator;
@@ -1089,15 +1060,14 @@ FTN_SUBROUTINE(pgtvl)(
  * prqvl
  *
  * DESCR:       request valuator
- * RETURNS:	status, value
+ * RETURNS:   status, value
  */
-
 FTN_SUBROUTINE(prqvl)(
-		      FTN_INTEGER(wkid),
-		      FTN_INTEGER(vldnr),
-		      Pint *stat,
-		      Pfloat *val
-		      ) {
+                      FTN_INTEGER(wkid),
+                      FTN_INTEGER(vldnr),
+                      Pint *stat,
+                      Pfloat *val
+                      ) {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint val_dev = FTN_INTEGER_GET(vldnr);
   preq_valuator(ws_id, val_dev, (Pin_status*)stat, val);
@@ -1107,14 +1077,13 @@ FTN_SUBROUTINE(prqvl)(
  * pflush
  *
  * DESCR:       flush device events
- * RETURNS:	N/A
+ * RETURNS:   N/A
  */
-
 FTN_SUBROUTINE(pflush)(
-		       FTN_INTEGER(wkid),
-		       FTN_INTEGER(icl),
-		       FTN_INTEGER(idnr)
-		       ) {
+                       FTN_INTEGER(wkid),
+                       FTN_INTEGER(icl),
+                       FTN_INTEGER(idnr)
+                       ) {
   Pint ws_id = FTN_INTEGER_GET(wkid);
   Pint i_cl = FTN_INTEGER_GET(icl);
   Pint i_dnr = FTN_INTEGER_GET(idnr);
@@ -1125,25 +1094,24 @@ FTN_SUBROUTINE(pflush)(
  * pqdlc3
  *
  * DESCR:       inquire default locator device data 3
- * RETURNS:	error index, init position in WC, number of echoes, echoes, 
+ * RETURNS:   error index, init position in WC, number of echoes, echoes,
  *              echo volume in DC, number of elements in data record, data record
  */
-
 FTN_SUBROUTINE(pqdlc3)(
-		       FTN_INTEGER(wtype),
-		       FTN_INTEGER(devno),
-		       FTN_INTEGER(n),
-		       FTN_INTEGER(mldr),
-		       int* errind,
-		       float* dpx,
-		       float* dpy,
-		       float* dpz,
-		       int* ol,
-		       int* pet,
-		       float evol[6],
-		       int* ldr,
-		       char* datrec
-		       ) {
+                       FTN_INTEGER(wtype),
+                       FTN_INTEGER(devno),
+                       FTN_INTEGER(n),
+                       FTN_INTEGER(mldr),
+                       int* errind,
+                       float* dpx,
+                       float* dpy,
+                       float* dpz,
+                       int* ol,
+                       int* pet,
+                       float evol[6],
+                       int* ldr,
+                       char* datrec
+                       ) {
   Wst *wst;
   Wst_input_wsdt *idt;
 
