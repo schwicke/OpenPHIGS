@@ -47,13 +47,6 @@ The second argument of popwk expects a non-zero integer which will be passed on 
 * If a file name has been defined in the configuration file as  %wf <filename>, the targa file will be created with this name in the current folder.
 * If no file name has been defined in the configuraiton file, it defaults to "output.tga" and is created in the current directory.
 
-## Transparency
-The ALPHA channel in a structure can be set with
-
-CALL PSALCH(X)
-
-where X is a floating point number between 0. (fully transparent) and 1. (fully opaque).
-
 ## Migration notes and extensions
 Some notes on differences with respect to other implementations.
 
@@ -133,9 +126,15 @@ Extensions:
   * as 4 but
   * echo area is given as a fraction of the root window
 
+## Transparency
+The ALPHA channel in a structure can be set with
+
+CALL PSALCH(X)
+
+where X is a floating point number between 0. (fully transparent) and 1. (fully opaque).
+
 ## Extensions
-### There is some support for transparency.
-#### Fortran bindings
+### Fortran bindings
 * PXNDEF(STRING NAME): set the configuration location and file name
 * PXSHCSF(INTEGER IWK, REAL VALUE): Set hardcopy scale factor for workstation ID WKID. Must be set before the workstation is being opened.
 * PXQHCSF(INTEGER IWK, REAL VALUE): Inquire the current scale factor for workstation ID WKID. The value is returned in the second argument.
@@ -143,7 +142,7 @@ Extensions:
 * PSALCH(REAL VALUE): set ALPHA channel to Value. Value is between 0(fully transparent) and 1 (opaque). Added to the current structure.
 * PSFNAME(INTEGER IWK, CHARACTER FNAME): set output file name for workstation ID IWK
 
-#### C-bindings
+### C-bindings
 * pxset_conf_file_name(char* path): set the configuration location and file name
 * pxset_conf_hcsf(WKID, Pfloat value): Set hardcopy scale factor for workstation ID WKID. Must be set before the workstation is being opened
 * Pfloat pxinq_conf_hcsf(WKID): Inquire the current hardcopy scale factor for workstation ID WKID.
@@ -156,3 +155,4 @@ Extensions:
 * v0.1-1:  Fixes for exotic hardware
 * v0.2-1:  Introduce scale factor for hardcopies
 * v0.2-2:  Introduce additional functions to manage the scale factor programmatically
+* v0.3-1: Add support for eps, svc, pdf and obj formatted hardcopies
