@@ -49,7 +49,10 @@ void priv_fill_area(
   for (i = 0; i < point_list->num_points; i++) {
     glVertex2f(point_list->points[i].x,
                point_list->points[i].y);
-    if (record_geom){
+    if (record_geom && record_geom_fill){
+#ifdef DEBUG_OBJ
+      printf("wsgl_fill: priv_fill_area called\n");
+#endif
       vertex_indices[n_vertices] = wsgl_add_vertex(point_list->points[i].x,
                                                    point_list->points[i].y,
                                                    0.0);
@@ -60,7 +63,7 @@ void priv_fill_area(
       n_normals ++;
     }
   }
-  if (record_geom){
+  if (record_geom && record_geom_fill){
     wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
@@ -120,7 +123,10 @@ void priv_fill_area3(
     glVertex3f(point_list->points[i].x,
                point_list->points[i].y,
                point_list->points[i].z);
-    if (record_geom){
+    if (record_geom && record_geom_fill){
+#ifdef DEBUG_OBJ
+      printf("wsgl_fill: priv_fill_area3 called\n");
+#endif
       vertex_indices[n_vertices] = wsgl_add_vertex(point_list->points[i].x,
                                                    point_list->points[i].y,
                                                    point_list->points[i].z);
@@ -131,7 +137,7 @@ void priv_fill_area3(
       n_normals ++;
     }
   }
-  if (record_geom){
+  if (record_geom && record_geom_fill){
     wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();

@@ -369,7 +369,7 @@ void pclose_ws(
       gl2ps = GL2PS_SVG;
       break;
     case PCAT_OBJ:
-      wsgl_export_obj(wsh->filename);
+      wsgl_export_obj(wsh->filename, config[ws_id].window_title);
       record_geom = FALSE;
       wsgl_clear_geometry();
       clean_fb = TRUE;

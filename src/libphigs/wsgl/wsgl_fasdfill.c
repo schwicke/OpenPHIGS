@@ -57,7 +57,7 @@ static void priv_fill_area_points(
     glVertex3f(points[i].x,
                points[i].y,
                0.0);
-    if (record_geom){
+    if (record_geom && record_geom_fill){
       vertex_indices[n_vertices] = wsgl_add_vertex(points[i].x,
                                                    points[i].y,
                                                    0.0);
@@ -68,7 +68,7 @@ static void priv_fill_area_points(
       n_normals ++;
     }
   }
-  if (record_geom){
+  if (record_geom && record_geom_fill){
     wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
@@ -101,7 +101,7 @@ static void priv_fill_area_ptcolrs(
     glVertex3f(ptcolrs[i].point.x,
                ptcolrs[i].point.y,
                0.0);
-    if (record_geom){
+    if (record_geom && record_geom_fill){
       vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[i].point.x,
                                                    ptcolrs[i].point.y,
                                                    0.0);
@@ -112,7 +112,7 @@ static void priv_fill_area_ptcolrs(
       n_normals ++;
     }
   }
-  if (record_geom){
+  if (record_geom && record_geom_fill){
     wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
@@ -145,7 +145,7 @@ static void priv_back_area_ptcolrs(
     glVertex3f(ptcolrs[i].point.x,
                ptcolrs[i].point.y,
                0.0);
-    if (record_geom){
+    if (record_geom && record_geom_fill){
       vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[i].point.x,
                                                    ptcolrs[i].point.y,
                                                    0.0);
@@ -156,7 +156,7 @@ static void priv_back_area_ptcolrs(
       n_normals ++;
     }
   }
-  if (record_geom){
+  if (record_geom && record_geom_fill){
     wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
@@ -191,7 +191,7 @@ static void priv_fill_area_ptnorms(
     glVertex3f(ptnorms[i].point.x,
                ptnorms[i].point.y,
                0.0);
-    if (record_geom){
+    if (record_geom && record_geom_fill){
       vertex_indices[n_vertices] = wsgl_add_vertex(ptnorms[i].point.x,
                                                    ptnorms[i].point.y,
                                                    0.0);
@@ -202,7 +202,7 @@ static void priv_fill_area_ptnorms(
       n_normals ++;
     }
   }
-  if (record_geom){
+  if (record_geom && record_geom_fill){
     wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();
@@ -242,7 +242,7 @@ static void priv_fill_area_ptconorms(
     glVertex3f(ptconorms[i].point.x,
                ptconorms[i].point.y,
                0.0);
-    if (record_geom){
+    if (record_geom && record_geom_fill){
       vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[i].point.x,
                                                    ptconorms[i].point.y,
                                                    0.0);
@@ -253,7 +253,7 @@ static void priv_fill_area_ptconorms(
       n_normals ++;
     }
   }
-  if (record_geom){
+  if (record_geom && record_geom_fill){
     wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
  glEnd();
@@ -293,7 +293,7 @@ static void priv_back_area_ptconorms(
     glVertex3f(ptconorms[i].point.x,
                ptconorms[i].point.y,
                0.0);
-    if (record_geom){
+    if (record_geom && record_geom_fill){
       vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[i].point.x,
                                                    ptconorms[i].point.y,
                                                    0.0);
@@ -304,7 +304,7 @@ static void priv_back_area_ptconorms(
       n_normals ++;
     }
   }
-  if (record_geom){
+  if (record_geom && record_geom_fill){
     wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
   }
   glEnd();

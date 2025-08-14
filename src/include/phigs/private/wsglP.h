@@ -142,9 +142,10 @@ extern int geom_count;
 extern Ppoint3 current_normal;
 
 extern int record_geom;
+extern int record_geom_fill;
 extern int normal_valid;
 
-#define MAX_VERTICES 500000
+#define MAX_VERTICES 10000
 /*******************************************************************************
  * wsgl_set_current_normal(float x, float y, float z)
  *
@@ -178,12 +179,12 @@ extern int normal_valid;
   void wsgl_add_geometry(GeomType type, const int* verts, const int* norms, int count);
 
 /*******************************************************************************
- * wsgl_export_obj(const char* filename)
+ * wsgl_export_obj(const char* filename, const char* title)
  * DESCR:       export as OBJ file
  * RETURNS:     Non zero or zero on error
  */
 
-  void wsgl_export_obj(const char* filename);
+  void wsgl_export_obj(const char* filename, const char* title);
 /*******************************************************************************
  * wsgl_clear_geometry()
  *

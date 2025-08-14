@@ -45,6 +45,7 @@ int geom_count = 0;
 Ppoint3 current_normal;
 
 int record_geom = FALSE;
+int record_geom_fill = TRUE;
 int normal_valid = FALSE;
 
 /*******************************************************************************
@@ -67,10 +68,6 @@ void wsgl_set_current_normal(float x, float y, float z) {
  * RETURNS:     Non zero or zero on error
  */
 int wsgl_add_vertex(float x, float y, float z) {
-  if (vertex_count >= MAX_VERTICES){
-    printf("Error: maximum number %d of vertices exceeded \n",  vertex_count);
-    return vertex_count;
-  }
   vertices = realloc(vertices, sizeof(Ppoint3) * (vertex_count + 1));
   if (!vertices) {
     fprintf(stderr, "Out of memory adding vertex\n");
@@ -92,10 +89,6 @@ int wsgl_add_vertex(float x, float y, float z) {
  * RETURNS:     Non zero or zero on error
  */
 int wsgl_add_normal(float x, float y, float z) {
-  if (normal_count >= MAX_VERTICES){
-    printf("Error: maximum number %d of vertices exceeded \n", normal_count);
-    return normal_count;
-  }
   normals = realloc(normals, sizeof(Ppoint3) * (normal_count + 1));
   if (!normals) {
     fprintf(stderr, "Out of memory adding normal\n");
@@ -144,7 +137,7 @@ void wsgl_add_geometry(GeomType type, const int* verts, const int* norms, int co
  * DESCR:       export as OBJ file
  * RETURNS:     Non zero or zero on error
  */
-void wsgl_export_obj(const char* filename) {
+void wsgl_export_obj(const char* filename, const char* title) {
   FILE* f = fopen(filename, "w");
   if (!f) {
     perror("fopen");
@@ -153,7 +146,7 @@ void wsgl_export_obj(const char* filename) {
 #ifdef DEBUG_OBJ
   printf("wsgl_obj: exporting %d vertices and %d normals\n", vertex_count, normal_count);
 #endif
-  
+  fprintf(f, "#name:%s\n", title);
   for (int i = 0; i < normal_count; ++i) {
     fprintf(f, "vn %f %f %f\n",
             normals[i].x,

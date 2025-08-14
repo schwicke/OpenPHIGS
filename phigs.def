@@ -57,3 +57,10 @@ Workstation example for output svg
 %wp 0.0 1.0 0.0 1.    position
 %hs 1.                scale factor for hardcopy
 %bg 0. 0. 0.          Background color R G B
+
+Workstation example for output obj
+%wk 93                Workstation for hardcopy
+%wg 2480 2480 0 0 1   Window width height px py border
+%wp 0.0 1.0 0.0 1.    position
+%hs 1.                scale factor for hardcopy
+%bg 0. 0. 0.          Background color R G B
