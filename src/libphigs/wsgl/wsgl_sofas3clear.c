@@ -37,20 +37,37 @@
  */
 
 static void priv_clear_area3_points(
-   Pint_list *vlist,
-   Ppoint3 *points
-   )
+                                    Pint_list *vlist,
+                                    Ppoint3 *points
+                                    )
 {
-   Pint i, vert;
+  Pint i, vert;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
-   glBegin(GL_POLYGON);
-   for (i = 0; i < vlist->num_ints; i++) {
-      vert = vlist->ints[i];
-      glVertex3f(points[vert].x,
-                 points[vert].y,
-                 points[vert].z);
-   }
-   glEnd();
+  glBegin(GL_POLYGON);
+  for (i = 0; i < vlist->num_ints; i++) {
+    vert = vlist->ints[i];
+    glVertex3f(points[vert].x,
+               points[vert].y,
+               points[vert].z);
+    if (record_geom){
+      vertex_indices[n_vertices] = wsgl_add_vertex(points[vert].x,
+                                                   points[vert].y,
+                                                   points[vert].z);
+      n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
+  }
+  glEnd();
 }
 
 /*******************************************************************************
@@ -61,20 +78,37 @@ static void priv_clear_area3_points(
  */
 
 static void priv_clear_area3_ptcolrs(
-   Pint_list *vlist,
-   Pptco3 *ptcolrs
-   )
+                                     Pint_list *vlist,
+                                     Pptco3 *ptcolrs
+                                     )
 {
-   Pint i, vert;
-
-   glBegin(GL_POLYGON);
-   for (i = 0; i < vlist->num_ints; i++) {
-      vert = vlist->ints[i];
-      glVertex3f(ptcolrs[vert].point.x,
-                 ptcolrs[vert].point.y,
-                 ptcolrs[vert].point.z);
-   }
-   glEnd();
+  Pint i, vert;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
+  
+  glBegin(GL_POLYGON);
+  for (i = 0; i < vlist->num_ints; i++) {
+    vert = vlist->ints[i];
+    glVertex3f(ptcolrs[vert].point.x,
+               ptcolrs[vert].point.y,
+               ptcolrs[vert].point.z);
+    if (record_geom){
+      vertex_indices[n_vertices] = wsgl_add_vertex(ptcolrs[vert].point.x,
+                                                   ptcolrs[vert].point.y,
+                                                   ptcolrs[vert].point.z);
+      n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
+  }
+  glEnd();
 }
 
 /*******************************************************************************
@@ -85,20 +119,37 @@ static void priv_clear_area3_ptcolrs(
  */
 
 static void priv_clear_area3_ptnorms(
-   Pint_list *vlist,
-   Pptnorm3 *ptnorms
-   )
+                                     Pint_list *vlist,
+                                     Pptnorm3 *ptnorms
+                                     )
 {
-   Pint i, vert;
+  Pint i, vert;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
-   glBegin(GL_POLYGON);
-   for (i = 0; i < vlist->num_ints; i++) {
-      vert = vlist->ints[i];
-      glVertex3f(ptnorms[vert].point.x,
-                 ptnorms[vert].point.y,
-                 ptnorms[vert].point.z);
-   }
-   glEnd();
+  glBegin(GL_POLYGON);
+  for (i = 0; i < vlist->num_ints; i++) {
+    vert = vlist->ints[i];
+    glVertex3f(ptnorms[vert].point.x,
+               ptnorms[vert].point.y,
+               ptnorms[vert].point.z);
+    if (record_geom){
+      vertex_indices[n_vertices] = wsgl_add_vertex(ptnorms[vert].point.x,
+                                                   ptnorms[vert].point.y,
+                                                   ptnorms[vert].point.z);
+      n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
+  }
+  glEnd();
 }
 
 /*******************************************************************************
@@ -110,20 +161,37 @@ static void priv_clear_area3_ptnorms(
  */
 
 static void priv_clear_area3_ptconorms(
-   Pint_list *vlist,
-   Pptconorm3 *ptconorms
-   )
+                                       Pint_list *vlist,
+                                       Pptconorm3 *ptconorms
+                                       )
 {
-   Pint i, vert;
+  Pint i, vert;
+  int vertex_indices[MAX_VERTICES];
+  int n_vertices = 0;
+  int normal_indices[MAX_VERTICES];
+  int n_normals = 0;
 
-   glBegin(GL_POLYGON);
-   for (i = 0; i < vlist->num_ints; i++) {
-      vert = vlist->ints[i];
-      glVertex3f(ptconorms[vert].point.x,
-                 ptconorms[vert].point.y,
-                 ptconorms[vert].point.z);
-   }
-   glEnd();
+  glBegin(GL_POLYGON);
+  for (i = 0; i < vlist->num_ints; i++) {
+    vert = vlist->ints[i];
+    glVertex3f(ptconorms[vert].point.x,
+               ptconorms[vert].point.y,
+               ptconorms[vert].point.z);
+    if (record_geom){
+      vertex_indices[n_vertices] = wsgl_add_vertex(ptconorms[vert].point.x,
+                                                   ptconorms[vert].point.y,
+                                                   ptconorms[vert].point.z);
+      n_vertices ++;
+      normal_indices[n_normals] = wsgl_add_normal(current_normal.x,
+                                                  current_normal.y,
+                                                  current_normal.z);
+      n_normals ++;
+    }
+  }
+  if (record_geom){
+    wsgl_add_geometry(GEOM_FACE, vertex_indices, normal_indices, n_vertices);
+  }
+  glEnd();
 }
 
 /*******************************************************************************
@@ -134,71 +202,70 @@ static void priv_clear_area3_ptconorms(
  */
 
 void wsgl_set_of_clear_area_set3_data(
-   Ws *ws,
-   void *pdata,
-   Ws_attr_st *ast
-   )
+                                      Ws *ws,
+                                      void *pdata,
+                                      Ws_attr_st *ast
+                                      )
 {
-   Pint i, j;
-   Psofas3 sofas3;
-   Pint num_lists;
-   Pint_list vlist;
+  Pint i, j;
+  Psofas3 sofas3;
+  Pint num_lists;
+  Pint_list vlist;
 
-   sofas3_head(&sofas3, pdata);
+  sofas3_head(&sofas3, pdata);
 
-   glPolygonOffset(WS_CLEAR_AREA_OFFSET, wsgl_get_edge_width(ast));
-   glEnable(GL_POLYGON_OFFSET_FILL);
-   wsgl_setup_background(ws);
+  glPolygonOffset(WS_CLEAR_AREA_OFFSET, wsgl_get_edge_width(ast));
+  glEnable(GL_POLYGON_OFFSET_FILL);
+  wsgl_setup_background(ws);
 
-   switch (sofas3.vflag) {
-      case PVERT_COORD:
-         for (i = 0; i < sofas3.num_sets; i++) {
-            num_lists = sofas3_num_vlists(&sofas3);
-            for (j = 0; j < num_lists; j++) {
-               sofas3_next_vlist(&vlist, &sofas3);
-               priv_clear_area3_points(&vlist,
-                                       sofas3.vdata.vertex_data.points);
-            }
-         }
-         break;
+  switch (sofas3.vflag) {
+  case PVERT_COORD:
+    for (i = 0; i < sofas3.num_sets; i++) {
+      num_lists = sofas3_num_vlists(&sofas3);
+      for (j = 0; j < num_lists; j++) {
+        sofas3_next_vlist(&vlist, &sofas3);
+        priv_clear_area3_points(&vlist,
+                                sofas3.vdata.vertex_data.points);
+      }
+    }
+    break;
 
-      case PVERT_COORD_COLOUR:
-         for (i = 0; i < sofas3.num_sets; i++) {
-            num_lists = sofas3_num_vlists(&sofas3);
-            for (j = 0; j < num_lists; j++) {
-               sofas3_next_vlist(&vlist, &sofas3);
-               priv_clear_area3_ptcolrs(&vlist,
-                                        sofas3.vdata.vertex_data.ptcolrs);
-            }
-         }
-         break;
+  case PVERT_COORD_COLOUR:
+    for (i = 0; i < sofas3.num_sets; i++) {
+      num_lists = sofas3_num_vlists(&sofas3);
+      for (j = 0; j < num_lists; j++) {
+        sofas3_next_vlist(&vlist, &sofas3);
+        priv_clear_area3_ptcolrs(&vlist,
+                                 sofas3.vdata.vertex_data.ptcolrs);
+      }
+    }
+    break;
 
-      case PVERT_COORD_NORMAL:
-         for (i = 0; i < sofas3.num_sets; i++) {
-            num_lists = sofas3_num_vlists(&sofas3);
-            for (j = 0; j < num_lists; j++) {
-               sofas3_next_vlist(&vlist, &sofas3);
-               priv_clear_area3_ptnorms(&vlist,
-                                        sofas3.vdata.vertex_data.ptnorms);
-            }
-         }
-         break;
+  case PVERT_COORD_NORMAL:
+    for (i = 0; i < sofas3.num_sets; i++) {
+      num_lists = sofas3_num_vlists(&sofas3);
+      for (j = 0; j < num_lists; j++) {
+        sofas3_next_vlist(&vlist, &sofas3);
+        priv_clear_area3_ptnorms(&vlist,
+                                 sofas3.vdata.vertex_data.ptnorms);
+      }
+    }
+    break;
 
-      case PVERT_COORD_COLOUR_NORMAL:
-         for (i = 0; i < sofas3.num_sets; i++) {
-            num_lists = sofas3_num_vlists(&sofas3);
-            for (j = 0; j < num_lists; j++) {
-               sofas3_next_vlist(&vlist, &sofas3);
-               priv_clear_area3_ptconorms(&vlist,
-                                          sofas3.vdata.vertex_data.ptconorms);
-            }
-         }
-         break;
+  case PVERT_COORD_COLOUR_NORMAL:
+    for (i = 0; i < sofas3.num_sets; i++) {
+      num_lists = sofas3_num_vlists(&sofas3);
+      for (j = 0; j < num_lists; j++) {
+        sofas3_next_vlist(&vlist, &sofas3);
+        priv_clear_area3_ptconorms(&vlist,
+                                   sofas3.vdata.vertex_data.ptconorms);
+      }
+    }
+    break;
 
-      default:
-         break;
-   }
+  default:
+    break;
+  }
 
-   glDisable(GL_POLYGON_OFFSET_FILL);
+  glDisable(GL_POLYGON_OFFSET_FILL);
 }
-

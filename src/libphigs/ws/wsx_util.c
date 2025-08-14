@@ -136,6 +136,7 @@ int phg_wsx_set_best_args(
       case PWST_HCOPY_TRUE_EPS:
       case PWST_HCOPY_TRUE_PDF:
       case PWST_HCOPY_TRUE_SVG:
+      case PWST_HCOPY_TRUE_OBJ:
           args[argc++] = GLX_RENDER_TYPE;
           args[argc++] = GLX_RGBA_BIT;
           args[argc++] = GLX_DRAWABLE_TYPE;

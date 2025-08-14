@@ -111,6 +111,7 @@ FTN_SUBROUTINE(popph)(
    phg_wst_add_ws_type(PCAT_EPS, 0);
    phg_wst_add_ws_type(PCAT_PDF, 0);
    phg_wst_add_ws_type(PCAT_SVG, 0);
+   phg_wst_add_ws_type(PCAT_OBJ, 0);
 
    PHG_WS_LIST = (Ws_handle *) malloc(sizeof(Ws_handle) * MAX_NO_OPEN_WS);
    if (PHG_WS_LIST == NULL) {

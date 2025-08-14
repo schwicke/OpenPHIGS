@@ -225,12 +225,12 @@ C     Delcare variables
       INTEGER WKID, I
 
 C     Configure choices dialog
-      PARAMETER(N=7, MAXSTR=30)
+      PARAMETER(N=8, MAXSTR=30)
       CHARACTER(LEN=80) DATREC(MAXSTR)
       CHARACTER(LEN=MAXSTR) STRING(N+1)
       INTEGER PROMPT(N),LSTR(N+1)
       DATA STRING/'EXIT', 'TGA', 'PNG', 'PNGA',
-     +     'EPS', 'PDF', 'SVG',
+     +     'EPS', 'PDF', 'SVG', 'OBJ',
      +     'Please choose output format'/
       REAL EVOL(6)
       REAL TIMOUT
@@ -243,8 +243,9 @@ C
 C     WKPSG: Grey scale    WKPSC: Color
 C     WKTGA: TGA output    WKPNG: PNG    WKPNGA: PNG with transparency
 C
-      INTEGER WKTGA, WKPNG, WKPNGA
-      PARAMETER (WKTGA=4, WKPNG=5, WKPNGA=6, WKEPS=7, WKPDF=8, WKSVG=9)
+      INTEGER WKTGA, WKPNG, WKPNGA, WKOBJ
+      PARAMETER (WKTGA=4, WKPNG=5, WKPNGA=6, WKEPS=7, WKPDF=8,
+     +     WKSVG=9, WKOBJ=10)
 C     Output format
       INTEGER WKTOUT, WKFORM, ICONDI
       INTEGER LUNPS
@@ -265,7 +266,8 @@ C     Choices: adjust length
       LSTR(5) = 3
       LSTR(6) = 3
       LSTR(7) = 3
-      LSTR(8) = 24
+      LSTR(8) = 3
+      LSTR(9) = 24
 C choose device
       ISTAT = PNCHOI
       ICHNR = 0
@@ -280,7 +282,7 @@ C choose device
       EVOL(6) = 1.
 
 C     Set timeout for user response
-      TIMOUT=60.0
+      TIMOUT=120.0
 C     Define redraw flag
       ICONDI = 0
 C     Open PHIGS and a workstation
@@ -331,6 +333,8 @@ C     set the output filenames accordingly
                CALL PSFNAME(WKTOUT, "hourglass.pdf")
             ELSE IF (CHNR.EQ.7) THEN
                CALL PSFNAME(WKTOUT, "hourglass.svg")
+            ELSE IF (CHNR.EQ.8) THEN
+               CALL PSFNAME(WKTOUT, "hourglass.obj")
             ENDIF
 C     draw again to output workstation
             CALL KYSABL(WKTOUT)

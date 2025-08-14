@@ -108,6 +108,7 @@ int wsgl_init(
    wsgl->dev_st.int_style_ind = -1;
    wsgl->dev_st.int_shad_meth = -1;
    /* initialise shaders */
+   wsgl_clear_geometry();
    wsgl_shaders(ws);
    status = TRUE;
 
@@ -225,6 +226,7 @@ void wsgl_clear(
    if (ws->drawable_id != 0){
      glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
    }
+   wsgl_clear_geometry();
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    if (ws->has_double_buffer) {
 #ifdef DEBUG

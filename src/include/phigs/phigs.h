@@ -2,7 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
-Copyright (c) 2022-2023 CERN
+Copyright (c) 2022-2025 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -163,7 +163,8 @@ typedef enum {
    PCAT_PNGA,
    PCAT_EPS,
    PCAT_PDF,
-   PCAT_SVG
+   PCAT_SVG,
+   PCAT_OBJ
 } Pws_cat;
 
 typedef enum {

@@ -81,6 +81,7 @@ SET(P_WSGL_SRCS
   wsgl/wsgl_light.c
   wsgl/wsgl_line.c
   wsgl/wsgl_marker.c
+  wsgl/wsgl_obj.c
   wsgl/wsgl_shaders.c
   wsgl/wsgl_sofas3clear.c
   wsgl/wsgl_sofas3edge.c

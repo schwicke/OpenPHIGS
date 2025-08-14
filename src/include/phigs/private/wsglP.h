@@ -3,7 +3,7 @@
 *
 *   This file is part of Open PHIGS
 *   Copyright (C) 2014 Surplus Users Ham Society
-*             (C) 2022-2023 CERN
+*             (C) 2022-2025 CERN
 *
 *   Open PHIGS is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Lesser General Public License as published by
@@ -118,6 +118,80 @@ typedef struct _Wsgl {
    GLuint          *select_buf;
    Ws_dev_st       dev_st;
 } Wsgl;
+
+/* record geometry */
+typedef enum {
+    GEOM_LINE,
+    GEOM_FACE
+} GeomType;
+
+typedef struct {
+    GeomType type;
+    int* indices;
+    int* norms;
+    int count;
+} Geometry;
+
+extern Ppoint3 * vertices;
+extern Ppoint3 * normals;
+extern int vertex_count;
+extern int normal_count;
+
+extern Geometry* geometries;
+extern int geom_count;
+extern Ppoint3 current_normal;
+
+extern int record_geom;
+extern int record_geom_fill;
+extern int normal_valid;
+
+#define MAX_VERTICES 10000
+/*******************************************************************************
+ * wsgl_set_current_normal(float x, float y, float z)
+ *
+ * DESCR:       add 3d vertex
+ * RETURNS:     Non zero or zero on error
+ */
+  void wsgl_set_current_normal(float x, float y, float z);
+
+/*******************************************************************************
+ * wsgl_add_vertex(float x, float y, float z)
+ *
+ * DESCR:       add 3d vertex
+ * RETURNS:     Non zero or zero on error
+ */
+  int wsgl_add_vertex(float x, float y, float z);
+
+/*******************************************************************************
+ * wsgl_add_normal(float x, float y, float z)
+ *
+ * DESCR:       add 3d vertex
+ * RETURNS:     Non zero or zero on error
+ */
+  int wsgl_add_normal(float x, float y, float z);
+
+/*******************************************************************************
+ * wsgl_add_geometry(GeomType type, const int* verts, const int* norms, int count)
+ *
+ * DESCR:       add 3d geometry
+ * RETURNS:     Non zero or zero on error
+ */
+  void wsgl_add_geometry(GeomType type, const int* verts, const int* norms, int count);
+
+/*******************************************************************************
+ * wsgl_export_obj(const char* filename, const char* title)
+ * DESCR:       export as OBJ file
+ * RETURNS:     Non zero or zero on error
+ */
+
+  void wsgl_export_obj(const char* filename, const char* title);
+/*******************************************************************************
+ * wsgl_clear_geometry()
+ *
+ * DESCR:       cleanup geometry records
+ * RETURNS:     Non zero or zero on error
+ */
+  void wsgl_clear_geometry();
 
 /*******************************************************************************
  * wsgl_init
@@ -1209,8 +1283,7 @@ void wsgl_anno_text_rel(
  * DESCR:	Initialise shaders
  * RETURNS:	N/A
  */
-
-  void wsgl_shaders(Ws * ws);
+void wsgl_shaders(Ws * ws);
 
 extern Phg_font *fnt_fonts[];
 extern unsigned char *wsgl_hatch_tbl[];

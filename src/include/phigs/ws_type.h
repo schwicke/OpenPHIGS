@@ -2,7 +2,7 @@
 
 Copyright (c) 1989, 1990, 1991  X Consortium
 Copyright (c) 2014 Surplus Users Ham Society
-Copyright (c) 2022-2023 CERN
+Copyright (c) 2022-2025 CERN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -67,6 +67,7 @@ extern "C" {
 #define PWST_HCOPY_TRUE_EPS              7
 #define PWST_HCOPY_TRUE_PDF              8
 #define PWST_HCOPY_TRUE_SVG              9
+#define PWST_HCOPY_TRUE_OBJ              10
 
 /* Default tables */
 #define WST_MIN_PREDEF_LINE_REPS         1

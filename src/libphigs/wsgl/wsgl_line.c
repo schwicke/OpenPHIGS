@@ -44,6 +44,8 @@ void wsgl_polyline(
    int i;
    Ppoint_list point_list;
    Pint *data = (Pint *) pdata;
+   int vertex_indices[MAX_VERTICES];
+   int n_vertices = 0;
 
    point_list.num_points = *data;
    point_list.points = (Ppoint *) &data[1];
@@ -53,6 +55,15 @@ void wsgl_polyline(
    for (i = 0; i < point_list.num_points; i++) {
       glVertex2f(point_list.points[i].x,
                  point_list.points[i].y);
+      if (record_geom){
+        vertex_indices[n_vertices] = wsgl_add_vertex(point_list.points[i].x,
+                                                     point_list.points[i].y,
+                                                     0.0);
+        n_vertices ++;
+      }
+   }
+   if (record_geom){
+     wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
    }
    glEnd();
 }
@@ -73,6 +84,8 @@ void wsgl_polyline3(
    int i;
    Ppoint_list3 point_list;
    Pint *data = (Pint *) pdata;
+   int vertex_indices[MAX_VERTICES];
+   int n_vertices = 0;
 
    point_list.num_points = *data;
    point_list.points = (Ppoint3 *) &data[1];
@@ -83,7 +96,15 @@ void wsgl_polyline3(
       glVertex3f(point_list.points[i].x,
                  point_list.points[i].y,
                  point_list.points[i].z);
+      if (record_geom){
+        vertex_indices[n_vertices] = wsgl_add_vertex(point_list.points[i].x,
+                                                     point_list.points[i].y,
+                                                     point_list.points[i].z);
+        n_vertices ++;
+      }
+   }
+   if (record_geom){
+     wsgl_add_geometry(GEOM_LINE, vertex_indices, NULL, n_vertices);
    }
    glEnd();
 }
-
