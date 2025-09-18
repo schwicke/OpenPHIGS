@@ -110,7 +110,7 @@ typedef struct _Css_ssl {
     El_handle   last_el;
 } Css_ssl;
 
-typedef int (*Css_func)();
+typedef int (*Css_func)(Css_handle, El_handle, caddr_t, Css_el_op);
 
 typedef struct _hash_block {
     Pint               struct_id;
@@ -260,7 +260,7 @@ int phg_css_struct_ref(Css_handle cssh,
                        Css_el_op opcode);
 int phg_css_no_data(Css_handle cssh,
                     El_handle elptr,
-                    caddr_t *argdata,
+                    caddr_t argdata,
                     Css_el_op opcode);
 void phg_css_el_search(Css_handle cssh,
                        Pint struct_id,

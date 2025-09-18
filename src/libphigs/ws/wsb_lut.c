@@ -141,21 +141,21 @@ void phg_wsb_destroy_LUTs(
     Ws_output_ws *ows = &ws->out_ws;
 
     if (ows->htab.line)
-       phg_htab_destroy(ows->htab.line, (void(*)())NULL);
+       phg_htab_destroy(ows->htab.line, (void(*)(int, char *))NULL);
     if (ows->htab.marker)
-       phg_htab_destroy(ows->htab.marker, (void(*)())NULL);
+       phg_htab_destroy(ows->htab.marker, (void(*)(int, char *))NULL);
     if (ows->htab.text)
-       phg_htab_destroy(ows->htab.text, (void(*)())NULL);
+       phg_htab_destroy(ows->htab.text, (void(*)(int, char *))NULL);
     if (ows->htab.interior)
-       phg_htab_destroy(ows->htab.interior, (void(*)())NULL);
+       phg_htab_destroy(ows->htab.interior, (void(*)(int, char *))NULL);
     if (ows->htab.edge)
-       phg_htab_destroy(ows->htab.edge, (void(*)())NULL);
+       phg_htab_destroy(ows->htab.edge, (void(*)(int, char*))NULL);
     if (ows->htab.colour)
-       phg_htab_destroy(ows->htab.colour, (void(*)())NULL);
+       phg_htab_destroy(ows->htab.colour, (void(*)(int, char *))NULL);
     if (ows->htab.view)
-       phg_htab_destroy(ows->htab.view, (void(*)())NULL);
+       phg_htab_destroy(ows->htab.view, (void(*)(int, char *))NULL);
     if (ows->htab.light_source)
-       phg_htab_destroy(ows->htab.light_source, (void(*)())NULL);
+       phg_htab_destroy(ows->htab.light_source, (void(*)(int, char *))NULL);
 }
 
 /*******************************************************************************

@@ -472,10 +472,10 @@ int phg_css_struct_ref(Css_handle cssh,
 
 int phg_css_no_data(Css_handle cssh,
                     El_handle elptr,
-                    caddr_t *argdata,
+                    caddr_t argdata,
                     Css_el_op opcode)
 {
-    Phg_ret_q_content *ret_data = (Phg_ret_q_content *)argdata;
+  Phg_ret_q_content *ret_data = (Phg_ret_q_content *)(&argdata);
 
     switch (opcode) {
       case CSS_EL_INQ_CONTENT:
@@ -484,7 +484,7 @@ int phg_css_no_data(Css_handle cssh,
         break;
 
       case CSS_EL_INQ_TYPE_SIZE:
-        ARGS_INQ_SIZE(argdata) = 0;
+        ARGS_INQ_SIZE(&argdata) = 0;
         break;
 
       default:

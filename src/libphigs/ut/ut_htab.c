@@ -141,7 +141,7 @@ Hash_table phg_htab_create(
 
 void phg_htab_destroy(
     Hash_table htab,
-    void (*destroy_entry)()
+    void (*destroy_entry)(int, caddr_t)
     )
 {
     int	i;
