@@ -26,7 +26,7 @@
 #include "err.h"
 #include "private/errP.h"
 
-void (*phg_errhandle)() = perr_hand;
+void (*phg_errhandle)(Pint,  Pint,  char *) = perr_hand;
 
 #define MSG_BUF_SIZE 255
 
@@ -254,8 +254,8 @@ void perr_log(
  */
 
 void pset_err_hand(
-   void (*new_err_hand)(),
-   void (**old_err_hand)()
+   void (*new_err_hand)(int,  int,  char *),
+   void (**old_err_hand)(int,  int,  char *)
    )
 {
    *old_err_hand = phg_errhandle;

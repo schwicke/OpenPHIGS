@@ -89,7 +89,7 @@ typedef struct _Err_struct {
 
 typedef Err_struct *Err_handle;
 
-extern void (*phg_errhandle)();
+  extern void (*phg_errhandle)(int, int, char*);
 
 #define ERR_SET_CUR_FUNC(erh, funcnum) \
     ((erh)->cur_func_num = (funcnum))
@@ -192,8 +192,8 @@ void perr_log(
  */
 
 void pset_err_hand(
-   void (*new_err_hand)(),
-   void (**old_err_hand)()
+   void (*new_err_hand)(int,  int,  char *),
+   void (**old_err_hand)(int,  int,  char *)
    );
 
 /*******************************************************************************

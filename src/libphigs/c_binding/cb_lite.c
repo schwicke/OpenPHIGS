@@ -37,12 +37,12 @@
  * DESCR:       inquire light source respresentation
  * RETURNS:     N/A
  */
-void pinq_light_src_rep( ws_id, index, type, err_ind, rep)
-     Pint  ws_id;
-     Pint  index;
-     Pinq_type  type;
-     Pint *err_ind;
-     Plight_src_bundle *rep;
+void pinq_light_src_rep(
+			Pint ws_id,
+			Pint index,
+			Pinq_type type,
+			Pint *err_ind,
+			Plight_src_bundle *rep)
 {
   Phg_ret         ret;
   Psl_ws_info     *wsinfo;
