@@ -429,7 +429,7 @@ FTN_SUBROUTINE(pgtpk)(
   pget_pick(depth, &status, &pick);
   *ppd = pick.depth;
   *stat = (int)status;
-#ifdef DEBUG
+#ifdef DEBUGINP
   printf("pgtpk: depth %d, stat %d, pickdepth %d\n", depth, status, pick.depth);
 #endif
   for (i=0; i<pick.depth; i++){

@@ -27,42 +27,42 @@
 #include "private/evtP.h"
 
 static char *eventNames[] = {
-   "Illegal Event",
-   "Illegal Event",
-   "KeyPress",
-   "KeyRelease",
-   "ButtonPress",
-   "ButtonRelease",
-   "MotionNotify",
-   "EnterNotify",
-   "LeaveNotify",
-   "FocusIn",
-   "FocusOut",
-   "KeymapNotify",
-   "Expose",
-   "GraphicsExpose",
-   "NoExpose",
-   "VisibilityNotify",
-   "CreateNotify",
-   "DestroyNotify",
-   "UnmapNotify",
-   "MapNotify",
-   "MapRequest",
-   "ReparentNotify",
-   "ConfigureNotify",
-   "ConfigureRequest",
-   "GravityNotify",
-   "ResizeRequest",
-   "CirculateNotify",
-   "CirculateRequest",
-   "PropertyNotify",
-   "SelectionClear",
-   "SelectionRequest",
-   "SelectionNotify",
-   "ColormapNotify",
-   "ClientMessage",
-   "MappingNotify",
-   "unknown event type"
+  "Illegal Event",
+  "Illegal Event",
+  "KeyPress",
+  "KeyRelease",
+  "ButtonPress",
+  "ButtonRelease",
+  "MotionNotify",
+  "EnterNotify",
+  "LeaveNotify",
+  "FocusIn",
+  "FocusOut",
+  "KeymapNotify",
+  "Expose",
+  "GraphicsExpose",
+  "NoExpose",
+  "VisibilityNotify",
+  "CreateNotify",
+  "DestroyNotify",
+  "UnmapNotify",
+  "MapNotify",
+  "MapRequest",
+  "ReparentNotify",
+  "ConfigureNotify",
+  "ConfigureRequest",
+  "GravityNotify",
+  "ResizeRequest",
+  "CirculateNotify",
+  "CirculateRequest",
+  "PropertyNotify",
+  "SelectionClear",
+  "SelectionRequest",
+  "SelectionNotify",
+  "ColormapNotify",
+  "ClientMessage",
+  "MappingNotify",
+  "unknown event type"
 };
 
 /*******************************************************************************
@@ -73,23 +73,23 @@ static char *eventNames[] = {
  */
 
 Phg_sin_evt_tbl* phg_sin_evt_tbl_create(
-   int num_events
-   )
+                                        int num_events
+                                        )
 {
-   Phg_sin_evt_tbl *ev_tbl;
+  Phg_sin_evt_tbl *ev_tbl;
 
-   ev_tbl = (Phg_sin_evt_tbl *) malloc(sizeof(Phg_sin_evt_tbl) +
-                                       sizeof(Phg_sin_evt_entry) * num_events);
-   if (ev_tbl != NULL) {
-      ev_tbl->num_events = num_events;
-      ev_tbl->events = (List *) &ev_tbl[1];
-      if (!phg_sin_evt_tbl_init(ev_tbl)) {
-         free(ev_tbl);
-         ev_tbl = NULL;
-      }
-   }
+  ev_tbl = (Phg_sin_evt_tbl *) malloc(sizeof(Phg_sin_evt_tbl) +
+                                      sizeof(Phg_sin_evt_entry) * num_events);
+  if (ev_tbl != NULL) {
+    ev_tbl->num_events = num_events;
+    ev_tbl->events = (List *) &ev_tbl[1];
+    if (!phg_sin_evt_tbl_init(ev_tbl)) {
+      free(ev_tbl);
+      ev_tbl = NULL;
+    }
+  }
 
-   return ev_tbl;
+  return ev_tbl;
 }
 
 /*******************************************************************************
@@ -100,16 +100,16 @@ Phg_sin_evt_tbl* phg_sin_evt_tbl_create(
  */
 
 int phg_sin_evt_tbl_init(
-   Phg_sin_evt_tbl *ev_tbl
-   )
+                         Phg_sin_evt_tbl *ev_tbl
+                         )
 {
-   int i;
+  int i;
 
-   for (i = 0; i < ev_tbl->num_events; i++) {
-      list_init(&ev_tbl->events[i]);
-   }
+  for (i = 0; i < ev_tbl->num_events; i++) {
+    list_init(&ev_tbl->events[i]);
+  }
 
-   return TRUE;
+  return TRUE;
 }
 
 /*******************************************************************************
@@ -120,10 +120,10 @@ int phg_sin_evt_tbl_init(
  */
 
 void phg_sin_evt_tbl_destroy(
-   Phg_sin_evt_tbl *ev_tbl
-   )
+                             Phg_sin_evt_tbl *ev_tbl
+                             )
 {
-   free(ev_tbl);
+  free(ev_tbl);
 }
 
 /*******************************************************************************
@@ -134,54 +134,54 @@ void phg_sin_evt_tbl_destroy(
  */
 
 int phg_sin_evt_register(
-   Phg_sin_evt_tbl *ev_tbl,
-   Display *display,
-   Window window,
-   int event_type,
-   caddr_t cdata,
-   void (*callback)(Display*, Window, caddr_t, XEvent*)
-   )
+                         Phg_sin_evt_tbl *ev_tbl,
+                         Display *display,
+                         Window window,
+                         int event_type,
+                         caddr_t cdata,
+                         void (*callback)(Display*, Window, caddr_t, XEvent*)
+                         )
 {
-   int status;
-   Phg_sin_evt_entry *ev;
+  int status;
+  Phg_sin_evt_entry *ev;
 
-#ifdef DEBUG
-   printf("sin_evt: phg_sin_evt_register\n");
-   printf("\t%-14s", eventNames[event_type]);
-   printf("\tWindow = %p, ", (void *) window);
-   printf("\tClient_data = %p\n", (void *) cdata);
+#ifdef DEBUGINP
+  printf("sin_evt: phg_sin_evt_register\n");
+  printf("\t%-14s", eventNames[event_type]);
+  printf("\tWindow = %p, ", (void *) window);
+  printf("\tClient_data = %p\n", (void *) cdata);
 #endif
-   /* First check if entry exists */
-   for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[event_type]);
-        ev != NULL;
-        ev = (Phg_sin_evt_entry *) NODE_NEXT(&ev->node)) {
-      if ((ev->display == display) &&
-          (ev->window == window) &&
-          (ev->cdata == cdata)) {
-         ev->callback = callback;
-         break;
-      }
-   }
+  /* First check if entry exists */
+  for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[event_type]);
+       ev != NULL;
+       ev = (Phg_sin_evt_entry *) NODE_NEXT(&ev->node)) {
+    if ((ev->display == display) &&
+        (ev->window == window) &&
+        (ev->cdata == cdata)) {
+      ev->callback = callback;
+      break;
+    }
+  }
 
-   /* Was not found */
-   if (ev == NULL) {
-      ev = (Phg_sin_evt_entry *) malloc(sizeof(Phg_sin_evt_entry));
-      if (ev == NULL) {
-         status = FALSE;
-      }
-      else {
-         ev->display = display;
-         ev->window = window;
-         ev->cdata = cdata;
-         ev->callback = callback;
-         list_add(&ev_tbl->events[event_type], &ev->node);
-      }
-   }
-   else {
-      status = TRUE;
-   }
+  /* Was not found */
+  if (ev == NULL) {
+    ev = (Phg_sin_evt_entry *) malloc(sizeof(Phg_sin_evt_entry));
+    if (ev == NULL) {
+      status = FALSE;
+    }
+    else {
+      ev->display = display;
+      ev->window = window;
+      ev->cdata = cdata;
+      ev->callback = callback;
+      list_add(&ev_tbl->events[event_type], &ev->node);
+    }
+  }
+  else {
+    status = TRUE;
+  }
 
-   return status;
+  return status;
 }
 
 /*******************************************************************************
@@ -192,27 +192,27 @@ int phg_sin_evt_register(
  */
 
 void phg_sin_evt_unregister(
-   Phg_sin_evt_tbl *ev_tbl,
-   Display *display,
-   Window window,
-   int event_type,
-   caddr_t cdata
-   )
+                            Phg_sin_evt_tbl *ev_tbl,
+                            Display *display,
+                            Window window,
+                            int event_type,
+                            caddr_t cdata
+                            )
 {
-   Phg_sin_evt_entry *ev;
+  Phg_sin_evt_entry *ev;
 
-   /* First check if entry exists */
-   for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[event_type]);
-        ev != NULL;
-        ev = (Phg_sin_evt_entry *) NODE_NEXT(&ev->node)) {
-      if ((ev->display == display) &&
-          (ev->window == window) &&
-          (ev->cdata == cdata)) {
-         list_remove(&ev_tbl->events[event_type], &ev->node);
-         free(ev);
-         break;
-      }
-   }
+  /* First check if entry exists */
+  for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[event_type]);
+       ev != NULL;
+       ev = (Phg_sin_evt_entry *) NODE_NEXT(&ev->node)) {
+    if ((ev->display == display) &&
+        (ev->window == window) &&
+        (ev->cdata == cdata)) {
+      list_remove(&ev_tbl->events[event_type], &ev->node);
+      free(ev);
+      break;
+    }
+  }
 }
 
 /*******************************************************************************
@@ -223,23 +223,23 @@ void phg_sin_evt_unregister(
  */
 
 void phg_sin_evt_unregister_display(
-   Phg_sin_evt_tbl *ev_tbl,
-   Display *display
-   )
+                                    Phg_sin_evt_tbl *ev_tbl,
+                                    Display *display
+                                    )
 {
-   int i;
-   Phg_sin_evt_entry *ev;
+  int i;
+  Phg_sin_evt_entry *ev;
 
-   for (i = 0; i < ev_tbl->num_events; i++) {
-      for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[i]);
-           ev != NULL;
-           ev = (Phg_sin_evt_entry *) NODE_NEXT(&ev->node)) {
-         if (ev->display == display) {
-            list_remove(&ev_tbl->events[i], &ev->node);
-            free(ev);
-         }
+  for (i = 0; i < ev_tbl->num_events; i++) {
+    for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[i]);
+         ev != NULL;
+         ev = (Phg_sin_evt_entry *) NODE_NEXT(&ev->node)) {
+      if (ev->display == display) {
+        list_remove(&ev_tbl->events[i], &ev->node);
+        free(ev);
       }
-   }
+    }
+  }
 }
 
 /*******************************************************************************
@@ -250,25 +250,25 @@ void phg_sin_evt_unregister_display(
  */
 
 void phg_sin_evt_unregister_window(
-   Phg_sin_evt_tbl *ev_tbl,
-   Display *display,
-   Window window
-   )
+                                   Phg_sin_evt_tbl *ev_tbl,
+                                   Display *display,
+                                   Window window
+                                   )
 {
-   int i;
-   Phg_sin_evt_entry *ev;
+  int i;
+  Phg_sin_evt_entry *ev;
 
-   for (i = 0; i < ev_tbl->num_events; i++) {
-      for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[i]);
-           ev != NULL;
-           ev = (Phg_sin_evt_entry *) NODE_NEXT(&ev->node)) {
-         if ((ev->display == display) &&
-             (ev->window == window)) {
-            list_remove(&ev_tbl->events[i], &ev->node);
-            free(ev);
-         }
+  for (i = 0; i < ev_tbl->num_events; i++) {
+    for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[i]);
+         ev != NULL;
+         ev = (Phg_sin_evt_entry *) NODE_NEXT(&ev->node)) {
+      if ((ev->display == display) &&
+          (ev->window == window)) {
+        list_remove(&ev_tbl->events[i], &ev->node);
+        free(ev);
       }
-   }
+    }
+  }
 }
 
 /*******************************************************************************
@@ -279,30 +279,33 @@ void phg_sin_evt_unregister_window(
  */
 
 void phg_sin_evt_dispatch(
-   Phg_sin_evt_tbl *ev_tbl,
-   Display *display,
-   XEvent *event
-   )
+                          Phg_sin_evt_tbl *ev_tbl,
+                          Display *display,
+                          XEvent *event
+                          )
 {
-   Phg_sin_evt_entry *ev;
-
-   /* First check if entry exists */
-   for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[event->type]);
-        ev != NULL;
-        ev = (Phg_sin_evt_entry *) NODE_NEXT(&ev->node)) {
-      if ((ev->display == display) &&
-          (ev->window == event->xany.window)) {
-#ifdef DEBUG
-         printf("%p\t", ev->cdata);
-         phg_sin_evt_print(event);
-         printf("\n");
+  Phg_sin_evt_entry *ev;
+#ifdef DEBUGINPUT
+      printf("phg_sin_evt_dispatch called\n");
 #endif
-         (*ev->callback)(display,
-                         event->xany.window,
-                         ev->cdata,
-                         event);
-      }
-   }
+  /* First check if entry exists */
+  for (ev = (Phg_sin_evt_entry *) LIST_HEAD(&ev_tbl->events[event->type]);
+       ev != NULL;
+       ev = (Phg_sin_evt_entry *) NODE_NEXT(&ev->node)) {
+    if ((ev->display == display) &&
+        (ev->window == event->xany.window)) {
+#ifdef DEBUGINPUT
+      printf("phg_sin_evt_dispatch event data\n");
+      printf("%p\t", ev->cdata);
+      phg_sin_evt_print(event);
+      printf("\n");
+#endif
+      (*ev->callback)(display,
+                      event->xany.window,
+                      ev->cdata,
+                      event);
+    }
+  }
 }
 
 /*******************************************************************************
@@ -311,12 +314,11 @@ void phg_sin_evt_dispatch(
  * DESCR:       Get event type name
  * RETURNS:     Pointer to string
  */
-
 char* phg_sin_evt_name(
-   XEvent *event
-   )
+                       XEvent *event
+                       )
 {
-   return eventNames[event->type];
+  return eventNames[event->type];
 }
 
 /*******************************************************************************
@@ -327,8 +329,8 @@ char* phg_sin_evt_name(
  */
 
 void phg_sin_evt_print(
-   XEvent *event
-   )
+                       XEvent *event
+                       )
 {
-   printf("%-14s", eventNames[event->type]);
+  printf("%-14s", eventNames[event->type]);
 }

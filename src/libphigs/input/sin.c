@@ -69,19 +69,18 @@ SOFTWARE.
  */
 
 void phg_sin_destroy(
-    Sin_input_ws *iws
-    )
+                     Sin_input_ws *iws
+                     )
 {
-    int	i;
-    printf("WARNING: phg_sin_destroy called .... may need fixing!\n");
-    phg_sin_dev_stop( iws );
-    phg_sin_ws_destroy_event_buf( iws );
-    phg_sin_dev_destroy_devices( iws );
-    phg_sin_cvs_destroy( iws );
-    for ( i = 0; i < 6; i++)
-	free(iws->devices[i]);
-    phg_sin_ws_free_notify_list( iws );
-    free(iws);
+  int i;
+  phg_sin_dev_stop( iws );
+  phg_sin_ws_destroy_event_buf( iws );
+  phg_sin_dev_destroy_devices( iws );
+  phg_sin_cvs_destroy( iws );
+  for ( i = 0; i < 6; i++)
+    free(iws->devices[i]);
+  phg_sin_ws_free_notify_list( iws );
+  free(iws);
 }
 
 /*******************************************************************************
@@ -90,143 +89,142 @@ void phg_sin_destroy(
  * DESCR:       Create input workstation
  * RETURNS:     Pointer to input workstation or NULL
  */
-
 Sin_handle phg_sin_create(
-    Sin_desc *desc,
-    Err_handle erh
-    )
+                          Sin_desc *desc,
+                          Err_handle erh
+                          )
 {
-    Sin_input_ws *iws;
-    Pint err = ERR900;
+  Sin_input_ws *iws;
+  Pint err = ERR900;
 
-    iws = (Sin_input_ws*) calloc(1, sizeof(Sin_input_ws));
-    if (iws == NULL) {
-	goto no_mem;
+  iws = (Sin_input_ws*) calloc(1, sizeof(Sin_input_ws));
+  if (iws == NULL) {
+    goto no_mem;
+  }
+
+  iws->erh = erh;
+  iws->queue = desc->queue;
+  iws->display = desc->display;
+  iws->output_window = desc->output_window;
+  iws->input_window = desc->input_window;
+  iws->shell = desc->shell;
+  iws->wsh = desc->wsh;
+  iws->ops.send_request = desc->send_request;
+  iws->ops.in_viewport = desc->in_viewport;
+
+  iws->wsid = desc->wsh->id;
+  iws->idt = desc->idt;
+  iws->num_devs = desc->idt->num_devs;
+
+  if (iws->num_devs.loc > 0) {
+    iws->devices[SIN_CLASS_INDEX(SIN_LOCATOR)] = (Sin_input_device*)
+      calloc((unsigned) iws->num_devs.loc, sizeof(Sin_input_device));
+    if (iws->devices[SIN_CLASS_INDEX(SIN_LOCATOR)] == NULL) {
+      goto no_mem;
     }
-
-    iws->erh = erh;
-    iws->queue = desc->queue;
-    iws->display = desc->display;
-    iws->output_window = desc->output_window;
-    iws->input_window = desc->input_window;
-    iws->shell = desc->shell;
-    iws->wsh = desc->wsh;
-    iws->ops.send_request = desc->send_request;
-    iws->ops.in_viewport = desc->in_viewport;
-
-    iws->wsid = desc->wsh->id;
-    iws->idt = desc->idt;
-    iws->num_devs = desc->idt->num_devs;
-
-    if (iws->num_devs.loc > 0) {
-        iws->devices[SIN_CLASS_INDEX(SIN_LOCATOR)] = (Sin_input_device*)
-            calloc((unsigned) iws->num_devs.loc, sizeof(Sin_input_device));
-        if (iws->devices[SIN_CLASS_INDEX(SIN_LOCATOR)] == NULL) {
-            goto no_mem;
-        }
+  }
+  if (iws->num_devs.stroke > 0) {
+    iws->devices[SIN_CLASS_INDEX(SIN_STROKE)] = (Sin_input_device*)
+      calloc((unsigned) iws->num_devs.stroke, sizeof(Sin_input_device));
+    if (iws->devices[SIN_CLASS_INDEX(SIN_STROKE)] == NULL) {
+      goto no_mem;
     }
-    if (iws->num_devs.stroke > 0) {
-        iws->devices[SIN_CLASS_INDEX(SIN_STROKE)] = (Sin_input_device*)
-            calloc((unsigned) iws->num_devs.stroke, sizeof(Sin_input_device));
-        if (iws->devices[SIN_CLASS_INDEX(SIN_STROKE)] == NULL) {
-            goto no_mem;
-        }
+  }
+  if (iws->num_devs.pick > 0) {
+    iws->devices[SIN_CLASS_INDEX(SIN_PICK)] = (Sin_input_device*)
+      calloc((unsigned) iws->num_devs.pick, sizeof(Sin_input_device));
+    if (iws->devices[SIN_CLASS_INDEX(SIN_PICK)] == NULL) {
+      goto no_mem;
     }
-
-    if (iws->num_devs.pick > 0) {
-        iws->devices[SIN_CLASS_INDEX(SIN_PICK)] = (Sin_input_device*)
-	    calloc((unsigned) iws->num_devs.pick, sizeof(Sin_input_device));
-        if (iws->devices[SIN_CLASS_INDEX(SIN_PICK)] == NULL) {
-            goto no_mem;
-        }
-    }
-
-    if (iws->num_devs.val > 0) {
-        iws->devices[SIN_CLASS_INDEX(SIN_VALUATOR)] = (Sin_input_device*)
-            calloc((unsigned) iws->num_devs.val, sizeof(Sin_input_device));
-        if (iws->devices[SIN_CLASS_INDEX(SIN_VALUATOR)] == NULL) {
-            goto no_mem;
-        }
-    }
-
-    if (iws->num_devs.choice > 0) {
 #ifdef DEBUGINP
-      printf("Creating choice\n");
+    printf("Created pick device\n");
 #endif
-        iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)] = (Sin_input_device*)
-            calloc((unsigned) iws->num_devs.choice, sizeof(Sin_input_device));
-        if (iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)] == NULL) {
-            goto no_mem;
-        }
+  }
+  if (iws->num_devs.val > 0) {
+    iws->devices[SIN_CLASS_INDEX(SIN_VALUATOR)] = (Sin_input_device*)
+      calloc((unsigned) iws->num_devs.val, sizeof(Sin_input_device));
+    if (iws->devices[SIN_CLASS_INDEX(SIN_VALUATOR)] == NULL) {
+      goto no_mem;
     }
-
-    if (iws->num_devs.string > 0) {
-        iws->devices[SIN_CLASS_INDEX(SIN_STRING)] = (Sin_input_device*)
-            calloc((unsigned) iws->num_devs.string, sizeof(Sin_input_device));
-        if (iws->devices[SIN_CLASS_INDEX(SIN_STRING)] == NULL) {
-            goto no_mem;
-        }
+  }
+  if (iws->num_devs.choice > 0) {
+#ifdef DEBUGINP
+    printf("Creating choice\n");
+#endif
+    iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)] = (Sin_input_device*)
+      calloc((unsigned) iws->num_devs.choice, sizeof(Sin_input_device));
+    if (iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)] == NULL) {
+      goto no_mem;
     }
+  }
 
-    phg_sin_dev_init_devices( iws );
-
-    SIN_DISABLE_BREAK(iws);
-
-    if ( !phg_sin_ws_event_buf_init( iws ) )
-	goto no_mem;
-
-    if ( !(iws->window_table = phg_sin_cvs_create( iws )) ) {
-	phg_sin_ws_destroy_event_buf( iws );
-	goto no_mem;
+  if (iws->num_devs.string > 0) {
+    iws->devices[SIN_CLASS_INDEX(SIN_STRING)] = (Sin_input_device*)
+      calloc((unsigned) iws->num_devs.string, sizeof(Sin_input_device));
+    if (iws->devices[SIN_CLASS_INDEX(SIN_STRING)] == NULL) {
+      goto no_mem;
     }
+  }
 
-    if ( !phg_sin_dev_create_devices( iws ) ) {
-	phg_sin_ws_destroy_event_buf( iws );
-	phg_sin_cvs_destroy( iws );
-	goto no_mem;
-    }
+  phg_sin_dev_init_devices( iws );
 
-    if ( !phg_sin_dev_start( iws ) ) {
-	phg_sin_ws_destroy_event_buf( iws );
-	phg_sin_dev_destroy_devices( iws );
-	phg_sin_cvs_destroy( iws );
-	goto no_mem;
-    }
+  SIN_DISABLE_BREAK(iws);
 
-    return iws;
+  if ( !phg_sin_ws_event_buf_init( iws ) )
+    goto no_mem;
 
-no_mem:
-    ERR_BUF(erh, err);
+  if ( !(iws->window_table = phg_sin_cvs_create( iws )) ) {
+    phg_sin_ws_destroy_event_buf( iws );
+    goto no_mem;
+  }
 
-    if (iws->devices[SIN_CLASS_INDEX(SIN_LOCATOR)] != NULL) {
-        free(iws->devices[SIN_CLASS_INDEX(SIN_LOCATOR)]);
-    }
+  if ( !phg_sin_dev_create_devices( iws ) ) {
+    phg_sin_ws_destroy_event_buf( iws );
+    phg_sin_cvs_destroy( iws );
+    goto no_mem;
+  }
 
-    if (iws->devices[SIN_CLASS_INDEX(SIN_STROKE)] != NULL) {
-        free(iws->devices[SIN_CLASS_INDEX(SIN_STROKE)]);
-    }
+  if ( !phg_sin_dev_start( iws ) ) {
+    phg_sin_ws_destroy_event_buf( iws );
+    phg_sin_dev_destroy_devices( iws );
+    phg_sin_cvs_destroy( iws );
+    goto no_mem;
+  }
 
-    if (iws->devices[SIN_CLASS_INDEX(SIN_PICK)] != NULL) {
-        free(iws->devices[SIN_CLASS_INDEX(SIN_PICK)]);
-    }
+  return iws;
 
-    if (iws->devices[SIN_CLASS_INDEX(SIN_VALUATOR)] != NULL) {
-        free(iws->devices[SIN_CLASS_INDEX(SIN_VALUATOR)]);
-    }
+ no_mem:
+  ERR_BUF(erh, err);
 
-    if (iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)] != NULL) {
-        free(iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)]);
-    }
+  if (iws->devices[SIN_CLASS_INDEX(SIN_LOCATOR)] != NULL) {
+    free(iws->devices[SIN_CLASS_INDEX(SIN_LOCATOR)]);
+  }
 
-    if (iws->devices[SIN_CLASS_INDEX(SIN_STRING)] != NULL) {
-        free(iws->devices[SIN_CLASS_INDEX(SIN_STRING)]);
-    }
+  if (iws->devices[SIN_CLASS_INDEX(SIN_STROKE)] != NULL) {
+    free(iws->devices[SIN_CLASS_INDEX(SIN_STROKE)]);
+  }
 
-    if (iws != NULL) {
-        free(iws);
-    }
+  if (iws->devices[SIN_CLASS_INDEX(SIN_PICK)] != NULL) {
+    free(iws->devices[SIN_CLASS_INDEX(SIN_PICK)]);
+  }
 
-    return NULL;
+  if (iws->devices[SIN_CLASS_INDEX(SIN_VALUATOR)] != NULL) {
+    free(iws->devices[SIN_CLASS_INDEX(SIN_VALUATOR)]);
+  }
+
+  if (iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)] != NULL) {
+    free(iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)]);
+  }
+
+  if (iws->devices[SIN_CLASS_INDEX(SIN_STRING)] != NULL) {
+    free(iws->devices[SIN_CLASS_INDEX(SIN_STRING)]);
+  }
+
+  if (iws != NULL) {
+    free(iws);
+  }
+
+  return NULL;
 }
 
 /*******************************************************************************
@@ -237,111 +235,114 @@ no_mem:
  */
 
 void phg_sin_init_device(
-    Sin_input_ws *iws,
-    Sin_input_class inp_class,
-    Pint dev_num,
-    Sin_dev_init_data *new_data
-    )
+                         Sin_input_ws *iws,
+                         Sin_input_class inp_class,
+                         Pint dev_num,
+                         Sin_dev_init_data *new_data
+                         )
 {
-    Sin_input_device *dev = SIN_DEV(iws, inp_class, dev_num);
-    size_t buf_size;
+  Sin_input_device *dev = SIN_DEV(iws, inp_class, dev_num);
+  size_t buf_size;
 
-#ifdef DEBUG
-    printf("sin: phg_sin_init_device\n");
-    printf("\tDevice class: %d\n", inp_class);
-    printf("Device number %d at %ld\n", dev_num, (long)dev);
-#endif
-    if ( !dev->flags.exists )
-	return;
-
-    /* Do anything that affects the whole workstation. */
-	/* nothing to do right now */
-
-    /* Do the device specific stuff. */
-    if ( dev->dev_ops.init ) {
-	(dev->dev_ops.init)( dev, new_data );
-    }
-
-    /* Update the Sin internal state. */
-    dev->client_data = new_data->client_data;
-    dev->pe_type = new_data->pe_type;
-    dev->echo_area = new_data->echo_area;
-    switch (dev->inp_class) {
-        case SIN_LOCATOR:
-	    SIN_COPY_LOC_INIT_DATA( new_data, dev)
-            break;
-	case SIN_STROKE: {
-	    /* Allocate room for request and sample event. */
-	    /* TODO: detect allocation failure and free this at ws close. */
-	    Ppoint3		*wc_pts;
-	    if ( dev->data.stroke.buf_size < new_data->data.stroke.buf_size) {
-		if ( dev->data.stroke.wc_pts )
-		    free(dev->data.stroke.wc_pts);
-		wc_pts = (Ppoint3*)
-		    malloc(new_data->data.stroke.buf_size * sizeof(Ppoint3));
-	    } else
-		wc_pts = dev->data.stroke.wc_pts;
-
-	    if ( dev->data.stroke.init_pts )
-		free(dev->data.stroke.init_pts);
-	    /* TODO: Make a macro to only copy the relevant fields. */
-	    dev->data = new_data->data;
-	    dev->data.stroke.wc_pts = wc_pts;
-	    if ( new_data->data.stroke.count > 0 )
-		memcpy(wc_pts, new_data->data.stroke.wc_pts,
-		    new_data->data.stroke.count * sizeof(Ppoint3) );
-            } break;
-	case SIN_VALUATOR:
-	    SIN_COPY_VAL_INIT_DATA( new_data, dev)
-            dev->data.valuator.value = dev->data.valuator.init_value;
-	    break;
-	case SIN_CHOICE:
-	    SIN_COPY_CHOICE_INIT_DATA( new_data, dev)
-            dev->data.choice.cur_choice = dev->data.choice.init_choice;
-	    switch ( dev->pe_type ) {
-		case 1:
-		case 3:
-		case -3:
-		case 4:
-		case -4:
-		    dev->data.choice.count = new_data->data.choice.count;
-		    dev->data.choice.choices.strings =
-			new_data->data.choice.choices.strings;
-		    break;
-	    }
-	    break;
-	case SIN_STRING: {
-	    /* Allocate buffer. */
-	    /* TODO: detect allocation failure and free this at ws close. */
-	    char	*str;
 #ifdef DEBUGINP
-	    printf("Sin.c: Allocating String buffer of size old: %d new:%d\n",
-		   dev->data.string.buf_size,
-		   new_data->data.string.buf_size);
+  printf("sin: phg_sin_init_device\n");
+  printf("\tDevice class: %d\n", inp_class);
+  printf("Device number %d at %ld\n", dev_num, (long)dev);
 #endif
-	    if ( dev->data.string.buf_size < new_data->data.string.buf_size) {
-		if ( dev->data.string.string )
-		    free( dev->data.string.string);
-		str = malloc(new_data->data.string.buf_size);
-		buf_size = new_data->data.string.buf_size;
-	    } else {
-	        str = dev->data.string.string;
-		buf_size = dev->data.string.buf_size;
-	    }
-	    dev->data = new_data->data;
-	    dev->data.string.string = str;
-	    dev->data.string.buf_size = buf_size;
-	    } break;
-	case SIN_PICK:
-	    SIN_COPY_PICK_INIT_DATA(new_data, dev)
-	    break;
+  if ( !dev->flags.exists )
+    return;
+
+  /* Do anything that affects the whole workstation. */
+  /* nothing to do right now */
+
+  /* Do the device specific stuff. */
+  if ( dev->dev_ops.init ) {
+    (dev->dev_ops.init)( dev, new_data );
+  }
+
+  /* Update the Sin internal state. */
+  dev->client_data = new_data->client_data;
+  dev->pe_type = new_data->pe_type;
+  dev->echo_area = new_data->echo_area;
+  switch (dev->inp_class) {
+  case SIN_LOCATOR:
+    SIN_COPY_LOC_INIT_DATA( new_data, dev)
+      break;
+  case SIN_STROKE: {
+    /* Allocate room for request and sample event. */
+    /* TODO: detect allocation failure and free this at ws close. */
+    Ppoint3		*wc_pts;
+    if ( dev->data.stroke.buf_size < new_data->data.stroke.buf_size) {
+      if ( dev->data.stroke.wc_pts )
+        free(dev->data.stroke.wc_pts);
+      wc_pts = (Ppoint3*)
+        malloc(new_data->data.stroke.buf_size * sizeof(Ppoint3));
+    } else
+      wc_pts = dev->data.stroke.wc_pts;
+
+    if ( dev->data.stroke.init_pts )
+      free(dev->data.stroke.init_pts);
+    /* TODO: Make a macro to only copy the relevant fields. */
+    dev->data = new_data->data;
+    dev->data.stroke.wc_pts = wc_pts;
+    if ( new_data->data.stroke.count > 0 )
+      memcpy(wc_pts, new_data->data.stroke.wc_pts,
+             new_data->data.stroke.count * sizeof(Ppoint3) );
+  } break;
+  case SIN_VALUATOR:
+    SIN_COPY_VAL_INIT_DATA( new_data, dev)
+      dev->data.valuator.value = dev->data.valuator.init_value;
+    break;
+  case SIN_CHOICE:
+    SIN_COPY_CHOICE_INIT_DATA( new_data, dev)
+      dev->data.choice.cur_choice = dev->data.choice.init_choice;
+    switch ( dev->pe_type ) {
+    case 1:
+    case 3:
+    case -3:
+    case 4:
+    case -4:
+      dev->data.choice.count = new_data->data.choice.count;
+      dev->data.choice.choices.strings =
+        new_data->data.choice.choices.strings;
+      break;
     }
+    break;
+  case SIN_STRING: {
+    /* Allocate buffer. */
+    /* TODO: detect allocation failure and free this at ws close. */
+    char	*str;
 #ifdef DEBUGINP
-    printf("Area for this device is: ll(%d %d) up(%d %d)\n",
-	   dev->echo_area.ll.x,
-	   dev->echo_area.ll.y,
-	   dev->echo_area.ur.x,
-	   dev->echo_area.ur.y);
+    printf("Sin.c: Allocating String buffer of size old: %d new:%d\n",
+           dev->data.string.buf_size,
+           new_data->data.string.buf_size);
+#endif
+    if ( dev->data.string.buf_size < new_data->data.string.buf_size) {
+      if ( dev->data.string.string )
+        free( dev->data.string.string);
+      str = malloc(new_data->data.string.buf_size);
+      buf_size = new_data->data.string.buf_size;
+    } else {
+      str = dev->data.string.string;
+      buf_size = dev->data.string.buf_size;
+    }
+    dev->data = new_data->data;
+    dev->data.string.string = str;
+    dev->data.string.buf_size = buf_size;
+  } break;
+  case SIN_PICK:
+    SIN_COPY_PICK_INIT_DATA(new_data, dev)
+#ifdef DEBUGINP
+    printf("Copied pick init data\n");
+#endif
+      break;
+  }
+#ifdef DEBUGINP
+  printf("Area for this device is: ll(%d %d) up(%d %d)\n",
+         dev->echo_area.ll.x,
+         dev->echo_area.ll.y,
+         dev->echo_area.ur.x,
+         dev->echo_area.ur.y);
 #endif
 }
 
@@ -353,48 +354,48 @@ void phg_sin_init_device(
  */
 
 void phg_sin_set_mode(
-    Sin_input_ws *iws,
-    Sin_set_mode_data *md,
-    Sin_enable_data *ed
-    )
+                      Sin_input_ws *iws,
+                      Sin_set_mode_data *md,
+                      Sin_enable_data *ed
+                      )
 {
-    Sin_input_device *dev = SIN_DEV(iws, md->inp_class, md->dev_num);
+  Sin_input_device *dev = SIN_DEV(iws, md->inp_class, md->dev_num);
 
-    if ( !dev->flags.exists )
-	return;
+  if ( !dev->flags.exists )
+    return;
 #ifdef DEBUGINP
-    printf("phg_sin_set_mode called\n");
+  printf("phg_sin_set_mode called\n");
 #endif
-    /* Turn old device off if it's on. */
-    if ( dev->flags.on ) {
+  /* Turn old device off if it's on. */
+  if ( dev->flags.on ) {
 #ifdef DEBUGINP
-      printf("phg_sin_set_mode called: disabling device\n");
+    printf("phg_sin_set_mode called: disabling device\n");
 #endif
-      phg_sin_ws_disable_device( dev);
+    phg_sin_ws_disable_device( dev);
 
-      /* Allow the cancellation of REQUEST_PENDING. */
+    /* Allow the cancellation of REQUEST_PENDING. */
 
-      if ( dev->mode == SIN_REQUEST_PENDING ) {
-	dev->mode = SIN_REQUEST;
-	SIN_DISABLE_BREAK(dev->ws);
-      }
+    if ( dev->mode == SIN_REQUEST_PENDING ) {
+      dev->mode = SIN_REQUEST;
+      SIN_DISABLE_BREAK(dev->ws);
     }
+  }
 
-    dev->mode = md->mode;
-    dev->echo_sw = md->echo;
-    SIN_SET_ENABLE_DATA(dev, ed)
+  dev->mode = md->mode;
+  dev->echo_sw = md->echo;
+  SIN_SET_ENABLE_DATA(dev, ed)
 
 #ifdef DEBUGINP
-      printf("Device mode is %d\n", dev->mode);
+    printf("Device mode is %d\n", dev->mode);
 #endif
-    /* turn device on if usable */
-    if ( dev->mode == SIN_EVENT || dev->mode == SIN_SAMPLE) {
+  /* turn device on if usable */
+  if ( dev->mode == SIN_EVENT || dev->mode == SIN_SAMPLE) {
 #ifdef DEBUGINP
-      printf("Resetting and enabling device \n");
+    printf("Resetting and enabling device \n");
 #endif
-      phg_sin_ws_reset_device( dev );
-      phg_sin_ws_enable_device( dev );
-    }
+    phg_sin_ws_reset_device( dev );
+    phg_sin_ws_enable_device( dev );
+  }
 }
 
 /*******************************************************************************
@@ -405,25 +406,25 @@ void phg_sin_set_mode(
  */
 
 void phg_sin_sample(
-    Sin_input_ws *iws,
-    Sin_input_class inp_class,
-    Pint dev_num,
-    Sin_input_event *event
-    )
+                    Sin_input_ws *iws,
+                    Sin_input_class inp_class,
+                    Pint dev_num,
+                    Sin_input_event *event
+                    )
 {
-    Sin_input_device *dev = SIN_DEV(iws, inp_class, dev_num);
+  Sin_input_device *dev = SIN_DEV(iws, inp_class, dev_num);
 
 #ifdef DEBUG
-    printf("sin: phg_sin_sample\n");
+  printf("sin: phg_sin_sample\n");
 #endif
 
-    if ( !dev->flags.exists )
-	return;
+  if ( !dev->flags.exists )
+    return;
 
-    if ( dev->dev_ops.sample ) {
-	(dev->dev_ops.sample)( dev );
-    }
-    phg_sin_ws_load_event( dev, event );
+  if ( dev->dev_ops.sample ) {
+    (dev->dev_ops.sample)( dev );
+  }
+  phg_sin_ws_load_event( dev, event );
 }
 
 /*******************************************************************************
@@ -434,42 +435,42 @@ void phg_sin_sample(
  */
 
 void phg_sin_request(
-    Sin_input_ws *iws,
-    Sin_input_class inp_class,
-    Pint dev_num,
-    Sin_enable_data *ed
-    )
+                     Sin_input_ws *iws,
+                     Sin_input_class inp_class,
+                     Pint dev_num,
+                     Sin_enable_data *ed
+                     )
 {
-    Sin_input_device *dev = SIN_DEV(iws, inp_class, dev_num);
+  Sin_input_device *dev = SIN_DEV(iws, inp_class, dev_num);
 
 #ifdef DEBUGINP
-    printf("Entering phg_sin_request\n");
+  printf("Entering phg_sin_request\n");
 #endif
-    if ( !dev->flags.exists ){
+  if ( !dev->flags.exists ){
 #ifdef DEBUGINP
-      printf("No flags => returning\n");
+    printf("No flags => returning\n");
 #endif
-      return;
-    }
+    return;
+  }
 #ifdef DEBUGINP
-    printf("using SIN_SET_ENABLE_DATA\n");
+  printf("using SIN_SET_ENABLE_DATA\n");
 #endif
-    SIN_SET_ENABLE_DATA(dev, ed)
+  SIN_SET_ENABLE_DATA(dev, ed)
     dev->mode = SIN_REQUEST_PENDING;
 #ifdef DEBUGINP
-    printf("using SIN_ENABLE_BREAK\n");
+  printf("using SIN_ENABLE_BREAK\n");
 #endif
-    SIN_ENABLE_BREAK(dev);
+  SIN_ENABLE_BREAK(dev);
 #ifdef DEBUGINP
-      printf("Resetting device\n");
+  printf("Resetting device\n");
 #endif
-    phg_sin_ws_reset_device( dev );
+  phg_sin_ws_reset_device( dev );
 #ifdef DEBUGINP
-      printf("Enabling device\n");
+  printf("Enabling device\n");
 #endif
-    phg_sin_ws_enable_device( dev );
+  phg_sin_ws_enable_device( dev );
 #ifdef DEBUGINP
-      printf("Done with phg_sin_request\n");
+  printf("Done with phg_sin_request\n");
 #endif
 }
 
@@ -481,46 +482,46 @@ void phg_sin_request(
  */
 
 void phg_sin_repaint(
-    Sin_input_ws *iws,
-    Pint num_rects,
-    XRectangle *rects
-    )
+                     Sin_input_ws *iws,
+                     Pint num_rects,
+                     XRectangle *rects
+                     )
 {
-    Sin_input_device *dev;
-    int i;
+  Sin_input_device *dev;
+  int i;
 
-    /* Only repaint active devices. */
+  /* Only repaint active devices. */
 
-    dev = iws->devices[SIN_CLASS_INDEX(SIN_LOCATOR)];
-    for ( i = 0; i < iws->num_devs.loc; i++, dev++ ) {
-	if ( dev->flags.on && dev->dev_ops.repaint )
-		(dev->dev_ops.repaint)( dev, num_rects, rects );
-    }
-    dev = iws->devices[SIN_CLASS_INDEX(SIN_STROKE)];
-    for ( i = 0; i < iws->num_devs.stroke; i++, dev++ ) {
-	if ( dev->flags.on && dev->dev_ops.repaint )
-		(dev->dev_ops.repaint)( dev, num_rects, rects );
-    }
-    dev = iws->devices[SIN_CLASS_INDEX(SIN_PICK)];
-    for ( i = 0; i < iws->num_devs.pick; i++, dev++ ) {
-	if ( dev->flags.on && dev->dev_ops.repaint )
-		(dev->dev_ops.repaint)( dev, num_rects, rects );
-    }
-    dev = iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)];
-    for ( i = 0; i < iws->num_devs.choice; i++, dev++ ) {
-	if ( dev->flags.on && dev->dev_ops.repaint )
-		(dev->dev_ops.repaint)( dev, num_rects, rects );
-    }
-    dev = iws->devices[SIN_CLASS_INDEX(SIN_VALUATOR)];
-    for ( i = 0; i < iws->num_devs.val; i++, dev++ ) {
-	if ( dev->flags.on && dev->dev_ops.repaint )
-		(dev->dev_ops.repaint)( dev, num_rects, rects );
-    }
-    dev = iws->devices[SIN_CLASS_INDEX(SIN_STRING)];
-    for ( i = 0; i < iws->num_devs.string; i++, dev++ ) {
-	if ( dev->flags.on && dev->dev_ops.repaint )
-		(dev->dev_ops.repaint)( dev, num_rects, rects );
-    }
+  dev = iws->devices[SIN_CLASS_INDEX(SIN_LOCATOR)];
+  for ( i = 0; i < iws->num_devs.loc; i++, dev++ ) {
+    if ( dev->flags.on && dev->dev_ops.repaint )
+      (dev->dev_ops.repaint)( dev, num_rects, rects );
+  }
+  dev = iws->devices[SIN_CLASS_INDEX(SIN_STROKE)];
+  for ( i = 0; i < iws->num_devs.stroke; i++, dev++ ) {
+    if ( dev->flags.on && dev->dev_ops.repaint )
+      (dev->dev_ops.repaint)( dev, num_rects, rects );
+  }
+  dev = iws->devices[SIN_CLASS_INDEX(SIN_PICK)];
+  for ( i = 0; i < iws->num_devs.pick; i++, dev++ ) {
+    if ( dev->flags.on && dev->dev_ops.repaint )
+      (dev->dev_ops.repaint)( dev, num_rects, rects );
+  }
+  dev = iws->devices[SIN_CLASS_INDEX(SIN_CHOICE)];
+  for ( i = 0; i < iws->num_devs.choice; i++, dev++ ) {
+    if ( dev->flags.on && dev->dev_ops.repaint )
+      (dev->dev_ops.repaint)( dev, num_rects, rects );
+  }
+  dev = iws->devices[SIN_CLASS_INDEX(SIN_VALUATOR)];
+  for ( i = 0; i < iws->num_devs.val; i++, dev++ ) {
+    if ( dev->flags.on && dev->dev_ops.repaint )
+      (dev->dev_ops.repaint)( dev, num_rects, rects );
+  }
+  dev = iws->devices[SIN_CLASS_INDEX(SIN_STRING)];
+  for ( i = 0; i < iws->num_devs.string; i++, dev++ ) {
+    if ( dev->flags.on && dev->dev_ops.repaint )
+      (dev->dev_ops.repaint)( dev, num_rects, rects );
+  }
 }
 
 /*******************************************************************************
@@ -531,19 +532,19 @@ void phg_sin_repaint(
  */
 
 void phg_sin_resize_dev(
-    Sin_input_ws *ws,
-    Sin_input_class inp_class,
-    Pint dev_num,
-    Sin_enable_data *ed,
-    XRectangle *old_rect,
-    XRectangle *new_rect
-    )
+                        Sin_input_ws *ws,
+                        Sin_input_class inp_class,
+                        Pint dev_num,
+                        Sin_enable_data *ed,
+                        XRectangle *old_rect,
+                        XRectangle *new_rect
+                        )
 {
-    Sin_input_device *dev = SIN_DEV( ws, inp_class, dev_num);
+  Sin_input_device *dev = SIN_DEV( ws, inp_class, dev_num);
 
-    if ( dev->flags.on ) {
-	SIN_SET_ENABLE_DATA( dev, ed)
-	if ( dev->dev_ops.resize )
-	    (dev->dev_ops.resize)( dev, old_rect, new_rect );
-    }
+  if ( dev->flags.on ) {
+    SIN_SET_ENABLE_DATA( dev, ed)
+      if ( dev->dev_ops.resize )
+        (dev->dev_ops.resize)( dev, old_rect, new_rect );
+  }
 }

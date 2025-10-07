@@ -876,7 +876,7 @@ void phg_wsb_traverse_net(
 
   wsgl_begin_structure(ws, structp->struct_id);
   el = structp->first_el;
-  while ( 1 ) {	/* termination test is at the bottom */
+  while ( 1 ) { /* termination test is at the bottom */
     switch ( el->eltype ) {
     case PELEM_NIL:
       break;
@@ -884,6 +884,9 @@ void phg_wsb_traverse_net(
       phg_wsb_traverse_net( ws, (Struct_handle)el->eldata.ptr );
       break;
     default:
+#ifdef DEBUGINPUT
+      printf("Render element %d\n", (int)el->eltype);
+#endif
       wsgl_render_element(ws, el);
       break;
     }
@@ -892,6 +895,9 @@ void phg_wsb_traverse_net(
       break;  /* out of the while over all elements in struct */
     el = el->next;
   }
+#ifdef DEBUGINPUT
+  printf("Calling wsgl_end_structure\n");
+#endif
   wsgl_end_structure(ws);
 }
 
@@ -2278,28 +2284,46 @@ int phg_wsb_resolve_pick(
   Pint err_ind, depth;
   Wsb_output_ws *owsb = &ws->out_ws.model.b;
 
+#ifdef DEBUGINP
+    printf("phg_wsb_resolve_pick called\n");
+#endif
+
   WSB_CHECK_POSTED(&owsb->posted);
   if (WSB_SOME_POSTED(&owsb->posted)) {
+#ifdef DEBUGINP
+    printf("phg_wsb_resolve_pick posted is true\n");
+#endif
     box.x = dc_pt->x;
     box.y = dc_pt->y;
     box.distance = 3.0;
-
+#ifdef DEBUGINP
+    printf("phg_wsb_resolve_pick box %d %d\n", box.x, box.y);
+#endif
     wsgl_set_filter(ws,
                     PHG_ARGS_FLT_PICK,
                     dev->filter.incl,
                     dev->filter.excl);
     wsgl_begin_pick(ws, &box);
-
+#ifdef DEBUGINP
+    printf("phg_wsb_resolve_pick begin pick\n");
+#endif
     post_str = owsb->posted.highest.lower;
     end = &(owsb->posted.lowest);
     while (post_str != end) {
+#ifdef DEBUGINPUT
+      printf("phg_wsb_resolve_pick checking structure\n");
+#endif
       phg_wsb_traverse_net(ws, post_str->structh);
       post_str = post_str->lower;
     }
-
+#ifdef DEBUGINP
+    printf("phg_wsb_resolve_pick ending pick\n");
+#endif
     wsgl_end_pick(ws, &err_ind, &depth, &elmts);
   }
-
+#ifdef DEBUGINP
+  printf("phg_wsb_resolve_pick depth is %d err %d\n", depth, err_ind);
+#endif
   if (err_ind != 0) {
     ERR_REPORT(ws->erh, err_ind);
     status = FALSE;
@@ -2309,6 +2333,9 @@ int phg_wsb_resolve_pick(
     pick->pick_path.path_list = (Ppick_path_elem *)
       malloc(sizeof(Ppick_path_elem) * depth);
     if (pick->pick_path.path_list == NULL) {
+#ifdef DEBUGINP
+      printf("phg_wsb_resolve_pick path list is NULL\n");
+#endif
       pick->status = PIN_STATUS_NONE;
       ERR_REPORT(ws->erh, ERR900);
       free(elmts);
@@ -2316,6 +2343,9 @@ int phg_wsb_resolve_pick(
     }
     else {
       pick->status = PIN_STATUS_OK;
+#ifdef DEBUGINP
+      printf("phg_wsb_resolve_pick status is OK\n");
+#endif
       if (dev->order == PORDER_BOTTOM_FIRST) {
 
         for (i = 0; i < depth; i++) {
@@ -2339,7 +2369,10 @@ int phg_wsb_resolve_pick(
     }
   }
   else {
-    pick->status = PIN_STATUS_NONE;
+#ifdef DEBUGINP
+    printf("phg_wsb_resolve_pick depth is zero\n");
+#endif
+  pick->status = PIN_STATUS_NONE;
     pick->pick_path.depth = 0;
     status = TRUE;
   }
