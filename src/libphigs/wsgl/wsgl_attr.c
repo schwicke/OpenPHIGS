@@ -48,60 +48,60 @@ extern GLint alpha_channel;
  */
 
 static void wsgl_set_matrix(
-    Pmatrix3 mat,
-    int mult
-    )
+                            Pmatrix3 mat,
+                            int mult
+                            )
 {
-   int i, j;
-   GLfloat m[16];
-   GLfloat *mp = &m[0];
+  int i, j;
+  GLfloat m[16];
+  GLfloat *mp = &m[0];
 
-   for (i = 0; i < 4; i++) {
-      for (j = 0; j < 4; j++) {
-         *mp = mat[j][i];
-         mp++;
-      }
-   }
+  for (i = 0; i < 4; i++) {
+    for (j = 0; j < 4; j++) {
+      *mp = mat[j][i];
+      mp++;
+    }
+  }
 
-   if (mult) {
-      glMultMatrixf(m);
-   }
-   else {
-      glLoadMatrixf(m);
-   }
+  if (mult) {
+    glMultMatrixf(m);
+  }
+  else {
+    glLoadMatrixf(m);
+  }
 }
 
 static void wsgl_set_model_view_matrix(
-    Pmatrix3 mat
-    )
+                                       Pmatrix3 mat
+                                       )
 {
-   int i, j;
-   GLfloat m[16];
-   GLfloat *mp = &m[0];
+  int i, j;
+  GLfloat m[16];
+  GLfloat *mp = &m[0];
 
-   for (i = 0; i < 4; i++) {
-     for (j = 0; j < 4; j++) {
-       *mp = mat[j][i];
-       mp++;
-     }
-   }
-   glUniformMatrix4fv(ModelViewMatrix, 1, FALSE, m);
+  for (i = 0; i < 4; i++) {
+    for (j = 0; j < 4; j++) {
+      *mp = mat[j][i];
+      mp++;
+    }
+  }
+  glUniformMatrix4fv(ModelViewMatrix, 1, FALSE, m);
 }
 
 static void wsgl_set_projection_matrix(
-    Pmatrix3 mat
-    )
+                                       Pmatrix3 mat
+                                       )
 {
-   int i, j;
-   GLfloat m[16];
-   GLfloat *mp = &m[0];
-   for (i = 0; i < 4; i++) {
-     for (j = 0; j < 4; j++) {
-       *mp = mat[j][i];
-       mp++;
-     }
-   }
-   glUniformMatrix4fv(ProjectionMatrix, 1, FALSE, m);
+  int i, j;
+  GLfloat m[16];
+  GLfloat *mp = &m[0];
+  for (i = 0; i < 4; i++) {
+    for (j = 0; j < 4; j++) {
+      *mp = mat[j][i];
+      mp++;
+    }
+  }
+  glUniformMatrix4fv(ProjectionMatrix, 1, FALSE, m);
 }
 
 /*******************************************************************************
@@ -110,43 +110,44 @@ static void wsgl_set_projection_matrix(
  * DESCR:	Update projection matrix
  * RETURNS:	N/A
  */
-
 void wsgl_update_projection(
-   Ws *ws
-   )
+                            Ws *ws
+                            )
 {
-   Wsgl_handle wsgl = ws->render_context;
+  Wsgl_handle wsgl = ws->render_context;
 
 #ifdef DEBUG
-   printf("Update projection\n");
+  printf("Update projection\n");
 #endif
 
-   glMatrixMode(GL_PROJECTION);
-   if (wsgl->render_mode == WS_RENDER_MODE_SELECT) {
-      phg_mat_mul(wsgl->model_tran,
-                  wsgl->pick_tran,
-                  wsgl->cur_struct.view_rep.map_matrix);
+  glMatrixMode(GL_PROJECTION);
+  if (wsgl->render_mode == WS_RENDER_MODE_SELECT) {
+    phg_mat_mul(wsgl->model_tran,
+                wsgl->pick_tran,
+                wsgl->cur_struct.view_rep.map_matrix);
 #ifdef GLEW
-      if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+    if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-      if (wsgl_use_shaders){
+      if (wsgl_use_shaders)
 #endif
-        wsgl_set_projection_matrix(wsgl->model_tran);
-      } else {
+        {
+          wsgl_set_projection_matrix(wsgl->model_tran);
+        } else {
         wsgl_set_matrix(wsgl->model_tran, FALSE);
       }
-   }
-   else {
+  }
+  else {
 #ifdef GLEW
-     if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+    if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-     if (wsgl_use_shaders){
+      if (wsgl_use_shaders)
 #endif
-       wsgl_set_projection_matrix(wsgl->cur_struct.view_rep.map_matrix);
-     } else {
-       wsgl_set_matrix(wsgl->cur_struct.view_rep.map_matrix, FALSE);
-     }
-   }
+        {
+          wsgl_set_projection_matrix(wsgl->cur_struct.view_rep.map_matrix);
+        } else {
+        wsgl_set_matrix(wsgl->cur_struct.view_rep.map_matrix, FALSE);
+      }
+  }
 }
 
 /*******************************************************************************
@@ -157,36 +158,37 @@ void wsgl_update_projection(
  */
 
 void wsgl_update_modelview(
-   Ws *ws
-   )
+                           Ws *ws
+                           )
 {
-   Wsgl_handle wsgl = ws->render_context;
+  Wsgl_handle wsgl = ws->render_context;
 
 #ifdef DEBUG
-   printf("Update modelview\n");
-   printf("Orientation matrix is :\n");
-   printf("%e %e %e\n", (double) *wsgl->cur_struct.view_rep.ori_matrix[0,0], (double) *wsgl->cur_struct.view_rep.ori_matrix[0,1], (double) *wsgl->cur_struct.view_rep.ori_matrix[0,2]);
-   printf("%e %e %e\n", (double) *wsgl->cur_struct.view_rep.ori_matrix[1,0], (double) *wsgl->cur_struct.view_rep.ori_matrix[1,1], (double) *wsgl->cur_struct.view_rep.ori_matrix[1,2]);
-   printf("%e %e %e\n", (double) *wsgl->cur_struct.view_rep.ori_matrix[2,0], (double) *wsgl->cur_struct.view_rep.ori_matrix[2,1], (double) *wsgl->cur_struct.view_rep.ori_matrix[2,2]);
+  printf("Update modelview\n");
+  printf("Orientation matrix is :\n");
+  printf("%e %e %e\n", (double) *wsgl->cur_struct.view_rep.ori_matrix[0,0], (double) *wsgl->cur_struct.view_rep.ori_matrix[0,1], (double) *wsgl->cur_struct.view_rep.ori_matrix[0,2]);
+  printf("%e %e %e\n", (double) *wsgl->cur_struct.view_rep.ori_matrix[1,0], (double) *wsgl->cur_struct.view_rep.ori_matrix[1,1], (double) *wsgl->cur_struct.view_rep.ori_matrix[1,2]);
+  printf("%e %e %e\n", (double) *wsgl->cur_struct.view_rep.ori_matrix[2,0], (double) *wsgl->cur_struct.view_rep.ori_matrix[2,1], (double) *wsgl->cur_struct.view_rep.ori_matrix[2,2]);
 #endif
 
 
-   glMatrixMode(GL_MODELVIEW);
-   phg_mat_mul(wsgl->composite_tran,
-               wsgl->cur_struct.global_tran,
-               wsgl->cur_struct.local_tran);
-   phg_mat_mul(wsgl->model_tran,
-               wsgl->cur_struct.view_rep.ori_matrix,
-               wsgl->composite_tran);
+  glMatrixMode(GL_MODELVIEW);
+  phg_mat_mul(wsgl->composite_tran,
+              wsgl->cur_struct.global_tran,
+              wsgl->cur_struct.local_tran);
+  phg_mat_mul(wsgl->model_tran,
+              wsgl->cur_struct.view_rep.ori_matrix,
+              wsgl->composite_tran);
 #ifdef GLEW
-   if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-   if (wsgl_use_shaders){
+    if (wsgl_use_shaders)
 #endif
-     wsgl_set_model_view_matrix(wsgl->model_tran);
-   } else {
-     wsgl_set_matrix(wsgl->model_tran, FALSE);
-   }
+      {
+        wsgl_set_model_view_matrix(wsgl->model_tran);
+      } else {
+      wsgl_set_matrix(wsgl->model_tran, FALSE);
+    }
 }
 
 /*******************************************************************************
@@ -195,27 +197,26 @@ void wsgl_update_modelview(
  * DESCR:	Setup view
  * RETURNS:	N/A
  */
-
 void wsgl_set_view_ind(
-   Ws *ws,
-   Pint ind
-   )
+                       Ws *ws,
+                       Pint ind
+                       )
 {
-   Phg_ret ret;
-   Wsgl_handle wsgl = ws->render_context;
+  Phg_ret ret;
+  Wsgl_handle wsgl = ws->render_context;
 
-   (*ws->inq_representation)(ws,
-                             ind,
-                             PINQ_REALIZED,
-                             PHG_ARGS_VIEWREP,
-                             &ret);
-   if (ret.err == 0) {
-      memcpy(&wsgl->cur_struct.view_rep,
-             &ret.data.rep.viewrep,
-             sizeof(Pview_rep3));
-      wsgl_update_projection(ws);
-      wsgl_update_modelview(ws);
-   }
+  (*ws->inq_representation)(ws,
+                            ind,
+                            PINQ_REALIZED,
+                            PHG_ARGS_VIEWREP,
+                            &ret);
+  if (ret.err == 0) {
+    memcpy(&wsgl->cur_struct.view_rep,
+           &ret.data.rep.viewrep,
+           sizeof(Pview_rep3));
+    wsgl_update_projection(ws);
+    wsgl_update_modelview(ws);
+  }
 }
 
 /*******************************************************************************
@@ -226,24 +227,25 @@ void wsgl_set_view_ind(
  */
 
 void wsgl_set_clip_ind(
-   Ws *ws,
-   Pint ind
-   )
+                       Ws *ws,
+                       Pint ind
+                       )
 {
   Phg_ret ret;
   Wsgl_handle wsgl = ws->render_context;
 #ifdef GLEW
-  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-  if (wsgl_use_shaders){
+  if (wsgl_use_shaders)
 #endif
-    glUniform1i(clipping_ind, ind);
-    if (ind == 1) {
-      glEnable(GL_CLIP_PLANE0);
-    } else {
-      glDisable(GL_CLIP_PLANE0);
+    {
+      glUniform1i(clipping_ind, ind);
+      if (ind == 1) {
+        glEnable(GL_CLIP_PLANE0);
+      } else {
+        glDisable(GL_CLIP_PLANE0);
+      }
     }
-  }
 }
 
 /*******************************************************************************
@@ -252,11 +254,10 @@ void wsgl_set_clip_ind(
  * DESCR:	Setup alpha channel
  * RETURNS:	N/A
  */
-
 void wsgl_set_alpha_channel(
-   Ws *ws,
-   Pfloat alpha
-   )
+                            Ws *ws,
+                            Pfloat alpha
+                            )
 {
   Phg_ret ret;
   Wsgl_handle wsgl = ws->render_context;
@@ -273,32 +274,45 @@ void wsgl_set_alpha_channel(
  * DESCR:	Setup view
  * RETURNS:	N/A
  */
-
 void wsgl_set_clip_vol3(
-   Ws *ws,
-   char * el_data
-   )
+                        Ws *ws,
+                        char * el_data
+                        )
 {
   Phg_ret ret;
   int op, num;
   int * int_data = (int*) el_data;
   Phalf_space3 * list;
   Phalf_space3 volume0;
+  Ppoint3 tmp1, tmp2, vol3, point3, pwc;
+  Pmatrix3  vrc2wc, unity;
+
 #ifdef GLEW
-  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects) {
+  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-  if (wsgl_use_shaders) {
+  if (wsgl_use_shaders)
 #endif
-    op = int_data[0];
-    num = int_data[1];
-    list = (Phalf_space3 *)(&int_data[2]);
-    volume0 = list[0];
-    glUniform1i(num_clip_planes, num);
-    glUniform4f(plane0, volume0.norm.delta_x, volume0.norm.delta_y, volume0.norm.delta_z, 0.);
-    glUniform4f(point0, volume0.point.x, volume0.point.y, volume0.point.z, 0.);
-    GLdouble eqn0[4] = {volume0.norm.delta_x, volume0.norm.delta_y, volume0.norm.delta_z, 0.};
-    glClipPlane(GL_CLIP_PLANE0, eqn0);
-  }
+    {
+      /* invert to transform from VRC to WC */
+      op = int_data[0];
+      num = int_data[1];
+      list = (Phalf_space3 *)(&int_data[2]);
+      volume0 = list[0];
+      /* take a local copy of the data */
+      tmp1.x = volume0.norm.delta_x;
+      tmp1.y = volume0.norm.delta_y;
+      tmp1.z = volume0.norm.delta_z;
+
+      tmp2.x = volume0.point.x;
+      tmp2.y = volume0.point.y;
+      tmp2.z = volume0.point.z;
+
+      glUniform1i(num_clip_planes, num);
+      glUniform4f(plane0, tmp1.x, tmp1.y, tmp1.z, 0.);
+      GLdouble eqn0[4] = {tmp1.x, tmp1.y, tmp1.z, 0.};
+      glClipPlane(GL_CLIP_PLANE0, eqn0);
+      glUniform4f(point0, tmp2.x, tmp2.y, tmp2.z, 0.);
+    }
 }
 
 /*******************************************************************************
@@ -307,25 +321,24 @@ void wsgl_set_clip_vol3(
  * DESCR:	Update depth buffer checking flag
  * RETURNS:	N/A
  */
-
 void wsgl_update_hlhsr_id(
-   Ws *ws
-   )
+                          Ws *ws
+                          )
 {
-   Wsgl_handle wsgl = ws->render_context;
+  Wsgl_handle wsgl = ws->render_context;
 
-   switch(wsgl->cur_struct.hlhsr_id) {
-      case PHIGS_HLHSR_ID_OFF:
-         glDepthFunc(GL_ALWAYS);
-         break;
+  switch(wsgl->cur_struct.hlhsr_id) {
+  case PHIGS_HLHSR_ID_OFF:
+    glDepthFunc(GL_ALWAYS);
+    break;
 
-      case PHIGS_HLHSR_ID_ON:
-         glDepthFunc(GL_LESS);
-         break;
+  case PHIGS_HLHSR_ID_ON:
+    glDepthFunc(GL_LESS);
+    break;
 
-      default:
-         break;
-   }
+  default:
+    break;
+  }
 }
 
 /*******************************************************************************
@@ -334,20 +347,19 @@ void wsgl_update_hlhsr_id(
  * DESCR:	Setup asf
  * RETURNS:	N/A
  */
-
 void wsgl_set_asf(
-   Ws_attr_st *ast,
-   void *asf_info
-   )
+                  Ws_attr_st *ast,
+                  void *asf_info
+                  )
 {
-   Pasf_info *data = (Pasf_info *) asf_info;
+  Pasf_info *data = (Pasf_info *) asf_info;
 
-   if (data->source == PASF_INDIV) {
-      phg_nset_name_set(&ast->asf_nameset, data->id);
-   }
-   else {
-      phg_nset_name_clear(&ast->asf_nameset, data->id);
-   }
+  if (data->source == PASF_INDIV) {
+    phg_nset_name_set(&ast->asf_nameset, data->id);
+  }
+  else {
+    phg_nset_name_clear(&ast->asf_nameset, data->id);
+  }
 }
 
 /*******************************************************************************
@@ -356,11 +368,10 @@ void wsgl_set_asf(
  * DESCR:	Set colour value
  * RETURNS:	N/A
  */
-
 void wsgl_set_colr(
-   Pint colr_type,
-   Pcoval *colr
-   )
+                   Pint colr_type,
+                   Pcoval *colr
+                   )
 {
   switch(colr_type) {
   case PINDIRECT:
@@ -369,16 +380,17 @@ void wsgl_set_colr(
 
   case PMODEL_RGB:
 #ifdef GLEW
-    if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+    if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-    if (wsgl_use_shaders){
+    if (wsgl_use_shaders)
 #endif
-      glVertexAttrib4f(vCOLOR,
-                       colr->direct.rgb.red,
-                       colr->direct.rgb.green,
-                       colr->direct.rgb.blue,
-                       1.0);
-    } else {
+      {
+        glVertexAttrib4f(vCOLOR,
+                         colr->direct.rgb.red,
+                         colr->direct.rgb.green,
+                         colr->direct.rgb.blue,
+                         1.0);
+      } else {
       glColor3f(colr->direct.rgb.red,
                 colr->direct.rgb.green,
                 colr->direct.rgb.blue);
@@ -396,7 +408,6 @@ void wsgl_set_colr(
  * DESCR:	Set colour
  * RETURNS:	N/A
  */
-
 void wsgl_set_gcolr(
                     Pgcolr *gcolr
                     )
@@ -408,16 +419,17 @@ void wsgl_set_gcolr(
 
   case PMODEL_RGB:
 #ifdef GLEW
-    if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+    if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-    if (wsgl_use_shaders){
+    if (wsgl_use_shaders)
 #endif
-      glVertexAttrib4f(vCOLOR,
-                       gcolr->val.general.x,
-                       gcolr->val.general.y,
-                       gcolr->val.general.z,
-                       1.0);
-    } else {
+      {
+        glVertexAttrib4f(vCOLOR,
+                         gcolr->val.general.x,
+                         gcolr->val.general.y,
+                         gcolr->val.general.z,
+                         1.0);
+      } else {
       glColor3f(gcolr->val.general.x,
                 gcolr->val.general.y,
                 gcolr->val.general.z);
@@ -435,7 +447,6 @@ void wsgl_set_gcolr(
  * DESCR:	Get colour value from Pgcolr
  * RETURNS:	N/A
  */
-
 void wsgl_colr_from_gcolr(
                           Pcoval *colr,
                           Pgcolr *gcolr
@@ -463,7 +474,6 @@ void wsgl_colr_from_gcolr(
  * DESCR:	Setup line index
  * RETURNS:	N/A
  */
-
 void wsgl_set_line_ind(
                        Ws *ws,
                        Pattr_group *attr_group,
@@ -490,7 +500,6 @@ void wsgl_set_line_ind(
  * DESCR:	Setup line attributes
  * RETURNS:	N/A
  */
-
 void wsgl_setup_line_attr(
                           Ws_attr_st *ast
                           )
@@ -538,13 +547,14 @@ void wsgl_setup_line_attr(
     glLineWidth(ast->bundl_group.line_bundle.width);
   }
 #ifdef GLEW
-  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-  if (wsgl_use_shaders){
+  if (wsgl_use_shaders)
 #endif
-    glEnable(GL_LINE_SMOOTH);
-    glUniform1i(shading_mode, 0);
-  } else {
+    {
+      glEnable(GL_LINE_SMOOTH);
+      glUniform1i(shading_mode, 0);
+    } else {
     glDisable(GL_LIGHTING);
   }
 }
@@ -555,7 +565,6 @@ void wsgl_setup_line_attr(
  * DESCR:	Setup interior index
  * RETURNS:	N/A
  */
-
 void wsgl_set_int_ind(
                       Ws *ws,
                       Pattr_group *attr_group,
@@ -582,7 +591,6 @@ void wsgl_set_int_ind(
  * DESCR:	Get interior colour
  * RETURNS:	Pointer to interiour colour
  */
-
 Pgcolr* wsgl_get_int_colr(
                           Ws_attr_st *ast
                           )
@@ -604,7 +612,6 @@ Pgcolr* wsgl_get_int_colr(
  * DESCR:	Get interior style
  * RETURNS:	Interiour style
  */
-
 Pint_style wsgl_get_int_style(
                               Ws_attr_st *ast
                               )
@@ -627,7 +634,6 @@ Pint_style wsgl_get_int_style(
  * DESCR:	Setup interior style
  * RETURNS:	N/A
  */
-
 void wsgl_setup_int_style(
                           Pint_style style
                           )
@@ -661,7 +667,6 @@ void wsgl_setup_int_style(
  * DESCR:	Setup interior attributes without color
  * RETURNS:	N/A
  */
-
 void wsgl_setup_int_attr_nocol(
                                Ws *ws,
                                Ws_attr_st *ast
@@ -710,17 +715,18 @@ void wsgl_setup_int_attr_nocol(
   }
 
 #ifdef GLEW
-  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects) {
+  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-  if (wsgl_use_shaders) {
+  if (wsgl_use_shaders)
 #endif
-    if (wsgl->cur_struct.lighting) {
-      glUniform1i(shading_mode, 1);
-    }
-    else {
-      glUniform1i(shading_mode, 0);
-    }
-  } else {
+    {
+      if (wsgl->cur_struct.lighting) {
+        glUniform1i(shading_mode, 1);
+      }
+      else {
+        glUniform1i(shading_mode, 0);
+      }
+    } else {
     if (wsgl->cur_struct.lighting) {
       glEnable(GL_LIGHTING);
     }
@@ -737,14 +743,13 @@ void wsgl_setup_int_attr_nocol(
  * DESCR:	Setup interior attributes
  * RETURNS:	N/A
  */
-
 void wsgl_setup_int_attr(
-   Ws *ws,
-   Ws_attr_st *ast
-   )
+                         Ws *ws,
+                         Ws_attr_st *ast
+                         )
 {
-   wsgl_set_gcolr(wsgl_get_int_colr(ast));
-   wsgl_setup_int_attr_nocol(ws, ast);
+  wsgl_set_gcolr(wsgl_get_int_colr(ast));
+  wsgl_setup_int_attr_nocol(ws, ast);
 }
 
 /*******************************************************************************
@@ -753,25 +758,24 @@ void wsgl_setup_int_attr(
  * DESCR:	Setup edge index
  * RETURNS:	N/A
  */
-
 void wsgl_set_edge_ind(
-   Ws *ws,
-   Pattr_group *attr_group,
-   Pint ind
-   )
+                       Ws *ws,
+                       Pattr_group *attr_group,
+                       Pint ind
+                       )
 {
-   Phg_ret ret;
+  Phg_ret ret;
 
-   (*ws->inq_representation)(ws,
-                             ind,
-                             PINQ_REALIZED,
-                             PHG_ARGS_EXTEDGEREP,
-                             &ret);
-   if (ret.err == 0) {
-      phg_attr_group_set_edge_bundle(ws,
-                                     attr_group,
-                                     &ret.data.rep.extedgerep);
-   }
+  (*ws->inq_representation)(ws,
+                            ind,
+                            PINQ_REALIZED,
+                            PHG_ARGS_EXTEDGEREP,
+                            &ret);
+  if (ret.err == 0) {
+    phg_attr_group_set_edge_bundle(ws,
+                                   attr_group,
+                                   &ret.data.rep.extedgerep);
+  }
 }
 
 /*******************************************************************************
@@ -780,21 +784,19 @@ void wsgl_set_edge_ind(
  * DESCR:	Get edge flag
  * RETURNS:	Edge flag
  */
-
 Pedge_flag wsgl_get_edge_flag(
-   Ws_attr_st *ast
-   )
+                              Ws_attr_st *ast
+                              )
 {
-   Pedge_flag flag;
+  Pedge_flag flag;
 
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_EDGE_FLAG)) {
-      flag = ast->indiv_group.edge_bundle.flag;
-   }
-   else {
-      flag = ast->bundl_group.edge_bundle.flag;
-   }
-
-   return flag;
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_EDGE_FLAG)) {
+    flag = ast->indiv_group.edge_bundle.flag;
+  }
+  else {
+    flag = ast->bundl_group.edge_bundle.flag;
+  }
+  return flag;
 }
 
 /*******************************************************************************
@@ -803,21 +805,20 @@ Pedge_flag wsgl_get_edge_flag(
  * DESCR:	Get edge width
  * RETURNS:	Edge width
  */
-
 Pfloat wsgl_get_edge_width(
-   Ws_attr_st *ast
-   )
+                           Ws_attr_st *ast
+                           )
 {
-   Pfloat width;
+  Pfloat width;
 
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_EDGEWIDTH)) {
-      width = ast->indiv_group.edge_bundle.width;
-   }
-   else {
-      width = ast->bundl_group.edge_bundle.width;
-   }
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_EDGEWIDTH)) {
+    width = ast->indiv_group.edge_bundle.width;
+  }
+  else {
+    width = ast->bundl_group.edge_bundle.width;
+  }
 
-   return width;
+  return width;
 }
 
 /*******************************************************************************
@@ -826,59 +827,59 @@ Pfloat wsgl_get_edge_width(
  * DESCR:	Setup edge attributes
  * RETURNS:	N/A
  */
-
 void wsgl_setup_edge_attr(
-   Ws_attr_st *ast
-   )
+                          Ws_attr_st *ast
+                          )
 {
-   Pint type;
+  Pint type;
 
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_EDGE_COLR_IND)) {
-      wsgl_set_gcolr(&ast->indiv_group.edge_bundle.colr);
-   }
-   else {
-      wsgl_set_gcolr(&ast->bundl_group.edge_bundle.colr);
-   }
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_EDGE_COLR_IND)) {
+    wsgl_set_gcolr(&ast->indiv_group.edge_bundle.colr);
+  }
+  else {
+    wsgl_set_gcolr(&ast->bundl_group.edge_bundle.colr);
+  }
 
-   glLineWidth(wsgl_get_edge_width(ast));
+  glLineWidth(wsgl_get_edge_width(ast));
 
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_EDGETYPE)) {
-      type = ast->indiv_group.edge_bundle.type;
-   }
-   else {
-      type = ast->bundl_group.edge_bundle.type;
-   }
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_EDGETYPE)) {
+    type = ast->indiv_group.edge_bundle.type;
+  }
+  else {
+    type = ast->bundl_group.edge_bundle.type;
+  }
 
-   /* Line style */
-   switch (type) {
-      case PLINE_DASH:
-         glLineStipple(1, 0x00ff);
-         glEnable(GL_LINE_STIPPLE);
-      break;
+  /* Line style */
+  switch (type) {
+  case PLINE_DASH:
+    glLineStipple(1, 0x00ff);
+    glEnable(GL_LINE_STIPPLE);
+    break;
 
-      case PLINE_DOT:
-         glLineStipple(1, 0x0101);
-         glEnable(GL_LINE_STIPPLE);
-      break;
+  case PLINE_DOT:
+    glLineStipple(1, 0x0101);
+    glEnable(GL_LINE_STIPPLE);
+    break;
 
-      case PLINE_DASH_DOT:
-         glLineStipple(1, 0x1c47);
-         glEnable(GL_LINE_STIPPLE);
-      break;
+  case PLINE_DASH_DOT:
+    glLineStipple(1, 0x1c47);
+    glEnable(GL_LINE_STIPPLE);
+    break;
 
-      default:
-         glDisable(GL_LINE_STIPPLE);
-      break;
-   }
+  default:
+    glDisable(GL_LINE_STIPPLE);
+    break;
+  }
 #ifdef GLEW
-   if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-   if (wsgl_use_shaders){
+  if (wsgl_use_shaders)
 #endif
-     glUniform1i(shading_mode, 0);
-   } else {
-     glDisable(GL_LIGHTING);
-   }
+    {
+      glUniform1i(shading_mode, 0);
+    } else {
+    glDisable(GL_LIGHTING);
+  }
 }
 
 /*******************************************************************************
@@ -887,25 +888,24 @@ void wsgl_setup_edge_attr(
  * DESCR:	Setup marker index
  * RETURNS:	N/A
  */
-
 void wsgl_set_marker_ind(
-   Ws *ws,
-   Pattr_group *attr_group,
-   Pint ind
-   )
+                         Ws *ws,
+                         Pattr_group *attr_group,
+                         Pint ind
+                         )
 {
-   Phg_ret ret;
+  Phg_ret ret;
 
-   (*ws->inq_representation)(ws,
-                             ind,
-                             PINQ_REALIZED,
-                             PHG_ARGS_EXTMKREP,
-                             &ret);
-   if (ret.err == 0) {
-      phg_attr_group_set_marker_bundle(ws,
-                                       attr_group,
-                                       &ret.data.rep.extmkrep);
-   }
+  (*ws->inq_representation)(ws,
+                            ind,
+                            PINQ_REALIZED,
+                            PHG_ARGS_EXTMKREP,
+                            &ret);
+  if (ret.err == 0) {
+    phg_attr_group_set_marker_bundle(ws,
+                                     attr_group,
+                                     &ret.data.rep.extmkrep);
+  }
 }
 
 /*******************************************************************************
@@ -914,43 +914,43 @@ void wsgl_set_marker_ind(
  * DESCR:	Setup marker attributes
  * RETURNS:	N/A
  */
-
 void wsgl_setup_marker_attr(
-   Ws_attr_st *ast,
-   Pint *type,
-   Pfloat *size
-   )
+                            Ws_attr_st *ast,
+                            Pint *type,
+                            Pfloat *size
+                            )
 {
-   if (phg_nset_name_is_set(&ast->asf_nameset,
-                            (Pint) PASPECT_MARKER_COLR_IND)) {
-      wsgl_set_gcolr(&ast->indiv_group.marker_bundle.colr);
-   }
-   else {
-      wsgl_set_gcolr(&ast->bundl_group.marker_bundle.colr);
-   }
+  if (phg_nset_name_is_set(&ast->asf_nameset,
+                           (Pint) PASPECT_MARKER_COLR_IND)) {
+    wsgl_set_gcolr(&ast->indiv_group.marker_bundle.colr);
+  }
+  else {
+    wsgl_set_gcolr(&ast->bundl_group.marker_bundle.colr);
+  }
 
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_MARKER_TYPE)) {
-      *type = ast->indiv_group.marker_bundle.type;
-   }
-   else {
-      *type = ast->bundl_group.marker_bundle.type;
-   }
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_MARKER_TYPE)) {
+    *type = ast->indiv_group.marker_bundle.type;
+  }
+  else {
+    *type = ast->bundl_group.marker_bundle.type;
+  }
 
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_MARKER_SIZE)) {
-      *size = ast->indiv_group.marker_bundle.size;
-   }
-   else {
-      *size = ast->bundl_group.marker_bundle.size;
-   }
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_MARKER_SIZE)) {
+    *size = ast->indiv_group.marker_bundle.size;
+  }
+  else {
+    *size = ast->bundl_group.marker_bundle.size;
+  }
 #ifdef GLEW
-   if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-   if (wsgl_use_shaders){
+    if (wsgl_use_shaders)
 #endif
-     glUniform1i(shading_mode, 0);
-   } else {
-     glDisable(GL_LIGHTING);
-   }
+      {
+        glUniform1i(shading_mode, 0);
+      } else {
+      glDisable(GL_LIGHTING);
+    }
 }
 
 /*******************************************************************************
@@ -959,31 +959,31 @@ void wsgl_setup_marker_attr(
  * DESCR:	Setup background colour
  * RETURNS:	N/A
  */
-
 void wsgl_setup_background(
-   Ws *ws
-   )
+                           Ws *ws
+                           )
 {
-   Wsgl_handle wsgl = ws->render_context;
-   glDisable(GL_POLYGON_STIPPLE);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  Wsgl_handle wsgl = ws->render_context;
+  glDisable(GL_POLYGON_STIPPLE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 #ifdef GLEW
-   if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+  if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-   if (wsgl_use_shaders){
+  if (wsgl_use_shaders)
 #endif
-     glVertexAttrib4f(vCOLOR,
-                      wsgl->background.val.general.x,
-                      wsgl->background.val.general.y,
-                      wsgl->background.val.general.z,
-                      1.0);
-   } else {
-     glColor3f(wsgl->background.val.general.x,
-               wsgl->background.val.general.y,
-               wsgl->background.val.general.z);
-   }
-   /* Need to restore polygon mode */
-   wsgl->dev_st.int_style = -1;
+    {
+      glVertexAttrib4f(vCOLOR,
+                       wsgl->background.val.general.x,
+                       wsgl->background.val.general.y,
+                       wsgl->background.val.general.z,
+                       1.0);
+    } else {
+    glColor3f(wsgl->background.val.general.x,
+              wsgl->background.val.general.y,
+              wsgl->background.val.general.z);
+  }
+  /* Need to restore polygon mode */
+  wsgl->dev_st.int_style = -1;
 }
 
 /*******************************************************************************
@@ -992,25 +992,24 @@ void wsgl_setup_background(
  * DESCR:	Setup text index
  * RETURNS:	N/A
  */
-
 void wsgl_set_text_ind(
-   Ws *ws,
-   Pattr_group *attr_group,
-   Pint ind
-   )
+                       Ws *ws,
+                       Pattr_group *attr_group,
+                       Pint ind
+                       )
 {
-   Phg_ret ret;
+  Phg_ret ret;
 
-   (*ws->inq_representation)(ws,
-                             ind,
-                             PINQ_REALIZED,
-                             PHG_ARGS_EXTTXREP,
-                             &ret);
-    if (ret.err == 0) {
-      phg_attr_group_set_text_bundle(ws,
-                                     attr_group,
-                                     &ret.data.rep.exttxrep);
-   }
+  (*ws->inq_representation)(ws,
+                            ind,
+                            PINQ_REALIZED,
+                            PHG_ARGS_EXTTXREP,
+                            &ret);
+  if (ret.err == 0) {
+    phg_attr_group_set_text_bundle(ws,
+                                   attr_group,
+                                   &ret.data.rep.exttxrep);
+  }
 }
 
 /*******************************************************************************
@@ -1019,21 +1018,20 @@ void wsgl_set_text_ind(
  * DESCR:	Get text precision
  * RETURNS:	Text precision
  */
-
 Ptext_prec wsgl_get_text_prec(
-   Ws_attr_st *ast
-   )
+                              Ws_attr_st *ast
+                              )
 {
-   Ptext_prec prec;
+  Ptext_prec prec;
 
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_TEXT_PREC)) {
-      prec = ast->indiv_group.text_bundle.prec;
-   }
-   else {
-      prec = ast->bundl_group.text_bundle.prec;
-   }
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_TEXT_PREC)) {
+    prec = ast->indiv_group.text_bundle.prec;
+  }
+  else {
+    prec = ast->bundl_group.text_bundle.prec;
+  }
 
-   return prec;
+  return prec;
 }
 
 /*******************************************************************************
@@ -1044,51 +1042,54 @@ Ptext_prec wsgl_get_text_prec(
  */
 
 void wsgl_setup_text_attr(
-   Ws_attr_st *ast,
-   Phg_font **fnt,
-   Pfloat *char_expan
-   )
+                          Ws_attr_st *ast,
+                          Phg_font **fnt,
+                          Pfloat *char_expan
+                          )
 {
-   Pint font;
+  Pint font;
 
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_TEXT_COLR_IND)) {
-      wsgl_set_gcolr(&ast->indiv_group.text_bundle.colr);
-   }
-   else {
-      wsgl_set_gcolr(&ast->bundl_group.text_bundle.colr);
-   }
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_TEXT_COLR_IND)) {
+    wsgl_set_gcolr(&ast->indiv_group.text_bundle.colr);
+  }
+  else {
+    wsgl_set_gcolr(&ast->bundl_group.text_bundle.colr);
+  }
 
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_TEXT_FONT)) {
-      font = ast->indiv_group.text_bundle.font;
-   }
-   else {
-      font = ast->bundl_group.text_bundle.font;
-   }
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_TEXT_FONT)) {
+    font = ast->indiv_group.text_bundle.font;
+  }
+  else {
+    font = ast->bundl_group.text_bundle.font;
+  }
 
-   if (font < 1) {
-      *fnt = fnt_fonts[1];
-   }
-   else {
-      *fnt = fnt_fonts[font - 1];
-   }
+  if (font < 1) {
+    *fnt = fnt_fonts[1];
+  }
+  else {
+    *fnt = fnt_fonts[font - 1];
+  }
 
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_CHAR_EXPAN)) {
-      *char_expan = ast->indiv_group.text_bundle.char_expan;
-   }
-   else {
-      *char_expan = ast->bundl_group.text_bundle.char_expan;
-   }
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_CHAR_EXPAN)) {
+    *char_expan = ast->indiv_group.text_bundle.char_expan;
+  }
+  else {
+    *char_expan = ast->bundl_group.text_bundle.char_expan;
+  }
 
 #ifdef GLEW
-   if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects){
+   if (wsgl_use_shaders && GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && GLEW_ARB_shader_objects)
 #else
-   if (wsgl_use_shaders){
+   if (wsgl_use_shaders)
 #endif
-     glUniform1i(shading_mode, 0);
-   } else {
-     glDisable(GL_LIGHTING);
-     glLineWidth(2.0);
-   }
+     {
+       glUniform1i(shading_mode, 0);
+     }
+   else
+     {
+       glDisable(GL_LIGHTING);
+       glLineWidth(2.0);
+     }
 }
 
 /*******************************************************************************
@@ -1097,21 +1098,20 @@ void wsgl_setup_text_attr(
  * DESCR:	Get char spacing
  * RETURNS:	Character spacing
  */
-
 Pfloat wsgl_get_char_space(
-   Ws_attr_st *ast
-   )
+                           Ws_attr_st *ast
+                           )
 {
-   Pfloat char_space;
+  Pfloat char_space;
 
-   if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_CHAR_SPACE)) {
-      char_space = ast->indiv_group.text_bundle.char_space;
-   }
-   else {
-      char_space = ast->bundl_group.text_bundle.char_space;
-   }
+  if (phg_nset_name_is_set(&ast->asf_nameset, (Pint) PASPECT_CHAR_SPACE)) {
+    char_space = ast->indiv_group.text_bundle.char_space;
+  }
+  else {
+    char_space = ast->bundl_group.text_bundle.char_space;
+  }
 
-   return char_space;
+  return char_space;
 }
 
 /*******************************************************************************
@@ -1120,22 +1120,21 @@ Pfloat wsgl_get_char_space(
  * DESCR:	Add names to nameset
  * RETURNS:	N/A
  */
-
 void wsgl_add_names_set(
-   Ws *ws,
-   void *names
-   )
+                        Ws *ws,
+                        void *names
+                        )
 {
-   Pint num_ints;
-   Pint *data = (Pint *) names;
-   Wsgl_handle wsgl = ws->render_context;
+  Pint num_ints;
+  Pint *data = (Pint *) names;
+  Wsgl_handle wsgl = ws->render_context;
 
-   num_ints = *data;
-   data++;
+  num_ints = *data;
+  data++;
 
-   phg_nset_names_set(&wsgl->cur_struct.cur_nameset,
-                      num_ints,
-                      data);
+  phg_nset_names_set(&wsgl->cur_struct.cur_nameset,
+                     num_ints,
+                     data);
 }
 
 /*******************************************************************************
@@ -1144,20 +1143,19 @@ void wsgl_add_names_set(
  * DESCR:	Remove names from nameset
  * RETURNS:	N/A
  */
-
 void wsgl_remove_names_set(
-   Ws *ws,
-   void *names
-   )
+                           Ws *ws,
+                           void *names
+                           )
 {
-   Pint num_ints;
-   Pint *data = (Pint *) names;
-   Wsgl_handle wsgl = ws->render_context;
+  Pint num_ints;
+  Pint *data = (Pint *) names;
+  Wsgl_handle wsgl = ws->render_context;
 
-   num_ints = *data;
-   data++;
+  num_ints = *data;
+  data++;
 
-   phg_nset_names_clear(&wsgl->cur_struct.cur_nameset,
-                        num_ints,
-                        data);
+  phg_nset_names_clear(&wsgl->cur_struct.cur_nameset,
+                       num_ints,
+                       data);
 }
