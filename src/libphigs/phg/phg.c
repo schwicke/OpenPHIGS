@@ -611,7 +611,6 @@ int phg_echo_limits_valid(
          }
          break;
 
-
       case Pfn_init_loc:
       case Pfn_init_stroke:
       case Pfn_init_pick:

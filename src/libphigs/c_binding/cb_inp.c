@@ -1571,15 +1571,27 @@ void pget_pick(
       *in_status = pik->status;
       if (pik->status == PIN_STATUS_OK) {
         pick->depth = pik->pick_path.depth;
+#ifdef DEBUGINP
+        printf("Pick status is OK. Depth: %d\n", pick->depth);
+#endif
         depth_limit = PHG_MIN(depth, pik->pick_path.depth);
         if (depth_limit > 0) {
+#ifdef DEBUGINP
+          printf("depth limit is %d", depth_limit);
+#endif
           memcpy(pick->path_list,
                  pik->pick_path.path_list,
                  depth_limit * sizeof(Ppick_path_elem));
         }
       }
+#ifdef DEBUGINP
+      else {
+        printf("Pick status is not OK: %d\n", pik->status);
+      }
+#endif
     }
   } else {
+    printf("No input");
     *in_status = PIN_STATUS_NO_IN;
   }
 }

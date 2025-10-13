@@ -5,16 +5,22 @@ Global flags:
 %gs 1                 Use shaders (1) or not (0)
 %pc 1                 print configuration. Set to 0 to disable.
 
-Per workstation configurations
+Parameters set for all workstations: kept for historical reasons
+%wk 0
+%bs yes             backing-store
+%xe yes             return x events
+%wr no              resizable
+%fp 6x13
+%cm 3
+%pa 2
 
-%wk 1                 workstation for rendering
-%wf fort.10           default output file name for hardcopies
-%wn OpenPHIGS         workstation name
-%wi PHIGS             workstation icon name
-%wp 0.0 1.0 0.0 1.    position
+Per workstation configurations
+%wk 4                 workstation for rendering
+%bs no
+%wn Markers           workstation name
+%in Markers           workstation icon name
 %wg 512 512 0 0 1     Window width height px py border
 %bg 0. 0. 0.          Background color R G B
-%hs 4.
 
 Workstation example for output as tga
 %wk 99                Workstation for hardcopy

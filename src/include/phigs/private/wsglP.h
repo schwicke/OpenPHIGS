@@ -472,10 +472,10 @@ void wsgl_set_view_ind(
  * RETURNS:     N/A
  */
 
- void wsgl_set_clip_vol3(
-   Ws *ws,
-   char * data
-   );
+  void wsgl_set_clip_vol3(
+    Ws *ws,
+    char * data
+  );
 
 /*******************************************************************************
  * wsgl_set_alpha_channel
