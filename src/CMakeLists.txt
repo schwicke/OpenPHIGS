@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0...3.9)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.9...3.31)
 PROJECT(PHIGS)
 
 if (APPLE)
@@ -8,6 +8,8 @@ if (APPLE)
   set(CMAKE_Fortran_COMPILER gfortran)
   set(CMAKE_EXE_LINKER_FLAGS  "-Wl,-ld_classic,-dead_strip")
 endif()
+
+set(OPENGL_GL_PREFERENCE "GLVND")
 
 # Choose between Epoxy or GLEW
 if (USE_GLEW)
