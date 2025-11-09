@@ -36,11 +36,15 @@ C     Delcare variables
      +     'CHOICE3','CHOICE4','CHOICE5', 'Please choose an option'/
       REAL EVOL(6)
       REAL TIMOUT
-      INTEGER WKIDI, ICL, IDEV
+
+      INTEGER IWK
+      PARAMETER (IWK=1)
+
+      INTEGER IWKI, ICL, IDEV
 C     Open PHIGS and a workstation
-      WKID=1
+
       CALL POPPH(0, 1)
-      CALL POPWK(WKID, 0, 3)
+      CALL POPWK(IWK, 0, 3)
 
       ISTAT = PNCHOI
       ICHNR = 0
@@ -69,14 +73,13 @@ C Adjust string length
       TIMOUT=60.0
  10   CALL PPREC(4, PROMPT, 0, 0., N+1, LSTR, STRING, MLDR,
      +     IERR, LDR, DATREC)
-      CALL PSCHM(WKID, CHDNR, PREQU, PECHO)
-      CALL PINCH3(WKID, CHDNR, ISTAT, ICHNR, PET, EVOL, LDR, DATREC)
+      CALL PSCHM(IWK, CHDNR, PREQU, PECHO)
+      CALL PINCH3(IWK, CHDNR, ISTAT, ICHNR, PET, EVOL, LDR, DATREC)
       DO WHILE (1 .GT. 0)
 C Put the device into event mode
-         CALL PSCHM(WKID, CHDNR, PEVENT, PECHO)
-         CALL PWAIT(TIMOUT, WKIDI, ICL, IDEV )
-C         PRINT*, "Got Event:", WKIDI, ICL, IDEV
-         CALL PFLUSH(WKIDI, ICL, IDEV)
+         CALL PSCHM(IWK, CHDNR, PEVENT, PECHO)
+         CALL PWAIT(TIMOUT, IWKI, ICL, IDEV )
+C         CALL PFLUSH(IWKI, ICL, IDEV)
          CALL PGTCH(STAT, CHNR)
          IF (STAT.eq.POK) THEN
             PRINT*, "Chosen option is ", CHNR
@@ -86,10 +89,10 @@ C         PRINT*, "Got Event:", WKIDI, ICL, IDEV
          ELSE
             PRINT*, "Nothing chosen"
          ENDIF
-C         CALL PSCHM(WKID, CHDNR, 0, 0)
+C         CALL PSCHM(IWK, CHDNR, 0, 0)
       ENDDO
  20   CONTINUE
-      CALL PCLWK(WKID)
+      CALL PCLWK(IWK)
 
 C     CLOSE PHIGS
       CALL PCLPH

@@ -490,31 +490,33 @@ CDECK  ID>, KYDELP.
       END
 
       PROGRAM DRAWLINE
-     
+
 C      Include PHIGS enumeration file
       INCLUDE 'phigsf77.h'
-     
-C      Open PHIGS and a workstation
-      CALL POPPH(0, 0)
-      CALL POPWK(0, 0, 0)
-      iwk1 = 0
-C     init colors
-      call initcols(iwk1)
-     
-     
+
+      INTEGER IWK
+      PARAMETER (IWK=1)
+
+C     Open PHIGS and a workstation
+      CALL POPPH(0, 1)
+      CALL POPWK(IWK, 0, 3)
+
+C     Initialize colors
+      CALL INITCOLS(IWK)
+
 C      Open structure
       CALL POPST(0)
       CALL KYDELP(0.3, 0.5, 1.)
-     
-C      Close structure
+C
+C     Close structure
       CALL PCLST
-     
+
 C      Post structure to workstation
-      CALL PPOST(0, 0, 0.0)
-     
+      CALL PPOST(IWK, 0, 0.0)
+
 C      Buisy loop
       DO WHILE (1 .GT. 0)
       END DO
-     
+
       STOP
       END
