@@ -202,6 +202,7 @@ void wsgl_clear(
   Phg_ret ret;
   Pgcolr gcolr;
   Wsgl_handle wsgl = ws->render_context;
+  char buffer[6];
   /* try to get the background color from the color table entry for this ws */
   phg_wsb_inq_LUT_entry(ws, 0, PINQ_REALIZED, PHG_ARGS_COREP, &ret, &gcolr, NULL);
   if (ret.err == 0) {
@@ -223,11 +224,20 @@ void wsgl_clear(
     glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
   }
   wsgl_clear_geometry();
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  strncpy(buffer, getenv("XDG_SESSION_TYPE"), 5);
+  if (ws->has_double_buffer && ( 0==strncmp(buffer, "x11", 3) || (0==strncmp(buffer, "tty", 3)))) {
 #ifdef DEBUG
-  printf("Clear: flush buffers\n");
+    printf("Swapping buffers in clear\n");
 #endif
-  glFlush();
+    glXSwapBuffers(ws->display, ws->drawable_id);
+  }
+  else {
+#ifdef DEBUG
+    printf("Clear: flush buffers\n");
+#endif
+    glFlush();
+  }
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 /*******************************************************************************
