@@ -302,7 +302,7 @@ int phg_wsx_setup_tool_nodisp(
     background.val.general.y = (float) green / 65535.0;
     background.val.general.z = (float) blue / 65535.0;
 
-    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &(ws->fbuf));
+    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, (GLint *)&(ws->fbuf));
 
     if (!wsgl_init(ws, &background, NUM_SELECTABLE_STRUCTS)) {
       ERR_BUF(ws->erh, ERR900);

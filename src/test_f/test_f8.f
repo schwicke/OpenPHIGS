@@ -34,13 +34,15 @@ C     Delcare variables
       INTEGER WKID,LENOCC,LNAMR4,LSTEDI,I
       INTEGER STDNR,STAT,LCHAR,PET,IA(2),IERR,MLDR,LDR
       REAL XMIN,XMAX,YMIN,YMAX
+      
+      INTEGER IWK
+      PARAMETER (IWK=1)
 
 C     Open PHIGS and a workstation
-      WKID=1
       CALL POPPH(0, 1)
-      CALL POPWK(WKID, 0, 3)
+      CALL POPWK(IWK, 0, 3)
 
-      CALL PMSG(WKID,"Press close, please");
+      CALL PMSG(IWK,"Press close, please");
 
       STOP
       END

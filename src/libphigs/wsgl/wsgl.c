@@ -59,8 +59,8 @@ short int wsgl_use_shaders = 1;
 /*******************************************************************************
  * wsgl_init
  *
- * DESCR:	Initialize renderer
- * RETURNS:	Non zero or zero on error
+ * DESCR:       Initialize renderer
+ * RETURNS:     Non zero or zero on error
  */
 
 int wsgl_init(
@@ -118,8 +118,8 @@ int wsgl_init(
 /*******************************************************************************
  * wsgl_close
  *
- * DESCR:	Close
- * RETURNS:	N/A
+ * DESCR:       Close
+ * RETURNS:     N/A
  */
 
 void wsgl_close(
@@ -135,8 +135,8 @@ void wsgl_close(
 /*******************************************************************************
  * wsgl_set_window
  *
- * DESCR:	Set render window coordinates
- * RETURNS:	N/A
+ * DESCR:       Set render window coordinates
+ * RETURNS:     N/A
  */
 void wsgl_set_window(
                      Ws *ws,
@@ -152,8 +152,8 @@ void wsgl_set_window(
 /*******************************************************************************
  * wsgl_set_viewport
  *
- * DESCR:	Set render window viewport
- * RETURNS:	N/A
+ * DESCR:       Set render window viewport
+ * RETURNS:     N/A
  */
 void wsgl_set_viewport(
                        Ws *ws,
@@ -172,8 +172,8 @@ void wsgl_set_viewport(
 /*******************************************************************************
  * wsgl_set_hlhsr_mode
  *
- * DESCR:	Set render depth mode
- * RETURNS:	N/A
+ * DESCR:       Set render depth mode
+ * RETURNS:     N/A
  */
 void wsgl_set_hlhsr_mode(
                          Ws *ws,
@@ -189,8 +189,8 @@ void wsgl_set_hlhsr_mode(
 /*******************************************************************************
  * wsgl_clear
  *
- * DESCR:	Clear render window
- * RETURNS:	N/A
+ * DESCR:       Clear render window
+ * RETURNS:     N/A
  */
 void wsgl_clear(
                 Ws *ws
@@ -202,7 +202,9 @@ void wsgl_clear(
   Phg_ret ret;
   Pgcolr gcolr;
   Wsgl_handle wsgl = ws->render_context;
-  /* try to get the background color from the color table entry for this ws */
+  char buffer[6];
+  char * xdg_session_type;
+  /* Try to get the background color from the color table entry for this ws */
   phg_wsb_inq_LUT_entry(ws, 0, PINQ_REALIZED, PHG_ARGS_COREP, &ret, &gcolr, NULL);
   if (ret.err == 0) {
     wsgl->background.val.general.x = gcolr.val.general.x;
@@ -223,8 +225,13 @@ void wsgl_clear(
     glXMakeContextCurrent(ws->display, ws->drawable_id, ws->drawable_id, ws->glx_context);
   }
   wsgl_clear_geometry();
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  if (ws->has_double_buffer) {
+  xdg_session_type = getenv("XDG_SESSION_TYPE");
+  if (xdg_session_type){
+    strncpy(buffer, xdg_session_type, 5);
+  } else {
+    strncpy(buffer, "unkwn", 5);
+  }
+  if (ws->has_double_buffer && ( 0==strncmp(buffer, "x11", 3) || (0==strncmp(buffer, "tty", 3)))) {
 #ifdef DEBUG
     printf("Swapping buffers in clear\n");
 #endif
@@ -236,13 +243,14 @@ void wsgl_clear(
 #endif
     glFlush();
   }
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 /*******************************************************************************
  * wsgl_flush
  *
- * DESCR:	Flush settings to render window
- * RETURNS:	N/A
+ * DESCR:       Flush settings to render window
+ * RETURNS:     N/A
  */
 void wsgl_flush(
                 Ws *ws
@@ -347,8 +355,8 @@ void wsgl_flush(
 /*******************************************************************************
  * init_rendering_state
  *
- * DESCR:	Initialize rendering state helper function
- * RETURNS:	N/A
+ * DESCR:       Initialize rendering state helper function
+ * RETURNS:     N/A
  */
 static void init_rendering_state(
                                  Ws *ws
@@ -396,8 +404,8 @@ static void init_rendering_state(
 /*******************************************************************************
  * wsgl_begin_rendering
  *
- * DESCR:	Start a rendiering session for workstation
- * RETURNS:	N/A
+ * DESCR:       Start a rendiering session for workstation
+ * RETURNS:     N/A
  */
 void wsgl_begin_rendering(
                           Ws *ws
@@ -426,8 +434,8 @@ void wsgl_begin_rendering(
 /*******************************************************************************
  * wsgl_end_rendering
  *
- * DESCR:	End a rendiering session
- * RETURNS:	N/A
+ * DESCR:       End a rendiering session
+ * RETURNS:     N/A
  */
 void wsgl_end_rendering(
                         Ws *ws
@@ -454,8 +462,8 @@ void wsgl_end_rendering(
 /*******************************************************************************
  * store_cur_struct
  *
- * DESCR:	Store current structure information helper function
- * RETURNS:	N/A
+ * DESCR:       Store current structure information helper function
+ * RETURNS:     N/A
  */
 
 static void store_cur_struct(
@@ -479,8 +487,8 @@ static void store_cur_struct(
 /*******************************************************************************
  * update_cur_struct
  *
- * DESCR:	Update current structure information helper function
- * RETURNS:	N/A
+ * DESCR:       Update current structure information helper function
+ * RETURNS:     N/A
  */
 static void update_cur_struct(
                               Ws *ws
@@ -545,8 +553,8 @@ static int check_draw_primitive(
 /*******************************************************************************
  * check_highlight_primitive
  *
- * DESCR:	check if the current primitive is highlighted
- * RETURNS:	N/A
+ * DESCR:       check if the current primitive is highlighted
+ * RETURNS:     N/A
  */
 static int check_highlight_primitive(
                                      Ws *ws
@@ -575,8 +583,8 @@ static int check_highlight_primitive(
 /*******************************************************************************
  * wsgl_begin_structure
  *
- * DESCR:	Mark the beginning of a new structure element
- * RETURNS:	N/A
+ * DESCR:       Mark the beginning of a new structure element
+ * RETURNS:     N/A
  */
 void wsgl_begin_structure(
                           Ws *ws,
@@ -614,8 +622,8 @@ void wsgl_begin_structure(
 /*******************************************************************************
  * wsgl_end_structure
  *
- * DESCR:	Mark the ending of a structure element
- * RETURNS:	N/A
+ * DESCR:       Mark the ending of a structure element
+ * RETURNS:     N/A
  */
 void wsgl_end_structure(
                         Ws *ws
@@ -654,8 +662,8 @@ void wsgl_end_structure(
 /*******************************************************************************
  * wsgl_render_element
  *
- * DESCR:	Render element to current workstation rendering window
- * RETURNS:	N/A
+ * DESCR:       Render element to current workstation rendering window
+ * RETURNS:     N/A
  */
 void wsgl_render_element(
                          Ws *ws,
@@ -1373,16 +1381,9 @@ void wsgl_begin_pick(
   printf("WSGL begin pick: set render mode to select\n");
   printf("WSGL begin pick: buffer size is %d at %p\n", wsgl->select_size, (void*)wsgl->select_buf);
 #endif
-  //glDisable(GL_CULL_FACE);
-  //glEnable(GL_DEPTH_TEST);
   glRenderMode(GL_SELECT);
   glInitNames();
-  /*
-  glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
-  glLoadIdentity();
-  glMatrixMode(GL_MODELVIEW);
-  */}
+}
 
 /*******************************************************************************
  * wsgl_end_pick

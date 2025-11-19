@@ -28,15 +28,18 @@ C     Delcare arrays
       REAL PXA(1:2)
       REAL PYA(1:2)
 
+      INTEGER IWK
+      PARAMETER (IWK=1)
+
 C      Open PHIGS and a workstation
-      CALL POPPH(0, 0)
-      CALL POPWK(0, 0, 0)
+      CALL POPPH(0, 1)
+      CALL POPWK(IWK, 0, 3)
 
 C      Define line colour in workstation table
       COLR(1) = 1.0
       COLR(2) = 1.0
       COLR(3) = 0.0
-      CALL PSCR(0, 1, 3, COLR)
+      CALL PSCR(IWK, 1, 3, COLR)
 
 C      Open structure
       CALL POPST(0)
@@ -70,7 +73,7 @@ C      Close structure
       CALL PCLST
 
 C      Post structure to workstation
-      CALL PPOST(0, 0, 0.0)
+      CALL PPOST(IWK, 0, 0.0)
 
 C      Buisy loop
       DO WHILE (1 .GT. 0)
