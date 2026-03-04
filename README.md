@@ -155,4 +155,7 @@ where X is a floating point number between 0. (fully transparent) and 1. (fully 
 * v0.1-1:  Fixes for exotic hardware
 * v0.2-1:  Introduce scale factor for hardcopies
 * v0.2-2:  Introduce additional functions to manage the scale factor programmatically
-* v0.3-1: Add support for eps, svc, pdf and obj formatted hardcopies
+* v0.3-1:  Add support for eps, svc, pdf and obj formatted hardcopies
+* v0.3-2:  C style fixings
+* v0.3-3:  test_f5 review, code improvements, clipping review
+* V0.4-1:  bug fixes, improve Wayland support, edge-cases on Mac and add support for a second clipping plane
