@@ -773,3 +773,20 @@ FTN_SUBROUTINE(psedci)(
 #endif
   pset_edge_colr_ind(colr_ind);
 }
+
+/*******************************************************************************
+ * psedt
+ *
+ * DESCR:       set edge type
+ * RETURNS:   N/A
+ */
+FTN_SUBROUTINE(psedt)(
+                       FTN_INTEGER(etype)
+                       )
+{
+  Pint edge_type = FTN_INTEGER_GET(etype);
+#ifdef DEBUG
+  printf("DEBUG: Set edge type to %d\n", colr_ind);
+#endif
+  pset_edgetype(edge_type);
+}
