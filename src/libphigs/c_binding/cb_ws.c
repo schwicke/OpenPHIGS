@@ -252,7 +252,7 @@ void pclose_ws(
     case PCAT_MI:
       break;
     case PCAT_TGA:
-      buffer_size = 3*width*height*sizeof(GLubyte);
+      buffer_size = (size_t)3 * (size_t)width * (size_t)height * sizeof(GLubyte);
       pixel_buffer = (GLubyte * ) malloc(buffer_size);
       glReadPixels(0, 0, width, height, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixel_buffer);
       error = glGetError();
@@ -270,7 +270,7 @@ void pclose_ws(
     case PCAT_PNG:
       png_rows = (png_byte**)malloc(height * sizeof(png_byte*));
       channels = 3;
-      buffer_size = channels*width*height*sizeof(GLubyte);
+      buffer_size = (unsigned int)((size_t)channels * (size_t)width * (size_t)height * sizeof(GLubyte));
       pixel_buffer = (GLubyte*) malloc(buffer_size);
       nvals = channels * width * height;
       glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixel_buffer);
@@ -316,7 +316,7 @@ void pclose_ws(
     case PCAT_PNGA:
       channels = 4;
       png_rows = (png_byte**)malloc(height * sizeof(png_byte*));
-      buffer_size = channels*width*height*sizeof(GLubyte);
+      buffer_size = (unsigned long)channels * (unsigned long)width * (unsigned long)height * sizeof(GLubyte);
       pixel_buffer = (GLubyte*) malloc(buffer_size);
       nvals = channels * width * height;
       glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixel_buffer);

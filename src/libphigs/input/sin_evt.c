@@ -124,6 +124,7 @@ void phg_sin_evt_tbl_destroy(
                              )
 {
   free(ev_tbl);
+  ev_tbl = NULL;
 }
 
 /*******************************************************************************
@@ -210,6 +211,7 @@ void phg_sin_evt_unregister(
         (ev->cdata == cdata)) {
       list_remove(&ev_tbl->events[event_type], &ev->node);
       free(ev);
+      ev = NULL;
       break;
     }
   }
@@ -237,6 +239,7 @@ void phg_sin_evt_unregister_display(
       if (ev->display == display) {
         list_remove(&ev_tbl->events[i], &ev->node);
         free(ev);
+        ev = NULL;
       }
     }
   }
@@ -266,6 +269,7 @@ void phg_sin_evt_unregister_window(
           (ev->window == window)) {
         list_remove(&ev_tbl->events[i], &ev->node);
         free(ev);
+        ev = NULL;
       }
     }
   }

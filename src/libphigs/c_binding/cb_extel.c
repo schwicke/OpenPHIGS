@@ -453,7 +453,7 @@ void pset_of_fill_area_set3_data(
       }
 
       args.el_type = PELEM_SET_OF_FILL_AREA_SET3_DATA;
-      args.el_size = 5 * sizeof(Pint) + num_sets * facet_size;
+      args.el_size = 5 * sizeof(Pint) + ((unsigned long)num_sets * facet_size);
 
       if (eflag == PEDGE_VISIBILITY) {
         for (i = 0; i < num_sets; i++) {
