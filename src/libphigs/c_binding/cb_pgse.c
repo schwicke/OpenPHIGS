@@ -25,6 +25,12 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
+/*******************************************************************************
+ * pgse
+ *
+ * DESCR:       Highlight color helper function
+ * RETURNS:     Non-zero on success, otherwise zero
+ */
 void pgse(
           Pgse_type gse_type,
           Pgse_data *gse_data
@@ -67,6 +73,12 @@ void pgse(
   }
 }
 
+/*******************************************************************************
+ * pxset_highlight_colr
+ *
+ * DESCR:       Set highligh color
+ * RETURNS:     None
+ */
 void pxset_highlight_colr  (
                             Pgcolr *colr
                             )

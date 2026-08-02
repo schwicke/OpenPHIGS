@@ -403,7 +403,7 @@ void pset_anno_char_ht(
 }
 
 /*******************************************************************************
- * pset_text_align
+ * pset_anno_align
  *
  * DESCR:   Creates a new element - Text Alignment Attribute
  * RETURNS:   N/A

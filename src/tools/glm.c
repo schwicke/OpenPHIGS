@@ -1791,6 +1791,7 @@ glmReadPPM(char* filename, int* width, int* height)
     FILE* fp;
     int i, w, h, d;
     unsigned char* image;
+    size_t image_size;
     char head[70];          /* max line <= 70 in PPM (per spec). */
     
     fp = fopen(filename, "rb");
@@ -1822,8 +1823,19 @@ glmReadPPM(char* filename, int* width, int* height)
     }
     
     /* grab all the image data in one fell swoop. */
-    image = (unsigned char*)malloc(sizeof(unsigned char)*w*h*3);
-    fread(image, sizeof(unsigned char), w*h*3, fp);
+    if (w <= 0 || h <= 0) {
+      fprintf(stderr, "%s: Invalid image dimensions\n", filename);
+      fclose(fp);
+      return NULL;
+    }
+    if ((size_t)w > ((size_t)-1) / (size_t)h / 3u) {
+      fprintf(stderr, "%s: Image too large\n", filename);
+      fclose(fp);
+      return NULL;
+    }
+    image_size = (size_t)w * (size_t)h * 3u;
+    image = (unsigned char*)malloc(image_size);
+    fread(image, sizeof(unsigned char), image_size, fp);    
     fclose(fp);
     
     *width = w;

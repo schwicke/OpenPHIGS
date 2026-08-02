@@ -438,7 +438,7 @@ FTN_SUBROUTINE(pfas3d)(
 }
 
 /*******************************************************************************
- * pfas3d
+ * pfasd
  *
  * DESCR:       fill area set
  * RETURNS:   N/A

@@ -17,7 +17,7 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '38 0 * * 2'
+    - cron: '20 17 * * *'
 
 jobs:
   analyze:
@@ -27,7 +27,7 @@ jobs:
     #   - https://gh.io/supported-runners-and-hardware-resources
     #   - https://gh.io/using-larger-runners (GitHub.com only)
     # Consider using larger runners or machines with greater resources for possible analysis time improvements.
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-22.04' }}
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-24.04' }}
     permissions:
       # required for all workflows
       security-events: write
@@ -65,7 +65,7 @@ jobs:
     # - name: Setup runtime (example)
     #   uses: actions/setup-example@v1
     - name: dependencies
-      run: sudo apt install --fix-missing cmake gcc gfortran libx11-dev libglu1-mesa-dev libmotif-dev tcsh libxaw7-dev libglew-dev libdlm-dev libgl2ps-dev libpng-dev
+      run: sudo apt install --fix-missing cmake gcc gfortran libx11-dev libglu1-mesa-dev libmotif-dev tcsh libxaw7-dev libglew-dev libdlm-dev libgl2ps-dev libpng-dev libxpm-dev
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL

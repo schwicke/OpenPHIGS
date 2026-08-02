@@ -312,8 +312,8 @@ FTN_SUBROUTINE(pspkft)(
 
   filter.incl_set.num_ints = isn1;
   filter.excl_set.num_ints = esn1;
-  if (isn == 0) incl_set[0] = 0;
-  if (esn == 0) excl_set[0] = 0;
+  if (isn1 == 0) incl_set[0] = 0;
+  if (esn1 == 0) excl_set[0] = 0;
   filter.incl_set.ints = &incl_set[0];
   filter.excl_set.ints = &excl_set[0];
 
@@ -347,8 +347,8 @@ FTN_SUBROUTINE(pshlft)(
 
   filter.incl_set.num_ints = isn1;
   filter.excl_set.num_ints = esn1;
-  if (isn == 0) incl_set[0] = 0;
-  if (esn == 0) excl_set[0] = 0;
+  if (isn1 == 0) incl_set[0] = 0;
+  if (esn1 == 0) excl_set[0] = 0;
   filter.incl_set.ints = &incl_set[0];
   filter.excl_set.ints = &excl_set[0];
 
