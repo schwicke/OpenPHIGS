@@ -35,7 +35,6 @@
 #include "util/ftn.h"
 #include "phconf.h"
 
-extern short int wsgl_use_shaders_settings;
 extern int record_geom;
 /*******************************************************************************
  * pqvwr
