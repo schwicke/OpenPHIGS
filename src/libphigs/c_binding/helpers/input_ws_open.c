@@ -25,16 +25,17 @@
 
 #include "phg.h"
 #include "private/phgP.h"
+#include "private/cb_internal.h"
 #include "private/sinqP.h"
 #include "private/wsxP.h"
 
-/*******************************************************************************
- * input_ws_open
+/**
+ * \file input_ws_open.c
+ * \brief Open input workstation desciption helper function
  *
- * DESCR:       Open input workstation desciption helper function
- * RETURNS:     Pointer to input description or NULL
+ * \return Pointer to input description or NULL
  */
-static Wst_input_wsdt* input_ws_open(
+Wst_input_wsdt* input_ws_open(
                                      Pint ws_id,
                                      Pint fn_id,
                                      Wst_phigs_dt **dtp,

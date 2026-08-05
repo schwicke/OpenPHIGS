@@ -38,18 +38,17 @@
 #include "css.h"
 #include "ws.h"
 #include "private/phgP.h"
+#include "private/cb_internal.h"
 #include "private/cbP.h"
 #include "private/wsglP.h"
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * inq_filter
- *
- * DESCR:       Get workstation filter
- * RETURNS:     N/A
+/**
+ * \file inq_filter.c
+ * \brief Get workstation filter
  */
-static void inq_filter(
+void inq_filter(
                        Phg_args_flt_type type,
                        Pint ws_id,
                        struct _Pstore *store,

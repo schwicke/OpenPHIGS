@@ -25,37 +25,32 @@
 
 #include "phg.h"
 #include "private/phgP.h"
+#include "private/cb_internal.h"
 #include "private/sinqP.h"
 #include "private/wsxP.h"
 
-/*******************************************************************************
- * check_loc_data_record
- *
- * DESCR:       Check locator data record helper function
- * RETURNS:     TRUE or FALSE
+/**
+ * \file set_mode.c
+ * \brief Set mode helper function
  */
-static int check_loc_data_record(
-                                 Pint pet,
-                                 Ploc_data3 *loc_data,
-                                 Wst_phigs_dt *dt,
-                                 Wst_defloc *ddt
-                                 )
+void set_mode(
+                     Pint ws_id,
+                     Phg_args_idev_class dev_class,
+                     Pint dev_num,
+                     Pop_mode op_mode,
+                     Pecho_switch echo_switch
+                     )
 {
-  int status;
+  Phg_args_set_mode_data args;
 
-  switch (pet) {
-  case 1:
-  case 2:
-  case 3:
-    /* No data */
-    status = TRUE;
-    break;
+  /* The calling function shall always check the requested workstation first */
+  Ws_handle wsh = PHG_WSID(ws_id);
 
-  default:
-    status = FALSE;
-    break;
-  }
+  args.idev_class = dev_class;
+  args.dev = dev_num;
+  args.mode = op_mode;
+  args.echo = echo_switch;
 
-  return status;
+  (*wsh->set_device_mode)(wsh, &args);
 }
 

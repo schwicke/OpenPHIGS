@@ -25,14 +25,15 @@
 
 #include "phg.h"
 #include "private/phgP.h"
+#include "private/cb_internal.h"
 #include "private/sinqP.h"
 #include "private/wsxP.h"
 
-/*******************************************************************************
- * inp_dispatch_next
+/**
+ * \file inp_dispatch_next.c
+ * \brief Dispatch next event for all open input workstations
  *
- * DESCR:       Dispatch next event for all open input workstations
- * RETURNS:     TRUE or FALSE
+ * \return TRUE or FALSE
  */
 int inp_dispatch_next(
                       Pint fn_id

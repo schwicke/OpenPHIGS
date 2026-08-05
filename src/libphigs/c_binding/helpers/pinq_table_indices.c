@@ -38,18 +38,17 @@
 #include "css.h"
 #include "ws.h"
 #include "private/phgP.h"
+#include "private/cb_internal.h"
 #include "private/cbP.h"
 #include "private/wsglP.h"
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pinq_table_indices
- *
- * DESCR:       Get table indices from workstation helper function
- * RETURNS:     N/A
+/**
+ * \file pinq_table_indices.c
+ * \brief Get table indices from workstation helper function
  */
-static void pinq_table_indices(
+void pinq_table_indices(
                                Phg_args_rep_type type,
                                Pint ws_id,
                                Pint num_elems_appl_list,

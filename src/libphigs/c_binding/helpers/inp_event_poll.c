@@ -25,16 +25,15 @@
 
 #include "phg.h"
 #include "private/phgP.h"
+#include "private/cb_internal.h"
 #include "private/sinqP.h"
 #include "private/wsxP.h"
 
-/*******************************************************************************
- * inp_event_poll
- *
- * DESCR:       Poll input events helper function
- * RETURNS:     N/A
+/**
+ * \file inp_event_poll.c
+ * \brief Poll input events helper function
  */
-static void inp_event_poll(
+void inp_event_poll(
                            Phg_ret *ret
                            )
 {

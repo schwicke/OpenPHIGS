@@ -25,30 +25,38 @@
 
 #include "phg.h"
 #include "private/phgP.h"
+#include "private/cb_internal.h"
 #include "private/sinqP.h"
 #include "private/wsxP.h"
 
-/*******************************************************************************
- * sample_device
+/**
+ * \file check_pick_data_record.c
+ * \brief Check pick data record helper function
  *
- * DESCR:       Sample device helper function
- * RETURNS:     N/A
+ * \return TRUE or FALSE
  */
-static void sample_device(
-                          Pint ws_id,
-                          Pint dev_num,
-                          Phg_args_idev_class dev_class,
-                          Phg_ret *ret
-                          )
+int check_pick_data_record(
+                                  Pint pet,
+                                  Ppick_data3 *stroke_data,
+                                  Wst_phigs_dt *dt,
+                                  Wst_defpick *ddt
+                                  )
 {
-  Ws_handle wsh;
+  int status;
 
-  /* The calling function shall always check the requested workstation first */
-  wsh = PHG_WSID(ws_id);
+  switch (pet) {
+  case 1:
+  case 2:
+  case 3:
+    /* No data */
+    status = TRUE;
+    break;
 
-  /* Process all events for workstation */
-  while (phg_wsx_input_dispatch_next(wsh, PHG_EVT_TABLE));
+  default:
+    status = FALSE;
+    break;
+  }
 
-  (*wsh->sample_device)(wsh, dev_class, dev_num, ret);
+  return status;
 }
 

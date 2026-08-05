@@ -25,34 +25,31 @@
 
 #include "phg.h"
 #include "private/phgP.h"
+#include "private/cb_internal.h"
 #include "private/sinqP.h"
 #include "private/wsxP.h"
 
-/*******************************************************************************
- * check_stroke_data_record
+/**
+ * \file check_event_class.c
+ * \brief Helper function to check input class of event on queue
  *
- * DESCR:       Check stroke data record helper function
- * RETURNS:     TRUE or FALSE
+ * \return TRUE or FALSE
  */
-static int check_stroke_data_record(
-                                    Pint pet,
-                                    Pstroke_data3 *stroke_data,
-                                    Wst_phigs_dt *dt,
-                                    Wst_defstroke *ddt
-                                    )
+int check_event_class(
+                             Pin_class dev_class,
+                             Pint fn_id
+                             )
 {
-  int status;
+  int status = TRUE;
 
-  if ((stroke_data->buffer_size < 1) ||
-      (stroke_data->buffer_size > ddt->max_bufsize)) {
+  ERR_SET_CUR_FUNC(PHG_ERH, fn_id);
+  if (PSL_WS_STATE(PHG_PSL) != PWS_ST_WSOP) {
+    ERR_REPORT(PHG_ERH, ERR3);
     status = FALSE;
   }
-  else if ((stroke_data->init_pos < 1) ||
-           (stroke_data->init_pos > ddt->max_bufsize)) {
+  else if (PSL_CUR_EVENT_CLASS(PHG_PSL) != dev_class) {
+    ERR_REPORT(PHG_ERH, ERR259);
     status = FALSE;
-  }
-  else {
-    status = TRUE;
   }
 
   return status;

@@ -25,30 +25,36 @@
 
 #include "phg.h"
 #include "private/phgP.h"
+#include "private/cb_internal.h"
 #include "private/sinqP.h"
 #include "private/wsxP.h"
 
-/*******************************************************************************
- * check_event_class
+/**
+ * \file check_loc_data_record.c
+ * \brief Check locator data record helper function
  *
- * DESCR:       Helper function to check input class of event on queue
- * RETURNS:     TRUE or FALSE
+ * \return TRUE or FALSE
  */
-static int check_event_class(
-                             Pin_class dev_class,
-                             Pint fn_id
-                             )
+int check_loc_data_record(
+                                 Pint pet,
+                                 Ploc_data3 *loc_data,
+                                 Wst_phigs_dt *dt,
+                                 Wst_defloc *ddt
+                                 )
 {
-  int status = TRUE;
+  int status;
 
-  ERR_SET_CUR_FUNC(PHG_ERH, fn_id);
-  if (PSL_WS_STATE(PHG_PSL) != PWS_ST_WSOP) {
-    ERR_REPORT(PHG_ERH, ERR3);
+  switch (pet) {
+  case 1:
+  case 2:
+  case 3:
+    /* No data */
+    status = TRUE;
+    break;
+
+  default:
     status = FALSE;
-  }
-  else if (PSL_CUR_EVENT_CLASS(PHG_PSL) != dev_class) {
-    ERR_REPORT(PHG_ERH, ERR259);
-    status = FALSE;
+    break;
   }
 
   return status;

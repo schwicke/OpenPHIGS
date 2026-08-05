@@ -16,42 +16,35 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************
-* Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "phg.h"
+#include "css.h"
+#include "ar.h"
 #include "private/phgP.h"
-#include "private/sinqP.h"
-#include "private/wsxP.h"
+#include "private/cb_internal.h"
+#include "private/cbP.h"
 
-/*******************************************************************************
- * set_mode
+/**
+ * \file valid_ar_fname.c
+ * \brief Check archive filename helper function
  *
- * DESCR:       Set mode helper function
- * RETURNS:     N/A
+ * \return Non-zero on success, otherwise zero
  */
-static void set_mode(
-                     Pint ws_id,
-                     Phg_args_idev_class dev_class,
-                     Pint dev_num,
-                     Pop_mode op_mode,
-                     Pecho_switch echo_switch
-                     )
+int valid_ar_fname(
+                          char *fname
+                          )
 {
-  Phg_args_set_mode_data args;
+  int status = 0;
 
-  /* The calling function shall always check the requested workstation first */
-  Ws_handle wsh = PHG_WSID(ws_id);
+  if (fname != NULL && strlen(fname) <= PHG_MAX_NAMELEN) {
+    status = 1;
+  }
 
-  args.idev_class = dev_class;
-  args.dev = dev_num;
-  args.mode = op_mode;
-  args.echo = echo_switch;
-
-  (*wsh->set_device_mode)(wsh, &args);
+  return status;
 }
 

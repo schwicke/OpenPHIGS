@@ -25,16 +25,16 @@
 
 #include "phg.h"
 #include "private/phgP.h"
+#include "private/cb_internal.h"
 #include "private/sinqP.h"
 #include "private/wsxP.h"
+#include "util.h"
 
-/*******************************************************************************
- * request_device
- *
- * DESCR:       Request device helper function
- * RETURNS:     N/A
+/**
+ * \file request_device.c
+ * \brief Request device helper function
  */
-static void request_device(
+void request_device(
                            Pint ws_id,
                            Pint dev_num,
                            Phg_args_idev_class dev_class,
