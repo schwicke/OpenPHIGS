@@ -1,6 +1,5 @@
 SET(P_C_BINDING_SRCS
-  
-  
+  c_binding/cb_ar/cb.c
   c_binding/cb_ar/par_all_structs.c
   c_binding/cb_ar/par_struct_nets.c
   c_binding/cb_ar/par_structs.c
@@ -11,7 +10,6 @@ SET(P_C_BINDING_SRCS
   c_binding/cb_ar/pdel_struct_net.c
   c_binding/cb_ar/pdel_struct_nets_ar.c
   c_binding/cb_ar/pdel_structs_ar.c
-  c_binding/cb_ar/phg_cb_resize_store.c
   c_binding/cb_ar/pinq_all_conf_structs.c
   c_binding/cb_ar/pinq_ar_files.c
   c_binding/cb_ar/pinq_ar_st.c
@@ -91,7 +89,6 @@ SET(P_C_BINDING_SRCS
   c_binding/cb_extel/pset_refl_model.c
   c_binding/cb_extel/pset_refl_props.c
   c_binding/cb_extel/pset_text_colr.c
-  c_binding/cb_globals.c
   c_binding/cb_inp/pawait_event.c
   c_binding/cb_inp/pflush_events.c
   c_binding/cb_inp/pget_choice.c
@@ -129,10 +126,11 @@ SET(P_C_BINDING_SRCS
   c_binding/cb_inp/pset_stroke_mode.c
   c_binding/cb_inp/pset_val_mode.c
   c_binding/cb_lite/pinq_light_src_rep.c
+  c_binding/cb_pgse/pgse.c
+  c_binding/cb_pgse/pxset_highlight_colr.c
   c_binding/cb_phg/pclose_phigs.c
   c_binding/cb_phg/pcreate_store.c
   c_binding/cb_phg/pdel_store.c
-  c_binding/cb_phg/phg_cb_destroy_all_stores.c
   c_binding/cb_phg/popen_phigs.c
   c_binding/cb_str/pchange_struct_id.c
   c_binding/cb_str/pchange_struct_id_refs.c
@@ -144,8 +142,6 @@ SET(P_C_BINDING_SRCS
   c_binding/cb_str/pdel_elems_labels.c
   c_binding/cb_str/pelem_search.c
   c_binding/cb_str/pempty_struct.c
-  c_binding/cb_str/phg_cb_store_el_data.c
-  c_binding/cb_str/phg_cb_store_el_size.c
   c_binding/cb_str/pinq_cur_elem_content.c
   c_binding/cb_str/pinq_cur_elem_type_size.c
   c_binding/cb_str/pinq_edit_mode.c
@@ -162,6 +158,7 @@ SET(P_C_BINDING_SRCS
   c_binding/cb_str/pset_elem_ptr_label.c
   c_binding/cb_text/panno_text_rel.c
   c_binding/cb_text/panno_text_rel3.c
+  c_binding/cb_text/pset_anno_align.c
   c_binding/cb_text/pset_anno_char_ht.c
   c_binding/cb_text/pset_anno_path.c
   c_binding/cb_text/pset_text_align.c
@@ -253,8 +250,7 @@ SET(P_C_BINDING_SRCS
 )
 
 SET(P_F_BINDING_SRCS
-  
-  
+  f_binding/fb_ar.c
   f_binding/fb_conf/pxndef.c
   f_binding/fb_conf/pxqhcsf.c
   f_binding/fb_conf/pxshcsf.c
@@ -265,6 +261,7 @@ SET(P_F_BINDING_SRCS
   f_binding/fb_el/ppl.c
   f_binding/fb_el/ppl3.c
   f_binding/fb_el/ppm.c
+  f_binding/fb_el/ppm3.c
   f_binding/fb_el/psatcu.c
   f_binding/fb_el/pschh.c
   f_binding/fb_el/pschsp.c
@@ -292,6 +289,7 @@ SET(P_F_BINDING_SRCS
   f_binding/fb_el/psvwi.c
   f_binding/fb_extel/pbsi.c
   f_binding/fb_extel/pfas3d.c
+  f_binding/fb_extel/pfasd.c
   f_binding/fb_extel/pres.c
   f_binding/fb_extel/psalch.c
   f_binding/fb_extel/psbic.c
