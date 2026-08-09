@@ -45,7 +45,9 @@
 #include "private/wsbP.h"
 #include "private/sofas3P.h"
 
+/* instantiate globals. */
 short int wsgl_use_shaders = 1;
+short int wsgl_use_shaders_settings = 0;
 short int wsgl_vert_shader_version = 120;
 short int wsgl_frag_shader_version = 120;
 

@@ -1,0 +1,75 @@
+/******************************************************************************
+*   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER
+*
+*   This file is part of Open PHIGS
+*   Copyright (C) 2014 Surplus Users Ham Society
+*
+*   Open PHIGS is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU Lesser General Public License as published by
+*   the Free Software Foundation, either version 2.1 of the License, or
+*   (at your option) any later version.
+*
+*   Open PHIGS is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU Lesser General Public License for more details.
+*
+*   You should have received a copy of the GNU Lesser General Public License
+*   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************
+* Changes:   Copyright (C) 2022-2023 CERN
+******************************************************************************/
+
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include "phg.h"
+#include "css.h"
+#include "private/phgP.h"
+#include "util/ftn.h"
+
+/*******************************************************************************
+ * pfa
+ *
+ * DESCR:   fill area
+ * RETURNS:   N/A
+ */
+
+FTN_SUBROUTINE(pfa)(
+                    FTN_INTEGER(n),
+                    FTN_REAL_ARRAY(pxa),
+                    FTN_REAL_ARRAY(pya)
+                    )
+{
+#ifdef DEBUG
+  printf("DEBUG: PFA pfill area called\n");
+#endif
+  Pint num_points = FTN_INTEGER_GET(n);
+  Phg_args_add_el args;
+  Pint i;
+  Pint  *data;
+  Ppoint *point;
+  if (phg_entry_check(PHG_ERH, 0, Pfn_fill_area)) {
+    if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
+      ERR_REPORT(PHG_ERH, ERR5);
+    }
+    else {
+      args.el_type = PELEM_FILL_AREA;
+      args.el_size = sizeof(Pint) + sizeof(Ppoint) * num_points;
+      if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
+        ERR_REPORT(PHG_ERH, ERR900);
+      }
+      else {
+        args.el_data = PHG_SCRATCH.buf;
+        data = (Pint *) args.el_data;
+        data[0] = num_points;
+        point = (Ppoint*) &data[1];
+        for (i=0; i<num_points;i++){
+          point[i].x = FTN_REAL_ARRAY_GET(pxa, i);
+          point[i].y = FTN_REAL_ARRAY_GET(pya, i);
+        }
+        phg_add_el(PHG_CSS, &args);
+      }
+    }
+  }
+}
