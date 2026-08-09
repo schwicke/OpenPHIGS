@@ -1,5 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.5...3.31)
 PROJECT(PHIGS)
+include(GNUInstallDirs)
 
 SET(CMAKE_MODULE_PATH ${PHIGS_SOURCE_DIR}/cmake)
 
@@ -153,4 +154,5 @@ if (DOXYGEN_FOUND)
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM)
+    install(FILES ../build/doc/man ../build/doc/html ../build/doc/latex DESTINATION ${CMAKE_INSTALL_DOCDIR})
 endif()

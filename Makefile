@@ -5,12 +5,14 @@ ifeq ("x${NO_GLEW}", "x")
 else
 	export GL_OPTS=-DUSE_GLEW=0
 endif
-all: clean config build install
+all: clean config build doc install
 config:
 	if [ ! -d build ]; then mkdir build; fi
 	cd build && cmake $(OPENPHIGS_OPTS) $(GL_OPTS) ../src
 build:	config
 	cd build && cmake --build .
+doc:	config
+	cd build && make doc
 install: build
 	cd build && cmake --install . --prefix ../distrib
 clean:
