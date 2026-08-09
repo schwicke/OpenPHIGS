@@ -42,6 +42,7 @@
 #include "private/wsglP.h"
 #include "private/wsxP.h"
 #include "phconf.h"
+#include "private/cb_internal.h"
 
 /*******************************************************************************
  * pinq_list_line_inds

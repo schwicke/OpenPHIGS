@@ -27,6 +27,7 @@
 #include "private/phgP.h"
 #include "private/sinqP.h"
 #include "private/wsxP.h"
+#include "private/cb_internal.h"
 
 /*******************************************************************************
  * pset_val_mode

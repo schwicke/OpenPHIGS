@@ -27,6 +27,7 @@
 #include "ar.h"
 #include "private/phgP.h"
 #include "private/cbP.h"
+#include "private/cb_internal.h"
 
 /*******************************************************************************
  * popen_ar_file

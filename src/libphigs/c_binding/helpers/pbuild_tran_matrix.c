@@ -54,22 +54,18 @@ SOFTWARE.
 #include "util.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pbuild_tran_matrix3
- *
- * DESCR:       Generate 3D transformation matrix
- * RETURNS:     N/A
+/**
+ * \file void pbuild_tran_matrix.c
+ * \brief Generate transformation matrix
  */
-void pbuild_tran_matrix3(
-                         Ppoint3 *pt,               /* fixed point */
-                         Pvec3 *shift,              /* shift vector */
-                         Pfloat x_angle,            /* rotation angle X */
-                         Pfloat y_angle,            /* rotation angle Y */
-                         Pfloat z_angle,            /* rotation angle Z */
-                         Pvec3 *scale,              /* scale vector */
-                         Pint *error_ind,           /* OUT error indicator */
-                         Pmatrix3 matrix            /* OUT transformation matrix */
-                         )
+void pbuild_tran_matrix(
+                        Ppoint *pt,                /* fixed point */
+                        Pvec *shift,               /* shift vector */
+                        Pfloat angle,              /* rotation angle */
+                        Pvec *scale,               /* scale vector */
+                        Pint *error_ind,           /* OUT error indicator */
+                        Pmatrix matrix             /* OUT transformation matrix */
+                        )
 {
   ERR_SET_CUR_FUNC(PHG_ERH, Pfn_INQUIRY);
 
@@ -77,6 +73,7 @@ void pbuild_tran_matrix3(
     *error_ind = ERR2;
   } else {
     *error_ind = 0;
-    build_transform3(pt, shift, x_angle, y_angle, z_angle, scale, matrix);
+    build_transform(pt, shift, angle, scale, matrix);
   }
 }
+

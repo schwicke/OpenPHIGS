@@ -231,7 +231,7 @@ SET(P_C_BINDING_SRCS
   c_binding/cb_ws/pupd_ws.c
   c_binding/cb_wst/pinq_disp_space_size3.c
   c_binding/cb_wst/pinq_ws_cat.c
-  c_binding/helpers/build_tran_matrix.c
+  c_binding/helpers/pbuild_tran_matrix.c
   c_binding/helpers/build_transform.c
   c_binding/helpers/build_transform3.c
   c_binding/helpers/check_event_class.c
@@ -257,6 +257,7 @@ SET(P_F_BINDING_SRCS
   f_binding/fb_el/pads.c
   f_binding/fb_el/pexst.c
   f_binding/fb_el/pfa.c
+  f_binding/fb_el/pfa3.c
   f_binding/fb_el/plb.c
   f_binding/fb_el/ppl.c
   f_binding/fb_el/ppl3.c

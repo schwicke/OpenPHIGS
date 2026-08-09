@@ -20,60 +20,57 @@
 * Changes:   Copyright (C) 2022-2023 CERN
 ******************************************************************************/
 
-#include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
+#include <stdio.h>
 #include "phg.h"
+#include "css.h"
 #include "private/phgP.h"
-#include "private/sinqP.h"
-#include "private/wsxP.h"
 #include "private/cb_internal.h"
+#include "util/ftn.h"
 
-/*******************************************************************************
- * pget_pick
- *
- * DESCR:       Get pick event from event queue
- * RETURNS:     N/A
+/**
+ * \file pfa3.c
+ * \brief fill area 3
  */
-void pget_pick(
-               Pint depth,
-               Pin_status *in_status,
-               Ppick_path *pick
-               )
+FTN_SUBROUTINE(pfa3)(
+                     FTN_INTEGER(n),
+                     FTN_REAL_ARRAY(pxa),
+                     FTN_REAL_ARRAY(pya),
+                     FTN_REAL_ARRAY(pza)
+                     )
 {
-  Ppick *pik;
-  Pint depth_limit;
-
-  if (PSL_CUR_EVENT_CLASS(PHG_PSL) != PIN_NONE){
-    if (check_event_class(PIN_PICK, Pfn_get_pick)) {
-      pik = &PSL_CUR_EVENT_DATA(PHG_PSL, pik);
-      *in_status = pik->status;
-      if (pik->status == PIN_STATUS_OK) {
-        pick->depth = pik->pick_path.depth;
-#ifdef DEBUGINP
-        printf("Pick status is OK. Depth: %d\n", pick->depth);
+#ifdef DEBUG
+  printf("DEBUG: PFA3 fill area called\n");
 #endif
-        depth_limit = PHG_MIN(depth, pik->pick_path.depth);
-        if (depth_limit > 0) {
-#ifdef DEBUGINP
-          printf("depth limit is %d", depth_limit);
-#endif
-          memcpy(pick->path_list,
-                 pik->pick_path.path_list,
-                 depth_limit * sizeof(Ppick_path_elem));
-        }
-      }
-#ifdef DEBUGINP
-      else {
-        printf("Pick status is not OK: %d\n", pik->status);
-      }
-#endif
+  Pint num_points = FTN_INTEGER_GET(n);
+  Phg_args_add_el args;
+  Pint i;
+  Pint  *data;
+  Ppoint3 *point;
+  if (phg_entry_check(PHG_ERH, 0, Pfn_fill_area)) {
+    if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
+      ERR_REPORT(PHG_ERH, ERR5);
     }
-  } else {
-#ifdef DEBUGINP
-    printf("No input");
-#endif
-    *in_status = PIN_STATUS_NO_IN;
+    else {
+      args.el_type = PELEM_FILL_AREA3;
+      args.el_size = sizeof(Pint) + sizeof(Ppoint3) * num_points;
+      if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
+        ERR_REPORT(PHG_ERH, ERR900);
+      }
+      else {
+        args.el_data = PHG_SCRATCH.buf;
+        data = (Pint *) args.el_data;
+        data[0] = num_points;
+        point = (Ppoint3*) &data[1];
+        for (i=0; i<num_points;i++){
+          point[i].x = FTN_REAL_ARRAY_GET(pxa, i);
+          point[i].y = FTN_REAL_ARRAY_GET(pya, i);
+          point[i].z = FTN_REAL_ARRAY_GET(pza, i);
+        }
+        phg_add_el(PHG_CSS, &args);
+      }
+    }
   }
 }
 

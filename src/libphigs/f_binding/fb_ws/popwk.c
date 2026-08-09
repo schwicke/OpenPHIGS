@@ -34,6 +34,7 @@
 #include "ws.h"
 #include "util/ftn.h"
 #include "phconf.h"
+#include "private/cb_internal.h"
 
 extern int record_geom;
 /*******************************************************************************

@@ -52,6 +52,7 @@ SOFTWARE.
 
 #include "phg.h"
 #include "util.h"
+#include "private/cb_internal.h"
 
 /*******************************************************************************
  * pcompose_tran_matrix3

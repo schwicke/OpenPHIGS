@@ -31,31 +31,31 @@
 /*******************************************************************************
  * pfa
  *
- * DESCR:   fill area 3
+ * DESCR:   fill area
  * RETURNS:   N/A
  */
-FTN_SUBROUTINE(pfa3)(
-                     FTN_INTEGER(n),
-                     FTN_REAL_ARRAY(pxa),
-                     FTN_REAL_ARRAY(pya),
-                     FTN_REAL_ARRAY(pza)
-                     )
+
+FTN_SUBROUTINE(pfa)(
+                    FTN_INTEGER(n),
+                    FTN_REAL_ARRAY(pxa),
+                    FTN_REAL_ARRAY(pya)
+                    )
 {
 #ifdef DEBUG
-  printf("DEBUG: PFA3 fill area called\n");
+  printf("DEBUG: PFA pfill area called\n");
 #endif
   Pint num_points = FTN_INTEGER_GET(n);
   Phg_args_add_el args;
   Pint i;
   Pint  *data;
-  Ppoint3 *point;
+  Ppoint *point;
   if (phg_entry_check(PHG_ERH, 0, Pfn_fill_area)) {
     if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
       ERR_REPORT(PHG_ERH, ERR5);
     }
     else {
-      args.el_type = PELEM_FILL_AREA3;
-      args.el_size = sizeof(Pint) + sizeof(Ppoint3) * num_points;
+      args.el_type = PELEM_FILL_AREA;
+      args.el_size = sizeof(Pint) + sizeof(Ppoint) * num_points;
       if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
         ERR_REPORT(PHG_ERH, ERR900);
       }
@@ -63,15 +63,13 @@ FTN_SUBROUTINE(pfa3)(
         args.el_data = PHG_SCRATCH.buf;
         data = (Pint *) args.el_data;
         data[0] = num_points;
-        point = (Ppoint3*) &data[1];
+        point = (Ppoint*) &data[1];
         for (i=0; i<num_points;i++){
           point[i].x = FTN_REAL_ARRAY_GET(pxa, i);
           point[i].y = FTN_REAL_ARRAY_GET(pya, i);
-          point[i].z = FTN_REAL_ARRAY_GET(pza, i);
         }
         phg_add_el(PHG_CSS, &args);
       }
     }
   }
 }
-

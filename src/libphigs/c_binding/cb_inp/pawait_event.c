@@ -28,6 +28,7 @@
 #include "private/sinqP.h"
 #include "private/wsxP.h"
 #include "util.h"
+#include "private/cb_internal.h"
 
 /*******************************************************************************
  * pawait_event

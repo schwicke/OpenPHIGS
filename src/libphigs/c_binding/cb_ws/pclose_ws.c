@@ -41,6 +41,7 @@
 #include "private/cbP.h"
 #include "private/wsglP.h"
 #include "private/wsxP.h"
+#include "private/cb_internal.h"
 #include "phconf.h"
 
 /*******************************************************************************
