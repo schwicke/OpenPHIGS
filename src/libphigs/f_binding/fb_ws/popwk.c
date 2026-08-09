@@ -36,14 +36,39 @@
 #include "phconf.h"
 #include "private/cb_internal.h"
 
+/** \internal recording flag for printing */
 extern int record_geom;
-/*******************************************************************************
- * popwk
- *
- * DESCR:   Open workstation
- * RETURNS:   N/A
- */
 
+/**
+ * \brief       Open workstation
+ *
+ * popwk opens a new workstation with ID wkid
+ *
+ * \param       wkid   workstation ID
+ * \param       conid  connection ID
+ * \param       wkid   wktype workstation type
+ *
+ * \verbatim
+  0  PWST_OUTPUT_TRUE                 Output only on GL display
+  1  PWST_OUTIN_TRUE                  Input/Output on GL display
+  2  PWST_OUTPUT_TRUE_DB              Output only on GL, buffered
+  3  PWST_OUTIN_TRUE_DB               Input/Output on GL display, buffered
+  4  PWST_HCOPY_TRUE_TGA              Hardcopy to file as TGA
+  5  PWST_HCOPY_TRUE_RGB_PNG          Hardcopy to file as PNG RGB only
+  6  PWST_HCOPY_TRUE_RGBA_PNG         Hardcopy to file as PNG with Alpha channel
+  7  PWST_HCOPY_TRUE_EPS              Hardcopy to file as Encapsulated PostScript, no shaders
+  8  PWST_HCOPY_TRUE_PDF              Hardcopy to file as PDF, no shaders
+  9  PWST_HCOPY_TRUE_SVG              Hardcopy to file as SVG, no shaders
+  10 PWST_HCOPY_TRUE_OBJ              Export geometry as OBJ
+ * \endverbatim
+ *
+ * \note There is no support for PostScript at the moment.
+ * The hardcopy types are available in Fortran. C-Bindings have not been tested with them
+ *
+ * \pre The workstation must not be open yet.
+ *
+ * \sa pclwk
+ */
 FTN_SUBROUTINE(popwk)(
                       FTN_INTEGER(wkid),
                       FTN_INTEGER(conid),

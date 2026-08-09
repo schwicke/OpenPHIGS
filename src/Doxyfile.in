@@ -2860,3 +2860,7 @@ MSCGEN_TOOL            =
 # command).
 
 MSCFILE_DIRS           =
+
+# Customisatons
+
+EXCLUDE_SYMBOLS = record_geom wsgl_use_shaders wsgl_use_shaders_settings
