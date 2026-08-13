@@ -205,6 +205,7 @@ SET(P_C_BINDING_SRCS
   c_binding/cb_ws/pinq_text_rep.c
   c_binding/cb_ws/pinq_ws_conn_type.c
   c_binding/cb_ws/pinq_ws_st.c
+  c_binding/cb_ws/pxset_color_map.c
   c_binding/cb_ws/pmessage.c
   c_binding/cb_ws/popen_ws.c
   c_binding/cb_ws/ppost_struct.c

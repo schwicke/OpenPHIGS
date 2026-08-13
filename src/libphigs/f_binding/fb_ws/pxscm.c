@@ -35,11 +35,19 @@
 #include "util/ftn.h"
 #include "phconf.h"
 
-extern int record_geom;
 /**
  * \file pxscm.c
  *
  * \brief       Set color map
+ * \param       wkid: Workstation ID
+ *
+ * This functions is an extension to PHIGS.
+ * - In COLORMODE=1 it creates 125 colors starting with index 16. Any colors with lower indices will not be touched.
+ * - COLORMODE=2 does same as 1. In addition, it creates 5 levels of transparent colors for all colors, with offset 200 with decreasing transparency. This is done as well for any existing colors with indices between 1 and 15.
+ *
+ * The color mode is set with pxscm.
+ *
+ * \sa pscm popwk
  */
 FTN_SUBROUTINE(pxscm)(
                       FTN_INTEGER(wkid)
