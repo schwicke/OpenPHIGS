@@ -17,4 +17,5 @@ install: build
 	cd build && cmake --install . --prefix ../distrib
 clean:
 	rm -rf build
+	rm -rf src/build
 	rm -rf distrib

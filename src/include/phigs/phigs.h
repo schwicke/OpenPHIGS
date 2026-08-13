@@ -248,10 +248,9 @@ extern "C" {
     PELEM_MODEL_CLIP_IND,
     PELEM_FILL_AREA_SET_DATA,
     PELEM_GSE,
-    PELEM_ALPHA_CHANNEL,
     PELEM_TEXT3,
-    PELEM_INT_REFL_MODEL,     //80
-    PELEM_BACK_INT_COLR_IND,
+    PELEM_INT_REFL_MODEL,     
+    PELEM_BACK_INT_COLR_IND,  //80
     PELEM_NUM_EL_TYPES
   } Pelem_type;
 
@@ -4170,17 +4169,6 @@ extern "C" {
    */
   void print_invis_filter(
                           Pint ws_id
-                          );
-
-  /*******************************************************************************
-   * set alpha channel
-   *
-   * DESCR:       set alpha channel
-   * RETURNS:     N/A
-   * Note: extending the standard
-   */
-  void pset_alpha_channel(
-                          Pfloat alpha
                           );
 
   /*******************************************************************************

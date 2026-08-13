@@ -406,7 +406,6 @@ static void init_rendering_state(
   wsgl->cur_struct.ast.anno_char_up_vec.delta_y = 1.0;
   wsgl->cur_struct.ast.disting_mode = PDISTING_YES;
   wsgl->cur_struct.ast.cull_mode = PCULL_NONE;
-  wsgl->cur_struct.ast.alpha_channel = 1.0;
   wsgl->cur_struct.ast.color_model= PMODEL_RGB;
   wsgl_set_edge_ind(ws, &wsgl->cur_struct.ast.bundl_group, 0);
   wsgl_set_edge_ind(ws, &wsgl->cur_struct.ast.indiv_group, 0);
@@ -1333,11 +1332,6 @@ void wsgl_render_element(
     wsgl_set_clip_vol3(ws,
                        (char*)ELMT_CONTENT(el),
                        wsgl->cur_struct.view_rep.map_matrix);
-    break;
-
-  case PELEM_ALPHA_CHANNEL:
-    wsgl->cur_struct.ast.alpha_channel = PHG_FLOAT(el);
-    wsgl->cur_struct.ast.color_model = PMODEL_RGBA;
     break;
 
   default:

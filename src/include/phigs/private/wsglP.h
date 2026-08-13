@@ -69,7 +69,6 @@ extern "C" {
     Ptext_path    anno_text_path;
     Ptext_align   anno_text_align;
     Pvec          anno_char_up_vec;
-    Pfloat        alpha_channel;
     Pfloat        color_model;
   } Ws_attr_st;
 
@@ -493,19 +492,6 @@ extern "C" {
                           char * data,
                           Pmatrix3 ModelviewMatrix
                           );
-
-  /*******************************************************************************
-   * wsgl_set_alpha_channel
-   *
-   * DESCR:       Setup alpha channel
-   * RETURNS:     N/A
-   */
-
-  void wsgl_set_alpha_channel(
-                              Ws *ws,
-                              Pfloat alpha
-                              );
-
 
   /*******************************************************************************
    * wsgl_update_hlhsr_id

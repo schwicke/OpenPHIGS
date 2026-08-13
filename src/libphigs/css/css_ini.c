@@ -152,7 +152,6 @@ Css_handle phg_css_init(Err_handle erh, Css_ssh_type ssh_type)
     fptr[(int)PELEM_MODEL_CLIP_VOL3] = hdl_generic_elmt;
     fptr[(int)PELEM_MODEL_CLIP_IND] = hdl_generic_elmt;
     fptr[(int)PELEM_FILL_AREA_SET_DATA] = hdl_generic_elmt;
-    fptr[(int)PELEM_ALPHA_CHANNEL] = hdl_generic_elmt;
     fptr[(int)PELEM_TEXT3] = hdl_generic_elmt;
     fptr[(int)PELEM_BACK_INT_COLR_IND] = hdl_generic_elmt;
     fptr[(int)PELEM_GSE] = hdl_generic_elmt;

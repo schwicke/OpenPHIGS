@@ -259,7 +259,6 @@ extern "C" {
 #define  Pfn_set_edge_colr               (327)
 #define  Pfn_set_light_src_rep           (340)
 #define  Pfn_set_refl_model              (343)
-#define  Pfn_set_alpha_channel           (900)
 #define  Pfn_INQUIRY                     (1000)
 
 #ifdef __cplusplus

@@ -38,7 +38,6 @@
 
 extern GLint shading_mode;
 extern GLint ModelViewMatrix, ProjectionMatrix;
-extern GLint alpha_channel;
 extern GLfloat s_plane[], t_plane[];
 
 GLint state1;

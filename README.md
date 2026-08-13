@@ -67,7 +67,6 @@ Workstation numbers can be in the range from 0 to 99.
 * 10 PWST_HCOPY_TRUE_OBJ              Export geometry as OBJ
 
 Notes:
- * There is no support for PostScript at the moment.
  * The hardcopy types are available in Fortran. C-Bindings have not been tested with them
 
 ### Input devices
@@ -128,13 +127,6 @@ Extensions:
 
 ## Transparency
 
-### PSALCH (DEPRECATED)
-The ALPHA channel in a structure can be set with
-
-CALL PSALCH(X)
-
-where X is a floating point number between 0. (fully transparent) and 1. (fully opaque).
-
 ### RGBA Color mode
 This version supports colors with 4 components. To switch to this mode, use PMODEL_RGBA instead of PMODEL_RGB which is the default. This
 can be done via a call to PSCM(WKID, COLORMODE). Note that this call should be done directly after the workstation has been opened.
@@ -157,7 +149,6 @@ In COLORMODE=2 same as above. In addition, it will create 5 levels of transparen
 * PXNDEF(STRING NAME): set the configuration location and file name
 * PXSHCSF(INTEGER IWK, REAL VALUE): Set hardcopy scale factor for workstation ID WKID. Must be set before the workstation is being opened.
 * PXQHCSF(INTEGER IWK, REAL VALUE): Inquire the current scale factor for workstation ID WKID. The value is returned in the second argument.
-* PSALCH(REAL VALUE): (deprecated) set ALPHA channel to Value. Value is between 0(fully transparent) and 1 (opaque). Added to the current structure.
 * PSFNAME(INTEGER IWK, CHARACTER FNAME): set output file name for workstation ID IWK
 * PXSCM(): Set color map
 
@@ -165,7 +156,6 @@ In COLORMODE=2 same as above. In addition, it will create 5 levels of transparen
 * pxset_conf_file_name(char* path): set the configuration location and file name
 * pxset_conf_hcsf(int wkid, Pfloat value): Set hardcopy scale factor for workstation ID WKID. Must be set before the workstation is being opened
 * Pfloat pxinq_conf_hcsf(int wkid): Inquire the current hardcopy scale factor for workstation ID WKID.
-* pset_alpha_channel(float value): C-Binding for PSALCH. Added to the current structure.
 * pxset_color_map(int wkid): set color map
 
 ### Configuration file
