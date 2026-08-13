@@ -26,6 +26,7 @@
  * \file pxinq_conf_hcsf.c
  *
  * \brief       inquire the hardcopy scale factor
+ * \param       wkid: work station ID
  * \return current hard copy scale factor for given workstation
  */
 Pint pxinq_conf_hcsf(

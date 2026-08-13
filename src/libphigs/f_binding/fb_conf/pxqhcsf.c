@@ -31,7 +31,8 @@
  * \file pxqhcsf.c
  *
  * \brief       get the hardcopy scale factor for workstation
- * \return current scale factor for workstation wkid
+ * \param       wkid (input) work station ID
+ * \return      hcsf (output) current scale factor for workstation wkid
  */
 FTN_SUBROUTINE(pxqhcsf)(
                         FTN_INTEGER(wkid),
