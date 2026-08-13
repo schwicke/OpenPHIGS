@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pscm
+/**
+ * \file pscm.c
  *
- * DESCR:       Set colour model
- * RETURNS:     N/A
+ * \brief       Set colour model
  */
 
 FTN_SUBROUTINE(pscm)(

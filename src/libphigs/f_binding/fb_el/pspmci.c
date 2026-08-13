@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pspmci
+/**
+ * \file pspmci.c
  *
- * DESCR:       set polymarker colour index
- * RETURNS:   N/A
+ * \brief       set polymarker colour index
  */
 FTN_SUBROUTINE(pspmci)(
                        FTN_INTEGER(coli)

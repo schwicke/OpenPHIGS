@@ -30,11 +30,10 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psedm
+/**
+ * \file psedm.c
  *
- * DESCR:       Set edit mode
- * RETURNS:   N/A
+ * \brief       Set edit mode
  */
 FTN_SUBROUTINE(psedm)(
                       FTN_INTEGER(editmode)

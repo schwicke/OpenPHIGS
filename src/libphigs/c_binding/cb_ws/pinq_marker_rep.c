@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pinq_marker_rep
+/**
+ * \file pinq_marker_rep.c
  *
- * DESCR:       Get workstation marker representation
- * RETURNS:     N/A
+ * \brief       Get workstation marker representation
  */
 void pinq_marker_rep(
                      Pint ws_id,

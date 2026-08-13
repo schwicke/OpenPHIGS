@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pset_pick_filter
+/**
+ * \file pset_pick_filter.c
  *
- * DESCR:       Set pick device filter
- * RETURNS:     N/A
+ * \brief       Set pick device filter
  */
 void pset_pick_filter(
                       Pint ws_id,

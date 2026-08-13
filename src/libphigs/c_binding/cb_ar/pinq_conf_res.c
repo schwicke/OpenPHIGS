@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_conf_res
+/**
+ * \file pinq_conf_res.c
  *
- * DESCR:       Get archive conflict resolution
- * RETURNS:     N/A
+ * \brief       Get archive conflict resolution
  */
 void pinq_conf_res(
                    Pint *err_ind,

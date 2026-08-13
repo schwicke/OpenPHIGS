@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * ppolyline3
+/**
+ * \file ppolyline3.c
  *
- * DESCR:   Creates a new element - Polyline 3D
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void ppolyline3(
                 Ppoint_list3 *point_list
                 )

@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pgtch
+/**
+ * \file pgtch.c
  *
- * DESCR:       get choice
- * RETURNS:   status, choice number
+ * \brief       get choice
+ * \return status, choice number
  */
 FTN_SUBROUTINE(pgtch)(
                       Pint* stat,

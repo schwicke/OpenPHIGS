@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * psmlc3
+/**
+ * \file psmlc3.c
  *
- * DESCR:       sample locator 3
- * RETURNS:   view index, current point in WC
+ * \brief       sample locator 3
+ * \return view index, current point in WC
  */
 FTN_SUBROUTINE(psmlc3)(
                        FTN_INTEGER(wkid),

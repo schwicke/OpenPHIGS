@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * prqpk
+/**
+ * \file prqpk.c
  *
- * DESCR:       request pick
- * RETURNS:   state, depth, path
+ * \brief       request pick
+ * \return state, depth, path
  */
 FTN_SUBROUTINE(prqpk)(
                       FTN_INTEGER(wkid),

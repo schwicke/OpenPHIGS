@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_edge_rep
+/**
+ * \file pset_edge_rep.c
  *
- * DESCR:   Set workstation edge represenation
- * RETURNS:   N/A
+ * \brief       Set workstation edge represenation
  */
 void pset_edge_rep(
                    Pint ws_id,

@@ -30,11 +30,10 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * posep
+/**
+ * \file posep.c
  *
- * DESCR:       Offset element pointer
- * RETURNS:   N/A
+ * \brief       Offset element pointer
  */
 FTN_SUBROUTINE(posep)(
                       FTN_INTEGER(epo)

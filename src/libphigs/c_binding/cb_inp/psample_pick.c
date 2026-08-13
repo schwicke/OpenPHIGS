@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * psample_pick
+/**
+ * \file psample_pick.c
  *
- * DESCR:       Sample pick device
- * RETURNS:     N/A
+ * \brief       Sample pick device
  */
 void psample_pick(
                   Pint ws_id,

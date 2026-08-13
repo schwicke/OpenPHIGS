@@ -26,14 +26,13 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pcopy_all_elems_struct
+/**
+ * \file pcopy_all_elems_struct.c
  *
- * DESCR:   Copies the elements of another structure into the open
+ * \brief       Copies the elements of another structure into the open
  *      structure after the current element, which is updated to
  *      point to the last element inserted.  A structure can be
  *      copied into itself.
- * RETURNS:   N/A
  */
 void pcopy_all_elems_struct(
                             Pint struct_id

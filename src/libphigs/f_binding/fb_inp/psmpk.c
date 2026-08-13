@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * psmpk
+/**
+ * \file psmpk.c
  *
- * DESCR:       sample pick
- * RETURNS:   status, depth and path
+ * \brief       sample pick
+ * \return status, depth and path
  */
 FTN_SUBROUTINE(psmpk)(
                       FTN_INTEGER(wkid),

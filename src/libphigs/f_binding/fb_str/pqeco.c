@@ -30,11 +30,11 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pqeco
+/**
+ * \file pqeco.c
  *
- * DESCR:       Inquire element content
- * RETURNS:   error indicator, num ints, ints array, num float, float array,
+ * \brief       Inquire element content
+ * \return error indicator, num ints, ints array, num float, float array,
  *              num strings, array of string lengths, character string entries
  */
 FTN_SUBROUTINE(pqeco)(

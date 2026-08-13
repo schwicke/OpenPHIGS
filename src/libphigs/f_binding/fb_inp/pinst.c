@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pinst
+/**
+ * \file pinst.c
  *
- * DESCR:       initialize string
- * RETURNS:   N/A
+ * \brief       initialize string
  */
 FTN_SUBROUTINE(pinst)(
                       FTN_INTEGER(wkid),

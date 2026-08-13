@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_colr_rep
+/**
+ * \file pset_colr_rep.c
  *
- * DESCR:       Set workstation colour representation
- * RETURNS:     N/A
+ * \brief       Set workstation colour representation
  */
 void pset_colr_rep(
                    Pint ws_id,

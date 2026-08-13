@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_back_int_style
+/**
+ * \file pset_back_int_style.c
  *
- * DESCR:   Creates a new element - Backface Interiour Style
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_back_int_style(
                          Pint_style int_style
                          )

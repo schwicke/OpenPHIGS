@@ -27,11 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_alpha_channel
+/**
+ * \file pset_alpha_channel.c
  *
- * DESCR:   sets the color alpha channel
- * RETURNS:   N/A
+ * \brief       sets the color alpha channel
  */
 void pset_alpha_channel(
                         Pfloat alpha

@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pwait
+/**
+ * \file pwait.c
  *
- * DESCR:       await event
- * RETURNS:   work station, class, number
+ * \brief       await event
+ * \return work station, class, number
  */
 FTN_SUBROUTINE(pwait)(
                       FTN_REAL(tout),

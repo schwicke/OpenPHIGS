@@ -28,12 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pspcli
+/**
+ * \file pspcli.c
  *
- * DESCR:       Creates a new element - Line Color Attribute
- * RETURNS:     N/A
- */
+ * \brief       Creates a new element  */
 FTN_SUBROUTINE(psplci)(
                        FTN_INTEGER(coli)
                        )

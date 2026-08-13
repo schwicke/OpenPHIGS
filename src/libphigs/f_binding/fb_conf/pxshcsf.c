@@ -27,11 +27,10 @@
 #include "util/ftn.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pxshcsf
+/**
+ * \file pxshcsf.c
  *
- * DESCR:       set the hardcopy scale factor for workstation
- * RETURNS:     N/A
+ * \brief       set the hardcopy scale factor for workstation
  */
 FTN_SUBROUTINE(pxshcsf)(
                         FTN_INTEGER(wkid),

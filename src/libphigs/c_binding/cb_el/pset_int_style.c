@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_int_style
+/**
+ * \file pset_int_style.c
  *
- * DESCR:   Creates a new element - Face Interiour Style
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 
 void pset_int_style(
                     Pint_style int_style

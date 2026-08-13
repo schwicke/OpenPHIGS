@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pret_struct_nets
+/**
+ * \file pret_struct_nets.c
  *
- * DESCR:       Retreive structure networks from archive
- * RETURNS:     N/A
+ * \brief       Retreive structure networks from archive
  */
 void pret_struct_nets(
                       Pint archive_id,

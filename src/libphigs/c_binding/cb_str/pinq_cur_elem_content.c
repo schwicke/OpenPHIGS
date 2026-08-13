@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_cur_elem_content
+/**
+ * \file pinq_cur_elem_content.c
  *
- * DESCR:   Get current element content
- * RETURNS:   N/A
+ * \brief       Get current element content
  */
 void pinq_cur_elem_content(
                            Pstore store,

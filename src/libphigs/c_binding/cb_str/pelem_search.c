@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pelem_search
+/**
+ * \file pelem_search.c
  *
- * DESCR:   Get all matching elements
- * RETURNS:   N/A
+ * \brief       Get all matching elements
  */
 void pelem_search(
                   Pint struct_id,

@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_ws_win
+/**
+ * \file pset_ws_win.c
  *
- * DESCR:   Set workstation window
- * RETURNS:   N/A
+ * \brief       Set workstation window
  */
 void pset_ws_win(
                  Pint ws_id,

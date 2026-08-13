@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinit_val3
+/**
+ * \file pinit_val3.c
  *
- * DESCR:       Initialize valuator3
- * RETURNS:     N/A
+ * \brief       Initialize valuator3
  */
 void pinit_val3(
                 Pint ws_id,

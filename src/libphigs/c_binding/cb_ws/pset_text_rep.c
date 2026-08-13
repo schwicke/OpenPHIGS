@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_text_rep
+/**
+ * \file pset_text_rep.c
  *
- * DESCR:   Set workstation text represenation
- * RETURNS:   N/A
+ * \brief       Set workstation text represenation
  */
 void pset_text_rep(
                    Pint ws_id,

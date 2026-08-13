@@ -27,11 +27,10 @@
 #include "util/ftn.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pxndef
+/**
+ * \file pxndef.c
  *
- * DESCR:       Read configuration from file
- * RETURNS:     N/A
+ * \brief       Read configuration from file
  */
 #define MAXLEN 4096
 FTN_SUBROUTINE(pxndef)(

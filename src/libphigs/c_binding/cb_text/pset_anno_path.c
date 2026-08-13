@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_anno_path
+/**
+ * \file pset_anno_path.c
  *
- * DESCR:   Creates a new element - Annotation Text Path Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_anno_path(
                     Ptext_path text_path
                     )

@@ -34,11 +34,10 @@
 #include "private/evtP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * popen_phigs
+/**
+ * \file popen_phigs.c
  *
- * DESCR:       Open phigs
- * RETURNS:     N/A
+ * \brief       Open phigs
  */
 void popen_phigs(
                  char *error_file,

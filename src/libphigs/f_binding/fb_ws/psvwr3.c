@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * psvwr3
+/**
+ * \file psvwr3.c
  *
- * DESCR:       Set view representation 3
- * RETURNS:     N/A
+ * \brief       Set view representation 3
  */
 
 FTN_SUBROUTINE(psvwr3)(

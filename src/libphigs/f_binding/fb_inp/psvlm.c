@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * psvlm
+/**
+ * \file psvlm.c
  *
- * DESCR:       set valuator mode
- * RETURNS:   N/A
+ * \brief       set valuator mode
  */
 FTN_SUBROUTINE(psvlm)(
                       FTN_INTEGER(wkid),

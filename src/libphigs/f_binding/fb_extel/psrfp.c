@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psrfp
+/**
+ * \file psrfp.c
  *
- * DESCR:       set reflectance properties
- * RETURNS:   N/A
+ * \brief       set reflectance properties
  */
 FTN_SUBROUTINE(psrfp)(
                       FTN_INTEGER(refl_type1),

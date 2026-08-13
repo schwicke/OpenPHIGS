@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psatcu
+/**
+ * \file psatcu.c
  *
- * DESCR:   set annotation text character up vector
- * RETURNS:   N/A
+ * \brief       set annotation text character up vector
  */
 
 FTN_SUBROUTINE(psatcu)(

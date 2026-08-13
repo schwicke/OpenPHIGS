@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_indiv_asf
+/**
+ * \file pset_indiv_asf.c
  *
- * DESCR:   Creates a new element - Set attribute source flag
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_indiv_asf(
                     Paspect asf_id,
                     Pasf asf_source

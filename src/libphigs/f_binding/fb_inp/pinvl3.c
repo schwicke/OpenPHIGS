@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pinvl3
+/**
+ * \file pinvl3.c
  *
- * DESCR:       initialize valuators 3
- * RETURNS:   N/A
+ * \brief       initialize valuators 3
  */
 FTN_SUBROUTINE(pinvl3)(
                        FTN_INTEGER(wkid),

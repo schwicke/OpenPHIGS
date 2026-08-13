@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pget_pick
+/**
+ * \file pget_pick.c
  *
- * DESCR:       Get pick event from event queue
- * RETURNS:     N/A
+ * \brief       Get pick event from event queue
  */
 void pget_pick(
                Pint depth,

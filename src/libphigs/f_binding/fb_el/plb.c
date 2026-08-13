@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * plb
+/**
+ * \file plb.c
  *
- * DESCR:   label
- * RETURNS:   N/A
+ * \brief       label
  */
 FTN_SUBROUTINE(plb)(
                     FTN_INTEGER(label)

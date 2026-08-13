@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_struct_st
+/**
+ * \file pinq_struct_st.c
  *
- * DESCR:   Get current structure state
- * RETURNS:   N/A
+ * \brief       Get current structure state
  */
 void pinq_struct_st(
                     Pint *struct_st

@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_char_space
+/**
+ * \file pset_char_space.c
  *
- * DESCR:   Creates a new element - Character spaceing Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_char_space(
                      Pfloat char_space
                      )

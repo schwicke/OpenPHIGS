@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psmcli
+/**
+ * \file psmcli.c
  *
- * DESCR:       set modelling clipping indicator
- * RETURNS:   N/A
+ * \brief       set modelling clipping indicator
  */
 FTN_SUBROUTINE(psmcli)(
                        FTN_INTEGER(mclipi)

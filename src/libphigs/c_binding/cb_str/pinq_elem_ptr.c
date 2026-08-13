@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_elem_ptr
+/**
+ * \file pinq_elem_ptr.c
  *
- * DESCR:   Returns the index of the current element.
- * RETURNS:   N/A
+ * \brief       Returns the index of the current element.
  */
 void pinq_elem_ptr(
                    Pint *err_ind,

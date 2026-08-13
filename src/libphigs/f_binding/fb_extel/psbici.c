@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psbici
+/**
+ * \file psbici.c
  *
- * DESCR:   set back interior colour index
- * RETURNS:   N/A
+ * \brief       set back interior colour index
  */
 FTN_SUBROUTINE(psbici)(
                       FTN_INTEGER(coli)

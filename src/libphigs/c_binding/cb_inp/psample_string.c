@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * psample_string
+/**
+ * \file psample_string.c
  *
- * DESCR:       Sample string device
- * RETURNS:     N/A
+ * \brief       Sample string device
  */
 void psample_string(
                     Pint ws_id,

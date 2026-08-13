@@ -22,11 +22,10 @@
 #include <stdio.h>
 #include "phconf.h"
 
-/*******************************************************************************
- * pxset_conf_hcsf
+/**
+ * \file pxset_conf_hcsf.c
  *
- * DESCR:       set the hardcopy scale factor
- * RETURNS:     N/A
+ * \brief       set the hardcopy scale factor
  */
 void pxset_conf_hcsf(
                      Pint wkid,

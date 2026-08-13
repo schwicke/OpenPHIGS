@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pflush
+/**
+ * \file pflush.c
  *
- * DESCR:       flush device events
- * RETURNS:   N/A
+ * \brief       flush device events
  */
 FTN_SUBROUTINE(pflush)(
                        FTN_INTEGER(wkid),

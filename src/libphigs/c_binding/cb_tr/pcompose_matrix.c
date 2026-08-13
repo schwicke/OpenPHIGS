@@ -53,11 +53,10 @@ SOFTWARE.
 #include "phg.h"
 #include "util.h"
 
-/*******************************************************************************
- * pcompose_matrix
+/**
+ * \file pcompose_matrix.c
  *
- * DESCR:       Generate combined transformation matrix
- * RETURNS:     N/A
+ * \brief       Generate combined transformation matrix
  */
 void pcompose_matrix(
                      Pmatrix a,                 /* matrix a */

@@ -31,11 +31,11 @@
 #include "util/ftn.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pqdsp3
+/**
+ * \file pqdsp3.c
  *
- * DESCR:       Inquire display space size 3
- * RETURNS:     error index, coordinate units,
+ * \brief       Inquire display space size 3
+ * \return error index, coordinate units,
  *              max display volume size (DC)
  *              max display volume size in raster units
  */

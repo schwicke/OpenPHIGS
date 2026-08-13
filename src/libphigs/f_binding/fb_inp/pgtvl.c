@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pgtvl
+/**
+ * \file pgtvl.c
  *
- * DESCR:       get valuator
- * RETURNS:   value (float)
+ * \brief       get valuator
+ * \return value (float)
  */
 FTN_SUBROUTINE(pgtvl)(
                       float* val) {

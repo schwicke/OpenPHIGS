@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pinch3
+/**
+ * \file pinch3.c
  *
- * DESCR:       initialize choice 3
- * RETURNS:   N/A
+ * \brief       initialize choice 3
  */
 FTN_SUBROUTINE(pinch3)(
                        FTN_INTEGER(wkid),

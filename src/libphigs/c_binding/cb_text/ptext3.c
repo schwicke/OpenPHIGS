@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * ptext3
+/**
+ * \file ptext3.c
  *
- * DESCR:   Creates a new element - Text
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void ptext3(
             Ppoint3 *text_pos,
             Pvec3 plane[2],

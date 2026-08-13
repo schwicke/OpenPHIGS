@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * patr3
+/**
+ * \file patr3.c
  *
- * DESCR:       ANNOTATION TEXT RELATIVE 3
- * RETURNS:     N/A
+ * \brief       ANNOTATION TEXT RELATIVE 3
  */
 FTN_SUBROUTINE(patr3)(
                       FTN_REAL(rpx),

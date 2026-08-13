@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_back_refl_props
+/**
+ * \file pset_back_refl_props.c
  *
- * DESCR:   Creates a new element - Set backsurface reflectance properties
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_back_refl_props(
                           Prefl_props *refl_props
                           )

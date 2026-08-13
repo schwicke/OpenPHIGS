@@ -30,11 +30,11 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pqedm
+/**
+ * \file pqedm.c
  *
- * DESCR:       Inquire edit mode
- * RETURNS:   error, mode
+ * \brief       Inquire edit mode
+ * \return error, mode
  */
 FTN_SUBROUTINE(pqedm)(
                       Pint *err,

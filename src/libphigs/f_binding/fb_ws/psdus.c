@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * psdus
+/**
+ * \file psdus.c
  *
- * DESCR:       Set display update state
- * RETURNS:     N/A
+ * \brief       Set display update state
  */
 
 FTN_SUBROUTINE(psdus)(

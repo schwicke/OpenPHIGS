@@ -53,11 +53,10 @@ SOFTWARE.
 #include "phg.h"
 #include "util.h"
 
-/*******************************************************************************
- * peval_view_ori_matrix3
+/**
+ * \file peval_view_ori_matrix3.c
  *
- * DESCR:       Generate 3D view orientation matrix
- * RETURNS:     N/A
+ * \brief       Generate 3D view orientation matrix
  */
 void peval_view_ori_matrix3(
                             Ppoint3 *vrp,              /* view reference point */

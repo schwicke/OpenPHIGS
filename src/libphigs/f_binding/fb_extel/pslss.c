@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * pslss
+/**
+ * \file pslss.c
  *
- * DESCR:       set light source state
- * RETURNS:   N/A
+ * \brief       set light source state
  */
 FTN_SUBROUTINE(pslss)(
                       FTN_INTEGER(nacti),

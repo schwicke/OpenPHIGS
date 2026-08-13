@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_text_colr_ind
+/**
+ * \file pset_text_colr_ind.c
  *
- * DESCR:   Creates a new element - Text Color Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_text_colr_ind(
                         Pint colr_ind
                         )

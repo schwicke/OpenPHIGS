@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psiasf
+/**
+ * \file psiasf.c
  *
- * DESCR:       set individual asf
- * RETURNS:   N/A
+ * \brief       set individual asf
  */
 FTN_SUBROUTINE(psiasf)(
                        FTN_INTEGER(attr),

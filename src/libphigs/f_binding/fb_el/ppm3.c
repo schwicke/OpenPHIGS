@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * ppm3
+/**
+ * \file ppm3.c
  *
- * DESCR:   polymarker 3
- * RETURNS:   N/A
+ * \brief       polymarker 3
  */
 FTN_SUBROUTINE(ppm3)(
                      FTN_INTEGER(n),

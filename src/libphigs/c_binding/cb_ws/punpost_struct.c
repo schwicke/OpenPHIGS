@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * punpost_struct
+/**
+ * \file punpost_struct.c
  *
- * DESCR:       Remove posted structure from workstation
- * RETURNS:     N/A
+ * \brief       Remove posted structure from workstation
  */
 void punpost_struct(
                     Pint ws_id,

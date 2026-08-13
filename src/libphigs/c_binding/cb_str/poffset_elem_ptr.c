@@ -26,14 +26,13 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * poffset_elem_ptr
+/**
+ * \file poffset_elem_ptr.c
  *
- * DESCR:   Offsets the element pointer forward by the given number of
+ * \brief       Offsets the element pointer forward by the given number of
  *      elements.
  *      Internal call to pset_elem_ptr does the verification work
  *      on the index.
- * RETURNS:   N/A
  */
 void poffset_elem_ptr(
                       Pint elem_ptr_offset

@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pset_stroke_mode
+/**
+ * \file pset_stroke_mode.c
  *
- * DESCR:       Set stroke input device mode
- * RETURNS:     N/A
+ * \brief       Set stroke input device mode
  */
 void pset_stroke_mode(
                       Pint ws_id,

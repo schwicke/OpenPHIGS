@@ -34,11 +34,10 @@
 #include "private/evtP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pcreate_store
+/**
+ * \file pcreate_store.c
  *
- * DESCR:       Create storage object
- * RETURNS:     N/A
+ * \brief       Create storage object
  */
 void pcreate_store(
                    Pint *err_ind,

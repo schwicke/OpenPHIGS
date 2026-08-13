@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pslcm
+/**
+ * \file pslcm.c
  *
- * DESCR:       set locator mode
- * RETURNS:   N/A
+ * \brief       set locator mode
  */
 FTN_SUBROUTINE(pslcm)(
                       FTN_INTEGER(wkid),

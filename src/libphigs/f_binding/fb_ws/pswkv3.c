@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pswkv3
+/**
+ * \file pswkv3.c
  *
- * DESCR:       Set workstation viewport 3
- * RETURNS:     N/A
+ * \brief       Set workstation viewport 3
  */
 
 FTN_SUBROUTINE(pswkv3)(

@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_edgetype
+/**
+ * \file pset_edgetype.c
  *
- * DESCR:   Creates a new element - Edge Type Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 
 void pset_edgetype(
                    Pint edgetype

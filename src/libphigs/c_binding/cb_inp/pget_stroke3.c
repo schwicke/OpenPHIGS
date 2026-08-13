@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pget_stroke3
+/**
+ * \file pget_stroke3.c
  *
- * DESCR:       Get stroke event from event queue 3D
- * RETURNS:     N/A
+ * \brief       Get stroke event from event queue 3D
  */
 void pget_stroke3(
                   Pint *view_ind,

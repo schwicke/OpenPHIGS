@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pmsg
+/**
+ * \file pmsg.c
  *
- * DESCR:       Message
- * RETURNS:     N/A
+ * \brief       Message
  */
 
 FTN_SUBROUTINE(pmsg)(
@@ -56,7 +55,7 @@ FTN_SUBROUTINE(pmsg)(
   pmessage(ws_id, buffer);
 }
 
-/********************************
+/**
  *
  *  extensions to the Standard
  *

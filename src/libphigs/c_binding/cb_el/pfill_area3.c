@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pfill_area3
+/**
+ * \file pfill_area3.c
  *
- * DESCR:   Creates a new element - Fill area 3D
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pfill_area3(
                  Ppoint_list3 *point_list
                  )

@@ -25,11 +25,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pinq_ws_cat
+/**
+ * \file pinq_ws_cat.c
  *
- * DESCR:       Get workstation category
- * RETURNS:     N/A
+ * \brief       Get workstation category
  */
 
 void pinq_ws_cat(

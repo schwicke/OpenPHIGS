@@ -30,11 +30,10 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pqstrs
+/**
+ * \file pqstrs.c
  *
- * DESCR:       Inquire structure state value
- * RETURNS:   N/A
+ * \brief       Inquire structure state value
  */
 FTN_SUBROUTINE(pqstrs)(Pint* strsta){
   pinq_struct_st(strsta);

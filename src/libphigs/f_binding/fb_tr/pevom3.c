@@ -27,11 +27,11 @@
 #include <private/phgP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pevom3
+/**
+ * \file pevom3.c
  *
- * DESCR:       Evaluate view orientation matrix 3
- * RETURNS:     Error index, orientation matrix
+ * \brief       Evaluate view orientation matrix 3
+ * \return Error index, orientation matrix
  */
 FTN_SUBROUTINE(pevom3)(
                        FTN_REAL(vwrx), FTN_REAL(vwry), FTN_REAL(vwrz),

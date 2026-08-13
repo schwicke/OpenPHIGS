@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_cur_elem_type_size
+/**
+ * \file pinq_cur_elem_type_size.c
  *
- * DESCR:   Get current element type and size
- * RETURNS:   N/A
+ * \brief       Get current element type and size
  */
 void pinq_cur_elem_type_size(
                              Pint *err_ind,

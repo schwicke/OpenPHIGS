@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * psample_loc
+/**
+ * \file psample_loc.c
  *
- * DESCR:       Sample locator device
- * RETURNS:     N/A
+ * \brief       Sample locator device
  */
 void psample_loc(
                  Pint ws_id,

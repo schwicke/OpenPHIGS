@@ -34,11 +34,10 @@
 #include "private/evtP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pclph
+/**
+ * \file pclph.c
  *
- * DESCR:       Close phigs
- * RETURNS:     N/A
+ * \brief       Close phigs
  */
 FTN_SUBROUTINE(pclph)()
 {

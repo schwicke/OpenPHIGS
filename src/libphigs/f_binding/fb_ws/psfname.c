@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * psfname
+/**
+ * \file psfname.c
  *
- * DESCR:       Set workstation output file name for hardcopy types
- * RETURNS:     N/A
+ * \brief       Set workstation output file name for hardcopy types
  * NOTES:       extension
  */
 FTN_SUBROUTINE(psfname)(

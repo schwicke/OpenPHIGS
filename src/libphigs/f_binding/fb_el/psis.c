@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psis
+/**
+ * \file psis.c
  *
- * DESCR:   set interior style
- * RETURNS:   N/A
+ * \brief       set interior style
  */
 FTN_SUBROUTINE(psis)(
                      FTN_INTEGER(ints)

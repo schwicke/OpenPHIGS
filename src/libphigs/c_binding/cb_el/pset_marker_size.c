@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_marker_size
+/**
+ * \file pset_marker_size.c
  *
- * DESCR:   Creates a new element - Marker Size Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_marker_size(
                       Pfloat marker_size
                       )

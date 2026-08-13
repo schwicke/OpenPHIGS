@@ -36,11 +36,11 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pqvwr
+/**
+ * \file pqvwr.c
  *
- * DESCR:       Inquire view representation
- * RETURNS:     error index, number of entries, Nth element of defined view indices
+ * \brief       Inquire view representation
+ * \return error index, number of entries, Nth element of defined view indices
  */
 
 FTN_SUBROUTINE(pqvwr)(

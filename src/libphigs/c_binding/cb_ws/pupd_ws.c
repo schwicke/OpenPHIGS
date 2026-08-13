@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pupd_ws
+/**
+ * \file pupd_ws.c
  *
- * DESCR:   Set workstation update state
- * RETURNS:   N/A
+ * \brief       Set workstation update state
  */
 void pupd_ws(
              Pint ws_id,

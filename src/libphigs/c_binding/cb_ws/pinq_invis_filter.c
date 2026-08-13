@@ -44,11 +44,10 @@
 #include "phconf.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinq_invis_filter
+/**
+ * \file pinq_invis_filter.c
  *
- * DESCR:       Get workstation invisibility filter
- * RETURNS:     N/A
+ * \brief       Get workstation invisibility filter
  */
 void pinq_invis_filter(
                        Pint ws_id,
@@ -61,7 +60,7 @@ void pinq_invis_filter(
              err_ind, invis_filter);
 }
 
-/***********************************
+/**
  * predefine 125 colors
  * in RGBA mode
  *    - prepeated with offset 200*i and increasing transparency

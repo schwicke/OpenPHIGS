@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * psir
+/**
+ * \file psir.c
  *
- * DESCR:       Set interior representation
- * RETURNS:     N/A
+ * \brief       Set interior representation
  */
 
 FTN_SUBROUTINE(psir)(

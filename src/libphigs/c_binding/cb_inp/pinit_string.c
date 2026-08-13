@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinit_string
+/**
+ * \file pinit_string.c
  *
- * DESCR:       Initialize string
- * RETURNS:     N/A
+ * \brief       Initialize string
  */
 void pinit_string(
                   Pint ws_id,

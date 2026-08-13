@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_hlhsr_mode
+/**
+ * \file pset_hlhsr_mode.c
  *
- * DESCR:   Set workstation hlhsr mode
- * RETURNS:   N/A
+ * \brief       Set workstation hlhsr mode
  */
 void pset_hlhsr_mode(
                      Pint ws_id,

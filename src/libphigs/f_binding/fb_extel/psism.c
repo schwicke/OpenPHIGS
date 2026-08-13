@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psism
+/**
+ * \file psism.c
  *
- * DESCR:       set interior shading method
- * RETURNS:   N/A
+ * \brief       set interior shading method
  */
 FTN_SUBROUTINE(psism)(
                       FTN_INTEGER(ism1)

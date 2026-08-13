@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pset_val_mode
+/**
+ * \file pset_val_mode.c
  *
- * DESCR:       Set valuator input device mode
- * RETURNS:     N/A
+ * \brief       Set valuator input device mode
  */
 void pset_val_mode(
                    Pint ws_id,

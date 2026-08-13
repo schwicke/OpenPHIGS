@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pfa
+/**
+ * \file pfa.c
  *
- * DESCR:   fill area
- * RETURNS:   N/A
+ * \brief       fill area
  */
 
 FTN_SUBROUTINE(pfa)(

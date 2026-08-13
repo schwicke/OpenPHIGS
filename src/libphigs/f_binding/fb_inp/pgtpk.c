@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pgtpk
+/**
+ * \file pgtpk.c
  *
- * DESCR:       get pick
- * RETURNS:   state, depth, path
+ * \brief       get pick
+ * \return state, depth, path
  */
 FTN_SUBROUTINE(pgtpk)(
                       FTN_INTEGER(ippd),

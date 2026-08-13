@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psgmt3
+/**
+ * \file psgmt3.c
  *
- * DESCR:       set global transformation 3
- * RETURNS:   N/A
+ * \brief       set global transformation 3
  */
 FTN_SUBROUTINE(psgmt3)(
                        float* xfrmt

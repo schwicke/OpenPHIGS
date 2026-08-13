@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pset_choice_mode
+/**
+ * \file pset_choice_mode.c
  *
- * DESCR:       Set choice input device mode
- * RETURNS:     N/A
+ * \brief       Set choice input device mode
  */
 void pset_choice_mode(
                       Pint ws_id,

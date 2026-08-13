@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * panno_text_rel3
+/**
+ * \file panno_text_rel3.c
  *
- * DESCR:   Creates a new element - annotation text relative
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void panno_text_rel3(
                      Ppoint3 *ref_point,
                      Pvec3 *offset,

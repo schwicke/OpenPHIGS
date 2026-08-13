@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_marker_type
+/**
+ * \file pset_marker_type.c
  *
- * DESCR:   Creates a new element - Marker Type Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_marker_type(
                       Pint marker_type
                       )

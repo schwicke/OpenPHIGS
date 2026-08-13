@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_model_clip_ind
+/**
+ * \file pset_model_clip_ind.c
  *
- * DESCR:   Creates a new element - set clipping indicator
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_model_clip_ind(
                          Pclip_ind clipi
                          )

@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pads
+/**
+ * \file pads.c
  *
- * DESCR:   add names to set
- * RETURNS:   N/A
+ * \brief       add names to set
  */
 
 FTN_SUBROUTINE(pads)(

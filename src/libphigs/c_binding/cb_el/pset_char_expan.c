@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_char_expan
+/**
+ * \file pset_char_expan.c
  *
- * DESCR:   Creates a new element - Character expansion factor Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_char_expan(
                      Pfloat char_expan
                      )

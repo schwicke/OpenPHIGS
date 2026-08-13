@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psmcv3
+/**
+ * \file psmcv3.c
  *
- * DESCR:       set modelling clipping volume 3
- * RETURNS:   N/A
+ * \brief       set modelling clipping volume 3
  */
 FTN_SUBROUTINE(psmcv3)(
                        FTN_INTEGER(op),

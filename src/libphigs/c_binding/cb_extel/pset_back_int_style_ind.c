@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_back_int_style_ind
+/**
+ * \file pset_back_int_style_ind.c
  *
- * DESCR:   Creates a new element - Backface Interiour Pattern Index
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_back_int_style_ind(
                              Pint int_style_ind
                              )

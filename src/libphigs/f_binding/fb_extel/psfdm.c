@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psfdm
+/**
+ * \file psfdm.c
  *
- * DESCR:       set facet distinguishing mode
- * RETURNS:   N/A
+ * \brief       set facet distinguishing mode
  */
 FTN_SUBROUTINE(psfdm)(
                       FTN_INTEGER(mode)

@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * pfas3d
+/**
+ * \file pfas3d.c
  *
- * DESCR:       fill area set 3
- * RETURNS:   N/A
+ * \brief       fill area set 3
  */
 FTN_SUBROUTINE(pfas3d)(
                        FTN_INTEGER(fflag1),

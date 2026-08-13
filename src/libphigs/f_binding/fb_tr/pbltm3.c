@@ -27,11 +27,11 @@
 #include <private/phgP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pbltm3
+/**
+ * \file pbltm3.c
  *
- * DESCR:       Build transformation matrix 3
- * RETURNS:     error index, transformation matrix
+ * \brief       Build transformation matrix 3
+ * \return error index, transformation matrix
  */
 FTN_SUBROUTINE(pbltm3)(
                        FTN_REAL(xo), FTN_REAL(yo), FTN_REAL(zo),

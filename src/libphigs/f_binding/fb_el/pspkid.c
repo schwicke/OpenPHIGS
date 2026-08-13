@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pspkid
+/**
+ * \file pspkid.c
  *
- * DESCR:       set pick identifier
- * RETURNS:   N/A
+ * \brief       set pick identifier
  */
 FTN_SUBROUTINE(pspkid)(
                        FTN_INTEGER(pkid)

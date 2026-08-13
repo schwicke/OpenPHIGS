@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pset_conf_res
+/**
+ * \file pset_conf_res.c
  *
- * DESCR:       Set structure conflict resolution for archive
- * RETURNS:     N/A
+ * \brief       Set structure conflict resolution for archive
  */
 void pset_conf_res(
                    Pconf_res archive_res,

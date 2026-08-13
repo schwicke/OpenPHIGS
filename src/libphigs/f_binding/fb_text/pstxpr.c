@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pstxpr
+/**
+ * \file pstxpr.c
  *
- * DESCR:       Set text precision
- * RETURNS:     N/A
+ * \brief       Set text precision
  */
 FTN_SUBROUTINE(pstxpr)(
                        FTN_INTEGER(prec)

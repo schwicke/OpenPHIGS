@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * puwk
+/**
+ * \file puwk.c
  *
- * DESCR:       Update workstation
- * RETURNS:     N/A
+ * \brief       Update workstation
  */
 
 FTN_SUBROUTINE(puwk)(

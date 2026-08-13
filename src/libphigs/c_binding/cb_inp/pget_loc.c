@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pget_loc
+/**
+ * \file pget_loc.c
  *
- * DESCR:       Get locator event from event queue
- * RETURNS:     N/A
+ * \brief       Get locator event from event queue
  */
 void pget_loc(
               Pint *view_ind,

@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_linewidth
+/**
+ * \file pset_linewidth.c
  *
- * DESCR:   Creates a new element - Line Width Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_linewidth(
                     Pfloat linewidth
                     )

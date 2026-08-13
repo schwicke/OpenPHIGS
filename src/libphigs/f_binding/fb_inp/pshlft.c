@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pshlft
+/**
+ * \file pshlft.c
  *
- * DESCR:       set highlighting filter
- * RETURNS:   N/A
+ * \brief       set highlighting filter
  */
 FTN_SUBROUTINE(pshlft)(
                        FTN_INTEGER(wkid),

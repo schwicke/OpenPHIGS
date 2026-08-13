@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_text_align
+/**
+ * \file pset_text_align.c
  *
- * DESCR:   Creates a new element - Text Alignment Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_text_align(
                      Ptext_align *text_align
                      )

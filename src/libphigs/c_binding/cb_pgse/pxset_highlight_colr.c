@@ -25,11 +25,11 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pxset_highlight_colr
+/**
+ * \file pxset_highlight_colr.c
  *
- * DESCR:       Set highligh color
- * RETURNS:     None
+ * \brief       Set highligh color
+ * \return None
  */
 void pxset_highlight_colr  (
                             Pgcolr *colr

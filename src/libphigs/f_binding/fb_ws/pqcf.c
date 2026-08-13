@@ -36,11 +36,11 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pqcf
+/**
+ * \file pqcf.c
  *
- * DESCR:       Inquire colour facilities
- * RETURNS:     error index, number of colour indices,
+ * \brief       Inquire colour facilities
+ * \return error index, number of colour indices,
  *              colour available, number of predefined colour indices, primary colours
  */
 

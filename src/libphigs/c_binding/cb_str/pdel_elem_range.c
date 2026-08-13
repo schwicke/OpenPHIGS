@@ -26,13 +26,12 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pdel_elem_range
+/**
+ * \file pdel_elem_range.c
  *
- * DESCR:   Deletes all elements within and on the bounds of the given
+ * \brief       Deletes all elements within and on the bounds of the given
  *      range.  The element pointer is left pointing to the element
  *    just prior to the first element deleted.
- * RETURNS:   N/A
  */
 void pdel_elem_range(
                      Pint elem_ptr1_value,

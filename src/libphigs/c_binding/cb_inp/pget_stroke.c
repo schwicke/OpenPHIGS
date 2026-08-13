@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pget_stroke
+/**
+ * \file pget_stroke.c
  *
- * DESCR:       Get stroke event from event queue
- * RETURNS:     N/A
+ * \brief       Get stroke event from event queue
  */
 void pget_stroke(
                  Pint *view_ind,

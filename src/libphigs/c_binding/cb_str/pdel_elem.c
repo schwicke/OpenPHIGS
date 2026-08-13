@@ -26,13 +26,12 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pdel_elem
+/**
+ * \file pdel_elem.c
  *
- * DESCR:   Deletes the current element.  The element pointer is left
+ * \brief       Deletes the current element.  The element pointer is left
  *      pointing to the element just before (to the left) the one to
  *      be killed, if any.
- * RETURNS:   N/A
  */
 void pdel_elem(
                void

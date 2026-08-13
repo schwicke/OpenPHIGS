@@ -53,12 +53,10 @@ SOFTWARE.
 #include "phg.h"
 #include "util.h"
 
-/*******************************************************************************
- * protate_z
+/**
+ * \file protate_z.c
  *
- * DESCR:       Generate matrix for rotation around z-axis
- * RETURNS:     N/A
- */
+ * \brief       Generate matrix for rotation around z */
 void protate_z(
                Pfloat angle,              /* rotation angle */
                Pint *error_ind,           /* OUT error indicator */

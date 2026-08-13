@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psalch
+/**
+ * \file psalch.c
  *
- * DESCR:       set alpha channel
- * RETURNS:   N/A
+ * \brief       set alpha channel
  * NOTE: Extemsion
  */
 FTN_SUBROUTINE(psalch)(

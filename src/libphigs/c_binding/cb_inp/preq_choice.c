@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * preq_choice
+/**
+ * \file preq_choice.c
  *
- * DESCR:       Request input from choice
- * RETURNS:     N/A
+ * \brief       Request input from choice
  */
 void preq_choice(
                  Pint ws_id,

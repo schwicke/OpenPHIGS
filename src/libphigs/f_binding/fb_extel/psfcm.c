@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psfcm
+/**
+ * \file psfcm.c
  *
- * DESCR:       set facet culling mode
- * RETURNS:   N/A
+ * \brief       set facet culling mode
  */
 FTN_SUBROUTINE(psfcm)(
                       FTN_INTEGER(imode)

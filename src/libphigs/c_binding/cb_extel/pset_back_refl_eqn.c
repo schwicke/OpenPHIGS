@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_back_refl_eqn
+/**
+ * \file pset_back_refl_eqn.c
  *
- * DESCR:   Creates a new element - Set backsurface reflectance equation
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_back_refl_eqn(
                         Pint refl_equ
                         )

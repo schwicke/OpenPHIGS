@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_line_ind
+/**
+ * \file pset_line_ind.c
  *
- * DESCR:   Creates a new element - Line Attribute Index
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_line_ind(
                    Pint line_ind
                    )

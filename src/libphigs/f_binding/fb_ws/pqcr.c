@@ -36,11 +36,11 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pqcr
+/**
+ * \file pqcr.c
  *
- * DESCR:       Inquire colour representation
- * RETURNS:     Error index, number of colour components, colour specs
+ * \brief       Inquire colour representation
+ * \return Error index, number of colour components, colour specs
  */
 
 FTN_SUBROUTINE(pqcr)(

@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_int_rep
+/**
+ * \file pset_int_rep.c
  *
- * DESCR:   Set workstation interior represenation
- * RETURNS:   N/A
+ * \brief       Set workstation interior represenation
  */
 void pset_int_rep(
                   Pint ws_id,

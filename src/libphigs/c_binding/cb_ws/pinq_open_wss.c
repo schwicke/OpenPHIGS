@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pinq_open_wss
+/**
+ * \file pinq_open_wss.c
  *
- * DESCR:       Get list of open workstations
- * RETURNS:     N/A
+ * \brief       Get list of open workstations
  */
 void pinq_open_wss(
                    Pint num_elems_appl_list,

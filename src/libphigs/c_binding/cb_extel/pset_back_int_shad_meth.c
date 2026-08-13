@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_back_int_shad_meth
+/**
+ * \file pset_back_int_shad_meth.c
  *
- * DESCR:   Creates a new element - Set backface interiour shading method
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_back_int_shad_meth(
                              Pint shad_meth
                              )

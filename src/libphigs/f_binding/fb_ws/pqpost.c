@@ -36,11 +36,11 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pqpost
+/**
+ * \file pqpost.c
  *
- * DESCR:       Inquire posted structures
- * RETURNS:     error index, HLHRS mode update status,
+ * \brief       Inquire posted structures
+ * \return error index, HLHRS mode update status,
  *              current HLHRS mode, requested HLHRS mode
  */
 

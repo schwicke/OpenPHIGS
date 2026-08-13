@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_local_tran3
+/**
+ * \file pset_local_tran3.c
  *
- * DESCR:   Creates a new element - Set local model space transformation 3D
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_local_tran3(
                       Pmatrix3 local_tran,
                       Pcompose_type compose_type

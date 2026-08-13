@@ -54,11 +54,10 @@ SOFTWARE.
 #include "util.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pcompose_tran_matrix3
+/**
+ * \file pcompose_tran_matrix3.c
  *
- * DESCR:       Combine 3D transformation with other transformation matrix
- * RETURNS:     N/A
+ * \brief       Combine 3D transformation with other transformation matrix
  */
 void pcompose_tran_matrix3(
                            Pmatrix3 m,                /* transformation matrix */

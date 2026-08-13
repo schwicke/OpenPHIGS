@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * par_structs
+/**
+ * \file par_structs.c
  *
- * DESCR:       Store structures in archive
- * RETURNS:     N/A
+ * \brief       Store structures in archive
  */
 void par_structs(
                  Pint archive_id,

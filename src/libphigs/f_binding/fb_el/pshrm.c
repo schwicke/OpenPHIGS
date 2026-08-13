@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pshrm
+/**
+ * \file pshrm.c
  *
- * DESCR:       set hlhsr mode
- * RETURNS:   N/A
+ * \brief       set hlhsr mode
  */
 FTN_SUBROUTINE(pshrm)(
                       FTN_INTEGER(wkid),

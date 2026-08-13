@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pget_choice
+/**
+ * \file pget_choice.c
  *
- * DESCR:       Get choice event from event queue
- * RETURNS:     N/A
+ * \brief       Get choice event from event queue
  */
 void pget_choice(
                  Pin_status *in_status,

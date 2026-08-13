@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_text_path
+/**
+ * \file pset_text_path.c
  *
- * DESCR:   Creates a new element - Text Path Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_text_path(
                     Ptext_path text_path
                     )

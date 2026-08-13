@@ -44,11 +44,10 @@
 #include "phconf.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * popen_ws
+/**
+ * \file popen_ws.c
  *
- * DESCR:   Open workstation
- * RETURNS:   N/A
+ * \brief       Open workstation
  */
 void popen_ws(
               Pint ws_id,

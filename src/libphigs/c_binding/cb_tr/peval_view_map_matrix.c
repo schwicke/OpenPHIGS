@@ -53,11 +53,10 @@ SOFTWARE.
 #include "phg.h"
 #include "util.h"
 
-/*******************************************************************************
- * peval_view_map_matrix
+/**
+ * \file peval_view_map_matrix.c
  *
- * DESCR:       Generate view mapping matrix
- * RETURNS:     N/A
+ * \brief       Generate view mapping matrix
  */
 void peval_view_map_matrix(
                            Pview_map *map,            /* view mapping */

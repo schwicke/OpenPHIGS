@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psatal
+/**
+ * \file psatal.c
  *
- * DESCR:
- * RETURNS:     N/A
+ * \brief       
  */
 FTN_SUBROUTINE(psatal)(
                        FTN_INTEGER(atalh),

@@ -29,11 +29,11 @@
 
 struct _Pstore *phg_cb_store_list = (struct _Pstore *) NULL;
 
-/*******************************************************************************
+/**
  * phg_cb_resize_store
  *
- * DESCR:       Resize storage object
- * RETURNS:     TRUE or FALSE
+ * \brief       Resize storage object
+ * \return TRUE or FALSE
  */
 int phg_cb_resize_store(
                         Pstore store,
@@ -63,11 +63,10 @@ int phg_cb_resize_store(
   return (*err_ind ? FALSE : TRUE);
 }
 
-/*******************************************************************************
+/**
  * phg_cb_destroy_all_stores
  *
- * DESCR:       Destroy all storage objects
- * RETURNS:     N/A
+ * \brief       Destroy all storage objects
  */
 void phg_cb_destroy_all_stores(
                                void
@@ -87,11 +86,11 @@ void phg_cb_destroy_all_stores(
   }
 }
 
-/*******************************************************************************
+/**
  * phg_cb_store_el_size
  *
- * DESCR:       Get size for store data buffer used by inquiry function
- * RETURNS:     Element size
+ * \brief       Get size for store data buffer used by inquiry function
+ * \return Element size
  */
 int phg_cb_store_el_size(
                          Phg_elmt_info *el_info
@@ -147,11 +146,10 @@ int phg_cb_store_el_size(
   return (size);
 }
 
-/*******************************************************************************
+/**
  * phg_cb_store_el_data
  *
- * DESCR:       Store element data for inquiry function
- * RETURNS:     N/A
+ * \brief       Store element data for inquiry function
  */
 void phg_cb_store_el_data(
                           Phg_elmt_info *el_info,

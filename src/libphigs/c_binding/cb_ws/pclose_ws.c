@@ -44,11 +44,10 @@
 #include "private/cb_internal.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pclose_ws
+/**
+ * \file pclose_ws.c
  *
- * DESCR:   Close workstation
- * RETURNS:   N/A
+ * \brief       Close workstation
  */
 void pclose_ws(
                Pint ws_id

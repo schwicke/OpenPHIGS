@@ -30,11 +30,10 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pdas
+/**
+ * \file pdas.c
  *
- * DESCR:       Delete all structures
- * RETURNS:   N/A
+ * \brief       Delete all structures
  */
 FTN_SUBROUTINE(pdas)(){
   pdel_all_structs();

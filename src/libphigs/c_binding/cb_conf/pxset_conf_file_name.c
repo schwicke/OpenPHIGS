@@ -22,11 +22,10 @@
 #include <stdio.h>
 #include "phconf.h"
 
-/*******************************************************************************
- * pxset_conf_file_name
+/**
+ * \file pxset_conf_file_name.c
  *
- * DESCR:       set the configuration path and name
- * RETURNS:     N/A
+ * \brief       set the configuration path and name
  */
 void pxset_conf_file_name(
                           char * name){

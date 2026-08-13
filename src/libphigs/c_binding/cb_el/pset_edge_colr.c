@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_edge_colr
+/**
+ * \file pset_edge_colr.c
  *
- * DESCR:   Creates a new element - Edge Color Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_edge_colr(
                     Pgcolr *colr
                     )

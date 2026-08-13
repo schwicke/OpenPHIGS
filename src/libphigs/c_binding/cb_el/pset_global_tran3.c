@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_global_tran3
+/**
+ * \file pset_global_tran3.c
  *
- * DESCR:   Creates a new element - Set global model space transformation 3D
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_global_tran3(
                        Pmatrix3 global_tran
                        )

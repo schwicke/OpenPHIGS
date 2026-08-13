@@ -30,11 +30,11 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pels
+/**
+ * \file pels.c
  *
- * DESCR:       element search
- * RETURNS:   error, status, element position
+ * \brief       element search
+ * \return error, status, element position
  */
 FTN_SUBROUTINE(pels)(
                      FTN_INTEGER(strid),

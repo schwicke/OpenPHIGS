@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_view_ind
+/**
+ * \file pset_view_ind.c
  *
- * DESCR:   Creates a new element - Set view index
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_view_ind(
                    Pint view_ind
                    )

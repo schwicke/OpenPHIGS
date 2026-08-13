@@ -44,11 +44,10 @@
 #include "phconf.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinq_list_marker_inds
+/**
+ * \file pinq_list_marker_inds.c
  *
- * DESCR:       Get workstation list of marker indices
- * RETURNS:     N/A
+ * \brief       Get workstation list of marker indices
  */
 void pinq_list_marker_inds(
                            Pint ws_id,

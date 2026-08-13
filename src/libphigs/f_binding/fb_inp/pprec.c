@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pprec
+/**
+ * \file pprec.c
  *
- * DESCR:       pack data record
- * RETURNS:   error, length, data record
+ * \brief       pack data record
+ * \return error, length, data record
  */
 FTN_SUBROUTINE(pprec)(
                       FTN_INTEGER(il),

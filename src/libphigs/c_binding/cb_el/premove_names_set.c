@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * premove_names_set
+/**
+ * \file premove_names_set.c
  *
- * DESCR:   Creates a new element - name set Remover
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void premove_names_set(
                        Pint_list *names
                        )

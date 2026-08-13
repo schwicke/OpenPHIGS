@@ -36,11 +36,11 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pqwkt
+/**
+ * \file pqwkt.c
  *
- * DESCR:       Inquire workstation transformation 3
- * RETURNS:     error index, update state,
+ * \brief       Inquire workstation transformation 3
+ * \return error index, update state,
  *              requested window in NPC, current window in NPC,
  *              requested window in DC, current window in DC
  */

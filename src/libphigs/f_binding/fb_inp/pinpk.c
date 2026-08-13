@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pinpk
+/**
+ * \file pinpk.c
  *
- * DESCR:       initialize pick
- * RETURNS:   N/A
+ * \brief       initialize pick
  */
 FTN_SUBROUTINE(pinpk)(
                       FTN_INTEGER(wkid),

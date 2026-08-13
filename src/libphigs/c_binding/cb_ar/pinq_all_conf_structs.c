@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_all_conf_structs
+/**
+ * \file pinq_all_conf_structs.c
  *
- * DESCR:       Get all conflicting structure ids
- * RETURNS:     N/A
+ * \brief       Get all conflicting structure ids
  */
 void pinq_all_conf_structs(
                            Pint ar_id,

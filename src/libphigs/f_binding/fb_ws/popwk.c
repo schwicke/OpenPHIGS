@@ -42,7 +42,7 @@ extern int record_geom;
 /**
  * \brief       Open workstation
  *
- * popwk opens a new workstation with ID wkid
+ * \file popwk.c
  *
  * \param       wkid   workstation ID
  * \param       conid  connection ID

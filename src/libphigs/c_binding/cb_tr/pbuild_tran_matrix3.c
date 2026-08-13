@@ -54,11 +54,10 @@ SOFTWARE.
 #include "util.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pbuild_tran_matrix3
+/**
+ * \file pbuild_tran_matrix3.c
  *
- * DESCR:       Generate 3D transformation matrix
- * RETURNS:     N/A
+ * \brief       Generate 3D transformation matrix
  */
 void pbuild_tran_matrix3(
                          Ppoint3 *pt,               /* fixed point */

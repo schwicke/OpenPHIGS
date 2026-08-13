@@ -44,11 +44,10 @@
 #include "phconf.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinq_list_colr_inds
+/**
+ * \file pinq_list_colr_inds.c
  *
- * DESCR:       Get workstation list of colour indices
- * RETURNS:     N/A
+ * \brief       Get workstation list of colour indices
  */
 void pinq_list_colr_inds(
                          Pint ws_id,

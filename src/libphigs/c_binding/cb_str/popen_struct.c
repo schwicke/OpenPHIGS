@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * popen_struct
+/**
+ * \file popen_struct.c
  *
- * DESCR:   Opens a structure for appending or editing.
- * RETURNS:   N/A
+ * \brief       Opens a structure for appending or editing.
  */
 
 void popen_struct(

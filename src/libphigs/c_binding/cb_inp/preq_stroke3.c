@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * preq_stroke3
+/**
+ * \file preq_stroke3.c
  *
- * DESCR:       Request input from stroke device 3D
- * RETURNS:     N/A
+ * \brief       Request input from stroke device 3D
  */
 void preq_stroke3(
                   Pint ws_id,

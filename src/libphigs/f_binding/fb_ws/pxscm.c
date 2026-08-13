@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pxscm
+/**
+ * \file pxscm.c
  *
- * DESCR:       Set color map
- * RETURNS:     N/A
+ * \brief       Set color map
  */
 FTN_SUBROUTINE(pxscm)(
                       FTN_INTEGER(wkid)

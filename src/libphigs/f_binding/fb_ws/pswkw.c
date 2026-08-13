@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pswkw
+/**
+ * \file pswkw.c
  *
- * DESCR:       Set workstation window
- * RETURNS:     N/A
+ * \brief       Set workstation window
  */
 
 FTN_SUBROUTINE(pswkw)(

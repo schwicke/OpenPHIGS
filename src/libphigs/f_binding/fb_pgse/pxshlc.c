@@ -26,12 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pxshlc
+/**
+ * \file pxshlc.c
  *
- * DESCR:	Extension: set highlighting colour
- * RETURNS:	N/A
- */
+ * \brief       Extension */
 FTN_SUBROUTINE(pxshlc)(
                        FTN_INTEGER(ctype),
                        FTN_INTEGER(ncc),

@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psewsc
+/**
+ * \file psewsc.c
  *
- * DESCR:   set edgewidth scale factor
- * RETURNS:   N/A
+ * \brief       set edgewidth scale factor
  */
 FTN_SUBROUTINE(psewsc)(
                        FTN_REAL(ewidth)

@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_face_cull_mode
+/**
+ * \file pset_face_cull_mode.c
  *
- * DESCR:   Creates a new element - Set face culling mode
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_face_cull_mode(
                          Pcull_mode cull_mode
                          )

@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pspkft
+/**
+ * \file pspkft.c
  *
- * DESCR:       set pick filter
- * RETURNS:   N/A
+ * \brief       set pick filter
  */
 FTN_SUBROUTINE(pspkft)(
                        FTN_INTEGER(wkid),

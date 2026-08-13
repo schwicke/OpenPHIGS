@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * par_struct_nets
+/**
+ * \file par_struct_nets.c
  *
- * DESCR:       Store structure networks in archive
- * RETURNS:     N/A
+ * \brief       Store structure networks in archive
  */
 void par_struct_nets(
                      Pint archive_id,

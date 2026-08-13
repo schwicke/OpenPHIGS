@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psii
+/**
+ * \file psii.c
  *
- * DESCR:       set interior index
- * RETURNS:   N/A
+ * \brief       set interior index
  */
 FTN_SUBROUTINE(psii)(
                      FTN_INTEGER(ii)

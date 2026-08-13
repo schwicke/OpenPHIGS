@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pchange_struct_id_refs
+/**
+ * \file pchange_struct_id_refs.c
  *
- * DESCR:   Changes structure ids and references
- * RETURNS:   N/A
+ * \brief       Changes structure ids and references
  */
 void pchange_struct_id_refs(
                             Pint orig_struct_id,

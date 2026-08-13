@@ -30,11 +30,11 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pqstst
+/**
+ * \file pqstst.c
  *
- * DESCR:       Inquire structure status
- * RETURNS:   error index, structure status index
+ * \brief       Inquire structure status
+ * \return error index, structure status index
  */
 FTN_SUBROUTINE(pqstst)(
                        FTN_INTEGER(strid),

@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pstxp
+/**
+ * \file pstxp.c
  *
- * DESCR:       Set text path
- * RETURNS:     N/A
+ * \brief       Set text path
  */
 FTN_SUBROUTINE(pstxp)(
                       FTN_INTEGER(txp)

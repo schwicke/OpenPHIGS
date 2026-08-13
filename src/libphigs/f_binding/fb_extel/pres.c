@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * pres
+/**
+ * \file pres.c
  *
- * DESCR:       remove name set
- * RETURNS:   N/A
+ * \brief       remove name set
  */
 FTN_SUBROUTINE(pres)(
                      FTN_INTEGER(num),

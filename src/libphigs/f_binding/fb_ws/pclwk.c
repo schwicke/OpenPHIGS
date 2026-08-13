@@ -39,7 +39,7 @@ extern int record_geom;
 /**
  * \brief       Close a workstation
  *
- * pclwk closes the workstation with the give workstation ID
+ * \file pclwk.c
  *
  * \param       wkid workstation ID
  *

@@ -28,12 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * ppl3
+/**
+ * \file ppl3.c
  *
- * DESCR:   Creates a new element - Polyline 3
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 FTN_SUBROUTINE(ppl3)(
                      FTN_INTEGER(n),
                      FTN_REAL_ARRAY(pxa),

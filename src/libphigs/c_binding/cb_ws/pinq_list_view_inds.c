@@ -44,11 +44,10 @@
 #include "phconf.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinq_list_view_inds
+/**
+ * \file pinq_list_view_inds.c
  *
- * DESCR:       Get workstation list of view indices
- * RETURNS:     N/A
+ * \brief       Get workstation list of view indices
  */
 void pinq_list_view_inds(
                          Pint ws_id,
