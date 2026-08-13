@@ -25,7 +25,14 @@
 /**
  * \file pxset_conf_hcsf.c
  *
- * \brief       set the hardcopy scale factor
+ * \brief       set the hardcopy scale factor (OpenPHIGS extension)
+ *
+ * \parameter   wkid work station ID
+ * \parameter   hcsf scale factor, a positive real number
+ *
+ * \note This setting is only relevant for work station types 4 - 9 and is ignored for other work station types. See popen_wk(3) for available work station types.
+ *
+ * \sa popen_wk
  */
 void pxset_conf_hcsf(
                      Pint wkid,
@@ -42,4 +49,3 @@ void pxset_conf_hcsf(
     exit(1);
   }
 }
-

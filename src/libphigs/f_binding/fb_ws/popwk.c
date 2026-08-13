@@ -62,12 +62,12 @@ extern int record_geom;
   10 PWST_HCOPY_TRUE_OBJ              Export geometry as OBJ
  * \endverbatim
  *
- * \note There is no support for PostScript at the moment.
- * The hardcopy types are available in Fortran. C-Bindings have not been tested with them
+ * \note The implementation for geometry export as OBJ is relatively basic and does not include any material or color schemas. The scale factor for TGA and PNG output can be set with the function PXSHCSF.
  *
  * \pre The workstation must not be open yet.
+ * \bug None know at the moment.
  *
- * \sa pclwk
+ * \sa pclwk pxshcsf
  */
 FTN_SUBROUTINE(popwk)(
                       FTN_INTEGER(wkid),

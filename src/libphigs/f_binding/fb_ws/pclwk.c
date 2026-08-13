@@ -56,4 +56,3 @@ FTN_SUBROUTINE(pclwk)(
 #endif
   pclose_ws(FTN_INTEGER_GET(wkid));
 }
-

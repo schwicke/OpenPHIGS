@@ -48,6 +48,11 @@
  * \file pclose_ws.c
  *
  * \brief       Close workstation
+ * \param       ws_id workstation ID
+ *
+ * \pre The workstation must be open
+ * \sa popen_wk
+ *
  */
 void pclose_ws(
                Pint ws_id
@@ -270,4 +275,3 @@ void pclose_ws(
     printf("PCLOSEWS ERROR: workstation was not open. Ignoring function.");
   }
 }
-

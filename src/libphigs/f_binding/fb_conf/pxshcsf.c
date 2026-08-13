@@ -30,7 +30,14 @@
 /**
  * \file pxshcsf.c
  *
- * \brief       set the hardcopy scale factor for workstation
+ * \brief       set the hardcopy scale factor for workstation (OpenPHIGS extension)
+ *
+ * \parameter   wkid work station ID
+ * \parameter   hcsf scale factor, a positive real number
+ *
+ * \note This setting is only relevant for work station types 4 - 9 and is ignored for other work station types. See popen_wk(3) for available work station types.
+ *
+ * \sa popwk
  */
 FTN_SUBROUTINE(pxshcsf)(
                         FTN_INTEGER(wkid),
@@ -41,4 +48,3 @@ FTN_SUBROUTINE(pxshcsf)(
   Pfloat hc_sf = FTN_REAL_GET(hcsf);
   pxset_conf_hcsf(ws_id, hc_sf);
 }
-

@@ -48,6 +48,31 @@
  * \file popen_ws.c
  *
  * \brief       Open workstation
+ *
+ * \param       ws_id    workstation ID
+ * \param       conn_id  connection ID
+ * \param       ws_type  wktype workstation type
+ *
+ * \verbatim
+  0  PWST_OUTPUT_TRUE                 Output only on GL display
+  1  PWST_OUTIN_TRUE                  Input/Output on GL display
+  2  PWST_OUTPUT_TRUE_DB              Output only on GL, buffered
+  3  PWST_OUTIN_TRUE_DB               Input/Output on GL display, buffered
+  4  PWST_HCOPY_TRUE_TGA              Hardcopy to file as TGA
+  5  PWST_HCOPY_TRUE_RGB_PNG          Hardcopy to file as PNG RGB only
+  6  PWST_HCOPY_TRUE_RGBA_PNG         Hardcopy to file as PNG with Alpha channel
+  7  PWST_HCOPY_TRUE_EPS              Hardcopy to file as Encapsulated PostScript, no shaders
+  8  PWST_HCOPY_TRUE_PDF              Hardcopy to file as PDF, no shaders
+  9  PWST_HCOPY_TRUE_SVG              Hardcopy to file as SVG, no shaders
+  10 PWST_HCOPY_TRUE_OBJ              Export geometry as OBJ
+ * \endverbatim
+ *
+ * \note The implementation for geometry export as OBJ is relatively basic and does not include any material or color schemas. The scale factor for TGA and PNG output can be set with the function pxset_conf_hcsf.
+ *
+ * \pre The workstation must not be open yet.
+ *
+ * \sa pclwk pxset_conf_hcsf
+
  */
 void popen_ws(
               Pint ws_id,
