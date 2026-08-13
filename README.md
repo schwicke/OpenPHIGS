@@ -180,5 +180,9 @@ By default, OpenPHIGS will look for a file named phigs.def in the current direct
 * v0.3-1:  Add support for eps, svc, pdf and obj formatted hardcopies
 * v0.3-2:  C style fixings
 * v0.3-3:  test_f5 review, code improvements, clipping review
-* V0.4-1:  bug fixes, improve Wayland support, edge-cases on Mac and add support for a second clipping plane
+* V0.4-1:  Bug fixes, improve Wayland support, edge-cases on Mac and add support for a second clipping plane
 * V0.5-1:  Improved support for transparency
+* v0.5-2:  Add tesselation to fix filling of concave surfaces
+* v0.6-1:  Add support for pattern filling
+* v0.6-2:  Add edge type fortran binding and fix polyline drawing
+* v0.6-3   Create documentation, bug fixes and code re-organisation
