@@ -25,7 +25,10 @@
 /**
  * \file pxset_conf_file_name.c
  *
- * \brief       set the configuration path and name
+ * \brief       Read the phigs default configuration file. For a description of the possible options please refer to the documenation of phigs.def.
+ * \param       name: path to the location of the configuration file. Defaults to phigs.def
+ *
+ * \sa phigs.def
  */
 void pxset_conf_file_name(
                           char * name){

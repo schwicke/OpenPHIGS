@@ -6,7 +6,7 @@ else
 	export GL_OPTS=-DUSE_GLEW=0
 endif
 all: clean config build docs install
-config:
+config:	clean
 	if [ ! -d build ]; then mkdir build; fi
 	cd build && cmake $(OPENPHIGS_OPTS) $(GL_OPTS) ../src
 build:	config

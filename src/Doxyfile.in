@@ -1087,7 +1087,7 @@ EXCLUDE_SYMBOLS        =
 # that contain example code fragments that are included (see the \include
 # command).
 
-EXAMPLE_PATH           =
+EXAMPLE_PATH           = @CMAKE_CURRENT_SOURCE_DIR@/examples
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp and
@@ -2424,9 +2424,9 @@ INCLUDE_FILE_PATTERNS  =
 PREDEFINED             = "FTN_SUBROUTINE(name)=SUBROUTINE name" \
                          "FTN_INTEGER(name)=INTEGER name" \
                          "FTN_REAL(name)=REAL name" \
-                         "FTN_INTEGER_ARRAY(name)=INTEGER name[]" \
+                         "FTN_INTEGER_ARRAY(name)=INTEGER name(*)" \
                          "FTN_REAL_ARRAY(name)=REAL name" \
-                         "FTN_CHARACTER(name)=CHARACTER name[}"
+                         "FTN_CHARACTER(name)=CHARACTER name(*)"
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The

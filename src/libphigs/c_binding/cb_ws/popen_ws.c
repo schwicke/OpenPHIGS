@@ -53,6 +53,9 @@
  * \param       conn_id  connection ID
  * \param       ws_type  wktype workstation type
  *
+ * - If a file name has been defined in the configuration file as  \%wf \<filename\>, the targa file will be created with this name in the current folder.
+ * - If no file name has been defined in the configuraiton file, it defaults to "output.tga" and is created in the current directory.
+
  * \verbatim
   0  PWST_OUTPUT_TRUE                 Output only on GL display
   1  PWST_OUTIN_TRUE                  Input/Output on GL display
@@ -71,7 +74,7 @@
  *
  * \pre The workstation must not be open yet.
  *
- * \sa pclwk pxset_conf_hcsf
+ * \sa pclwk pxset_conf_hcsf pxset_conf_file_name
 
  */
 void popen_ws(

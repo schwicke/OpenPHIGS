@@ -32,9 +32,6 @@ By default, widgets will use Motif. To switch to Xaw, make sure that cmake is co
 ## Extensions
 Some extensions have been implemented, specifically for the Fortran bindings, to support the DELPHI and OPAL event displays.
 
-### New Work station types 4 and 5
-Work station types 4 (without double buffering) and 5 (with double buffering) take a screen shot when closed and write the screen shot as targa file to a file name.
-
 #### Fortran bindings:
 The second argument of popwk expects a non-zero integer which will be passed on as LUN.
 

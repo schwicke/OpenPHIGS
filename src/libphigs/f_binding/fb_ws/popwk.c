@@ -64,10 +64,15 @@ extern int record_geom;
  *
  * \note The implementation for geometry export as OBJ is relatively basic and does not include any material or color schemas. The scale factor for TGA and PNG output can be set with the function PXSHCSF.
  *
+ * The second argument of popwk expects a non-zero integer which will be passed on as logical unit number.
+ *   - If a file name has been defined in the configuration file as  \%wf \<filename\>, the targa file will be created with this name in the current folder.
+ *   - If no file name has been defined in the configuration file as \%wf \<filename\> fort.\<LUN\> will be used.
+ *   - After opening the work station, the output file name can be set with a call to CALL PSFNAME(WKD, \<filename\>) where filename can be the full path to the output
+ * 
  * \pre The workstation must not be open yet.
  * \bug None know at the moment.
  *
- * \sa pclwk pxshcsf
+ * \sa pclwk pxshcsf pxndef
  */
 FTN_SUBROUTINE(popwk)(
                       FTN_INTEGER(wkid),

@@ -147,7 +147,7 @@ if (DOXYGEN_FOUND)
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM)
-    install(FILES ../build/doc/man ../build/doc/html ../build/doc/latex DESTINATION ${CMAKE_INSTALL_DOCDIR})
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/doc/man ${CMAKE_CURRENT_BINARY_DIR}/doc/html ${CMAKE_CURRENT_BINARY_DIR}/doc/latex DESTINATION ${CMAKE_INSTALL_DOCDIR})
 endif()
 
 # uncomment for debugging
