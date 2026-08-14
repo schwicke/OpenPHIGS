@@ -70,6 +70,7 @@ static int css_get_network(Css_handle cssh,
 static int css_change_ref_structp(Struct_handle oldref,
                                   Struct_handle newref);
 
+#ifdef NEVER
 #define CSS_ADD_NEW_STRUCT(cssh, structid, structp)                     \
   if ( !((structp) = phg_css_create_struct((structid))) ) {             \
     ERR_BUF((cssh)->erh, ERR901);                                       \
@@ -79,6 +80,25 @@ static int css_change_ref_structp(Struct_handle oldref,
     ERR_BUF((cssh)->erh, ERR901);                                       \
     return(NULL);                           /* out of memory */         \
   }
+#endif
+/* Version proposed by Claude AI */
+/* FIXME: ERR2006 is arbitray */
+#define CSS_ADD_NEW_STRUCT(cssh, structid, structp)                     \
+  do {                                                                  \
+    int _rc;                                                            \
+    if ( !((structp) = phg_css_create_struct((structid))) ) {           \
+      ERR_BUF((cssh)->erh, ERR901);                                     \
+      return(NULL);                         /* out of memory */         \
+    }                                                                   \
+    _rc = phg_css_stab_insert((cssh)->stab, (structid), (structp));     \
+    if (_rc != 1) {                                                     \
+      css_struct_free((cssh), (structp));   /* don't leak the orphan */ \
+      (structp) = NULL;                                                 \
+      ERR_BUF((cssh)->erh, _rc == 0 ? ERR901 : ERR2006);                \
+      return(NULL);                                                     \
+    }                                                                   \
+  } while (0);
+
 
 /*******************
 
