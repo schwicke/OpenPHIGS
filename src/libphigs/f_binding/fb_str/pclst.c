@@ -34,6 +34,8 @@
  * \file pclst.c
  *
  * \brief       Closes a previously opened structure.
+ * \pre         There must be no current open structure.
+ * \sa          popst
  */
 FTN_SUBROUTINE(pclst)(
                       void

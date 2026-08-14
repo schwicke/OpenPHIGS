@@ -30,6 +30,8 @@
  * \file pclose_struct.c
  *
  * \brief       Closes a previously opened structure.
+ * \pre         There must be a currently open structure.
+ * \sa          popen_struct
  */
 void pclose_struct(
                    void

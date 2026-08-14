@@ -30,6 +30,9 @@
  * \file popen_struct.c
  *
  * \brief       Opens a structure for appending or editing.
+ * \param       struct_id (int): structure ID
+ * \pre         There must be no current open structure.
+ * \sa          pclose_struct
  */
 
 void popen_struct(

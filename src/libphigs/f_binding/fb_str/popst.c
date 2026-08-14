@@ -34,6 +34,9 @@
  * \file popst.c
  *
  * \brief       Opens a structure for appending or editing.
+ * \param       strid (integer): structure ID
+ * \pre         There must be no current open structure.
+ * \sa          pclst
  */
 FTN_SUBROUTINE(popst)(
                       FTN_INTEGER(strid)
