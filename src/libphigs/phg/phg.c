@@ -265,7 +265,9 @@ void phg_del_struct(
           if (*ws_list->wsh->delete_struct == NULL) {
             printf("ERROR: Cannot delete this structure as wsh->>delete_struct is NULL\n");
           } else if (ws_list->wsh->id <= 0 || ws_list->wsh->id > 10){
-            printf("ERROR: Refusing to delete structure as the WS Id looks like garbage: %d.\n", ws_list->wsh->id);
+            printf("ERROR: Refusing to delete structure as the WS Id looks like garbage: %d. ID=%d\n",
+                   ws_list->wsh->id,
+                   struct_id);
           } else {
             if ((*ws_list->wsh->delete_struct)(ws_list->wsh, structh,
                                                WS_PRE_CSS_DELETE)) {
