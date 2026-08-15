@@ -174,7 +174,7 @@ void fasd3_next_vdata3(
 
   case PVERT_COORD_NORMAL:
     tp = (char *) fasd3->vdata->vertex_data.ptnorms;
-    tp += sizeof(Pptnorm3);
+    tp += sizeof(Pptnorm3) * num_vertices;
     data = (Pint *) tp;
     fasd3->vdata->num_vertices = data[0];
     fasd3->vdata->vertex_data.ptnorms = (Pptnorm3 *) &data[1];
