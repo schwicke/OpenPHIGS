@@ -70,18 +70,7 @@ static int css_get_network(Css_handle cssh,
 static int css_change_ref_structp(Struct_handle oldref,
                                   Struct_handle newref);
 
-#ifdef NEVER
-#define CSS_ADD_NEW_STRUCT(cssh, structid, structp)                     \
-  if ( !((structp) = phg_css_create_struct((structid))) ) {             \
-    ERR_BUF((cssh)->erh, ERR901);                                       \
-    return(NULL);                           /* out of memory */         \
-  }                                                                     \
-  if ( !(phg_css_stab_insert((cssh)->stab, (structid), (structp))) ) {  \
-    ERR_BUF((cssh)->erh, ERR901);                                       \
-    return(NULL);                           /* out of memory */         \
-  }
-#endif
-/* Version proposed by Claude AI */
+/* Version proposed by AI */
 /* FIXME: ERR2006 is arbitray */
 #define CSS_ADD_NEW_STRUCT(cssh, structid, structp)                     \
   do {                                                                  \
@@ -97,7 +86,7 @@ static int css_change_ref_structp(Struct_handle oldref,
       ERR_BUF((cssh)->erh, _rc == 0 ? ERR901 : ERR2006);                \
       return(NULL);                                                     \
     }                                                                   \
-  } while (0);
+  } while (0)
 
 
 /*******************
@@ -114,7 +103,7 @@ Struct_handle phg_css_open_struct(Css_handle cssh, Pint structid)
 {
   if ( !(cssh->open_struct = CSS_STRUCT_EXISTS(cssh, structid)) ) {
     /* no such structure, so create an empty one */
-    CSS_ADD_NEW_STRUCT(cssh, structid, cssh->open_struct)
+    CSS_ADD_NEW_STRUCT(cssh, structid, cssh->open_struct);
       }
   cssh->el_ptr = cssh->open_struct->last_el->prev;
   cssh->el_index = cssh->open_struct->num_el;
@@ -493,7 +482,7 @@ Css_ws_list phg_css_change_struct_id(Css_handle cssh,
     if ( orig_posted_somewhere || orig->refer_to_me->num_elements
          || orig->ws_posted_to ) {
       /* orig struct is referenced or posted, so create an empty one */
-      CSS_ADD_NEW_STRUCT(cssh, ids->orig_id, structp)
+      CSS_ADD_NEW_STRUCT(cssh, ids->orig_id, structp);
         }
     if (orig->refer_to_me->num_elements || orig->ws_posted_to) {
       /* fix up ws_posted_to and ws_appear_on lists */
@@ -578,7 +567,7 @@ Css_ws_list phg_css_change_struct_id(Css_handle cssh,
     if (newst)
       CSS_EMPTY_STRUCT(cssh, newst->struct_id)
       else {
-        CSS_ADD_NEW_STRUCT(cssh, ids->new_id, structp)
+        CSS_ADD_NEW_STRUCT(cssh, ids->new_id, structp);
           }
   }
   return(cssh->ws_list->wsh ? cssh->ws_list : NULL);
@@ -607,7 +596,7 @@ Css_ws_list phg_css_change_struct_refs(Css_handle cssh,
   if (orig && orig->refer_to_me->num_elements) {
     /* nothing to do if no references to orig */
     if (!newst)
-      CSS_ADD_NEW_STRUCT(cssh, ids->new_id, newst)
+      CSS_ADD_NEW_STRUCT(cssh, ids->new_id, newst);
         if ( !phg_css_join_ws_list(cssh, orig, (Struct_handle)NULL,
                                    &cssh->ws_list, CSS_WS_APPEAR) )
           return(NULL);                /* out of memory */
@@ -714,7 +703,7 @@ Css_ws_list phg_css_change_struct_idrefs(Css_handle cssh,
     if (newst)
       CSS_EMPTY_STRUCT(cssh, newst->struct_id)
       else {
-        CSS_ADD_NEW_STRUCT(cssh, ids->new_id, structp)
+        CSS_ADD_NEW_STRUCT(cssh, ids->new_id, structp);
           }
   }
   return(cssh->ws_list->wsh ? cssh->ws_list : NULL);
@@ -735,10 +724,10 @@ Css_ws_list phg_css_change_struct_idrefs(Css_handle cssh,
 static int css_change_ref_structp(Struct_handle oldref,
                                   Struct_handle newref)
 {
-  Struct_handle    structp;
+  Struct_handle      structp;
   Css_set_ptr        old_el, new_el;
   Css_set_element    *structel, *ref;
-  int            count;
+  long               count;
 
   ref = oldref->refer_to_me->elements->next;
   while (ref) {
@@ -767,7 +756,7 @@ static int css_change_ref_structp(Struct_handle oldref,
                                  (caddr_t)ref->key, (caddr_t*)&count) )
       count = 0;
     if ( !phg_css_set_add(newref->refer_to_me, ref->key,
-                          (caddr_t)((long)count + (long)old_el->num_elements)) )
+                          (caddr_t)(count + (long)old_el->num_elements)) )
       return(FALSE);                /* out of memory */
     free((char *)old_el);
     ref = ref->next;

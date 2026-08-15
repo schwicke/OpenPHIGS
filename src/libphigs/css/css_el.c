@@ -529,7 +529,7 @@ static int css_add_to_refer_sets(Css_handle cssh, Struct_handle exec_struct)
 {
   Struct_handle open_struct = cssh->open_struct;
   Css_set_ptr el_set; /* set of element pointers  */
-  int count; /* how many times a structure
+  long count; /* how many times a structure
               * has been referenced */
 
   /* see if open structure has previously referenced exec_struct, if not
@@ -575,7 +575,7 @@ static void css_rm_from_refer_sets(Struct_handle edit_struct,
   Struct_handle	exec_struct = /* structure being executed */
     (Struct_handle)elptr->eldata.ptr;
   Css_set_ptr el_set; /* set of element pointers  */
-  int count; /* how many times a structure
+  long count; /* how many times a structure
               * has been referenced */
 
   /* remove element ptr from set of references to exec_struct, and remove
@@ -645,7 +645,7 @@ void phg_css_el_search(Css_handle cssh,
     start_el = structp->num_el;
     elptr = structp->last_el->prev;	/* last non-NIL element */
 
-  } else {				/* count forward for start_el */
+  } else {    /* count forward for start_el */
     El_handle	next;
 
     assert( (1 <= start_el) && (start_el <= structp->num_el) );
