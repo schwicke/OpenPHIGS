@@ -30,6 +30,7 @@
  * \file patr.c
  *
  * \brief       Annotation text relative
+ * \sa patr3
  */
 FTN_SUBROUTINE(patr)(
                      FTN_REAL(rpx),
@@ -49,5 +50,6 @@ FTN_SUBROUTINE(patr)(
   offset.delta_x = FTN_REAL_GET(apx);
   offset.delta_y = FTN_REAL_GET(apy);
   panno_text_rel(&ref_point, &offset, text);
+  free(text);
 }
 
