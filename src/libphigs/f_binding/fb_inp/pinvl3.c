@@ -50,7 +50,7 @@ FTN_SUBROUTINE(pinvl3)(
   Pfloat * rp;
   Pint * ip;
   char* cp;
-  char* buffer;
+
   int i, length, l1, l2, l3, l4;
   int nstrings, charlen;
   Pint num_boxed;
@@ -112,53 +112,25 @@ FTN_SUBROUTINE(pinvl3)(
     /* FIXME: release space afterwards */
     cp = (char *)&ip[nstrings+1];
     if (l1 > 0){
-      buffer = (char*) malloc((l1+1)*sizeof(char));
-      if (buffer != NULL){
-        strncpy(buffer, &cp[0], l1*sizeof(char));
-        buffer[l1] = '\0';
-        val_data_rec.pets.pet_u1.label = buffer;
-      } else {
-        val_data_rec.pets.pet_u1.label = WST_DEFAULT_VALUATOR_LABEL;
-      }
+      val_data_rec.pets.pet_u1.label = &cp[0];
       cp += l1*sizeof(char);
     } else {
       val_data_rec.pets.pet_u1.label = WST_DEFAULT_VALUATOR_LABEL;
     }
     if (l2 > 0){
-      buffer = (char*) malloc((l2+1)*sizeof(char));
-      if (buffer != NULL){
-        strncpy(buffer, &cp[0], l2*sizeof(char));
-        buffer[l2] = '\0';
-        val_data_rec.pets.pet_u1.format = buffer;
-      } else {
-        val_data_rec.pets.pet_u1.format = WST_DEFAULT_VALUATOR_FORMAT;
-      }
+      val_data_rec.pets.pet_u1.format = &cp[0];
       cp += l2*sizeof(char);
     } else {
       val_data_rec.pets.pet_u1.format = WST_DEFAULT_VALUATOR_FORMAT;
     }
     if (l3 > 0){
-      buffer = (char*) malloc((l3+1)*sizeof(char));
-      if (buffer != NULL){
-        strncpy(buffer, &cp[0], l3*sizeof(char));
-        buffer[l3] = '\0';
-        val_data_rec.pets.pet_u1.low_label = buffer;
-      } else {
-        val_data_rec.pets.pet_u1.low_label = WST_DEFAULT_VALUATOR_LOW_LABEL;
-      }
+      val_data_rec.pets.pet_u1.low_label = &cp[0];
       cp += l3*sizeof(char);
     } else {
       val_data_rec.pets.pet_u1.low_label = WST_DEFAULT_VALUATOR_LOW_LABEL;
     }
     if (l4 > 0){
-      buffer = (char*) malloc((l4+1)*sizeof(char));
-      if (buffer != NULL){
-        strncpy(buffer, &cp[0], l4*sizeof(char));
-        buffer[l4] = '\0';
-        val_data_rec.pets.pet_u1.high_label = buffer;
-      } else {
-        val_data_rec.pets.pet_u1.high_label = WST_DEFAULT_VALUATOR_HIGH_LABEL;
-      }
+      val_data_rec.pets.pet_u1.high_label = &cp[0];
       cp += l4*sizeof(char);
     } else {
       val_data_rec.pets.pet_u1.high_label = WST_DEFAULT_VALUATOR_HIGH_LABEL;

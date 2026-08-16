@@ -83,14 +83,9 @@ FTN_SUBROUTINE(pinch3)(
   /* copy over the length of the strings */
   memcpy(&charlen[0], (int*)&ip[0], nstrings*sizeof(int));
   strings = (char *) &ip[nstrings];
-  /* FIXME: we need to release these strings later on */
+  /* We need to release these strings later on */
   for (i=0; i<nstrings; i++){
-    buffer = (char*) malloc((charlen[i]+1)*sizeof(char));
-    if (buffer != NULL){
-      strncpy(buffer, strings, charlen[i]*sizeof(char));
-      buffer[strlen(strings)] = '\0';
-    }
-    str[i] = buffer;
+    str[i] = strings;
 #ifdef DEBUG
     printf("DEBUG pinch3: string nr %d %s length %d expected %d\n", i, str[i], (int) strlen(str[i]), charlen[i]);
 #endif
