@@ -1,0 +1,47 @@
+name: Deploy Doxygen Documentation to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install --fix-missing -y cmake gcc gfortran libx11-dev libglu1-mesa-dev libmotif-dev tcsh libxaw7-dev libglew-dev libdlm-dev libgl2ps-dev libpng-dev doxygen graphviz
+
+      - name: Generate Doxygen Documentation
+        run: |
+          mkdir -p build
+          cd build
+          cmake ../src
+          make doc
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './build/html'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
