@@ -133,8 +133,7 @@ void wsgl_close(
                 )
 {
   Wsgl_handle wsgl = ws->render_context;
-
-  free(wsgl->struct_stack);
+  stack_destroy(wsgl->struct_stack);
   free(ws->render_context);
 }
 

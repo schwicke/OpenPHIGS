@@ -41,6 +41,9 @@
 
 int view_index = 0;
 
+Pedge_flag *edges;
+Pedge_data_list *edata;
+
 void init_checker(int num)
 {
    int i;
@@ -52,9 +55,10 @@ void init_checker(int num)
    Ppoint3 *points = (Ppoint3 *) malloc(sizeof(Ppoint3) * 4 * num);
    Pfacet_vdata_list3 *vdata = (Pfacet_vdata_list3 *) malloc(
       sizeof(Pfacet_vdata_list3) * num);
-   Pedge_flag *edges = (Pedge_flag *) malloc(sizeof(Pedge_flag) * 4 * num);
-   Pedge_data_list *edata = malloc(sizeof(Pedge_data_list) * num);
    Ppoint3 *p;
+ 
+   edges = (Pedge_flag *) malloc(sizeof(Pedge_flag) * 4 * num);
+   edata = malloc(sizeof(Pedge_data_list) * num);
 
    fdata.colr.direct.rgb.red = 0.0;
    fdata.colr.direct.rgb.green = 0.5;
@@ -177,7 +181,6 @@ int main(int argc, char *argv[])
 exit:
    pclose_ws(0);
    pclose_phigs();
-
    return 0;
 }
 

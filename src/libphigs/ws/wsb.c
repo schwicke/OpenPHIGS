@@ -381,6 +381,7 @@ static void destroy_resources(
 {
   Ws_output_ws *ows = &ws->out_ws;
 
+  printf("Freeing resources\n");
   if (ows->nset.invis_incl != NULL) {
     phg_nset_destroy(ows->nset.invis_incl);
   }
@@ -654,17 +655,30 @@ void wsb_free_all_posted(
   end->lower = &owsb->posted.lowest;
 }
 
+static void destroy_view_list(List *pList)
+{
+   Node *pNode, *pNext;
+   Ws_view_ref *vref;
+
+   for (pNode = LIST_HEAD(pList); pNode != NULL; pNode = pNext) {
+      pNext = NODE_NEXT(pNode);
+      vref = (Ws_view_ref *) ((char *) pNode - offsetof(Ws_view_ref, node));
+      free(vref);
+   }
+   list_init(pList);
+}
+
 void wsb_destroy_ws(
                     Ws *ws
                     )
 {
   if ( ws ) {
+    Ws_output_ws *ows = &ws->out_ws;
+    Wsb_output_ws *owsb = &ows->model.b;
     if ( ws->display ) {
-      if ( ws->drawable_id )
-        phg_wsx_release_window( ws );
-
+      if ( ws->drawable_id ) phg_wsx_release_window( ws );
       destroy_resources(ws);
-
+      
       /* NOTE:
        * Free renderer resource here if needed
        * Destroy colourmap here if needed
@@ -672,6 +686,17 @@ void wsb_destroy_ws(
 
       XFlush( ws->display );
     }
+    /* Free views */
+    destroy_view_list(&owsb->pending_views);
+    destroy_view_list(&owsb->views);
+    /* Free hash tables */
+    phg_wsb_destroy_LUTs(ws);
+    /* Free Scratch space */
+    if (ws->scratch.size > 0){
+      free(ws->scratch.buf);
+      ws->scratch.size = 0;
+    }
+    /* free the ws pointer and set it to NULL */
     phg_wsx_destroy( ws );
   }
 }
@@ -774,6 +799,7 @@ void phg_wsb_make_requested_current(
 #endif
         list_remove(&owsb->views, &dupref->node);
         free(dupref);
+        dupref = NULL;
       }
 
       list_enqueue(&owsb->views, &vref->node, vref->priority);
@@ -1174,7 +1200,7 @@ static Ws_post_str* wsb_unpost_struct_if_found(
       /* Found it -- now delete it */
       cur->lower->higher = cur->higher;
       cur->higher->lower = cur->lower;
-      end = cur->higher;	/* Save this around the free */
+      end = cur->higher;    /* Save this around the free */
       free( (char *)cur );
       return end;
     } else

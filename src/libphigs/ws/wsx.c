@@ -177,6 +177,7 @@ int phg_wsx_setup_tool(
         if (!wsgl_init(ws, &background, NUM_SELECTABLE_STRUCTS)) {
           ERR_BUF(ws->erh, ERR900);
           free(ws);
+          ws = NULL;
           status = FALSE;
         }
         else {
@@ -308,6 +309,7 @@ int phg_wsx_setup_tool_nodisp(
     if (!wsgl_init(ws, &background, NUM_SELECTABLE_STRUCTS)) {
       ERR_BUF(ws->erh, ERR900);
       free(ws);
+      ws = NULL;
       status = FALSE;
     }
   }
@@ -361,4 +363,5 @@ void phg_wsx_destroy(
    )
 {
    free(ws);
+   ws = NULL;
 }
