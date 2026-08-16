@@ -30,7 +30,11 @@
 /**
  * \file panno_text_rel3.c
  *
- * \brief       Creates a new element  */
+ * \brief       Annotation text relative. Creates an annotation text element in the currently open structure
+ * \pre         A structure must be open for edit or append
+ * \sa          panno_text_rel
+ */
+
 void panno_text_rel3(
                      Ppoint3 *ref_point,
                      Pvec3 *offset,
