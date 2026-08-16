@@ -113,9 +113,12 @@ C     Close structure
 C      Post structure to workstation
       CALL PPOST(IWK, 0, 0.0)
 
-C      Buisy loop
-      DO WHILE (1 .GT. 0)
-      END DO
+C     Wait for key stroke
+      READ(*,*)
+
+C     Cleanup
+      CALL PCLWK(IWK)
+      CALL PCLPH()
 
       STOP
       END

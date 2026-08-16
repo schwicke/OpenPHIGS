@@ -283,9 +283,10 @@ C     Open PHIGS and a workstation
 
       CALL KYSABL(IWK)
 
-C      Buisy loop
-      DO WHILE (1 .GT. 0)
-      END DO
+C     Wait for key stroke
+      READ(*,*)
 
-      STOP
+C     Cleanup
+      CALL PCLWK(IWK)
+      CALL PCLPH()
       END

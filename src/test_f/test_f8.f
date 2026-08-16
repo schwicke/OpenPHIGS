@@ -44,5 +44,7 @@ C     Open PHIGS and a workstation
 
       CALL PMSG(IWK,"Press close, please");
 
+      CALL PCLWK(IWK)
+      CALL PCLPH()
       STOP
       END
