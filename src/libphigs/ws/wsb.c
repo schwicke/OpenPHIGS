@@ -2355,8 +2355,8 @@ int phg_wsb_resolve_pick(
   Pint i;
   Ws_post_str *post_str, *end;
   Ws_hit_box box;
-  Ws_pick_elmt *elmts;
-  Pint err_ind, depth;
+  Ws_pick_elmt *elmts = NULL;
+  Pint err_ind, depth = 0;
   Wsb_output_ws *owsb = &ws->out_ws.model.b;
 
 #ifdef DEBUGINP
@@ -2402,27 +2402,23 @@ int phg_wsb_resolve_pick(
   if (err_ind != 0) {
     ERR_REPORT(ws->erh, err_ind);
     status = FALSE;
-  }
-  else if (depth > 0) {
+  } else if (depth > 0) {
     pick->pick_path.depth = depth;
-    pick->pick_path.path_list = (Ppick_path_elem *)
-      malloc(sizeof(Ppick_path_elem) * depth);
+    pick->pick_path.path_list = (Ppick_path_elem *) malloc(sizeof(Ppick_path_elem) * depth);
     if (pick->pick_path.path_list == NULL) {
 #ifdef DEBUGINP
       printf("phg_wsb_resolve_pick path list is NULL\n");
 #endif
       pick->status = PIN_STATUS_NONE;
       ERR_REPORT(ws->erh, ERR900);
-      free(elmts);
+      if (elmts != NULL) free(elmts);
       status = FALSE;
-    }
-    else {
+    } else {
       pick->status = PIN_STATUS_OK;
 #ifdef DEBUGINP
       printf("phg_wsb_resolve_pick status is OK\n");
 #endif
       if (dev->order == PORDER_BOTTOM_FIRST) {
-
         for (i = 0; i < depth; i++) {
           pick->pick_path.path_list[i].struct_id =
             elmts[depth - i - 1].sid;

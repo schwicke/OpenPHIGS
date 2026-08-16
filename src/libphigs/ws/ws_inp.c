@@ -295,7 +295,8 @@ static int resolve_pick(
       cur_pick->pick_path.depth = pick.pick_path.depth;
       status = 1;
     }
-
+    free(pick.pick_path.path_list);       /* temporary — copied out above */
+    pick.pick_path.path_list = NULL;
   } else {    /* No pick */
     cur_pick->status = PIN_STATUS_NONE;
     cur_pick->pick_path.depth = 0;
