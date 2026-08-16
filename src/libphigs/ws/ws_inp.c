@@ -265,6 +265,7 @@ static int resolve_pick(
           if ( dev_state->scratch_path.depth > 0 )
             free(dev_state->scratch_path.path_list);
           dev_state->scratch_path.path_list = path;
+          dev_state->scratch_path.depth = pick.pick_path.depth;  /* new capacity */
         }
       }
     } else {
