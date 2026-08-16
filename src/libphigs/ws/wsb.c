@@ -686,6 +686,8 @@ void wsb_destroy_ws(
 
       XFlush( ws->display );
     }
+    /* close inputs */
+    phg_ws_input_close( ws );
     /* Free views */
     destroy_view_list(&owsb->pending_views);
     destroy_view_list(&owsb->views);
