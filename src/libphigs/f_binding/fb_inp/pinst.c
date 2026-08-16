@@ -32,6 +32,21 @@
  * \file pinst.c
  *
  * \brief       initialize string
+ * \param       INTEGER WKID              workstation identifier
+ * \param       INTEGER STDNR             string device number
+ * \param       INTEGER LSTR              length of initial string (>= 0)
+ * \param       CHARACTER*(*) ISTR        initial string
+ * \param       INTEGER PET               prompt and echo type
+ * \param       REAL XMIN,XMAX,YMIN,YMAX  echo volume (DC)
+ * \param       INTEGER LDR               dimension of data record array
+ * \param       CHARACTER*80 DATREC(LDR)  data record
+ *
+ * - echo mode 1
+ *   + opens a new window
+ *   + echo area given in NC coordinates for the root window
+ * - echo mode -1
+ *   + echo area given in % relative to the main window
+ * \sa pprec pinst3
  */
 FTN_SUBROUTINE(pinst)(
                       FTN_INTEGER(wkid),

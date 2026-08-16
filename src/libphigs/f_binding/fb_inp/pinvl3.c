@@ -32,7 +32,39 @@
  * \file pinvl3.c
  *
  * \brief       initialize valuators 3
+ * \param       INTEGER WKID              workstation identifier
+ * \param       INTEGER VLDNR             valuator device number
+ * \param       REAL IVAL                 initial value
+ * \param       INTEGER PET               prompt and echo type
+ * \param       REAL    EVOL(6)           echo volume (DC), xmin, xmax, ymin, ymax, zmin, zmax
+ * \param       INTEGER LDR               dimension of data record array
+ * \param       CHARACTER*80 DATREC(LDR)  data record
+ * - echo mode 1:
+ *   - uses default strings for label, format low label and high label
+ *   - opens a new window
+ *   - echo area given in NC coordinates for the root window
+ * - echo mode -1: As mode 1 but expects additional parameters as string, namely
+ *   - label
+ *   - format
+ *   - low label
+ *   - high label
+ *   These should be encoded
+ *
+ * Extensions:
+ * - echo mode 2:
+ *   - as echo mode 1 but places the window on top of the main window
+ *   - echo area given as a fraction of the main window
+ * - echo mode -2:
+ *   - as echo mode -1 but places the window on top of the main window
+ *   - echo area given as a fraction of the main window
+ * - echo mode 3, -3:
+ *   - as echo mode 2 but places the window on top of the main window
+ *   - echo area given as a fraction of the main window
+ *   - boxes the valuators up in one Window.
+ * (!) PPREC expects one integer for this echo mode which is the number of valuators to be boxed up
+ * \sa pprec
  */
+
 FTN_SUBROUTINE(pinvl3)(
                        FTN_INTEGER(wkid),
                        FTN_INTEGER(vldnr),
@@ -138,4 +170,3 @@ FTN_SUBROUTINE(pinvl3)(
   }
   pinit_val3(ws_id, val_dev, init_value, pet, &echo_volume, &val_data_rec);
 }
-

@@ -32,6 +32,16 @@
  * \file pinpk.c
  *
  * \brief       initialize pick
+ * \param       INTEGER WKID              workstation identifier
+ * \param       INTEGER PKDNR             pick device number
+ * \param       INTEGER ISTAT             initial status (POK,PNPICK)
+ * \param       INTEGER IPPD              depth of initial pick path
+ * \param       INTEGER PP(3, IPPD)       initial pick path
+ * \param       INTEGER PET               prompt and echo type
+ * \param       REAL XMIN, XMAX,YMIN,YMAX  echo area (DC)
+ * \param       INTEGER LDR               dimension of data record array
+ * \param       CHARACTER*80 DATREC(LDR)  data record
+ * \param       INTEGER PPORDR            pick path order (PPOTOP, PPOBOT)
  */
 FTN_SUBROUTINE(pinpk)(
                       FTN_INTEGER(wkid),

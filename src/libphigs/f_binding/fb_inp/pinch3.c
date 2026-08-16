@@ -32,7 +32,39 @@
  * \file pinch3.c
  *
  * \brief       initialize choice 3
+ * \param       INTEGER WKID              workstation identifier
+ * \param       INTEGER CHDNR             choice device number
+ * \param       INTEGER ISTAT             initial status (POK,PNCHOI)
+ * \param       INTEGER ICHNR             initial choice number
+ * \param       INTEGER PET               prompt and echo type
+ * \param       REAL    EVOL(6)           echo volume (DC), xmin, xmax, ymin, ymax, zmin, zmax
+ * \param       INTEGER LDR               dimension of data record array
+ * \param       CHARACTER*80 DATREC(LDR)  data record
+ *
+ * OpenPHIGS supports the following echo modes:
+ * - echo mode 1:
+ *    + opens a new window
+ *    +  echo area given in NC coordinates for the root window
+ * - echo mode -1:
+ *    + displays window on top of the root window
+ *    + echo area is given as a fraction of the root window
+ * - echo mode 3:
+ *    + opens a new window
+ *    + echo area given in NC coordinates for the root window
+ *    + expects titels as strings
+ * - echo mode -3:
+ *    + as 3 but echo area is given as a fraction of the root window
+ * - echo mode 4:
+ *    + as 3 but expects one more string
+ *    + last string will be used as title
+ * - echo mode -4:
+ *    + as 4 but
+ *    + echo area is given as a fraction of the root window
+ *
+ * \todo The function implements only a subset of PETs foreseen. The 2dim function implementation is missing.
+ * \sa pprec
  */
+
 FTN_SUBROUTINE(pinch3)(
                        FTN_INTEGER(wkid),
                        FTN_INTEGER(chdnr),
