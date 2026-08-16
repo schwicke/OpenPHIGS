@@ -123,10 +123,10 @@ void popen_ws(
         printf("cb_ws: WSID=%d type=%d scale factor %f\n", ws_id, ws_type, args.hcsf);
 #endif
         if (conn_id == NULL) {
+          args.conn_info.background = 0;
           args.conn_type = PHG_ARGS_CONN_OPEN;
         }
         else {
-          args.conn_info.background = 0;
           record_geom = FALSE;
           if (
               ws_type == PWST_HCOPY_TRUE_TGA ||
