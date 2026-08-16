@@ -378,26 +378,22 @@ void phg_wsb_set_LUT_entry(
     break;
 
   case PHG_ARGS_COREP:
-#ifdef DEBUG
-    printf("Set corep: %d\n", rep->index);
-#endif
-    data = malloc(sizeof(Pgcolr));
-    if (data != NULL) {
-#ifdef DEBUG
-      printf("Setting gcolr for index=%d %f %f %f\n", rep->index,
-             gcolr->val.general.x,
-             gcolr->val.general.y,
-             gcolr->val.general.z,
-             gcolr->val.general.a
-             );
-#endif
+    if (phg_htab_get_entry(ows->htab.colour, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memcpy(data, gcolr, sizeof(Pgcolr));
-      if (!phg_htab_add_entry(ows->htab.colour, rep->index, data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Pgcolr));
+      if (data != NULL) {
+        memcpy(data, gcolr, sizeof(Pgcolr));
+        if (!phg_htab_add_entry(ows->htab.colour, rep->index, data)) {
+          free(data);              /* don't leak on add failure either */
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
