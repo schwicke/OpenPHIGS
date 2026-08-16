@@ -118,13 +118,28 @@ int phg_sin_evt_tbl_init(
  * DESCR:       Destroy event table
  * RETURNS:     N/A
  */
-
 void phg_sin_evt_tbl_destroy(
                              Phg_sin_evt_tbl *ev_tbl
                              )
 {
+  int i;
+  Node *node, *next;
+  Phg_sin_evt_entry *ev;
+
+  if (ev_tbl == NULL)
+     return;
+
+  for (i = 0; i < ev_tbl->num_events; i++) {
+     for (node = LIST_HEAD(&ev_tbl->events[i]); node != NULL; node = next) {
+        next = NODE_NEXT(node);
+        ev = (Phg_sin_evt_entry *) ((char *) node
+                                    - offsetof(Phg_sin_evt_entry, node));
+        free(ev);
+     }
+     list_init(&ev_tbl->events[i]);
+  }
+
   free(ev_tbl);
-  ev_tbl = NULL;
 }
 
 /*******************************************************************************

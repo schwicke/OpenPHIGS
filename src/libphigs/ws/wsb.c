@@ -63,6 +63,7 @@ SOFTWARE.
 #include "util.h"
 #include "ws.h"
 #include "cp.h"
+#include "private/sinP.h"    // FIXME restructure so that we do not need this here
 #include "private/wsbP.h"
 #include "private/wsglP.h"
 #include "private/wsxP.h"
@@ -381,7 +382,6 @@ static void destroy_resources(
 {
   Ws_output_ws *ows = &ws->out_ws;
 
-  printf("Freeing resources\n");
   if (ows->nset.invis_incl != NULL) {
     phg_nset_destroy(ows->nset.invis_incl);
   }
@@ -675,6 +675,10 @@ void wsb_destroy_ws(
   if ( ws ) {
     Ws_output_ws *ows = &ws->out_ws;
     Wsb_output_ws *owsb = &ows->model.b;
+
+    /* close inputs */
+    phg_ws_input_close( ws );
+
     if ( ws->display ) {
       if ( ws->drawable_id ) phg_wsx_release_window( ws );
       destroy_resources(ws);
@@ -686,8 +690,6 @@ void wsb_destroy_ws(
 
       XFlush( ws->display );
     }
-    /* close inputs */
-    phg_ws_input_close( ws );
     /* Free views */
     destroy_view_list(&owsb->pending_views);
     destroy_view_list(&owsb->views);
