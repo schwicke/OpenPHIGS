@@ -71,6 +71,7 @@ void pset_disp_upd_st(
     case PCAT_PDF:
     case PCAT_SVG:
     case PCAT_OBJ:
+    case PCAT_GLTF:
     case PCAT_MO:
       wsh = PHG_WSID(ws_id);
       (*wsh->set_disp_update_state)(wsh, def_mode, mod_mode);

@@ -68,6 +68,7 @@ void predraw_all_structs(
     case PCAT_PDF:
     case PCAT_SVG:
     case PCAT_OBJ:
+    case PCAT_GLTF:
     case PCAT_MO:
       wsh = PHG_WSID(ws_id);
       (*wsh->redraw_all)(wsh, ctrl_flag);

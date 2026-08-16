@@ -1,0 +1,1035 @@
+From 77c7e53741e36896c7315d1b0da601e09ce613be Mon Sep 17 00:00:00 2001
+From: Ulrich Schwickerath <ulrich.schwickerath@gmail.com>
+Date: Sun, 9 Aug 2026 13:30:14 +0200
+Subject: [PATCH] fix: remove duplicates and fix remaining issues, e.g. pfa and
+ pfa3 definitions
+
+---
+ src/libphigs/bindings_src.cmake               |  3 +-
+ src/libphigs/c_binding/cb_ar/popen_ar_file.c  |  1 +
+ src/libphigs/c_binding/cb_inp/pawait_event.c  |  1 +
+ src/libphigs/c_binding/cb_inp/pflush_events.c |  1 +
+ src/libphigs/c_binding/cb_inp/pget_choice.c   |  1 +
+ src/libphigs/c_binding/cb_inp/pget_loc.c      |  1 +
+ src/libphigs/c_binding/cb_inp/pget_loc3.c     |  1 +
+ src/libphigs/c_binding/cb_inp/pget_pick.c     |  1 +
+ src/libphigs/c_binding/cb_inp/pget_stroke.c   |  1 +
+ src/libphigs/c_binding/cb_inp/pget_stroke3.c  |  1 +
+ src/libphigs/c_binding/cb_inp/pget_val.c      |  1 +
+ src/libphigs/c_binding/cb_inp/pinit_choice3.c |  1 +
+ src/libphigs/c_binding/cb_inp/pinit_loc3.c    |  1 +
+ src/libphigs/c_binding/cb_inp/pinit_pick3.c   |  1 +
+ src/libphigs/c_binding/cb_inp/pinit_string.c  |  1 +
+ src/libphigs/c_binding/cb_inp/pinit_string3.c |  1 +
+ src/libphigs/c_binding/cb_inp/pinit_stroke3.c |  1 +
+ src/libphigs/c_binding/cb_inp/pinit_val3.c    |  1 +
+ src/libphigs/c_binding/cb_inp/preq_choice.c   |  1 +
+ src/libphigs/c_binding/cb_inp/preq_loc3.c     |  1 +
+ src/libphigs/c_binding/cb_inp/preq_pick.c     |  1 +
+ src/libphigs/c_binding/cb_inp/preq_string.c   |  1 +
+ src/libphigs/c_binding/cb_inp/preq_stroke3.c  |  1 +
+ src/libphigs/c_binding/cb_inp/preq_valuator.c |  1 +
+ src/libphigs/c_binding/cb_inp/psample_loc.c   |  1 +
+ src/libphigs/c_binding/cb_inp/psample_loc3.c  |  1 +
+ src/libphigs/c_binding/cb_inp/psample_pick.c  |  1 +
+ .../c_binding/cb_inp/psample_string.c         |  1 +
+ .../c_binding/cb_inp/psample_stroke.c         |  1 +
+ .../c_binding/cb_inp/psample_stroke3.c        |  1 +
+ .../c_binding/cb_inp/pset_choice_mode.c       |  1 +
+ .../c_binding/cb_inp/pset_highl_filter.c      |  1 +
+ src/libphigs/c_binding/cb_inp/pset_loc_mode.c |  1 +
+ .../c_binding/cb_inp/pset_pick_filter.c       |  1 +
+ .../c_binding/cb_inp/pset_pick_mode.c         |  1 +
+ .../c_binding/cb_inp/pset_string_mode.c       |  1 +
+ .../c_binding/cb_inp/pset_stroke_mode.c       |  1 +
+ src/libphigs/c_binding/cb_inp/pset_val_mode.c |  1 +
+ .../c_binding/cb_tr/pbuild_tran_matrix3.c     | 74 +----------------
+ .../c_binding/cb_tr/pcompose_tran_matrix.c    |  1 +
+ .../c_binding/cb_tr/pcompose_tran_matrix3.c   |  1 +
+ src/libphigs/c_binding/cb_ws/pclose_ws.c      |  1 +
+ .../c_binding/cb_ws/pinq_invis_filter.c       |  1 +
+ .../c_binding/cb_ws/pinq_list_colr_inds.c     |  1 +
+ .../c_binding/cb_ws/pinq_list_edge_inds.c     |  1 +
+ .../c_binding/cb_ws/pinq_list_int_inds.c      |  1 +
+ .../c_binding/cb_ws/pinq_list_line_inds.c     |  1 +
+ .../c_binding/cb_ws/pinq_list_marker_inds.c   |  1 +
+ .../c_binding/cb_ws/pinq_list_text_inds.c     |  1 +
+ .../c_binding/cb_ws/pinq_list_view_inds.c     |  1 +
+ src/libphigs/c_binding/cb_ws/popen_ws.c       |  1 +
+ .../c_binding/helpers/pbuild_tran_matrix.c    | 79 +++++++++++++++++++
+ src/libphigs/f_binding/fb_el/pfa.c            | 26 +++---
+ src/libphigs/f_binding/fb_el/pfa3.c           | 76 ++++++++++++++++++
+ src/libphigs/f_binding/fb_ws/popwk.c          |  1 +
+ src/libphigs/shaders/CMakeLists.txt           |  1 +
+ src/libphigs/wsgl/wsgl.c                      |  2 +
+ 57 files changed, 223 insertions(+), 88 deletions(-)
+ create mode 100644 src/libphigs/c_binding/helpers/pbuild_tran_matrix.c
+ create mode 100644 src/libphigs/f_binding/fb_el/pfa3.c
+
+diff --git a/src/libphigs/bindings_src.cmake b/src/libphigs/bindings_src.cmake
+index aa6c4bd..221e74a 100644
+--- a/src/libphigs/bindings_src.cmake
++++ b/src/libphigs/bindings_src.cmake
+@@ -231,7 +231,7 @@ SET(P_C_BINDING_SRCS
+   c_binding/cb_ws/pupd_ws.c
+   c_binding/cb_wst/pinq_disp_space_size3.c
+   c_binding/cb_wst/pinq_ws_cat.c
+-  c_binding/helpers/build_tran_matrix.c
++  c_binding/helpers/pbuild_tran_matrix.c
+   c_binding/helpers/build_transform.c
+   c_binding/helpers/build_transform3.c
+   c_binding/helpers/check_event_class.c
+@@ -257,6 +257,7 @@ SET(P_F_BINDING_SRCS
+   f_binding/fb_el/pads.c
+   f_binding/fb_el/pexst.c
+   f_binding/fb_el/pfa.c
++  f_binding/fb_el/pfa3.c
+   f_binding/fb_el/plb.c
+   f_binding/fb_el/ppl.c
+   f_binding/fb_el/ppl3.c
+diff --git a/src/libphigs/c_binding/cb_ar/popen_ar_file.c b/src/libphigs/c_binding/cb_ar/popen_ar_file.c
+index 4a601c4..9454019 100644
+--- a/src/libphigs/c_binding/cb_ar/popen_ar_file.c
++++ b/src/libphigs/c_binding/cb_ar/popen_ar_file.c
+@@ -27,6 +27,7 @@
+ #include "ar.h"
+ #include "private/phgP.h"
+ #include "private/cbP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * popen_ar_file
+diff --git a/src/libphigs/c_binding/cb_inp/pawait_event.c b/src/libphigs/c_binding/cb_inp/pawait_event.c
+index 3c73e73..113b89e 100644
+--- a/src/libphigs/c_binding/cb_inp/pawait_event.c
++++ b/src/libphigs/c_binding/cb_inp/pawait_event.c
+@@ -28,6 +28,7 @@
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
+ #include "util.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pawait_event
+diff --git a/src/libphigs/c_binding/cb_inp/pflush_events.c b/src/libphigs/c_binding/cb_inp/pflush_events.c
+index f755484..2c16d4c 100644
+--- a/src/libphigs/c_binding/cb_inp/pflush_events.c
++++ b/src/libphigs/c_binding/cb_inp/pflush_events.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pflush_events
+diff --git a/src/libphigs/c_binding/cb_inp/pget_choice.c b/src/libphigs/c_binding/cb_inp/pget_choice.c
+index edfe5f2..41f7eb0 100644
+--- a/src/libphigs/c_binding/cb_inp/pget_choice.c
++++ b/src/libphigs/c_binding/cb_inp/pget_choice.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pget_choice
+diff --git a/src/libphigs/c_binding/cb_inp/pget_loc.c b/src/libphigs/c_binding/cb_inp/pget_loc.c
+index 1044f37..e00ef6e 100644
+--- a/src/libphigs/c_binding/cb_inp/pget_loc.c
++++ b/src/libphigs/c_binding/cb_inp/pget_loc.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pget_loc
+diff --git a/src/libphigs/c_binding/cb_inp/pget_loc3.c b/src/libphigs/c_binding/cb_inp/pget_loc3.c
+index a6848ef..6a7d2d5 100644
+--- a/src/libphigs/c_binding/cb_inp/pget_loc3.c
++++ b/src/libphigs/c_binding/cb_inp/pget_loc3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pget_loc3
+diff --git a/src/libphigs/c_binding/cb_inp/pget_pick.c b/src/libphigs/c_binding/cb_inp/pget_pick.c
+index 47d0ec0..890db76 100644
+--- a/src/libphigs/c_binding/cb_inp/pget_pick.c
++++ b/src/libphigs/c_binding/cb_inp/pget_pick.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pget_pick
+diff --git a/src/libphigs/c_binding/cb_inp/pget_stroke.c b/src/libphigs/c_binding/cb_inp/pget_stroke.c
+index b64a844..acebd7a 100644
+--- a/src/libphigs/c_binding/cb_inp/pget_stroke.c
++++ b/src/libphigs/c_binding/cb_inp/pget_stroke.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pget_stroke
+diff --git a/src/libphigs/c_binding/cb_inp/pget_stroke3.c b/src/libphigs/c_binding/cb_inp/pget_stroke3.c
+index 1d8d11c..6b85421 100644
+--- a/src/libphigs/c_binding/cb_inp/pget_stroke3.c
++++ b/src/libphigs/c_binding/cb_inp/pget_stroke3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pget_stroke3
+diff --git a/src/libphigs/c_binding/cb_inp/pget_val.c b/src/libphigs/c_binding/cb_inp/pget_val.c
+index 430634a..3c5320c 100644
+--- a/src/libphigs/c_binding/cb_inp/pget_val.c
++++ b/src/libphigs/c_binding/cb_inp/pget_val.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pget_val
+diff --git a/src/libphigs/c_binding/cb_inp/pinit_choice3.c b/src/libphigs/c_binding/cb_inp/pinit_choice3.c
+index b895e72..cd05640 100644
+--- a/src/libphigs/c_binding/cb_inp/pinit_choice3.c
++++ b/src/libphigs/c_binding/cb_inp/pinit_choice3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinit_choice3
+diff --git a/src/libphigs/c_binding/cb_inp/pinit_loc3.c b/src/libphigs/c_binding/cb_inp/pinit_loc3.c
+index e1c991f..35e0a33 100644
+--- a/src/libphigs/c_binding/cb_inp/pinit_loc3.c
++++ b/src/libphigs/c_binding/cb_inp/pinit_loc3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinit_loc3
+diff --git a/src/libphigs/c_binding/cb_inp/pinit_pick3.c b/src/libphigs/c_binding/cb_inp/pinit_pick3.c
+index 31c1107..9fafa45 100644
+--- a/src/libphigs/c_binding/cb_inp/pinit_pick3.c
++++ b/src/libphigs/c_binding/cb_inp/pinit_pick3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinit_pick3
+diff --git a/src/libphigs/c_binding/cb_inp/pinit_string.c b/src/libphigs/c_binding/cb_inp/pinit_string.c
+index 65114eb..17396fb 100644
+--- a/src/libphigs/c_binding/cb_inp/pinit_string.c
++++ b/src/libphigs/c_binding/cb_inp/pinit_string.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinit_string
+diff --git a/src/libphigs/c_binding/cb_inp/pinit_string3.c b/src/libphigs/c_binding/cb_inp/pinit_string3.c
+index 8828208..8b3ed0c 100644
+--- a/src/libphigs/c_binding/cb_inp/pinit_string3.c
++++ b/src/libphigs/c_binding/cb_inp/pinit_string3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinit_string3
+diff --git a/src/libphigs/c_binding/cb_inp/pinit_stroke3.c b/src/libphigs/c_binding/cb_inp/pinit_stroke3.c
+index d2a600f..3a0d09f 100644
+--- a/src/libphigs/c_binding/cb_inp/pinit_stroke3.c
++++ b/src/libphigs/c_binding/cb_inp/pinit_stroke3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinit_stroke3
+diff --git a/src/libphigs/c_binding/cb_inp/pinit_val3.c b/src/libphigs/c_binding/cb_inp/pinit_val3.c
+index da31f49..9e533ee 100644
+--- a/src/libphigs/c_binding/cb_inp/pinit_val3.c
++++ b/src/libphigs/c_binding/cb_inp/pinit_val3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinit_val3
+diff --git a/src/libphigs/c_binding/cb_inp/preq_choice.c b/src/libphigs/c_binding/cb_inp/preq_choice.c
+index 518073b..35e7ec7 100644
+--- a/src/libphigs/c_binding/cb_inp/preq_choice.c
++++ b/src/libphigs/c_binding/cb_inp/preq_choice.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * preq_choice
+diff --git a/src/libphigs/c_binding/cb_inp/preq_loc3.c b/src/libphigs/c_binding/cb_inp/preq_loc3.c
+index 30760c9..91fbe38 100644
+--- a/src/libphigs/c_binding/cb_inp/preq_loc3.c
++++ b/src/libphigs/c_binding/cb_inp/preq_loc3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * preq_loc3
+diff --git a/src/libphigs/c_binding/cb_inp/preq_pick.c b/src/libphigs/c_binding/cb_inp/preq_pick.c
+index 917bc85..53710ad 100644
+--- a/src/libphigs/c_binding/cb_inp/preq_pick.c
++++ b/src/libphigs/c_binding/cb_inp/preq_pick.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * preq_pick
+diff --git a/src/libphigs/c_binding/cb_inp/preq_string.c b/src/libphigs/c_binding/cb_inp/preq_string.c
+index 5554f37..2e21c0d 100644
+--- a/src/libphigs/c_binding/cb_inp/preq_string.c
++++ b/src/libphigs/c_binding/cb_inp/preq_string.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * preq_string
+diff --git a/src/libphigs/c_binding/cb_inp/preq_stroke3.c b/src/libphigs/c_binding/cb_inp/preq_stroke3.c
+index c27bebc..9ce5c68 100644
+--- a/src/libphigs/c_binding/cb_inp/preq_stroke3.c
++++ b/src/libphigs/c_binding/cb_inp/preq_stroke3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * preq_stroke3
+diff --git a/src/libphigs/c_binding/cb_inp/preq_valuator.c b/src/libphigs/c_binding/cb_inp/preq_valuator.c
+index 39098a2..b6a2a1b 100644
+--- a/src/libphigs/c_binding/cb_inp/preq_valuator.c
++++ b/src/libphigs/c_binding/cb_inp/preq_valuator.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * preq_valuator
+diff --git a/src/libphigs/c_binding/cb_inp/psample_loc.c b/src/libphigs/c_binding/cb_inp/psample_loc.c
+index 4e689c7..5c4bc04 100644
+--- a/src/libphigs/c_binding/cb_inp/psample_loc.c
++++ b/src/libphigs/c_binding/cb_inp/psample_loc.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * psample_loc
+diff --git a/src/libphigs/c_binding/cb_inp/psample_loc3.c b/src/libphigs/c_binding/cb_inp/psample_loc3.c
+index 433c9b7..6d09c76 100644
+--- a/src/libphigs/c_binding/cb_inp/psample_loc3.c
++++ b/src/libphigs/c_binding/cb_inp/psample_loc3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * psample_loc3
+diff --git a/src/libphigs/c_binding/cb_inp/psample_pick.c b/src/libphigs/c_binding/cb_inp/psample_pick.c
+index 4072985..f5f3780 100644
+--- a/src/libphigs/c_binding/cb_inp/psample_pick.c
++++ b/src/libphigs/c_binding/cb_inp/psample_pick.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * psample_pick
+diff --git a/src/libphigs/c_binding/cb_inp/psample_string.c b/src/libphigs/c_binding/cb_inp/psample_string.c
+index fb1ffcb..559f740 100644
+--- a/src/libphigs/c_binding/cb_inp/psample_string.c
++++ b/src/libphigs/c_binding/cb_inp/psample_string.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * psample_string
+diff --git a/src/libphigs/c_binding/cb_inp/psample_stroke.c b/src/libphigs/c_binding/cb_inp/psample_stroke.c
+index dbc86f9..a3197b1 100644
+--- a/src/libphigs/c_binding/cb_inp/psample_stroke.c
++++ b/src/libphigs/c_binding/cb_inp/psample_stroke.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * psample_stroke
+diff --git a/src/libphigs/c_binding/cb_inp/psample_stroke3.c b/src/libphigs/c_binding/cb_inp/psample_stroke3.c
+index dfe1265..ef2a4db 100644
+--- a/src/libphigs/c_binding/cb_inp/psample_stroke3.c
++++ b/src/libphigs/c_binding/cb_inp/psample_stroke3.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * psample_stroke3
+diff --git a/src/libphigs/c_binding/cb_inp/pset_choice_mode.c b/src/libphigs/c_binding/cb_inp/pset_choice_mode.c
+index f52a058..fc9f4df 100644
+--- a/src/libphigs/c_binding/cb_inp/pset_choice_mode.c
++++ b/src/libphigs/c_binding/cb_inp/pset_choice_mode.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pset_choice_mode
+diff --git a/src/libphigs/c_binding/cb_inp/pset_highl_filter.c b/src/libphigs/c_binding/cb_inp/pset_highl_filter.c
+index a8534cf..a590e61 100644
+--- a/src/libphigs/c_binding/cb_inp/pset_highl_filter.c
++++ b/src/libphigs/c_binding/cb_inp/pset_highl_filter.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pset_highl_filter
+diff --git a/src/libphigs/c_binding/cb_inp/pset_loc_mode.c b/src/libphigs/c_binding/cb_inp/pset_loc_mode.c
+index 39a2ac5..e465769 100644
+--- a/src/libphigs/c_binding/cb_inp/pset_loc_mode.c
++++ b/src/libphigs/c_binding/cb_inp/pset_loc_mode.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pset_loc_mode
+diff --git a/src/libphigs/c_binding/cb_inp/pset_pick_filter.c b/src/libphigs/c_binding/cb_inp/pset_pick_filter.c
+index b2a2f33..505515e 100644
+--- a/src/libphigs/c_binding/cb_inp/pset_pick_filter.c
++++ b/src/libphigs/c_binding/cb_inp/pset_pick_filter.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pset_pick_filter
+diff --git a/src/libphigs/c_binding/cb_inp/pset_pick_mode.c b/src/libphigs/c_binding/cb_inp/pset_pick_mode.c
+index c52e9fa..15ad8bf 100644
+--- a/src/libphigs/c_binding/cb_inp/pset_pick_mode.c
++++ b/src/libphigs/c_binding/cb_inp/pset_pick_mode.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pset_pick_mode
+diff --git a/src/libphigs/c_binding/cb_inp/pset_string_mode.c b/src/libphigs/c_binding/cb_inp/pset_string_mode.c
+index 70fc554..0a7b2b2 100644
+--- a/src/libphigs/c_binding/cb_inp/pset_string_mode.c
++++ b/src/libphigs/c_binding/cb_inp/pset_string_mode.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pset_string_mode
+diff --git a/src/libphigs/c_binding/cb_inp/pset_stroke_mode.c b/src/libphigs/c_binding/cb_inp/pset_stroke_mode.c
+index 114c2ca..1f5f2ea 100644
+--- a/src/libphigs/c_binding/cb_inp/pset_stroke_mode.c
++++ b/src/libphigs/c_binding/cb_inp/pset_stroke_mode.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pset_stroke_mode
+diff --git a/src/libphigs/c_binding/cb_inp/pset_val_mode.c b/src/libphigs/c_binding/cb_inp/pset_val_mode.c
+index 8369a06..df83c04 100644
+--- a/src/libphigs/c_binding/cb_inp/pset_val_mode.c
++++ b/src/libphigs/c_binding/cb_inp/pset_val_mode.c
+@@ -27,6 +27,7 @@
+ #include "private/phgP.h"
+ #include "private/sinqP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pset_val_mode
+diff --git a/src/libphigs/c_binding/cb_tr/pbuild_tran_matrix3.c b/src/libphigs/c_binding/cb_tr/pbuild_tran_matrix3.c
+index db23ed8..091fad0 100644
+--- a/src/libphigs/c_binding/cb_tr/pbuild_tran_matrix3.c
++++ b/src/libphigs/c_binding/cb_tr/pbuild_tran_matrix3.c
+@@ -52,6 +52,7 @@ SOFTWARE.
+ 
+ #include "phg.h"
+ #include "util.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pbuild_tran_matrix3
+@@ -79,76 +80,3 @@ void pbuild_tran_matrix3(
+     build_transform3(pt, shift, x_angle, y_angle, z_angle, scale, matrix);
+   }
+ }
+-
+-/*******************************************************************************
+- * void build_transform
+- *
+- * DESCR:       Generate transformation matrix helper function
+- * RETURNS:     N/A
+- */
+-static void build_transform(
+-                            Ppoint *pt,                /* fixed point */
+-                            Pvec *shift,               /* shift vector */
+-                            Pfloat ang,                /* rotation angle */
+-                            Pvec *scl,                 /* scale vector */
+-                            Pmatrix m                  /* OUT transformation matrix */
+-                            )
+-{
+-  /* Translate pt to the origin, scale, rotate, translate back to pt,
+-   * shift:
+-   *      T * Tf~ * R * S * Tf.
+-   *
+-   *    where:  T is the "shift" transform,
+-   *      Tf ia the translation of pt to the origin and
+-   *      Tf~ is it's inverse,
+-   *      R is the rotation transform,
+-   *      S is the scaling transform.
+-   */
+-  float *r;
+-  float c, s;
+-
+-  c = cos(ang);
+-  s = sin(ang);
+-
+-  r = m[0];
+-  r[0] = c * scl->delta_x;
+-  r[1] = -s * scl->delta_y;
+-  r[2] = shift->delta_x + pt->x -
+-    c * scl->delta_x * pt->x + s * scl->delta_y * pt->y;
+-
+-  r = m[1];
+-  r[0] = s * scl->delta_x;
+-  r[1] = c * scl->delta_y;
+-  r[2] = shift->delta_y + pt->y -
+-    (s * scl->delta_x * pt->x + c * scl->delta_y * pt->y);
+-
+-  r = m[2];
+-  r[0] = r[1] = 0.0;
+-  r[2] = 1.0;
+-}
+-
+-/*******************************************************************************
+- * void build_tran_matrix
+- *
+- * DESCR:       Generate transformation matrix
+- * RETURNS:     N/A
+- */
+-void pbuild_tran_matrix(
+-                        Ppoint *pt,                /* fixed point */
+-                        Pvec *shift,               /* shift vector */
+-                        Pfloat angle,              /* rotation angle */
+-                        Pvec *scale,               /* scale vector */
+-                        Pint *error_ind,           /* OUT error indicator */
+-                        Pmatrix matrix             /* OUT transformation matrix */
+-                        )
+-{
+-  ERR_SET_CUR_FUNC(PHG_ERH, Pfn_INQUIRY);
+-
+-  if (PSL_SYS_STATE(PHG_PSL) != PSYS_ST_PHOP) {
+-    *error_ind = ERR2;
+-  } else {
+-    *error_ind = 0;
+-    build_transform(pt, shift, angle, scale, matrix);
+-  }
+-}
+-
+diff --git a/src/libphigs/c_binding/cb_tr/pcompose_tran_matrix.c b/src/libphigs/c_binding/cb_tr/pcompose_tran_matrix.c
+index 2e6c4d1..5d7f11f 100644
+--- a/src/libphigs/c_binding/cb_tr/pcompose_tran_matrix.c
++++ b/src/libphigs/c_binding/cb_tr/pcompose_tran_matrix.c
+@@ -52,6 +52,7 @@ SOFTWARE.
+ 
+ #include "phg.h"
+ #include "util.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pcompose_tran_matrix
+diff --git a/src/libphigs/c_binding/cb_tr/pcompose_tran_matrix3.c b/src/libphigs/c_binding/cb_tr/pcompose_tran_matrix3.c
+index 97180ea..73c2964 100644
+--- a/src/libphigs/c_binding/cb_tr/pcompose_tran_matrix3.c
++++ b/src/libphigs/c_binding/cb_tr/pcompose_tran_matrix3.c
+@@ -52,6 +52,7 @@ SOFTWARE.
+ 
+ #include "phg.h"
+ #include "util.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pcompose_tran_matrix3
+diff --git a/src/libphigs/c_binding/cb_ws/pclose_ws.c b/src/libphigs/c_binding/cb_ws/pclose_ws.c
+index 5f26730..390b184 100644
+--- a/src/libphigs/c_binding/cb_ws/pclose_ws.c
++++ b/src/libphigs/c_binding/cb_ws/pclose_ws.c
+@@ -41,6 +41,7 @@
+ #include "private/cbP.h"
+ #include "private/wsglP.h"
+ #include "private/wsxP.h"
++#include "private/cb_internal.h"
+ #include "phconf.h"
+ 
+ /*******************************************************************************
+diff --git a/src/libphigs/c_binding/cb_ws/pinq_invis_filter.c b/src/libphigs/c_binding/cb_ws/pinq_invis_filter.c
+index e8fb2bd..589b848 100644
+--- a/src/libphigs/c_binding/cb_ws/pinq_invis_filter.c
++++ b/src/libphigs/c_binding/cb_ws/pinq_invis_filter.c
+@@ -42,6 +42,7 @@
+ #include "private/wsglP.h"
+ #include "private/wsxP.h"
+ #include "phconf.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinq_invis_filter
+diff --git a/src/libphigs/c_binding/cb_ws/pinq_list_colr_inds.c b/src/libphigs/c_binding/cb_ws/pinq_list_colr_inds.c
+index 181345c..d66d7b8 100644
+--- a/src/libphigs/c_binding/cb_ws/pinq_list_colr_inds.c
++++ b/src/libphigs/c_binding/cb_ws/pinq_list_colr_inds.c
+@@ -42,6 +42,7 @@
+ #include "private/wsglP.h"
+ #include "private/wsxP.h"
+ #include "phconf.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinq_list_colr_inds
+diff --git a/src/libphigs/c_binding/cb_ws/pinq_list_edge_inds.c b/src/libphigs/c_binding/cb_ws/pinq_list_edge_inds.c
+index 3955df3..638a4fc 100644
+--- a/src/libphigs/c_binding/cb_ws/pinq_list_edge_inds.c
++++ b/src/libphigs/c_binding/cb_ws/pinq_list_edge_inds.c
+@@ -42,6 +42,7 @@
+ #include "private/wsglP.h"
+ #include "private/wsxP.h"
+ #include "phconf.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinq_list_edge_inds
+diff --git a/src/libphigs/c_binding/cb_ws/pinq_list_int_inds.c b/src/libphigs/c_binding/cb_ws/pinq_list_int_inds.c
+index 38ea707..eff7e17 100644
+--- a/src/libphigs/c_binding/cb_ws/pinq_list_int_inds.c
++++ b/src/libphigs/c_binding/cb_ws/pinq_list_int_inds.c
+@@ -42,6 +42,7 @@
+ #include "private/wsglP.h"
+ #include "private/wsxP.h"
+ #include "phconf.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinq_list_int_inds
+diff --git a/src/libphigs/c_binding/cb_ws/pinq_list_line_inds.c b/src/libphigs/c_binding/cb_ws/pinq_list_line_inds.c
+index 3c1096b..004e5cd 100644
+--- a/src/libphigs/c_binding/cb_ws/pinq_list_line_inds.c
++++ b/src/libphigs/c_binding/cb_ws/pinq_list_line_inds.c
+@@ -42,6 +42,7 @@
+ #include "private/wsglP.h"
+ #include "private/wsxP.h"
+ #include "phconf.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinq_list_line_inds
+diff --git a/src/libphigs/c_binding/cb_ws/pinq_list_marker_inds.c b/src/libphigs/c_binding/cb_ws/pinq_list_marker_inds.c
+index 5c2cd2f..038e893 100644
+--- a/src/libphigs/c_binding/cb_ws/pinq_list_marker_inds.c
++++ b/src/libphigs/c_binding/cb_ws/pinq_list_marker_inds.c
+@@ -42,6 +42,7 @@
+ #include "private/wsglP.h"
+ #include "private/wsxP.h"
+ #include "phconf.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinq_list_marker_inds
+diff --git a/src/libphigs/c_binding/cb_ws/pinq_list_text_inds.c b/src/libphigs/c_binding/cb_ws/pinq_list_text_inds.c
+index 2059fbe..d4fae55 100644
+--- a/src/libphigs/c_binding/cb_ws/pinq_list_text_inds.c
++++ b/src/libphigs/c_binding/cb_ws/pinq_list_text_inds.c
+@@ -42,6 +42,7 @@
+ #include "private/wsglP.h"
+ #include "private/wsxP.h"
+ #include "phconf.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinq_list_text_inds
+diff --git a/src/libphigs/c_binding/cb_ws/pinq_list_view_inds.c b/src/libphigs/c_binding/cb_ws/pinq_list_view_inds.c
+index 7954746..0a08298 100644
+--- a/src/libphigs/c_binding/cb_ws/pinq_list_view_inds.c
++++ b/src/libphigs/c_binding/cb_ws/pinq_list_view_inds.c
+@@ -42,6 +42,7 @@
+ #include "private/wsglP.h"
+ #include "private/wsxP.h"
+ #include "phconf.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * pinq_list_view_inds
+diff --git a/src/libphigs/c_binding/cb_ws/popen_ws.c b/src/libphigs/c_binding/cb_ws/popen_ws.c
+index c8216cd..f88957f 100644
+--- a/src/libphigs/c_binding/cb_ws/popen_ws.c
++++ b/src/libphigs/c_binding/cb_ws/popen_ws.c
+@@ -42,6 +42,7 @@
+ #include "private/wsglP.h"
+ #include "private/wsxP.h"
+ #include "phconf.h"
++#include "private/cb_internal.h"
+ 
+ /*******************************************************************************
+  * popen_ws
+diff --git a/src/libphigs/c_binding/helpers/pbuild_tran_matrix.c b/src/libphigs/c_binding/helpers/pbuild_tran_matrix.c
+new file mode 100644
+index 0000000..d30489b
+--- /dev/null
++++ b/src/libphigs/c_binding/helpers/pbuild_tran_matrix.c
+@@ -0,0 +1,79 @@
++/******************************************************************************
++
++Copyright (c) 1989, 1990, 1991  X Consortium
++Copyright (c) 2014 Surplus Users Ham Society
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in
++all copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
++X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
++AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
++CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++
++Except as contained in this notice, the name of the X Consortium shall not be
++used in advertising or otherwise to promote the sale, use or other dealings
++in this Software without prior written authorization from the X Consortium.
++
++Copyright 1989, 1990, 1991 by Sun Microsystems, Inc.
++
++                        All Rights Reserved
++
++Permission to use, copy, modify, and distribute this software and its
++documentation for any purpose and without fee is hereby granted,
++provided that the above copyright notice appear in all copies and that
++both that copyright notice and this permission notice appear in
++supporting documentation, and that the name of Sun Microsystems,
++not be used in advertising or publicity pertaining to distribution of
++the software without specific, written prior permission.
++
++SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
++INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
++SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
++DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
++WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
++ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
++SOFTWARE.
++
++******************************************************************/
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <math.h>
++
++#include "phg.h"
++#include "util.h"
++#include "private/cb_internal.h"
++
++/**
++ * \file void pbuild_tran_matrix.c
++ * \brief Generate transformation matrix
++ */
++void pbuild_tran_matrix(
++                        Ppoint *pt,                /* fixed point */
++                        Pvec *shift,               /* shift vector */
++                        Pfloat angle,              /* rotation angle */
++                        Pvec *scale,               /* scale vector */
++                        Pint *error_ind,           /* OUT error indicator */
++                        Pmatrix matrix             /* OUT transformation matrix */
++                        )
++{
++  ERR_SET_CUR_FUNC(PHG_ERH, Pfn_INQUIRY);
++
++  if (PSL_SYS_STATE(PHG_PSL) != PSYS_ST_PHOP) {
++    *error_ind = ERR2;
++  } else {
++    *error_ind = 0;
++    build_transform(pt, shift, angle, scale, matrix);
++  }
++}
++
+diff --git a/src/libphigs/f_binding/fb_el/pfa.c b/src/libphigs/f_binding/fb_el/pfa.c
+index 9decfdd..95f3453 100644
+--- a/src/libphigs/f_binding/fb_el/pfa.c
++++ b/src/libphigs/f_binding/fb_el/pfa.c
+@@ -31,31 +31,31 @@
+ /*******************************************************************************
+  * pfa
+  *
+- * DESCR:   fill area 3
++ * DESCR:   fill area
+  * RETURNS:   N/A
+  */
+-FTN_SUBROUTINE(pfa3)(
+-                     FTN_INTEGER(n),
+-                     FTN_REAL_ARRAY(pxa),
+-                     FTN_REAL_ARRAY(pya),
+-                     FTN_REAL_ARRAY(pza)
+-                     )
++
++FTN_SUBROUTINE(pfa)(
++                    FTN_INTEGER(n),
++                    FTN_REAL_ARRAY(pxa),
++                    FTN_REAL_ARRAY(pya)
++                    )
+ {
+ #ifdef DEBUG
+-  printf("DEBUG: PFA3 fill area called\n");
++  printf("DEBUG: PFA pfill area called\n");
+ #endif
+   Pint num_points = FTN_INTEGER_GET(n);
+   Phg_args_add_el args;
+   Pint i;
+   Pint  *data;
+-  Ppoint3 *point;
++  Ppoint *point;
+   if (phg_entry_check(PHG_ERH, 0, Pfn_fill_area)) {
+     if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
+       ERR_REPORT(PHG_ERH, ERR5);
+     }
+     else {
+-      args.el_type = PELEM_FILL_AREA3;
+-      args.el_size = sizeof(Pint) + sizeof(Ppoint3) * num_points;
++      args.el_type = PELEM_FILL_AREA;
++      args.el_size = sizeof(Pint) + sizeof(Ppoint) * num_points;
+       if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
+         ERR_REPORT(PHG_ERH, ERR900);
+       }
+@@ -63,15 +63,13 @@ FTN_SUBROUTINE(pfa3)(
+         args.el_data = PHG_SCRATCH.buf;
+         data = (Pint *) args.el_data;
+         data[0] = num_points;
+-        point = (Ppoint3*) &data[1];
++        point = (Ppoint*) &data[1];
+         for (i=0; i<num_points;i++){
+           point[i].x = FTN_REAL_ARRAY_GET(pxa, i);
+           point[i].y = FTN_REAL_ARRAY_GET(pya, i);
+-          point[i].z = FTN_REAL_ARRAY_GET(pza, i);
+         }
+         phg_add_el(PHG_CSS, &args);
+       }
+     }
+   }
+ }
+-
+diff --git a/src/libphigs/f_binding/fb_el/pfa3.c b/src/libphigs/f_binding/fb_el/pfa3.c
+new file mode 100644
+index 0000000..0c738ac
+--- /dev/null
++++ b/src/libphigs/f_binding/fb_el/pfa3.c
+@@ -0,0 +1,76 @@
++/******************************************************************************
++*   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER
++*
++*   This file is part of Open PHIGS
++*   Copyright (C) 2014 Surplus Users Ham Society
++*
++*   Open PHIGS is free software: you can redistribute it and/or modify
++*   it under the terms of the GNU Lesser General Public License as published by
++*   the Free Software Foundation, either version 2.1 of the License, or
++*   (at your option) any later version.
++*
++*   Open PHIGS is distributed in the hope that it will be useful,
++*   but WITHOUT ANY WARRANTY; without even the implied warranty of
++*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++*   GNU Lesser General Public License for more details.
++*
++*   You should have received a copy of the GNU Lesser General Public License
++*   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
++******************************************************************************
++* Changes:   Copyright (C) 2022-2023 CERN
++******************************************************************************/
++
++#include <stdlib.h>
++#include <string.h>
++#include <stdio.h>
++#include "phg.h"
++#include "css.h"
++#include "private/phgP.h"
++#include "private/cb_internal.h"
++#include "util/ftn.h"
++
++/**
++ * \file pfa3.c
++ * \brief fill area 3
++ */
++FTN_SUBROUTINE(pfa3)(
++                     FTN_INTEGER(n),
++                     FTN_REAL_ARRAY(pxa),
++                     FTN_REAL_ARRAY(pya),
++                     FTN_REAL_ARRAY(pza)
++                     )
++{
++#ifdef DEBUG
++  printf("DEBUG: PFA3 fill area called\n");
++#endif
++  Pint num_points = FTN_INTEGER_GET(n);
++  Phg_args_add_el args;
++  Pint i;
++  Pint  *data;
++  Ppoint3 *point;
++  if (phg_entry_check(PHG_ERH, 0, Pfn_fill_area)) {
++    if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
++      ERR_REPORT(PHG_ERH, ERR5);
++    }
++    else {
++      args.el_type = PELEM_FILL_AREA3;
++      args.el_size = sizeof(Pint) + sizeof(Ppoint3) * num_points;
++      if (!PHG_SCRATCH_SPACE(&PHG_SCRATCH, args.el_size)) {
++        ERR_REPORT(PHG_ERH, ERR900);
++      }
++      else {
++        args.el_data = PHG_SCRATCH.buf;
++        data = (Pint *) args.el_data;
++        data[0] = num_points;
++        point = (Ppoint3*) &data[1];
++        for (i=0; i<num_points;i++){
++          point[i].x = FTN_REAL_ARRAY_GET(pxa, i);
++          point[i].y = FTN_REAL_ARRAY_GET(pya, i);
++          point[i].z = FTN_REAL_ARRAY_GET(pza, i);
++        }
++        phg_add_el(PHG_CSS, &args);
++      }
++    }
++  }
++}
++
+diff --git a/src/libphigs/f_binding/fb_ws/popwk.c b/src/libphigs/f_binding/fb_ws/popwk.c
+index 5c57e20..2723162 100644
+--- a/src/libphigs/f_binding/fb_ws/popwk.c
++++ b/src/libphigs/f_binding/fb_ws/popwk.c
+@@ -34,6 +34,7 @@
+ #include "ws.h"
+ #include "util/ftn.h"
+ #include "phconf.h"
++#include "private/cb_internal.h"
+ 
+ extern int record_geom;
+ /*******************************************************************************
+diff --git a/src/libphigs/shaders/CMakeLists.txt b/src/libphigs/shaders/CMakeLists.txt
+index 7c16880..995f575 100644
+--- a/src/libphigs/shaders/CMakeLists.txt
++++ b/src/libphigs/shaders/CMakeLists.txt
+@@ -28,3 +28,4 @@ add_custom_target(generate_shaders_fs120 DEPENDS ${CMAKE_BINARY_DIR}/include/phi
+ add_custom_target(generate_shaders_fs130 DEPENDS ${CMAKE_BINARY_DIR}/include/phigs/private/fs130.h)
+ add_dependencies(phigs generate_shaders_vs120 generate_shaders_vs130 generate_shaders_fs120 generate_shaders_fs130)
+ add_dependencies(phigs-shared generate_shaders_vs120 generate_shaders_vs130 generate_shaders_fs120 generate_shaders_fs130)
++add_dependencies(phigs-obj generate_shaders_vs120 generate_shaders_vs130 generate_shaders_fs120 generate_shaders_fs130)
+diff --git a/src/libphigs/wsgl/wsgl.c b/src/libphigs/wsgl/wsgl.c
+index 26dd1fd..1dc44cd 100644
+--- a/src/libphigs/wsgl/wsgl.c
++++ b/src/libphigs/wsgl/wsgl.c
+@@ -45,7 +45,9 @@
+ #include "private/wsbP.h"
+ #include "private/sofas3P.h"
+ 
++/* instantiate globals. */
+ short int wsgl_use_shaders = 1;
++short int wsgl_use_shaders_settings = 0;
+ short int wsgl_vert_shader_version = 120;
+ short int wsgl_frag_shader_version = 120;
+ 
+-- 
+2.53.0
+

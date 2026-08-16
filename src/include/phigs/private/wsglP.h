@@ -188,6 +188,7 @@ extern "C" {
    */
 
   void wsgl_export_obj(const char* filename, const char* title);
+  void wsgl_export_gltf(const char* filename, const char* title);
   /*******************************************************************************
    * wsgl_clear_geometry()
    *

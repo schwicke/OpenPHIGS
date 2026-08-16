@@ -75,7 +75,7 @@ void pset_hlhsr_mode(
           dt->ws_category == PCAT_EPS ||
           dt->ws_category == PCAT_PDF ||
           dt->ws_category == PCAT_SVG ||
-          dt->ws_category == PCAT_OBJ ||
+          dt->ws_category == PCAT_OBJ || dt->ws_category == PCAT_GLTF ||
           dt->ws_category == PCAT_OUTIN ||
           dt->ws_category == PCAT_MO)) {
       ERR_REPORT(PHG_ERH, ERR59);

@@ -216,6 +216,12 @@ void pclose_ws(
       wsgl_clear_geometry();
       clean_fb = TRUE;
       break;
+    case PCAT_GLTF:
+      wsgl_export_gltf(wsh->filename, config[ws_id].window_title);
+      record_geom = FALSE;
+      wsgl_clear_geometry();
+      clean_fb = TRUE;
+      break;
     default:
       break;
     }
