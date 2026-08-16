@@ -1,0 +1,5 @@
+# lsan.supp
+leak:libnvidia-glcore
+leak:libGLX_nvidia
+leak:libX11
+leak:libdbus-1
