@@ -62,6 +62,7 @@ Workstation numbers can be in the range from 0 to 99.
 * 8  PWST_HCOPY_TRUE_PDF              Hardcopy to file as PDF, no shaders
 * 9  PWST_HCOPY_TRUE_SVG              Hardcopy to file as SVG, no shaders
 * 10 PWST_HCOPY_TRUE_OBJ              Export geometry as OBJ
+* 11 PWST_HCOPY_TRUE_GLTF             Export geometry as glTF
 
 Notes:
  * The hardcopy types are available in Fortran. C-Bindings have not been tested with them
