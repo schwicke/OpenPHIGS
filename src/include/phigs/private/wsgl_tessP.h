@@ -43,6 +43,12 @@ typedef struct {
     
 } Wsgl_tess_vertex;
 
+typedef struct {
+   Wsgl_tess_vertex **verts;
+   int count;
+   int capacity;
+} Wsgl_tess_pool;
+
 void wsgl_draw_tess_polygon(Wsgl_tess_vertex *vertices, int num_vertices, int record_geom_flag);
 
 #endif

@@ -16,6 +16,8 @@
 *
 *   You should have received a copy of the GNU Lesser General Public License
 *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
+*
+*   Changes: Copyright (C) C 2026 CERN
 ******************************************************************************/
 
 #include <stdio.h>
@@ -37,6 +39,37 @@
 #define CALLBACK
 #endif
 #endif
+/**
+   \brief Helper function to keep track of resource allocations in tesselation shaders
+ */
+static int pool_add(Wsgl_tess_pool *pool, Wsgl_tess_vertex *v)
+{
+   if (pool->count == pool->capacity) {
+      int newcap = (pool->capacity == 0) ? 16 : pool->capacity * 2;
+      Wsgl_tess_vertex **tmp = (Wsgl_tess_vertex **)
+         realloc(pool->verts, newcap * sizeof(Wsgl_tess_vertex *));
+      if (tmp == NULL)
+         return 0;                 /* old pool->verts still valid */
+      pool->verts = tmp;
+      pool->capacity = newcap;
+   }
+   pool->verts[pool->count++] = v;
+   return 1;
+}
+
+/**
+   \brief Helper function to cleanup the resource pool used in tesselation shaders
+ */
+static void pool_free(Wsgl_tess_pool *pool)
+{
+   int i;
+   for (i = 0; i < pool->count; i++)
+      free(pool->verts[i]);
+   free(pool->verts);
+   pool->verts = NULL;
+   pool->count = 0;
+   pool->capacity = 0;
+}
 
 static void CALLBACK tessBeginCB(GLenum which) {
     glBegin(which);
@@ -65,8 +98,10 @@ static void CALLBACK tessVertexCB(void *data) {
 static void CALLBACK tessCombineCB(GLdouble coords[3], 
                                    void *vertex_data[4], 
                                    GLfloat weight[4], 
-                                   void **outData) {
+                                   void **outData,
+                                   void *polygon_data) {
     /* Basic combine callback to prevent crashing on self-intersecting polygons */
+    Wsgl_tess_pool *pool = (Wsgl_tess_pool *) polygon_data;
     Wsgl_tess_vertex *new_vert = (Wsgl_tess_vertex *)malloc(sizeof(Wsgl_tess_vertex));
     if (new_vert) {
         memset(new_vert, 0, sizeof(Wsgl_tess_vertex));
@@ -86,6 +121,11 @@ static void CALLBACK tessCombineCB(GLdouble coords[3],
                 new_vert->norm[1] = v0->norm[1];
                 new_vert->norm[2] = v0->norm[2];
             }
+        }
+        if (!pool_add(pool, new_vert)) {
+            free(new_vert);           /* can't track it — don't leak it */
+            *outData = vertex_data[0];
+            return;
         }
         *outData = new_vert;
     } else {
@@ -113,13 +153,19 @@ void wsgl_draw_tess_polygon(Wsgl_tess_vertex *vertices, int num_vertices, int re
 
     tess = gluNewTess();
     if (!tess) return;
+    if (record_geom_flag && num_vertices > MAX_VERTICES) {
+        record_geom_flag = 0;      /* or clamp, or allocate */
+    }
 
+    Wsgl_tess_pool pool = { NULL, 0, 0 };
+ 
     gluTessCallback(tess, GLU_TESS_BEGIN, (void (CALLBACK *)())tessBeginCB);
     gluTessCallback(tess, GLU_TESS_END, (void (CALLBACK *)())tessEndCB);
     gluTessCallback(tess, GLU_TESS_VERTEX, (void (CALLBACK *)())tessVertexCB);
     gluTessCallback(tess, GLU_TESS_ERROR, (void (CALLBACK *)())tessErrorCB);
     gluTessCallback(tess, GLU_TESS_COMBINE, (void (CALLBACK *)())tessCombineCB);
     gluTessCallback(tess, GLU_TESS_EDGE_FLAG, (void (CALLBACK *)())tessEdgeFlagCB);
+    gluTessCallback(tess, GLU_TESS_COMBINE_DATA, (void (CALLBACK *)()) tessCombineCB);
 
     /* Determine if depth writing should be disabled for order-independent transparency */
     glGetBooleanv(GL_DEPTH_WRITEMASK, &orig_depth_mask);
@@ -139,7 +185,7 @@ void wsgl_draw_tess_polygon(Wsgl_tess_vertex *vertices, int num_vertices, int re
         glDepthMask(GL_FALSE);
     }
 
-    gluTessBeginPolygon(tess, NULL);
+    gluTessBeginPolygon(tess, &pool);
     gluTessBeginContour(tess);
 
     for (i = 0; i < num_vertices; i++) {
@@ -159,6 +205,7 @@ void wsgl_draw_tess_polygon(Wsgl_tess_vertex *vertices, int num_vertices, int re
 
     gluTessEndContour(tess);
     gluTessEndPolygon(tess);
+    pool_free(&pool);
     gluDeleteTess(tess);
 
     /* Restore default edge flag state for subsequent rendering */

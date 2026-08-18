@@ -76,14 +76,15 @@ include_directories(${X11_INCLUDE_DIR} ${MOTIF_INCLUDE_DIR} ${GL_INCLUDES})
 SET(CMAKE_C_FLAGS  "$ENV{CFLAGS} -DMOTIF -g -O0 -fPIC -Wno-deprecated-non-prototype")
 SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -DMOTIF -g -O0  -fPIC -Wno-deprecated-non-prototype")
 SET(CMAKE_Fortran_FLAGS "$ENV{FFLAGS} -DMOTIF -finit-local-zero -g -O0 -fPIC")
+SET(CMAKE_EXE_LINKER_FLAGS "$ENV{LDFLAGS}")
 
 # Use this for memory debugging. Call as e.g. LSAN_OPTIONS=suppressions=lsan.supp  distrib/tests_c/test_c7 
 #SET(CMAKE_C_FLAGS  "$ENV{CFLAGS} -DMOTIF -fsanitize=address -g -O0 -fPIC -Wno-deprecated-non-prototype")
 #SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -DMOTIF -fsanitize=address -g -O0  -fPIC -Wno-deprecated-non-prototype")
 #SET(CMAKE_Fortran_FLAGS "$ENV{FFLAGS} -DMOTIF -fsanitize=address -finit-local-zero -g -O0 -fPIC")
+#SET(CMAKE_EXE_LINKER_FLAGS "$ENV{LDFLAGS} -fsanitize=address")
 
 
-SET(CMAKE_EXE_LINKER_FLAGS "$ENV{LDFLAGS} -fsanitize=address")
 if (OPENPHIGS_FORCE_32)
   set(CMAKE_C_FLAGS " -m32 ${CMAKE_C_FLAGS}")
   set(CMAKE_CXX_FLAGS " -m32 ${CMAKE_CXX_FLAGS}")
