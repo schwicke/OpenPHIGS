@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h> 
 #include <GL/gl.h>
 #include <GL/glu.h>
 
@@ -110,16 +111,53 @@ static void CALLBACK tessCombineCB(GLdouble coords[3],
     new_vert->pos[2] = coords[2];
     if (vertex_data[0]) {
       Wsgl_tess_vertex *v0 = (Wsgl_tess_vertex *)vertex_data[0];
+      int j;
+      /* Non-interpolable attributes come from v0 */
       new_vert->apply_cb = v0->apply_cb;
-      new_vert->ws = v0->ws;
+      new_vert->ws        = v0->ws;
       new_vert->colr_type = v0->colr_type;
-      new_vert->colr = v0->colr;
-      new_vert->ast = v0->ast;
-      new_vert->has_norm = v0->has_norm;
+      new_vert->ast       = v0->ast;
+      new_vert->has_norm  = v0->has_norm;
+      new_vert->colr      = v0->colr;
+      /* in RGBA mode try to blend things */
+      if (v0->colr_type == PMODEL_RGBA) {
+        float r = 0.0f, g = 0.0f, b = 0.0f, a = 0.0f;
+
+        for (j = 0; j < 4; j++) {
+          Wsgl_tess_vertex *vj = (Wsgl_tess_vertex *) vertex_data[j];
+          if (vj == NULL || weight[j] == 0.0f)
+            continue;
+          r += weight[j] * vj->colr.direct.rgba.red;
+          g += weight[j] * vj->colr.direct.rgba.green;
+          b += weight[j] * vj->colr.direct.rgba.blue;
+          a += weight[j] * vj->colr.direct.rgba.alpha;
+        }
+        new_vert->colr.direct.rgba.red   = r;
+        new_vert->colr.direct.rgba.green = g;
+        new_vert->colr.direct.rgba.blue  = b;
+        new_vert->colr.direct.rgba.alpha = a;
+      }
+
       if (new_vert->has_norm) {
-        new_vert->norm[0] = v0->norm[0];
-        new_vert->norm[1] = v0->norm[1];
-        new_vert->norm[2] = v0->norm[2];
+        double nx = 0.0, ny = 0.0, nz = 0.0, len;
+        for (j = 0; j < 4; j++) {
+          Wsgl_tess_vertex *vj = (Wsgl_tess_vertex *) vertex_data[j];
+          if (vj == NULL || weight[j] == 0.0f || !vj->has_norm)
+            continue;
+          nx += weight[j] * vj->norm[0];
+          ny += weight[j] * vj->norm[1];
+          nz += weight[j] * vj->norm[2];
+        }
+        len = sqrt(nx*nx + ny*ny + nz*nz);
+        if (len > 1e-12) {
+          new_vert->norm[0] = nx / len;
+          new_vert->norm[1] = ny / len;
+          new_vert->norm[2] = nz / len;
+        } else {
+          new_vert->norm[0] = v0->norm[0];   /* degenerate — fall back */
+          new_vert->norm[1] = v0->norm[1];
+          new_vert->norm[2] = v0->norm[2];
+        }
       }
     }
     if (!pool_add(pool, new_vert)) {
