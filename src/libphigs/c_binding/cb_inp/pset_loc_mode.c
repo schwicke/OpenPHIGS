@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pset_loc_mode
+/**
+ * \file pset_loc_mode.c
  *
- * DESCR:       Set locator input device mode
- * RETURNS:     N/A
+ * \brief       Set locator input device mode
  */
 void pset_loc_mode(
                    Pint ws_id,

@@ -30,11 +30,10 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pcelst
+/**
+ * \file pcelst.c
  *
- * DESCR:       Copy all elements from structure
- * RETURNS:   N/A
+ * \brief       Copy all elements from structure
  */
 FTN_SUBROUTINE(pcelst)(FTN_INTEGER(strid)){
   Pint struct_id = FTN_INTEGER_GET(strid);

@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pstxr
+/**
+ * \file pstxr.c
  *
- * DESCR:       Set text representation
- * RETURNS:     N/A
+ * \brief       Set text representation
  */
 
 FTN_SUBROUTINE(pstxr)(

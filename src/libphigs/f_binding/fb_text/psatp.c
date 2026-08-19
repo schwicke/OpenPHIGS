@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psatp
+/**
+ * \file psatp.c
  *
- * DESCR:       Set annotation text path
- * RETURNS:     N/A
+ * \brief       Set annotation text path
  */
 FTN_SUBROUTINE(psatp)(
                       FTN_INTEGER(path)

@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pflush_events
+/**
+ * \file pflush_events.c
  *
- * DESCR:       Flush events for device
- * RETURNS:     N/A
+ * \brief       Flush events for device
  */
 void pflush_events(
                    Pint        ws_id,     /* workstation identifier       */

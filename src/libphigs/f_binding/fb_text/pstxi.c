@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pstxi
+/**
+ * \file pstxi.c
  *
- * DESCR:       Set text index
- * RETURNS:     N/A
+ * \brief       Set text index
  */
 FTN_SUBROUTINE(pstxi)(
                       FTN_INTEGER(txi)

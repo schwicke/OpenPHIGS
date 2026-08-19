@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psbis
+/**
+ * \file psbis.c
  *
- * DESCR:       set back interior style
- * RETURNS:   N/A
+ * \brief       set back interior style
  */
 FTN_SUBROUTINE(psbis)(
                       FTN_INTEGER(istyle)

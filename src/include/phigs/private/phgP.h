@@ -38,8 +38,7 @@ extern "C" {
    (Phg_elmt_info *) (((Css_eldata *) (ELMT))->ptr)
 
 #define ARGS_COPY_DATA_LEN(ELMT) \
-   (((Phg_elmt_info *) (((Css_eldata *) (ELMT))->ptr))->length + \
-      sizeof(Phg_elmt_info))
+  (((Phg_elmt_info *) (((Css_eldata *) (ELMT))->ptr))->length)
 
 #define ARGS_INQ_HEAD(ARG) \
    (((Phg_ret_q_content *) argdata)->el_head)
@@ -341,4 +340,3 @@ extern Phg_conv phg_swap_tbl[];
 #endif /* __cplusplus */
 
 #endif /* _phgP_h */
-

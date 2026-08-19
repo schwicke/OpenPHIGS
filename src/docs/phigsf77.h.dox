@@ -1,0 +1,17 @@
+/**
+ * \page phigsf77.h PHIGS Fortran 77 constants
+ *
+ *
+ * \manonly
+ * .SH SYNOPSIS
+ * .nf
+ * .B INCLUDE 'phigsf77.h'
+ * .fi
+ * \endmanonly
+ *
+ * Include `phigs/phigsf77.h` in your Fortran 77 code for the PHIGS
+ * workstation type and error code definitions.
+ *
+ * \sa phigs.h
+ *
+ */

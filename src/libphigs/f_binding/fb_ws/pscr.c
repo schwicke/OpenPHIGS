@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pscr
+/**
+ * \file pscr.c
  *
- * DESCR:       Set colour representation
- * RETURNS:     N/A
+ * \brief       Set colour representation
  */
 
 FTN_SUBROUTINE(pscr)(

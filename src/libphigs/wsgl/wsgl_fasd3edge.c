@@ -482,9 +482,11 @@ void wsgl_edge_area_set3_data(
                               fasd3.vdata->vertex_data.points);
 
             /* Advance to next set of data */
-            fasd3_next_vdata3(&fasd3);
-            if (fasd3.eflag == PEDGE_VISIBILITY) {
-               fasd3_next_edata(&fasd3);
+            if (i + 1 < fasd3.nfa) {
+              fasd3_next_vdata3(&fasd3);
+              if (fasd3.eflag == PEDGE_VISIBILITY) {
+                fasd3_next_edata(&fasd3);
+              }
             }
          }
          break;
@@ -497,9 +499,11 @@ void wsgl_edge_area_set3_data(
                                fasd3.vdata->vertex_data.ptcolrs);
 
             /* Advance to next set of data */
-            fasd3_next_vdata3(&fasd3);
-            if (fasd3.eflag == PEDGE_VISIBILITY) {
-               fasd3_next_edata(&fasd3);
+            if (i + 1 < fasd3.nfa) {
+              fasd3_next_vdata3(&fasd3);
+              if (fasd3.eflag == PEDGE_VISIBILITY) {
+                fasd3_next_edata(&fasd3);
+              }
             }
          }
          break;
@@ -512,9 +516,11 @@ void wsgl_edge_area_set3_data(
                                fasd3.vdata->vertex_data.ptnorms);
 
             /* Advance to next set of data */
-            fasd3_next_vdata3(&fasd3);
-            if (fasd3.eflag == PEDGE_VISIBILITY) {
-               fasd3_next_edata(&fasd3);
+            if (i + 1 < fasd3.nfa) {
+              fasd3_next_vdata3(&fasd3);
+              if (fasd3.eflag == PEDGE_VISIBILITY) {
+                fasd3_next_edata(&fasd3);
+              }
             }
          }
          break;
@@ -527,9 +533,11 @@ void wsgl_edge_area_set3_data(
                                  fasd3.vdata->vertex_data.ptconorms);
 
             /* Advance to next set of data */
-            fasd3_next_vdata3(&fasd3);
-            if (fasd3.eflag == PEDGE_VISIBILITY) {
-               fasd3_next_edata(&fasd3);
+            if (i + 1 < fasd3.nfa) {
+              fasd3_next_vdata3(&fasd3);
+              if (fasd3.eflag == PEDGE_VISIBILITY) {
+                fasd3_next_edata(&fasd3);
+              }
             }
          }
          break;

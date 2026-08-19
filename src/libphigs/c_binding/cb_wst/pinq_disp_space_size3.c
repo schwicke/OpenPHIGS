@@ -25,11 +25,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pinq_disp_space_size3
+/**
+ * \file pinq_disp_space_size3.c
  *
- * DESCR:       Get display size 3D
- * RETURNS:     N/A
+ * \brief       Get display size 3D
  */
 void pinq_disp_space_size3(
                            Pint ws_type,

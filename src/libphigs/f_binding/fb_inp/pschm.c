@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pschm
+/**
+ * \file pschm.c
  *
- * DESCR:       set choice mode
- * RETURNS:   N/A
+ * \brief       set choice mode
  */
 FTN_SUBROUTINE(pschm)(
                       FTN_INTEGER(wkid),

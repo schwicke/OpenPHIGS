@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pinlc
+/**
+ * \file pinlc.c
  *
- * DESCR:       initialize locator
- * RETURNS:   N/A
+ * \brief       initialize locator
  */
 FTN_SUBROUTINE(pinlc)(
                       FTN_INTEGER(wkid),

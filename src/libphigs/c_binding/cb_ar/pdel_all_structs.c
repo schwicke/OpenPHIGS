@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pdel_all_structs
+/**
+ * \file pdel_all_structs.c
  *
- * DESCR:   Delete all structures
- * RETURNS:   N/A
+ * \brief       Delete all structures
  */
 void pdel_all_structs(
                       void

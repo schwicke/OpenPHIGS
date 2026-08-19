@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pempty_struct
+/**
+ * \file pempty_struct.c
  *
- * DESCR:   Clear structure
- * RETURNS:   N/A
+ * \brief       Clear structure
  */
 void pempty_struct(
                    Pint struct_id

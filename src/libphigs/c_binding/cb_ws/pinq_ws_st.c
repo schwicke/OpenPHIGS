@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pinq_ws_st
+/**
+ * \file pinq_ws_st.c
  *
- * DESCR:       Get workstation state
- * RETURNS:     N/A
+ * \brief       Get workstation state
  */
 void pinq_ws_st(
                 Pws_st *ws_state

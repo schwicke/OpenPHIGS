@@ -62,25 +62,59 @@ SOFTWARE.
 #include "private/cvsP.h"
 
 /*******************************************************************************
+ * free_device_buffers
+ *
+ * DESCR:       Destroy input workstation helper function
+ * RETURNS:     N/A
+ */
+static void free_device_buffers(Sin_input_device *dev)
+{
+   switch (dev->inp_class) {
+   case SIN_STROKE:
+      if (dev->data.stroke.wc_pts)   free(dev->data.stroke.wc_pts);
+      if (dev->data.stroke.init_pts) free(dev->data.stroke.init_pts);
+      break;
+   case SIN_STRING:
+      if (dev->data.string.string)   free(dev->data.string.string);
+      break;
+   default:
+      break;
+   }
+}
+
+/*******************************************************************************
  * phg_sin_destroy
  *
  * DESCR:       Destroy input workstation
  * RETURNS:     N/A
  */
-
-void phg_sin_destroy(
-                     Sin_input_ws *iws
-                     )
+void phg_sin_destroy(Sin_input_ws *iws)
 {
-  int i;
-  phg_sin_dev_stop( iws );
-  phg_sin_ws_destroy_event_buf( iws );
-  phg_sin_dev_destroy_devices( iws );
-  phg_sin_cvs_destroy( iws );
-  for ( i = 0; i < 6; i++)
-    free(iws->devices[i]);
-  phg_sin_ws_free_notify_list( iws );
-  free(iws);
+   int i, j;
+   Pint counts[6];
+
+   phg_sin_dev_stop(iws);
+   phg_sin_ws_destroy_event_buf(iws);
+   phg_sin_dev_destroy_devices(iws);
+   phg_sin_cvs_destroy(iws);
+
+   counts[SIN_CLASS_INDEX(SIN_LOCATOR)]  = iws->num_devs.loc;
+   counts[SIN_CLASS_INDEX(SIN_STROKE)]   = iws->num_devs.stroke;
+   counts[SIN_CLASS_INDEX(SIN_PICK)]     = iws->num_devs.pick;
+   counts[SIN_CLASS_INDEX(SIN_VALUATOR)] = iws->num_devs.val;
+   counts[SIN_CLASS_INDEX(SIN_CHOICE)]   = iws->num_devs.choice;
+   counts[SIN_CLASS_INDEX(SIN_STRING)]   = iws->num_devs.string;
+
+   for (i = 0; i < 6; i++) {
+      if (iws->devices[i] != NULL) {
+         for (j = 0; j < counts[i]; j++)
+            free_device_buffers(&iws->devices[i][j]);
+         free(iws->devices[i]);
+      }
+   }
+
+   phg_sin_ws_free_notify_list(iws);
+   free(iws);
 }
 
 /*******************************************************************************
@@ -271,7 +305,7 @@ void phg_sin_init_device(
   case SIN_STROKE: {
     /* Allocate room for request and sample event. */
     /* TODO: detect allocation failure and free this at ws close. */
-    Ppoint3		*wc_pts;
+    Ppoint3  *wc_pts;
     if ( dev->data.stroke.buf_size < new_data->data.stroke.buf_size) {
       if ( dev->data.stroke.wc_pts )
         free(dev->data.stroke.wc_pts);

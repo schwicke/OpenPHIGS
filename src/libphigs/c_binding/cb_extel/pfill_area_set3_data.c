@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pfill_area_set3_data
+/**
+ * \file pfill_area_set3_data.c
  *
- * DESCR:   Creates a new element - Fill area set with data 3D
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pfill_area_set3_data(
                           Pint fflag,
                           Pint eflag,

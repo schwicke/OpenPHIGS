@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * pfasd
+/**
+ * \file pfasd.c
  *
- * DESCR:       fill area set
- * RETURNS:   N/A
+ * \brief       fill area set
  */
 FTN_SUBROUTINE(pfasd)(
                       FTN_INTEGER(fflag1),

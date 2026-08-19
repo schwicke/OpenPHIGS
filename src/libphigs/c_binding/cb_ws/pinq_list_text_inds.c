@@ -44,11 +44,10 @@
 #include "phconf.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinq_list_text_inds
+/**
+ * \file pinq_list_text_inds.c
  *
- * DESCR:       Get workstation list of text indices
- * RETURNS:     N/A
+ * \brief       Get workstation list of text indices
  */
 void pinq_list_text_inds(
                          Pint ws_id,

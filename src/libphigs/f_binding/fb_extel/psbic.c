@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psbic
+/**
+ * \file psbic.c
  *
- * DESCR:       set back interior color
- * RETURNS:   N/A
+ * \brief       set back interior color
  */
 FTN_SUBROUTINE(psbic)(
                       FTN_INTEGER(ityp),

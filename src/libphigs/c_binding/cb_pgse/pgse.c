@@ -25,11 +25,11 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pgse
+/**
+ * \file pgse.c
  *
- * DESCR:       Highlight color helper function
- * RETURNS:     Non-zero on success, otherwise zero
+ * \brief       Highlight color helper function
+ * \return Non-zero on success, otherwise zero
  */
 void pgse(
           Pgse_type gse_type,

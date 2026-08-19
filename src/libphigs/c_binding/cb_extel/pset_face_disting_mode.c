@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_face_disting_mode
+/**
+ * \file pset_face_disting_mode.c
  *
- * DESCR:   Creates a new element - Set facet distinguish mode
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_face_disting_mode(
                             Pdisting_mode disting_mode
                             )

@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pinq_ws_conn_type
+/**
+ * \file pinq_ws_conn_type.c
  *
- * DESCR:       Get workstation connection type
- * RETURNS:     N/A
+ * \brief       Get workstation connection type
  */
 void pinq_ws_conn_type(
                        Pint ws_id,

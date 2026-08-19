@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pinq_edge_rep
+/**
+ * \file pinq_edge_rep.c
  *
- * DESCR:       Get workstation edge representation
- * RETURNS:     N/A
+ * \brief       Get workstation edge representation
  */
 void pinq_edge_rep(
                    Pint ws_id,

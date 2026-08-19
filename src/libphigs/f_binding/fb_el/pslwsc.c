@@ -28,12 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pslwsc
+/**
+ * \file pslwsc.c
  *
- * DESCR:       Creates a new element - Line Width Attribute
- * RETURNS:     N/A
- */
+ * \brief       Creates a new element  */
 
 FTN_SUBROUTINE(pslwsc)(
                        FTN_REAL(lwidth)

@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_marker_colr_ind
+/**
+ * \file pset_marker_colr_ind.c
  *
- * DESCR:   Creates a new element - Marker Color Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_marker_colr_ind(
                           Pint colr_ind
                           )

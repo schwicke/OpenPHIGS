@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pupost
+/**
+ * \file pupost.c
  *
- * DESCR:       Unpost structure
- * RETURNS:     N/A
+ * \brief       Unpost structure
  */
 
 FTN_SUBROUTINE(pupost)(

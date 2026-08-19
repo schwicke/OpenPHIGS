@@ -215,6 +215,7 @@ C     Busy loop
 
          ENDIF
       END DO
-
+      CALL PCLWK(IWKMK)
+      CALL PCLPH()
       STOP
       END

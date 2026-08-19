@@ -30,11 +30,12 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pclst
+/**
+ * \file pclst.c
  *
- * DESCR:   Closes a previously opened structure.
- * RETURNS:   N/A
+ * \brief       Closes a previously opened structure.
+ * \pre         There must be no current open structure.
+ * \sa          popst
  */
 FTN_SUBROUTINE(pclst)(
                       void

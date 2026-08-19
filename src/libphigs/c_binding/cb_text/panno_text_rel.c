@@ -27,11 +27,13 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * panno_text_rel
+/**
+ * \file panno_text_rel.c
  *
- * DESCR:   Creates a new element - annotation text relative
- * RETURNS:   N/A
+ * \brief       Annotation text relative. Creates an annotation text element in the currently open structure
+ * \pre         A structure must be open for edit or append
+ * \sa          panno_text_rel3
+ *
  */
 void panno_text_rel(
                     Ppoint *ref_point,

@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psmksc
+/**
+ * \file psmksc.c
  *
- * DESCR:       set marker size scale factor
- * RETURNS:   N/A
+ * \brief       set marker size scale factor
  */
 FTN_SUBROUTINE(psmksc)(
                        FTN_REAL(mszsf)

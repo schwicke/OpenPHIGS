@@ -53,11 +53,10 @@ SOFTWARE.
 #include "phg.h"
 #include "util.h"
 
-/*******************************************************************************
- * ptranslate3
+/**
+ * \file ptranslate3.c
  *
- * DESCR:       Generate 3D translation matrix
- * RETURNS:     N/A
+ * \brief       Generate 3D translation matrix
  */
 void ptranslate3(
                  Pvec3 *trans_vector,       /* translation vector */

@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_view_tran_in_pri
+/**
+ * \file pset_view_tran_in_pri.c
  *
- * DESCR:   Set view input priority
- * RETURNS:   N/A
+ * \brief       Set view input priority
  */
 void pset_view_tran_in_pri(
                            Pint ws_id,

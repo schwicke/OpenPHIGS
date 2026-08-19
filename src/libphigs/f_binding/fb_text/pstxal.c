@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pstxal
+/**
+ * \file pstxal.c
  *
- * DESCR:       Set text alignment
- * RETURNS:     N/A
+ * \brief       Set text alignment
  */
 FTN_SUBROUTINE(pstxal)(
                        FTN_INTEGER(txalh),

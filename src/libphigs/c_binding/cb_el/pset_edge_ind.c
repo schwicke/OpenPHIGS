@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_edge_ind
+/**
+ * \file pset_edge_ind.c
  *
- * DESCR:   Creates a new element - Edge Attribute Index
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_edge_ind(
                    Pint edge_ind
                    )

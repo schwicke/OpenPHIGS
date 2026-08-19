@@ -30,11 +30,10 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pdel
+/**
+ * \file pdel.c
  *
- * DESCR:       Delete element
- * RETURNS:   N/A
+ * \brief       Delete element
  */
 FTN_SUBROUTINE(pdel)(void)
 {

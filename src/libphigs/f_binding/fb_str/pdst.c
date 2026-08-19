@@ -30,11 +30,10 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pdst
+/**
+ * \file pdst.c
  *
- * DESCR:       Delete structure
- * RETURNS:   N/A
+ * \brief       Delete structure
  */
 FTN_SUBROUTINE(pdst)(
                      FTN_INTEGER(strid)

@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinit_stroke3
+/**
+ * \file pinit_stroke3.c
  *
- * DESCR:       Initialize stroke device 3D
- * RETURNS:     N/A
+ * \brief       Initialize stroke device 3D
  */
 void pinit_stroke3(
                    Pint ws_id,

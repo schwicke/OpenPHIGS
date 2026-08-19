@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_ar_st
+/**
+ * \file pinq_ar_st.c
  *
- * DESCR:       Get archive state
- * RETURNS:     N/A
+ * \brief       Get archive state
  */
 void pinq_ar_st(
                 Par_st *ar_st

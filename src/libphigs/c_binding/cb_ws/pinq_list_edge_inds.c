@@ -44,11 +44,10 @@
 #include "phconf.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinq_list_edge_inds
+/**
+ * \file pinq_list_edge_inds.c
  *
- * DESCR:       Get workstation list of edge indices
- * RETURNS:     N/A
+ * \brief       Get workstation list of edge indices
  */
 void pinq_list_edge_inds(
                          Pint ws_id,

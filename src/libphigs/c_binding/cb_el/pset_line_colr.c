@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_line_colr
+/**
+ * \file pset_line_colr.c
  *
- * DESCR:   Creates a new element - Line Color Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_line_colr(
                     Pgcolr *colr
                     )

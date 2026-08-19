@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_anno_align
+/**
+ * \file pset_anno_align.c
  *
- * DESCR:   Creates a new element - Text Alignment Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_anno_align(
                      Ptext_align *text_align
                      )

@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psvwi
+/**
+ * \file psvwi.c
  *
- * DESCR:   set view index
- * RETURNS:   N/A
+ * \brief       set view index
  */
 FTN_SUBROUTINE(psvwi)(
                       FTN_INTEGER(viewi)

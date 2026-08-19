@@ -30,11 +30,13 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * popst
+/**
+ * \file popst.c
  *
- * DESCR:   Opens a structure for appending or editing.
- * RETURNS:   N/A
+ * \brief       Opens a structure for appending or editing.
+ * \param       strid (integer): structure ID
+ * \pre         There must be no current open structure.
+ * \sa          pclst
  */
 FTN_SUBROUTINE(popst)(
                       FTN_INTEGER(strid)

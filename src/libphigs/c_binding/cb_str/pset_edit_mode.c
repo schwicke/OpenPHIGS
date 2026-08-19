@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pset_edit_mode
+/**
+ * \file pset_edit_mode.c
  *
- * DESCR:   Set structure edit mode
- * RETURNS:   N/A
+ * \brief       Set structure edit mode
  */
 void pset_edit_mode(
                     Pedit_mode edit_mode

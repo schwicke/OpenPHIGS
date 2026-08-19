@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * ppolymarker3
+/**
+ * \file ppolymarker3.c
  *
- * DESCR:   Creates a new element - Polymarker 3D
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 
 void ppolymarker3(
                   Ppoint_list3 *point_list

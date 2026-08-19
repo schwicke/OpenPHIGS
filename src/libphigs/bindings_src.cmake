@@ -72,7 +72,6 @@ SET(P_C_BINDING_SRCS
   c_binding/cb_el/pset_view_ind.c
   c_binding/cb_extel/pfill_area_set3_data.c
   c_binding/cb_extel/pfill_area_set_data.c
-  c_binding/cb_extel/pset_alpha_channel.c
   c_binding/cb_extel/pset_back_int_shad_meth.c
   c_binding/cb_extel/pset_back_int_style.c
   c_binding/cb_extel/pset_back_int_style_ind.c
@@ -206,6 +205,7 @@ SET(P_C_BINDING_SRCS
   c_binding/cb_ws/pinq_text_rep.c
   c_binding/cb_ws/pinq_ws_conn_type.c
   c_binding/cb_ws/pinq_ws_st.c
+  c_binding/cb_ws/pxset_color_map.c
   c_binding/cb_ws/pmessage.c
   c_binding/cb_ws/popen_ws.c
   c_binding/cb_ws/ppost_struct.c
@@ -292,7 +292,6 @@ SET(P_F_BINDING_SRCS
   f_binding/fb_extel/pfas3d.c
   f_binding/fb_extel/pfasd.c
   f_binding/fb_extel/pres.c
-  f_binding/fb_extel/psalch.c
   f_binding/fb_extel/psbic.c
   f_binding/fb_extel/psbici.c
   f_binding/fb_extel/psbis.c

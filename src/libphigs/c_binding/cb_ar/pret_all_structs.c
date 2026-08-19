@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pret_all_structs
+/**
+ * \file pret_all_structs.c
  *
- * DESCR:       Retreive all structures from archive
- * RETURNS:     N/A
+ * \brief       Retreive all structures from archive
  */
 void pret_all_structs(
                       Pint archive_id

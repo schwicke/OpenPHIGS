@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_model_clip_vol3
+/**
+ * \file pset_model_clip_vol3.c
  *
- * DESCR:   Creates a new element - set clipping volume 3
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void  pset_model_clip_vol3 (
                             Pint op,
                             Phalf_space_list3 spacelist
@@ -72,7 +70,7 @@ void  pset_model_clip_vol3 (
 }
 
 
-/***********
+/**
    Extensions outside the standards
  **********/
 

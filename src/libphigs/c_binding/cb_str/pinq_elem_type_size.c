@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_elem_type_size
+/**
+ * \file pinq_elem_type_size.c
  *
- * DESCR:   Get element type and size
- * RETURNS:   N/A
+ * \brief       Get element type and size
  */
 void pinq_elem_type_size(
                          Pint struct_id,

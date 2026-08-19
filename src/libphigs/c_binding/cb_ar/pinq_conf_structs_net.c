@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_conf_structs_net
+/**
+ * \file pinq_conf_structs_net.c
  *
- * DESCR:       Get conflicting structure ids in network
- * RETURNS:     N/A
+ * \brief       Get conflicting structure ids in network
  */
 void pinq_conf_structs_net(
                            Pint ar_id,

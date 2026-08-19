@@ -44,11 +44,15 @@
 #include "private/cb_internal.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pclose_ws
+/**
+ * \file pclose_ws.c
  *
- * DESCR:   Close workstation
- * RETURNS:   N/A
+ * \brief       Close workstation
+ * \param       ws_id workstation ID
+ *
+ * \pre The workstation must be open
+ * \sa popen_wk
+ *
  */
 void pclose_ws(
                Pint ws_id
@@ -271,4 +275,3 @@ void pclose_ws(
     printf("PCLOSEWS ERROR: workstation was not open. Ignoring function.");
   }
 }
-

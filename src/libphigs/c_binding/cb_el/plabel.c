@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * plabel
+/**
+ * \file plabel.c
  *
- * DESCR:   Creates a new element - Label
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void plabel(
             Pint label_id
             )

@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_open_struct
+/**
+ * \file pinq_open_struct.c
  *
- * DESCR:       Get current structure open and edit status
- * RETURNS:   N/A
+ * \brief       Get current structure open and edit status
  */
 void pinq_open_struct(
                       Pint *err_ind,

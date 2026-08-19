@@ -62,6 +62,7 @@ C      Open PHIGS and a workstation
       IF (LCHAR.GT.0) THEN
          PRINT *, TCHAR
       ENDIF
-
+      CALL PCLWK(IWK)
+      CALL PCLPH()
       STOP
       END

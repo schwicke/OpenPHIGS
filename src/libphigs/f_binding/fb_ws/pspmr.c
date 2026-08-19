@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pspmr
+/**
+ * \file pspmr.c
  *
- * DESCR:       Set polymarker representation
- * RETURNS:     N/A
+ * \brief       Set polymarker representation
  */
 FTN_SUBROUTINE(pspmr)(
                       FTN_INTEGER(wkid),

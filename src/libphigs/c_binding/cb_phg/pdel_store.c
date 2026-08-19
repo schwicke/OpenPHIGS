@@ -34,11 +34,10 @@
 #include "private/evtP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pdel_store
+/**
+ * \file pdel_store.c
  *
- * DESCR:       Delete storage object
- * RETURNS:     N/A
+ * \brief       Delete storage object
  */
 void pdel_store(
                 Pstore store

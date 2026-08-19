@@ -1,0 +1,33 @@
+/**
+ * \page phigs.def      Read the OpenPHIGS configuration file
+ *
+ *
+ * The PHIGS configuration file allows to change the default behavior of OpenPHIGS.
+ *
+ * \section global Global options
+ * Global options determine general features of the library
+ * - \%gs 1                 Use shaders (1) or not (0)
+ * - \%vs 120               Vertex shader version, recommended: 1.20
+ * - \%fs 120               Fragment shader version, recommended:  1.20
+ * - \%pc 1                 print configuration if set to 1. Set to 0 to disable dumping of configuration parameters.
+ *
+ * \section workstations Workstation specific settings
+ * Define one section for each workstation. Each section starts with a \%wk, followed by a positive integer representing the workstation number. Definitions for workstation number 0 set the default for all other workstations. That is, settings following  \%wk 0 are applied to all workstations, \%wk 1 are only applied to workstation 1 and so on. Later definitions usually win. Available parameters depend on the workstation type as well.
+ *
+ * - \%bs <yes/no>          Backing store, yes or no
+ * - \%wn string            Set workstation name to string
+ * - \%in string            set workstation icon name to string
+ * - \%xe <yes/no>          return x events
+ * - \%wr <yes/no>          Window is resizable or not
+ * - \%wg 512 512 0 0 1     Window width height px py and border size in pixel
+ * - \%wp 0.0 1.0 0.0 1.    Window positition
+ * - \%bg  0. 0. 0.         Background color in RGB mode
+ * - \%bga 0. 0. 0. 0.5     Background color in RGBA
+ * - \%hs 3.                scale factor for hardcopy related work station types
+ *
+ * \bug Not all parameters may be implemented or have an actual effect, depending on the hardware and driver setup
+ *
+ * \sa phigsf77.h
+ *
+ * \example phigs.def
+ */

@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_edit_mode
+/**
+ * \file pinq_edit_mode.c
  *
- * DESCR:   Get structure edit mode
- * RETURNS:   N/A
+ * \brief       Get structure edit mode
  */
 void pinq_edit_mode(
                     Pint *err_ind,

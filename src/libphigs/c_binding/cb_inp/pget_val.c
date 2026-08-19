@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pget_val
+/**
+ * \file pget_val.c
  *
- * DESCR:       Get valuator event from event queue
- * RETURNS:     N/A
+ * \brief       Get valuator event from event queue
  */
 void pget_val(
               Pfloat *val

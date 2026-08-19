@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psedi
+/**
+ * \file psedi.c
  *
- * DESCR:       set edge index
- * RETURNS:   N/A
+ * \brief       set edge index
  */
 FTN_SUBROUTINE(psedi)(
                       FTN_INTEGER(edi)

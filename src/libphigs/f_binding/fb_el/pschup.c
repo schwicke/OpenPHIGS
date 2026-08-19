@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pschup
+/**
+ * \file pschup.c
  *
- * DESCR:   set character up vector
- * RETURNS:   N/A
+ * \brief       set character up vector
  */
 FTN_SUBROUTINE(pschup)(
                        FTN_REAL(chux),

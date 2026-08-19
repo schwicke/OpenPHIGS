@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * ptext
+/**
+ * \file ptext.c
  *
- * DESCR:   Creates a new element - Text
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void ptext(
            Ppoint *text_pos,
            char *char_string

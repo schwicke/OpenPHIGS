@@ -27,11 +27,10 @@
 #include <private/phgP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pslmt3
+/**
+ * \file pslmt3.c
  *
- * DESCR:       SET LOCAL TRANSFORMATION 3
- * RETURNS:     N/A
+ * \brief       SET LOCAL TRANSFORMATION 3
  */
 FTN_SUBROUTINE(pslmt3)(
                        float * xfrmt,

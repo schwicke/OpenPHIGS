@@ -1,0 +1,17 @@
+/**
+ * \page phigs.h PHIGS definitions and C binding declarations.
+ *
+ *
+ * \manonly
+ * .SH SYNOPSIS
+ * .nf
+ * .B #include <phigs/phigs.h>
+ * .fi
+ * \endmanonly
+ *
+ * Public interface for the OpenPHIGS C API. Include this header to
+ * access the C bindings.
+ *
+ * \sa phigsf77.h
+ *
+ */

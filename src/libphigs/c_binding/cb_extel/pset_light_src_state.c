@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_light_src_state
+/**
+ * \file pset_light_src_state.c
  *
- * DESCR:   Creates a new element - Set light source state
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_light_src_state(
                           Pint_list *activation,
                           Pint_list *deactivation

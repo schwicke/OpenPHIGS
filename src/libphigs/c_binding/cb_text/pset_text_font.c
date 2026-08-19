@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_text_font
+/**
+ * \file pset_text_font.c
  *
- * DESCR:   Creates a new element - Text Font Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_text_font(
                     Pint font
                     )

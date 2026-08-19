@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_char_up_vec
+/**
+ * \file pset_char_up_vec.c
  *
- * DESCR:   Creates a new element - Character up vector Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_char_up_vec(
                       Pvec *char_up_vec
                       )

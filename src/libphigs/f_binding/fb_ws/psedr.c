@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * psedr
+/**
+ * \file psedr.c
  *
- * DESCR:       Set edge representation
- * RETURNS:     N/A
+ * \brief       Set edge representation
  */
 
 FTN_SUBROUTINE(psedr)(

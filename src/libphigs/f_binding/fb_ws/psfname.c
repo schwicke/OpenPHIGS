@@ -36,12 +36,13 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * psfname
+/**
+ * \file psfname.c
  *
- * DESCR:       Set workstation output file name for hardcopy types
- * RETURNS:     N/A
- * NOTES:       extension
+ * \brief       Set workstation output file name for hardcopy workstation types
+ * \notes       This function is an extension specific to OpenPHIGS
+ *
+ * \sa popwk
  */
 FTN_SUBROUTINE(psfname)(
                         FTN_INTEGER(wkid),

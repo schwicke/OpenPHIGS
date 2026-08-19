@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinit_choice3
+/**
+ * \file pinit_choice3.c
  *
- * DESCR:       Initialize choice3
- * RETURNS:     N/A
+ * \brief       Initialize choice3
  */
 void pinit_choice3(
                    Pint ws_id,

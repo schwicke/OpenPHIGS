@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinit_loc3
+/**
+ * \file pinit_loc3.c
  *
- * DESCR:       Initialize locator device 3D
- * RETURNS:     N/A
+ * \brief       Initialize locator device 3D
  */
 void pinit_loc3(
                 Pint ws_id,

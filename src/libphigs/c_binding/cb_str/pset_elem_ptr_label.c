@@ -26,17 +26,16 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pset_elem_ptr_label
+/**
+ * \file pset_elem_ptr_label.c
  *
- * DESCR:   Searches forward in the structure list for the specified
+ * \brief       Searches forward in the structure list for the specified
  *      label, and makes that the current element.  Search begins
  *      with the element after (to the right) of the current one.
  *      Question: should I include the current element in the search?
  *      Or does the search begin with the first element after the
  *      current one?
  *      This version gives fatal error if label not found.
- * RETURNS:   N/A
  */
 void pset_elem_ptr_label(
                          Pint label_id

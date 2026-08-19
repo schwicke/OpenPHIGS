@@ -36,11 +36,19 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pscm
+/**
+ * \file pscm.c
  *
- * DESCR:       Set colour model
- * RETURNS:     N/A
+ * \brief       Set workstation colour model
+ * \param       wkid: workstation ID
+ * \param       cmodel: color model
+ *
+ * Available color modes are
+ * - 0 for PINDIRECT
+ * - 1 for PMODEL_RGB
+ * - 2 for PMODEL_RGBA
+ *
+ * \sa popwk pxscm
  */
 
 FTN_SUBROUTINE(pscm)(

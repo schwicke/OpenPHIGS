@@ -26,11 +26,11 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * patr3
+/**
+ * \file patr3.c
  *
- * DESCR:       ANNOTATION TEXT RELATIVE 3
- * RETURNS:     N/A
+ * \brief       ANNOTATION TEXT RELATIVE 3
+ * \sa patr
  */
 FTN_SUBROUTINE(patr3)(
                       FTN_REAL(rpx),
@@ -55,5 +55,6 @@ FTN_SUBROUTINE(patr3)(
   offset.delta_y = FTN_REAL_GET(apy);
   offset.delta_z = FTN_REAL_GET(apz);
   panno_text_rel3(&ref_point, &offset, text);
+  free(text);
 }
 

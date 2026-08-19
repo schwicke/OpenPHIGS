@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pspkm
+/**
+ * \file pspkm.c
  *
- * DESCR:       set pick mode
- * RETURNS:   N/A
+ * \brief       set pick mode
  */
 FTN_SUBROUTINE(pspkm)(
                       FTN_INTEGER(wkid),

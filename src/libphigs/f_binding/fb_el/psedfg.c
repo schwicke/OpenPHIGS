@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psedfg
+/**
+ * \file psedfg.c
  *
- * DESCR:   set edge flag
- * RETURNS:   N/A
+ * \brief       set edge flag
  */
 FTN_SUBROUTINE(psedfg)(
                        FTN_INTEGER(flag)

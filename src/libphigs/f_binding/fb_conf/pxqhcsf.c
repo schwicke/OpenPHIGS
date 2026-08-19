@@ -27,11 +27,12 @@
 #include "util/ftn.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pxqhcsf
+/**
+ * \file pxqhcsf.c
  *
- * DESCR:       get the hardcopy scale factor for workstation
- * RETURNS:     current scale factor for workstation wkid
+ * \brief       get the hardcopy scale factor for workstation
+ * \param       wkid (input) work station ID
+ * \return      hcsf (output) current scale factor for workstation wkid
  */
 FTN_SUBROUTINE(pxqhcsf)(
                         FTN_INTEGER(wkid),

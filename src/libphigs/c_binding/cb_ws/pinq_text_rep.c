@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pinq_text_rep
+/**
+ * \file pinq_text_rep.c
  *
- * DESCR:       Get workstation text representation
- * RETURNS:     N/A
+ * \brief       Get workstation text representation
  */
 void pinq_text_rep(
                    Pint ws_id,

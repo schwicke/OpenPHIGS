@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psrfm
+/**
+ * \file psrfm.c
  *
- * DESCR:       set reflectance model
- * RETURNS:   N/A
+ * \brief       set reflectance model
  */
 FTN_SUBROUTINE(psrfm)(
                        FTN_INTEGER(refl_mod)

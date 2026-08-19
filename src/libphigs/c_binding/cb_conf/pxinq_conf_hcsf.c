@@ -22,11 +22,12 @@
 #include <stdio.h>
 #include "phconf.h"
 
-/*******************************************************************************
- * pxinq_conf_hcsf
+/**
+ * \file pxinq_conf_hcsf.c
  *
- * DESCR:       inquire the hardcopy scale factor
- * RETURNS:     current hard copy scale factor for given workstation
+ * \brief       inquire the hardcopy scale factor
+ * \param       wkid: work station ID
+ * \return current hard copy scale factor for given workstation
  */
 Pint pxinq_conf_hcsf(
                      Pint wkid

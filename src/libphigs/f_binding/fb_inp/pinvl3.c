@@ -28,12 +28,43 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pinvl3
+/**
+ * \file pinvl3.c
  *
- * DESCR:       initialize valuators 3
- * RETURNS:   N/A
+ * \brief       initialize valuators 3
+ * \param       INTEGER WKID              workstation identifier
+ * \param       INTEGER VLDNR             valuator device number
+ * \param       REAL IVAL                 initial value
+ * \param       INTEGER PET               prompt and echo type
+ * \param       REAL    EVOL(6)           echo volume (DC), xmin, xmax, ymin, ymax, zmin, zmax
+ * \param       INTEGER LDR               dimension of data record array
+ * \param       CHARACTER*80 DATREC(LDR)  data record
+ * - echo mode 1:
+ *   - uses default strings for label, format low label and high label
+ *   - opens a new window
+ *   - echo area given in NC coordinates for the root window
+ * - echo mode -1: As mode 1 but expects additional parameters as string, namely
+ *   - label
+ *   - format
+ *   - low label
+ *   - high label
+ *   These should be encoded
+ *
+ * Extensions:
+ * - echo mode 2:
+ *   - as echo mode 1 but places the window on top of the main window
+ *   - echo area given as a fraction of the main window
+ * - echo mode -2:
+ *   - as echo mode -1 but places the window on top of the main window
+ *   - echo area given as a fraction of the main window
+ * - echo mode 3, -3:
+ *   - as echo mode 2 but places the window on top of the main window
+ *   - echo area given as a fraction of the main window
+ *   - boxes the valuators up in one Window.
+ * (!) PPREC expects one integer for this echo mode which is the number of valuators to be boxed up
+ * \sa pprec
  */
+
 FTN_SUBROUTINE(pinvl3)(
                        FTN_INTEGER(wkid),
                        FTN_INTEGER(vldnr),
@@ -51,7 +82,7 @@ FTN_SUBROUTINE(pinvl3)(
   Pfloat * rp;
   Pint * ip;
   char* cp;
-  char* buffer;
+
   int i, length, l1, l2, l3, l4;
   int nstrings, charlen;
   Pint num_boxed;
@@ -113,53 +144,25 @@ FTN_SUBROUTINE(pinvl3)(
     /* FIXME: release space afterwards */
     cp = (char *)&ip[nstrings+1];
     if (l1 > 0){
-      buffer = (char*) malloc((l1+1)*sizeof(char));
-      if (buffer != NULL){
-        strncpy(buffer, &cp[0], l1*sizeof(char));
-        buffer[l1] = '\0';
-        val_data_rec.pets.pet_u1.label = buffer;
-      } else {
-        val_data_rec.pets.pet_u1.label = WST_DEFAULT_VALUATOR_LABEL;
-      }
+      val_data_rec.pets.pet_u1.label = &cp[0];
       cp += l1*sizeof(char);
     } else {
       val_data_rec.pets.pet_u1.label = WST_DEFAULT_VALUATOR_LABEL;
     }
     if (l2 > 0){
-      buffer = (char*) malloc((l2+1)*sizeof(char));
-      if (buffer != NULL){
-        strncpy(buffer, &cp[0], l2*sizeof(char));
-        buffer[l2] = '\0';
-        val_data_rec.pets.pet_u1.format = buffer;
-      } else {
-        val_data_rec.pets.pet_u1.format = WST_DEFAULT_VALUATOR_FORMAT;
-      }
+      val_data_rec.pets.pet_u1.format = &cp[0];
       cp += l2*sizeof(char);
     } else {
       val_data_rec.pets.pet_u1.format = WST_DEFAULT_VALUATOR_FORMAT;
     }
     if (l3 > 0){
-      buffer = (char*) malloc((l3+1)*sizeof(char));
-      if (buffer != NULL){
-        strncpy(buffer, &cp[0], l3*sizeof(char));
-        buffer[l3] = '\0';
-        val_data_rec.pets.pet_u1.low_label = buffer;
-      } else {
-        val_data_rec.pets.pet_u1.low_label = WST_DEFAULT_VALUATOR_LOW_LABEL;
-      }
+      val_data_rec.pets.pet_u1.low_label = &cp[0];
       cp += l3*sizeof(char);
     } else {
       val_data_rec.pets.pet_u1.low_label = WST_DEFAULT_VALUATOR_LOW_LABEL;
     }
     if (l4 > 0){
-      buffer = (char*) malloc((l4+1)*sizeof(char));
-      if (buffer != NULL){
-        strncpy(buffer, &cp[0], l4*sizeof(char));
-        buffer[l4] = '\0';
-        val_data_rec.pets.pet_u1.high_label = buffer;
-      } else {
-        val_data_rec.pets.pet_u1.high_label = WST_DEFAULT_VALUATOR_HIGH_LABEL;
-      }
+      val_data_rec.pets.pet_u1.high_label = &cp[0];
       cp += l4*sizeof(char);
     } else {
       val_data_rec.pets.pet_u1.high_label = WST_DEFAULT_VALUATOR_HIGH_LABEL;
@@ -167,4 +170,3 @@ FTN_SUBROUTINE(pinvl3)(
   }
   pinit_val3(ws_id, val_dev, init_value, pet, &echo_volume, &val_data_rec);
 }
-

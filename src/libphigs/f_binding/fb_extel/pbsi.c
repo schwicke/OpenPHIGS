@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * pbsi
+/**
+ * \file pbsi.c
  *
- * DESCR:   set back interior style
- * RETURNS:   N/A
+ * \brief       set back interior style
  */
 FTN_SUBROUTINE(pbsi)(
                      FTN_INTEGER(ints)

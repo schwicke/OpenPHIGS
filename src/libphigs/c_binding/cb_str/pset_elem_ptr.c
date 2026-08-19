@@ -26,13 +26,11 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pset_elem_ptr
+/**
+ * \file pset_elem_ptr.c
  *
- * DESCR:   Make the requested index the "currently active element".
- *      NOTE: 0 means set element to even before the very first
+ * \brief       Make the requested index the  *      NOTE: 0 means set element to even before the very first
  *      element; 1 means set elptr to very first element.
- * RETURNS:   N/A
  */
 void pset_elem_ptr(
                    Pint elem_ptr_value

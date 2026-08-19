@@ -28,12 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psln
+/**
+ * \file psln.c
  *
- * DESCR:       Creates a new element - Line Type Attribute
- * RETURNS:     N/A
- */
+ * \brief       Creates a new element  */
 FTN_SUBROUTINE(psln)(
                      FTN_INTEGER(ltype)
                      )

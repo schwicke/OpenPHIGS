@@ -27,11 +27,13 @@
 #include "util/ftn.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pxndef
+/**
+ * \file pxndef.c
  *
- * DESCR:       Read configuration from file
- * RETURNS:     N/A
+ * \brief       Read the phigs default configuration file. For a description of the possible options please refer to the documenation of phigs.def.
+ * \param       NAME: path to the location of the configuration file. Defaults to phigs.def
+ *
+ * \sa phigs.def pxset_conf_file_name
  */
 #define MAXLEN 4096
 FTN_SUBROUTINE(pxndef)(

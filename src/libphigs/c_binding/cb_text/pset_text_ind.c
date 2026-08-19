@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_text_ind
+/**
+ * \file pset_text_ind.c
  *
- * DESCR:   Creates a new element - Text Attribute Index
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_text_ind(
                    Pint text_ind
                    )

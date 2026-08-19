@@ -27,11 +27,11 @@
 #include <private/phgP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pevmm3
+/**
+ * \file pevmm3.c
  *
- * DESCR:       EVALUATE VIEW MAPPING MATRIX 3
- * RETURNS:     error index, view mapping matrix
+ * \brief       EVALUATE VIEW MAPPING MATRIX 3
+ * \return error index, view mapping matrix
  */
 FTN_SUBROUTINE(pevmm3)(
                        FTN_REAL_ARRAY(vwwnlm),

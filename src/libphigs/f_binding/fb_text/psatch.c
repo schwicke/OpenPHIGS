@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psatch
+/**
+ * \file psatch.c
  *
- * DESCR:       Set annotation text character height
- * RETURNS:     N/A
+ * \brief       Set annotation text character height
  */
 FTN_SUBROUTINE(psatch)(
                        FTN_REAL(atchh)

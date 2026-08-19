@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * preq_string
+/**
+ * \file preq_string.c
  *
- * DESCR:       Request input from string
- * RETURNS:     N/A
+ * \brief       Request input from string
  */
 void preq_string(
                  Pint ws_id,

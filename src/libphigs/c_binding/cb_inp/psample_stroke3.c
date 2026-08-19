@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * psample_stroke3
+/**
+ * \file psample_stroke3.c
  *
- * DESCR:       Sample stroke device 3D
- * RETURNS:     N/A
+ * \brief       Sample stroke device 3D
  */
 void psample_stroke3(
                      Pint ws_id,

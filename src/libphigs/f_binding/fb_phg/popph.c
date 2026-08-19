@@ -34,11 +34,10 @@
 #include "private/evtP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * popph
+/**
+ * \file popph.c
  *
- * DESCR:       Open phigs
- * RETURNS:     N/A
+ * \brief       Open phigs
  */
 FTN_SUBROUTINE(popph)(
                       FTN_INTEGER(errfil),

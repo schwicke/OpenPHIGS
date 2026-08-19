@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * prqst
+/**
+ * \file prqst.c
  *
- * DESCR:       request string
- * RETURNS:   status, length, string
+ * \brief       request string
+ * \return status, length, string
  */
 FTN_SUBROUTINE(prqst)(
                       FTN_INTEGER(wkid),

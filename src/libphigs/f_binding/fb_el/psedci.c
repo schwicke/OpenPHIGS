@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psedci
+/**
+ * \file psedci.c
  *
- * DESCR:       set edge colour index
- * RETURNS:   N/A
+ * \brief       set edge colour index
  */
 FTN_SUBROUTINE(psedci)(
                        FTN_INTEGER(coli)

@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psedt
+/**
+ * \file psedt.c
  *
- * DESCR:       set edge type
- * RETURNS:   N/A
+ * \brief       set edge type
  */
 FTN_SUBROUTINE(psedt)(
                        FTN_INTEGER(etype)

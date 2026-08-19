@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pmessage
+/**
+ * \file pmessage.c
  *
- * DESCR:   Display a message box
- * RETURNS:   N/A
+ * \brief       Display a message box
  */
 void pmessage(
               Pint ws_id,

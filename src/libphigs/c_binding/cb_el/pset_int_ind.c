@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_int_ind
+/**
+ * \file pset_int_ind.c
  *
- * DESCR:   Creates a new element - Facet Interiour Attribute Index
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_int_ind(
                   Pint int_ind
                   )

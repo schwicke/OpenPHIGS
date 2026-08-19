@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pdel_struct_net
+/**
+ * \file pdel_struct_net.c
  *
- * DESCR:   Delete structure network
- * RETURNS:   N/A
+ * \brief       Delete structure network
  */
 void pdel_struct_net(
                      Pint struct_id,

@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * prqvl
+/**
+ * \file prqvl.c
  *
- * DESCR:       request valuator
- * RETURNS:   status, value
+ * \brief       request valuator
+ * \return status, value
  */
 FTN_SUBROUTINE(prqvl)(
                       FTN_INTEGER(wkid),

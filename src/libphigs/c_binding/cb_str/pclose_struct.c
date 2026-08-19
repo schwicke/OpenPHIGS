@@ -26,11 +26,12 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pclose_struct
+/**
+ * \file pclose_struct.c
  *
- * DESCR:   Closes a previously opened structure.
- * RETURNS:   N/A
+ * \brief       Closes a previously opened structure.
+ * \pre         There must be a currently open structure.
+ * \sa          popen_struct
  */
 void pclose_struct(
                    void

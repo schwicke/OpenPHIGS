@@ -108,9 +108,16 @@ void phg_wst_destroy(
    Wst *wst
    )
 {
-   if (wst != NULL) {
-      free(wst);
-   }
+  Wst_phigs_dt *dt;
+  if (wst != NULL) {
+    dt = &wst->desc_tbl.phigs_dt;
+    if (wst->desc_tbl.xwin_dt.pick_device_types != NULL){
+      free(wst->desc_tbl.xwin_dt.pick_device_types);
+      wst->desc_tbl.xwin_dt.pick_device_types = NULL;
+    }
+    if (dt != NULL) free(dt->hlhsr_modes);
+    free(wst);
+  }
 }
 
 /*******************************************************************************

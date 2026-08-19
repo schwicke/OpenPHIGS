@@ -30,11 +30,10 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pseplb
+/**
+ * \file pseplb.c
  *
- * DESCR:       Set element pointer at label
- * RETURNS:   N/A
+ * \brief       Set element pointer at label
  */
 
 FTN_SUBROUTINE(pseplb)(

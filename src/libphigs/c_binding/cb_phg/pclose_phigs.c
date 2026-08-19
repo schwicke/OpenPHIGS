@@ -34,11 +34,10 @@
 #include "private/evtP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pclose_phigs
+/**
+ * \file pclose_phigs.c
  *
- * DESCR:       Close phigs
- * RETURNS:     N/A
+ * \brief       Close phigs
  */
 void pclose_phigs(
                   void

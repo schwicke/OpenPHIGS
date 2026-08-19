@@ -44,11 +44,10 @@
 #include "phconf.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinq_list_line_inds
+/**
+ * \file pinq_list_line_inds.c
  *
- * DESCR:       Get workstation list of line indices
- * RETURNS:     N/A
+ * \brief       Get workstation list of line indices
  */
 void pinq_list_line_inds(
                          Pint ws_id,

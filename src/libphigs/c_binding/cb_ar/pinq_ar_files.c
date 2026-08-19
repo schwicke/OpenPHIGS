@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_ar_files
+/**
+ * \file pinq_ar_files.c
  *
- * DESCR:       Get open archive files
- * RETURNS:     N/A
+ * \brief       Get open archive files
  */
 void pinq_ar_files(
                    Pstore store,

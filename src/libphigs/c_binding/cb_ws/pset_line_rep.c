@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_line_rep
+/**
+ * \file pset_line_rep.c
  *
- * DESCR:   Set workstation line represenation
- * RETURNS:   N/A
+ * \brief       Set workstation line represenation
  */
 void pset_line_rep(
                    Pint ws_id,

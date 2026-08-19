@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pchange_struct_refs
+/**
+ * \file pchange_struct_refs.c
  *
- * DESCR:   Changes structure references
- * RETURNS:   N/A
+ * \brief       Changes structure references
  */
 void pchange_struct_refs(
                          Pint orig_struct_id,

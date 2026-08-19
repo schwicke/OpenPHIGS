@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pexst
+/**
+ * \file pexst.c
  *
- * DESCR:       execute structure
- * RETURNS:   N/A
+ * \brief       execute structure
  */
 FTN_SUBROUTINE(pexst)(
                       FTN_INTEGER(strid)

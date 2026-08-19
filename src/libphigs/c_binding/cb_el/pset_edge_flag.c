@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_edge_flag
+/**
+ * \file pset_edge_flag.c
  *
- * DESCR:   Creates a new element - Edge Flag Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 
 void pset_edge_flag(
                     Pedge_flag edge_flag

@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_hlhsr_id
+/**
+ * \file pset_hlhsr_id.c
  *
- * DESCR:   Create hidden lines, surface removal flag element
- * RETURNS:   N/A
- */
+ * \brief       Create hidden lines */
 void pset_hlhsr_id(
                    Pint hlhsr_id
                    )

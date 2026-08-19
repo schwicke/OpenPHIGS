@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pinq_line_rep
+/**
+ * \file pinq_line_rep.c
  *
- * DESCR:       Get workstation line representation
- * RETURNS:     N/A
+ * \brief       Get workstation line representation
  */
 void pinq_line_rep(
                    Pint ws_id,

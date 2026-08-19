@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_back_int_colr_ind
+/**
+ * \file pset_back_int_colr_ind.c
  *
- * DESCR:   Creates a new element - Facet Back Color Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_back_int_colr_ind(
                        Pint colr_ind
                        )

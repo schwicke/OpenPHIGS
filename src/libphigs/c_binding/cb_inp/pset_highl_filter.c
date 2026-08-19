@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pset_highl_filter
+/**
+ * \file pset_highl_filter.c
  *
- * DESCR:       Set highlighting filter
- * RETURNS:     N/A
+ * \brief       Set highlighting filter
  */
 void pset_highl_filter(
                        Pint ws_id,

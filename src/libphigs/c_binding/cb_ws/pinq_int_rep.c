@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pinq_int_rep
+/**
+ * \file pinq_int_rep.c
  *
- * DESCR:       Get workstation interior representation
- * RETURNS:     N/A
+ * \brief       Get workstation interior representation
  */
 void pinq_int_rep(
                   Pint ws_id,

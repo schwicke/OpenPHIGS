@@ -72,11 +72,19 @@ set (GL_INCLUDES ${GL2PS_INCLUDE_DIR})
 message(STATUS "GL Includes=${GL_INCLUDES}")
 include_directories(${X11_INCLUDE_DIR} ${MOTIF_INCLUDE_DIR} ${GL_INCLUDES})
 
+# Default settings
 SET(CMAKE_C_FLAGS  "$ENV{CFLAGS} -DMOTIF -g -O0 -fPIC -Wno-deprecated-non-prototype")
 SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -DMOTIF -g -O0  -fPIC -Wno-deprecated-non-prototype")
 SET(CMAKE_Fortran_FLAGS "$ENV{FFLAGS} -DMOTIF -finit-local-zero -g -O0 -fPIC")
+SET(CMAKE_EXE_LINKER_FLAGS "$ENV{LDFLAGS}")
 
-SET(CMAKE_EXE_LINKER_FLAGS $ENV{LDFLAGS})
+# Use this for memory debugging. Call as e.g. LSAN_OPTIONS=suppressions=lsan.supp  distrib/tests_c/test_c7 
+#SET(CMAKE_C_FLAGS  "$ENV{CFLAGS} -DMOTIF -fsanitize=address -g -O0 -fPIC -Wno-deprecated-non-prototype")
+#SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -DMOTIF -fsanitize=address -g -O0  -fPIC -Wno-deprecated-non-prototype")
+#SET(CMAKE_Fortran_FLAGS "$ENV{FFLAGS} -DMOTIF -fsanitize=address -finit-local-zero -g -O0 -fPIC")
+#SET(CMAKE_EXE_LINKER_FLAGS "$ENV{LDFLAGS} -fsanitize=address")
+
+
 if (OPENPHIGS_FORCE_32)
   set(CMAKE_C_FLAGS " -m32 ${CMAKE_C_FLAGS}")
   set(CMAKE_CXX_FLAGS " -m32 ${CMAKE_CXX_FLAGS}")
@@ -137,6 +145,19 @@ ADD_SUBDIRECTORY(tools)
 ADD_SUBDIRECTORY(test_c)
 ADD_SUBDIRECTORY(test_f)
 
+find_package(Doxygen)
+if (DOXYGEN_FOUND)
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    add_custom_target(docs
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/doc/man ${CMAKE_CURRENT_BINARY_DIR}/doc/html ${CMAKE_CURRENT_BINARY_DIR}/doc/latex DESTINATION ${CMAKE_INSTALL_DOCDIR})
+endif()
+
 # uncomment for debugging
 #get_cmake_property(_variableNames VARIABLES)
 #list (SORT _variableNames)
@@ -144,15 +165,3 @@ ADD_SUBDIRECTORY(test_f)
 #    message(STATUS "${_variableName}=${${_variableName}}")
 #endforeach()
 
-find_package(Doxygen)
-if (DOXYGEN_FOUND)
-    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
-    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-    add_custom_target(doc
-        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Generating API documentation with Doxygen"
-        VERBATIM)
-    install(FILES ../build/doc/man ../build/doc/html ../build/doc/latex DESTINATION ${CMAKE_INSTALL_DOCDIR})
-endif()

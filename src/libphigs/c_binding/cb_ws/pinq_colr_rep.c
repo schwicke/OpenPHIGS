@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pinq_colr_rep
+/**
+ * \file pinq_colr_rep.c
  *
- * DESCR:       Get workstation colour representation
- * RETURNS:     N/A
+ * \brief       Get workstation colour representation
  */
 void pinq_colr_rep(
                    Pint ws_id,

@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_disp_upd_st
+/**
+ * \file pset_disp_upd_st.c
  *
- * DESCR:   Set workstation update state
- * RETURNS:   N/A
+ * \brief       Set workstation update state
  */
 void pset_disp_upd_st(
                       Pint ws_id,

@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_linetype
+/**
+ * \file pset_linetype.c
  *
- * DESCR:   Creates a new element - Line Type Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_linetype(
                    Pint linetype
                    )

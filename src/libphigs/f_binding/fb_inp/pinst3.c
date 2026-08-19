@@ -28,11 +28,25 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pinst3
+/**
+ * \file pinst3.c
  *
- * DESCR:       initialize string 3
- * RETURNS:   N/A
+ * \brief       initialize string 3
+ * \param       INTEGER WKID              workstation identifier
+ * \param       INTEGER STDNR             string device number
+ * \param       INTEGER LSTR              length of initial string (>= 0)
+ * \param       CHARACTER*(*) ISTR        initial string
+ * \param       INTEGER PET              prompt and echo type
+ * \param       REAL    EVOL(6)           echo volume (DC), xmin, xmax, ymin, ymax, zmin, zmax
+ * \param       INTEGER LDR               dimension of data record array
+ * \param       CHARACTER*80 DATREC(LDR)  data record
+ *
+ * - echo mode 1
+ *   + opens a new window
+ *   + echo area given in NC coordinates for the root window
+ * - echo mode -1
+ *   + echo area given in % relative to the main window
+ * \sa pprec pinst
  */
 FTN_SUBROUTINE(pinst3)(
                        FTN_INTEGER(wkid),

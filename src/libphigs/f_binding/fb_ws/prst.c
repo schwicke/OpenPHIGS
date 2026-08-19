@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * prst
+/**
+ * \file prst.c
  *
- * DESCR:       Redraw all structures
- * RETURNS:     N/A
+ * \brief       Redraw all structures
  */
 
 FTN_SUBROUTINE(prst)(

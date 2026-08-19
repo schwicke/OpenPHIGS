@@ -30,11 +30,10 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psep
+/**
+ * \file psep.c
  *
- * DESCR:       Set element pointer
- * RETURNS:   N/A
+ * \brief       Set element pointer
  */
 FTN_SUBROUTINE(psep)(
                      FTN_INTEGER(pos)

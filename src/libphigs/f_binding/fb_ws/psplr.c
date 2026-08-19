@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * psplr
+/**
+ * \file psplr.c
  *
- * DESCR:       Set polyline representation
- * RETURNS:     N/A
+ * \brief       Set polyline representation
  */
 
 FTN_SUBROUTINE(psplr)(

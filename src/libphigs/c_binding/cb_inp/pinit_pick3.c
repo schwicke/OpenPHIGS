@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pinit_pick3
+/**
+ * \file pinit_pick3.c
  *
- * DESCR:       Initialize pick device 3D
- * RETURNS:     N/A
+ * \brief       Initialize pick device 3D
  */
 void pinit_pick3(
                  Pint ws_id,

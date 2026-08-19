@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_pick_id
+/**
+ * \file pset_pick_id.c
  *
- * DESCR:   Creates a new element - Pick ID
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_pick_id(
                   Pint pick_id
                   )

@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * preq_valuator
+/**
+ * \file preq_valuator.c
  *
- * DESCR:       Request input from valuator
- * RETURNS:     N/A
+ * \brief       Request input from valuator
  */
 void preq_valuator(
                    Pint ws_id,

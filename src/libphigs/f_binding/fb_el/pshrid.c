@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pshrid
+/**
+ * \file pshrid.c
  *
- * DESCR:       set hlhsr identifier
- * RETURNS:   N/A
+ * \brief       set hlhsr identifier
  */
 FTN_SUBROUTINE(pshrid)(
                        FTN_INTEGER(hrid)

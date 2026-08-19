@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pdel_struct_nets_ar
+/**
+ * \file pdel_struct_nets_ar.c
  *
- * DESCR:       Delete structure networks from archive
- * RETURNS:     N/A
+ * \brief       Delete structure networks from archive
  */
 void pdel_struct_nets_ar(
                          Pint archive_id,

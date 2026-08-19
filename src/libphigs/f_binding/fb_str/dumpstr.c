@@ -30,11 +30,10 @@
 #include "private/cbP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * dumpstr
+/**
+ * \file dumpstr.c
  *
- * DESCR:       Print structure as string
- * RETURNS:   N/A
+ * \brief       Print structure as string
  */
 FTN_SUBROUTINE(dumpstr)(FTN_INTEGER(strid)){
   Struct_handle structp;

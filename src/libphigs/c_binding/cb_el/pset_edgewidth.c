@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_edgewidth
+/**
+ * \file pset_edgewidth.c
  *
- * DESCR:   Creates a new element - Edge Width Attribute
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_edgewidth(
                     Pfloat edgewidth
                     )

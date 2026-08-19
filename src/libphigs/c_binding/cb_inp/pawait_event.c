@@ -30,11 +30,10 @@
 #include "util.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pawait_event
+/**
+ * \file pawait_event.c
  *
- * DESCR:       Wait for event to occur
- * RETURNS:     N/A
+ * \brief       Wait for event to occur
  */
 void pawait_event(
                   Pfloat timeout,

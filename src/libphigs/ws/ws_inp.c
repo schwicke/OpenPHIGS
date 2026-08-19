@@ -125,7 +125,7 @@ void set_generic_enable_data(Ws *ws, Plimit3* e_volume, Sin_window_rect* ed ){
 #endif
   } else
     WSINP_DC_ECHO_TO_DRWBL_ECHO2(ws, e_volume, ed)
-}
+      }
 
 /*******************************************************************************
  * resolve_locator
@@ -135,30 +135,30 @@ void set_generic_enable_data(Ws *ws, Plimit3* e_volume, Sin_window_rect* ed ){
  */
 
 static int resolve_locator(
-    Sin_input_device *dev,
-    Pint int_data,
-    Sin_window_pt *pt
-    )
+                           Sin_input_device *dev,
+                           Pint int_data,
+                           Sin_window_pt *pt
+                           )
 {
-    Ws *ws = (Ws *)dev->client_data;
-    int	status = 0;
-    Ws_point dc_pt;
-    Ppoint3 wc_pt;
-    Pint view;
+  Ws *ws = (Ws *)dev->client_data;
+  int    status = 0;
+  Ws_point dc_pt;
+  Ppoint3 wc_pt;
+  Pint view;
 
-    /* Don't change the current measure if the point can't be resolved.  In
-     * sample mode the old value will be reported.  In request and event
-     * mode no event will be generated (nothing happens).
-     */
-    WS_DRWBL_TO_DC2(ws, &dev->data.locator.cur_pos, &dc_pt);
-    if ( (*ws->resolve_locator)( ws, &dc_pt, 1, &view, &wc_pt ) ) {
-      dev->data.locator.wc_pt.x = wc_pt.x;
-      dev->data.locator.wc_pt.y = wc_pt.y;
-      dev->data.locator.wc_pt.z = wc_pt.z;
-      dev->data.locator.view = view;
-      status = 1;
-    }
-    return status;
+  /* Don't change the current measure if the point can't be resolved.  In
+   * sample mode the old value will be reported.  In request and event
+   * mode no event will be generated (nothing happens).
+   */
+  WS_DRWBL_TO_DC2(ws, &dev->data.locator.cur_pos, &dc_pt);
+  if ( (*ws->resolve_locator)( ws, &dc_pt, 1, &view, &wc_pt ) ) {
+    dev->data.locator.wc_pt.x = wc_pt.x;
+    dev->data.locator.wc_pt.y = wc_pt.y;
+    dev->data.locator.wc_pt.z = wc_pt.z;
+    dev->data.locator.view = view;
+    status = 1;
+  }
+  return status;
 }
 
 /*******************************************************************************
@@ -174,13 +174,13 @@ static int resolve_stroke(
                           XPoint *raw_pts
                           )
 {
-  int	status = FALSE;
+  int    status = FALSE;
   Ws_point *dc_pts;
   Pint view;
   Ppoint_list3 wc_pts;
   Ws *ws = (Ws *)dev->client_data;
 
-  int	i;
+  int    i;
 
   /* Don't change the current measure if the points can't be resolved.
    * In sample mode the old value will be reported.  In request and event
@@ -226,12 +226,12 @@ static int resolve_pick(
                         Sin_window_pt *pt
                         )
 {
-  int	status = FALSE;
+  int    status = FALSE;
   Ws_point dc_pt;
   Ppick pick;
   Ppick_path_elem *path;
   Ws *ws = (Ws *)dev->client_data;
-  Ws_inp_pick	*dev_state = WS_INP_DEV(ws, pick, dev->num);
+  Ws_inp_pick    *dev_state = WS_INP_DEV(ws, pick, dev->num);
   Ppick *cur_pick = &dev->data.pick.cur_pick;
 
 #ifdef DEBUGINP
@@ -265,6 +265,7 @@ static int resolve_pick(
           if ( dev_state->scratch_path.depth > 0 )
             free(dev_state->scratch_path.path_list);
           dev_state->scratch_path.path_list = path;
+          dev_state->scratch_path.depth = pick.pick_path.depth;  /* new capacity */
         }
       }
     } else {
@@ -295,8 +296,9 @@ static int resolve_pick(
       cur_pick->pick_path.depth = pick.pick_path.depth;
       status = 1;
     }
-
-  } else {	/* No pick */
+    free(pick.pick_path.path_list);       /* temporary — copied out above */
+    pick.pick_path.path_list = NULL;
+  } else {    /* No pick */
     cur_pick->status = PIN_STATUS_NONE;
     cur_pick->pick_path.depth = 0;
     status = 1;
@@ -313,7 +315,7 @@ static int resolve_pick(
 
 static void init_sin_locator(
                              Ws *ws,
-                             Ws_input_ws	*iws,
+                             Ws_input_ws    *iws,
                              Ws_inp_loc *dev,
                              XPoint *init_dwbl_pt
                              )
@@ -365,7 +367,7 @@ static void init_locator(
   if ( !(*ws->map_initial_points)( ws, init->view_ind, &num_pts,
                                    &init->position, &init_dwbl_pt ) || num_pts != 1 ) {
     ERR_BUF( ws->erh, ERR261 );
-  } else {	/* All the data's okay. */
+  } else {    /* All the data's okay. */
     dev->pet = args->pet;
     /* The binding checks the data record for this device class. */
     dev->record = args->data.loc.rec;
@@ -442,8 +444,8 @@ static void init_stroke(
 
   /* Take care of any initial points. */
   if ( init->num_points > 0 ) {
-    Pint		num_pts;
-    unsigned	size;
+    Pint        num_pts;
+    unsigned    size;
 
     /* Get space for the WC and drawable versions of the points. */
     size = init->num_points * (sizeof(Ppoint3) + sizeof(XPoint));
@@ -560,8 +562,8 @@ static int setup_choice_init(
                              int two_d
                              )
 {
-  int	i, cnt;
-  int	errnum = 0;	/* success is the default */
+  int    i, cnt;
+  int    errnum = 0;    /* success is the default */
 
 #ifdef DEBUGINP
   printf("Setup choice init\n");
@@ -1223,8 +1225,8 @@ static int init_input_state(
   }
 
   {
-    Ws_inp_loc	*loc = iws->devs.locator;
-    Wst_defloc	*def_loc = idt->locators;
+    Ws_inp_loc    *loc = iws->devs.locator;
+    Wst_defloc    *def_loc = idt->locators;
 
     for ( i = 0; i < iws->num_devs.loc; i++, loc++, def_loc++) {
       WSINP_INIT_COMMON_FIELDS( loc, def_loc)
@@ -1235,8 +1237,8 @@ static int init_input_state(
   }
 
   {
-    Ws_inp_stroke	*stk = iws->devs.stroke;
-    Wst_defstroke	*def_stk = idt->strokes;
+    Ws_inp_stroke    *stk = iws->devs.stroke;
+    Wst_defstroke    *def_stk = idt->strokes;
 
     for ( i = 0; i < iws->num_devs.stroke; i++, stk++, def_stk++) {
       WSINP_INIT_COMMON_FIELDS( stk, def_stk)
@@ -1251,8 +1253,8 @@ static int init_input_state(
   }
 
   {
-    Ws_inp_pick	*pick = iws->devs.pick;
-    Wst_defpick	*def_pick = idt->picks;
+    Ws_inp_pick    *pick = iws->devs.pick;
+    Wst_defpick    *def_pick = idt->picks;
     Pint *dev_types;
     Pint num_dev_types;
 
@@ -1270,7 +1272,7 @@ static int init_input_state(
       pick->pick.status = PIN_STATUS_NONE;
       pick->pick.pick_path.depth = 0;
       pick->pick.pick_path.path_list = NULL;
-      pick->ap_size = 5.0;	/* DC units */
+      pick->ap_size = 5.0;    /* DC units */
       pick->dev_type = i >= num_dev_types ? dev_types[0] : dev_types[i];
       pick->filter.incl = phg_nset_create(WS_MAX_NAMES_IN_NAMESET);
       if (pick->filter.incl == NULL) {
@@ -1284,8 +1286,8 @@ static int init_input_state(
   }
 
   {
-    Ws_inp_val	*val = iws->devs.valuator;
-    Wst_defval	*def_val = idt->valuators;
+    Ws_inp_val    *val = iws->devs.valuator;
+    Wst_defval    *def_val = idt->valuators;
 
     for ( i = 0; i < iws->num_devs.val; i++, val++, def_val++) {
       WSINP_INIT_COMMON_FIELDS( val, def_val)
@@ -1295,8 +1297,8 @@ static int init_input_state(
   }
 
   {
-    Ws_inp_choice	*cho = iws->devs.choice;
-    Wst_defchoice	*def_cho = idt->choices;
+    Ws_inp_choice    *cho = iws->devs.choice;
+    Wst_defchoice    *def_cho = idt->choices;
 
     for ( i = 0; i < iws->num_devs.choice; i++, cho++, def_cho++) {
       WSINP_INIT_COMMON_FIELDS( cho, def_cho)
@@ -1306,8 +1308,8 @@ static int init_input_state(
   }
 
   {
-    Ws_inp_string	*str = iws->devs.string;
-    Wst_defstring	*def_str = idt->strings;
+    Ws_inp_string    *str = iws->devs.string;
+    Wst_defstring    *def_str = idt->strings;
 
     for ( i = 0; i < iws->num_devs.string; i++, str++, def_str++) {
       WSINP_INIT_COMMON_FIELDS( str, def_str)
@@ -1326,7 +1328,7 @@ static int init_input_state(
 
   return TRUE;
 
- no_mem:	/* ran out of memory somewhere! */
+ no_mem:    /* ran out of memory somewhere! */
   ERR_BUF( ws->erh, ERR900);
   if (iws->devs.locator != NULL) {
     free(iws->devs.locator);
@@ -1476,9 +1478,9 @@ static void ws_inp_load_funcs(
 #endif
 
   ws->init_device       = phg_ws_inp_init_device;
-  ws->set_device_mode	  = phg_ws_inp_set_mode;
+  ws->set_device_mode      = phg_ws_inp_set_mode;
   ws->request_device    = phg_ws_inp_request;
-  ws->sample_device	  = phg_ws_inp_sample;
+  ws->sample_device      = phg_ws_inp_sample;
   ws->input_repaint     = phg_ws_inp_repaint;
   ws->inq_inp_dev_state = phg_ws_inp_inq_dev_state;
 }
@@ -1492,50 +1494,50 @@ static void ws_inp_load_funcs(
  */
 
 int phg_ws_input_init(
-    Ws *ws,
-    Input_q_handle queue
-    )
+                      Ws *ws,
+                      Input_q_handle queue
+                      )
 {
-    Sin_desc sin_desc;
-    int status = FALSE;
-    Wst_input_wsdt *idt = &ws->type->desc_tbl.phigs_dt.in_dt;
-    Sin_desc *desc = &sin_desc;
-    Ws_input_ws *iws = &ws->in_ws;
+  Sin_desc sin_desc;
+  int status = FALSE;
+  Wst_input_wsdt *idt = &ws->type->desc_tbl.phigs_dt.in_dt;
+  Sin_desc *desc = &sin_desc;
+  Ws_input_ws *iws = &ws->in_ws;
 
 #ifdef DEBUG
-    printf("ws_inp: phg_ws_input_init\n");
-    printf("\twindow = %x\n", (unsigned) ws->drawable_id);
-    printf("\tinput_overlay_window = %x\n",
-           (unsigned) ws->input_overlay_window);
+  printf("ws_inp: phg_ws_input_init\n");
+  printf("\twindow = %x\n", (unsigned) ws->drawable_id);
+  printf("\tinput_overlay_window = %x\n",
+         (unsigned) ws->input_overlay_window);
 #endif
 
-    if ( init_input_state( ws, idt ) ) {
-	iws->input_queue = (Input_q_handle)queue;
-	desc->wsh = (Ws_handle)ws;
-	desc->idt = idt;
-	desc->queue = (Sin_event_queue *)queue;
-	desc->display = ws->display;
-	desc->output_window = ws->drawable_id;
-	desc->input_window = ws->input_overlay_window;
-	desc->shell = ws->shell;
-	desc->send_request = send_request;
-	desc->in_viewport = ws->point_in_viewport;
+  if ( init_input_state( ws, idt ) ) {
+    iws->input_queue = (Input_q_handle)queue;
+    desc->wsh = (Ws_handle)ws;
+    desc->idt = idt;
+    desc->queue = (Sin_event_queue *)queue;
+    desc->display = ws->display;
+    desc->output_window = ws->drawable_id;
+    desc->input_window = ws->input_overlay_window;
+    desc->shell = ws->shell;
+    desc->send_request = send_request;
+    desc->in_viewport = ws->point_in_viewport;
 
-	ws_inp_load_funcs( ws );
+    ws_inp_load_funcs( ws );
 
-	if ( !(iws->sin_handle = phg_sin_create( desc, ws->erh )) ) {
-	    phg_ws_input_close( ws );
-	} else {
-	    init_all_devices( ws, iws, idt );
-	    status = TRUE;
-	}
+    if ( !(iws->sin_handle = phg_sin_create( desc, ws->erh )) ) {
+      phg_ws_input_close( ws );
+    } else {
+      init_all_devices( ws, iws, idt );
+      status = TRUE;
     }
+  }
 
 #ifdef DEBUG
-    printf("ws_inp: phg_ws_input_init DONE!\n");
+  printf("ws_inp: phg_ws_input_init DONE!\n");
 #endif
 
-    return status;
+  return status;
 }
 
 /*******************************************************************************
@@ -1546,87 +1548,87 @@ int phg_ws_input_init(
  */
 
 void phg_ws_input_close(
-    Ws *ws
-    )
+                        Ws *ws
+                        )
 {
-    Ws_input_ws *iws = &ws->in_ws;
-    int i;
+  Ws_input_ws *iws = &ws->in_ws;
+  int i;
 
-    {
-	Ws_inp_stroke *stk = iws->devs.stroke;
+  {
+    Ws_inp_stroke *stk = iws->devs.stroke;
 
-	if (stk != NULL) {
-	    for ( i = 0; i < iws->num_devs.stroke; i++, stk++ ) {
-		if ( stk->stroke.points )
-		    free(stk->stroke.points);
-	    }
-	}
+    if (stk != NULL) {
+      for ( i = 0; i < iws->num_devs.stroke; i++, stk++ ) {
+        if ( stk->stroke.points )
+          free(stk->stroke.points);
+      }
     }
+  }
 
-    {
-	Ws_inp_pick *pick = iws->devs.pick;
+  {
+    Ws_inp_pick *pick = iws->devs.pick;
 
-	if (pick != NULL) {
-	    for ( i = 0; i < iws->num_devs.pick; i++, pick++ ) {
-                phg_nset_destroy(pick->filter.incl);
-                phg_nset_destroy(pick->filter.excl);
-		if ( pick->pick.status == PIN_STATUS_OK
-			&& pick->pick.pick_path.depth > 0 )
-		    free(pick->pick.pick_path.path_list);
-	    }
-	}
+    if (pick != NULL) {
+      for ( i = 0; i < iws->num_devs.pick; i++, pick++ ) {
+        phg_nset_destroy(pick->filter.incl);
+        phg_nset_destroy(pick->filter.excl);
+        if ( pick->pick.status == PIN_STATUS_OK
+             && pick->pick.pick_path.depth > 0 )
+          free(pick->pick.pick_path.path_list);
+      }
     }
+  }
 
-    {
-	Ws_inp_string *str = iws->devs.string;
+  {
+    Ws_inp_string *str = iws->devs.string;
 
-	if (str != NULL) {
-	    for ( i = 0; i < iws->num_devs.string; i++, str++)
-		free(str->string);
-	}
+    if (str != NULL) {
+      for ( i = 0; i < iws->num_devs.string; i++, str++)
+        free(str->string);
     }
+  }
 
-    {
-	Ws_inp_choice *cho = iws->devs.choice;
+  {
+    Ws_inp_choice *cho = iws->devs.choice;
 
-	if (cho != NULL) {
-	  for ( i = 0; i < iws->num_devs.choice; i++, cho++ ){
-	    free_choice( cho );
-	  }
-	}
+    if (cho != NULL) {
+      for ( i = 0; i < iws->num_devs.choice; i++, cho++ ){
+        free_choice( cho );
+      }
     }
+  }
 
-    {
-	Ws_inp_val *val = iws->devs.valuator;
+  {
+    Ws_inp_val *val = iws->devs.valuator;
 
-	if (val != NULL) {
-	    for ( i = 0; i < iws->num_devs.val; i++, val++ )
-		free_valuator( val );
-	}
+    if (val != NULL) {
+      for ( i = 0; i < iws->num_devs.val; i++, val++ )
+        free_valuator( val );
     }
+  }
 
-    if (iws->sin_handle != NULL) {
-	phg_sin_destroy(iws->sin_handle);
-    }
-    if (iws->num_devs.loc > 0) {
-	free(iws->devs.locator);
-    }
-    if (iws->num_devs.stroke > 0) {
-	free(iws->devs.stroke);
-    }
-    if (iws->num_devs.pick > 0) {
-	free(iws->devs.pick);
-    }
-    if (iws->num_devs.val > 0) {
-	free(iws->devs.valuator);
-    }
-    if (iws->num_devs.choice > 0) {
-	free(iws->devs.choice);
-    }
-    if (iws->num_devs.string > 0) {
-	free(iws->devs.string);
-    }
-    memset(iws, 0, sizeof(*iws));
+  if (iws->sin_handle != NULL) {
+    phg_sin_destroy(iws->sin_handle);
+  }
+  if (iws->num_devs.loc > 0) {
+    free(iws->devs.locator);
+  }
+  if (iws->num_devs.stroke > 0) {
+    free(iws->devs.stroke);
+  }
+  if (iws->num_devs.pick > 0) {
+    free(iws->devs.pick);
+  }
+  if (iws->num_devs.val > 0) {
+    free(iws->devs.valuator);
+  }
+  if (iws->num_devs.choice > 0) {
+    free(iws->devs.choice);
+  }
+  if (iws->num_devs.string > 0) {
+    free(iws->devs.string);
+  }
+  memset(iws, 0, sizeof(*iws));
 }
 
 /*******************************************************************************
@@ -1637,39 +1639,39 @@ void phg_ws_input_close(
  */
 
 static int stk_enable_data(
-    Ws *ws,
-    Ws_inp_stroke *dev,
-    Sin_enable_data *ed
-    )
+                           Ws *ws,
+                           Ws_inp_stroke *dev,
+                           Sin_enable_data *ed
+                           )
 {
-    Pint num_pts;
-    XPoint *init_dwbl_pts;
+  Pint num_pts;
+  XPoint *init_dwbl_pts;
 
-    /* Set echo area and initial drawable points using current window size. */
+  /* Set echo area and initial drawable points using current window size. */
 
-    if ( dev->stroke.num_points > 0 ) {
+  if ( dev->stroke.num_points > 0 ) {
 
-	/* Get the space we have stashed away for drawable points. */
-	init_dwbl_pts = (XPoint *)
-	    (dev->stroke.points + dev->stroke.num_points);
+    /* Get the space we have stashed away for drawable points. */
+    init_dwbl_pts = (XPoint *)
+      (dev->stroke.points + dev->stroke.num_points);
 
-	/* Check and map the initial points. */
-	num_pts = dev->stroke.num_points;
-	if ( !(*ws->map_initial_points)( ws, dev->stroke.view_ind, &num_pts,
-		dev->stroke.points, init_dwbl_pts )
-		|| num_pts != dev->stroke.num_points ) {
-	    /* The points aren't valid with this window size. */
-	    ERR_BUF( ws->erh, ERR261 );
-	    return FALSE;
-	}
-	ed->data.stroke.cnt = num_pts;
-	ed->data.stroke.init_pts = init_dwbl_pts;
-    } else {
-	ed->data.stroke.cnt = 0;
-	ed->data.stroke.init_pts = (Sin_window_pt *)NULL;
+    /* Check and map the initial points. */
+    num_pts = dev->stroke.num_points;
+    if ( !(*ws->map_initial_points)( ws, dev->stroke.view_ind, &num_pts,
+                                     dev->stroke.points, init_dwbl_pts )
+         || num_pts != dev->stroke.num_points ) {
+      /* The points aren't valid with this window size. */
+      ERR_BUF( ws->erh, ERR261 );
+      return FALSE;
     }
+    ed->data.stroke.cnt = num_pts;
+    ed->data.stroke.init_pts = init_dwbl_pts;
+  } else {
+    ed->data.stroke.cnt = 0;
+    ed->data.stroke.init_pts = (Sin_window_pt *)NULL;
+  }
 
-    WSINP_DC_ECHO_TO_DRWBL_ECHO2( ws, &dev->e_volume, &ed->echo_area )
+  WSINP_DC_ECHO_TO_DRWBL_ECHO2( ws, &dev->e_volume, &ed->echo_area )
 
     return TRUE;
 }
@@ -1682,20 +1684,20 @@ static int stk_enable_data(
  */
 
 static void loc_enable_data(
-    Ws *ws,
-    Ws_inp_loc *dev,
-    Sin_enable_data *ed
-    )
+                            Ws *ws,
+                            Ws_inp_loc *dev,
+                            Sin_enable_data *ed
+                            )
 {
-    Pint num_pts = 1;
-    XPoint dwbl_pt;
+  Pint num_pts = 1;
+  XPoint dwbl_pt;
 
-    /* Set echo area using the current window size. */
-    if ( (*ws->map_initial_points)( ws, dev->loc.view_ind, &num_pts,
-	    &dev->loc.position, &dwbl_pt ) && num_pts == 1 )
-	ed->data.locator.init_pos = dwbl_pt;
-    WSINP_DC_ECHO_TO_DRWBL_ECHO2( ws, &dev->e_volume, &ed->echo_area )
-}
+  /* Set echo area using the current window size. */
+  if ( (*ws->map_initial_points)( ws, dev->loc.view_ind, &num_pts,
+                                  &dev->loc.position, &dwbl_pt ) && num_pts == 1 )
+    ed->data.locator.init_pos = dwbl_pt;
+  WSINP_DC_ECHO_TO_DRWBL_ECHO2( ws, &dev->e_volume, &ed->echo_area )
+    }
 
 /*******************************************************************************
  * phg_ws_inp_set_mode
@@ -2158,8 +2160,8 @@ void phg_ws_inp_inq_dev_state(
   switch (idev_class) {
   case PHG_ARGS_INP_LOC3:
   case PHG_ARGS_INP_LOC: {
-    Ws_inp_loc	*dev = WS_INP_DEV( ws, locator, num);
-    Plocst3	*st = &ret->data.inp_state.loc;
+    Ws_inp_loc    *dev = WS_INP_DEV( ws, locator, num);
+    Plocst3    *st = &ret->data.inp_state.loc;
 
     WSINP_COPY_COMMON_STATE_FIELDS( st, dev )
       st->loc = dev->loc;
@@ -2167,8 +2169,8 @@ void phg_ws_inp_inq_dev_state(
 
   case PHG_ARGS_INP_STK3:
   case PHG_ARGS_INP_STK: {
-    Ws_inp_stroke	*dev = WS_INP_DEV( ws, stroke, num);
-    Pstrokest3		*st = &ret->data.inp_state.stroke;
+    Ws_inp_stroke    *dev = WS_INP_DEV( ws, stroke, num);
+    Pstrokest3        *st = &ret->data.inp_state.stroke;
 
     WSINP_COPY_COMMON_STATE_FIELDS( st, dev )
       st->stroke = dev->stroke;
@@ -2176,9 +2178,9 @@ void phg_ws_inp_inq_dev_state(
 
   case PHG_ARGS_INP_PIK3:
   case PHG_ARGS_INP_PIK:{
-    Ws_inp_pick		*dev = WS_INP_DEV( ws, pick, num);
-    Ppickst3		*st = &ret->data.inp_state.pick;
-    Phg_ret		ret_filt;
+    Ws_inp_pick        *dev = WS_INP_DEV( ws, pick, num);
+    Ppickst3        *st = &ret->data.inp_state.pick;
+    Phg_ret        ret_filt;
 
     WSINP_COPY_COMMON_STATE_FIELDS( st, dev )
       st->pick = dev->pick;
@@ -2196,8 +2198,8 @@ void phg_ws_inp_inq_dev_state(
 
   case PHG_ARGS_INP_VAL3:
   case PHG_ARGS_INP_VAL: {
-    Ws_inp_val		*dev = WS_INP_DEV( ws, valuator, num);
-    Pvalst3		*st = &ret->data.inp_state.val;
+    Ws_inp_val        *dev = WS_INP_DEV( ws, valuator, num);
+    Pvalst3        *st = &ret->data.inp_state.val;
 
     WSINP_COPY_COMMON_STATE_FIELDS( st, dev )
       st->val = dev->val;
@@ -2221,8 +2223,8 @@ void phg_ws_inp_inq_dev_state(
   } break;
   case PHG_ARGS_INP_CHC3:
   case PHG_ARGS_INP_CHC: {
-    Ws_inp_choice	*dev = WS_INP_DEV( ws, choice, num);
-    Pchoicest3		*st = &ret->data.inp_state.choice.state;
+    Ws_inp_choice    *dev = WS_INP_DEV( ws, choice, num);
+    Pchoicest3        *st = &ret->data.inp_state.choice.state;
 
     WSINP_COPY_COMMON_STATE_FIELDS( st, dev )
       st->choice = dev->choice;
@@ -2246,8 +2248,8 @@ void phg_ws_inp_inq_dev_state(
 
   case PHG_ARGS_INP_STR3:
   case PHG_ARGS_INP_STR: {
-    Ws_inp_string	*dev = WS_INP_DEV( ws, string, num);
-    Pstringst3		*st = &ret->data.inp_state.string.state;
+    Ws_inp_string    *dev = WS_INP_DEV( ws, string, num);
+    Pstringst3        *st = &ret->data.inp_state.string.state;
 
     WSINP_COPY_COMMON_STATE_FIELDS( st, dev )
       st->string = dev->string;
@@ -2276,42 +2278,42 @@ void phg_ws_inp_resize(
    * updated anyway when the device *becomes* active.
    */
   for ( i = 0; i < iws->num_devs.loc; i++) {
-    Ws_inp_loc	*dev = &iws->devs.locator[i];
+    Ws_inp_loc    *dev = &iws->devs.locator[i];
     loc_enable_data( ws, dev, &ed);
     phg_sin_resize_dev( iws->sin_handle, SIN_LOCATOR, dev->num,
                         &ed, old_rect, &ws->ws_rect );
   }
 
   for ( i = 0; i < iws->num_devs.stroke; i++) {
-    Ws_inp_stroke	*dev = &iws->devs.stroke[i];
+    Ws_inp_stroke    *dev = &iws->devs.stroke[i];
     stk_enable_data( ws, dev, &ed);
     phg_sin_resize_dev( iws->sin_handle, SIN_STROKE, dev->num,
                         &ed, old_rect, &ws->ws_rect );
   }
 
   for ( i = 0; i < iws->num_devs.pick; i++) {
-    Ws_inp_pick	*dev = &iws->devs.pick[i];
+    Ws_inp_pick    *dev = &iws->devs.pick[i];
     WSINP_SET_GENERIC_ENABLE_DATA( ws, dev, &ed)
       phg_sin_resize_dev( iws->sin_handle, SIN_PICK, dev->num,
                           &ed, old_rect, &ws->ws_rect );
   }
 
   for ( i = 0; i < iws->num_devs.choice; i++) {
-    Ws_inp_choice	*dev = &iws->devs.choice[i];
+    Ws_inp_choice    *dev = &iws->devs.choice[i];
     WSINP_SET_GENERIC_ENABLE_DATA( ws, dev, &ed)
       phg_sin_resize_dev( iws->sin_handle, SIN_CHOICE, dev->num,
                           &ed, old_rect, &ws->ws_rect );
   }
 
   for ( i = 0; i < iws->num_devs.val; i++) {
-    Ws_inp_val	*dev = &iws->devs.valuator[i];
+    Ws_inp_val    *dev = &iws->devs.valuator[i];
     WSINP_SET_GENERIC_ENABLE_DATA( ws, dev, &ed)
       phg_sin_resize_dev( iws->sin_handle, SIN_VALUATOR, dev->num,
                           &ed, old_rect, &ws->ws_rect );
   }
 
   for ( i = 0; i < iws->num_devs.string; i++) {
-    Ws_inp_string	*dev = &iws->devs.string[i];
+    Ws_inp_string    *dev = &iws->devs.string[i];
     WSINP_SET_GENERIC_ENABLE_DATA( ws, dev, &ed)
       phg_sin_resize_dev( iws->sin_handle, SIN_STRING, dev->num,
                           &ed, old_rect, &ws->ws_rect );

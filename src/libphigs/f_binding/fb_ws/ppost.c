@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * ppost
+/**
+ * \file ppost.c
  *
- * DESCR:   Post structure
- * RETURNS:   N/A
+ * \brief       Post structure
  */
 
 FTN_SUBROUTINE(ppost)(

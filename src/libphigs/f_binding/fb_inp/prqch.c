@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * prqch
+/**
+ * \file prqch.c
  *
- * DESCR:       request choice
- * RETURNS:   status, choice number
+ * \brief       request choice
+ * \return status, choice number
  */
 FTN_SUBROUTINE(prqch)(
                       FTN_INTEGER(wkid),

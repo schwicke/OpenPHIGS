@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pspmi
+/**
+ * \file pspmi.c
  *
- * DESCR:       set polymarker index
- * RETURNS:   N/A
+ * \brief       set polymarker index
  */
 FTN_SUBROUTINE(pspmi)(
                       FTN_INTEGER(pmi)

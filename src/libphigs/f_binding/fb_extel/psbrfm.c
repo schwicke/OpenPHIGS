@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psbrfm
+/**
+ * \file psbrfm.c
  *
- * DESCR:       set back reflectance equation
- * RETURNS:   N/A
+ * \brief       set back reflectance equation
  */
 FTN_SUBROUTINE(psbrfm)(
                        FTN_INTEGER(refl_eq)

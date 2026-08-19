@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_ws_vp
+/**
+ * \file pset_ws_vp.c
  *
- * DESCR:   Set workstation viewport
- * RETURNS:   N/A
+ * \brief       Set workstation viewport
  */
 void pset_ws_vp(
                 Pint ws_id,

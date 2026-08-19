@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pdel_struct
+/**
+ * \file pdel_struct.c
  *
- * DESCR:   Delete structure
- * RETURNS:   N/A
+ * \brief       Delete structure
  */
 void pdel_struct(
                  Pint struct_id

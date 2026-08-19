@@ -32,11 +32,10 @@
 #define  MAX_ARRAY_SIZE 400
 #endif
 
-/*******************************************************************************
- * psrfeq
+/**
+ * \file psrfeq.c
  *
- * DESCR:       set reflectance equation
- * RETURNS:   N/A
+ * \brief       set reflectance equation
  */
 FTN_SUBROUTINE(psrfeq)(
                        FTN_INTEGER(refl_eq)

@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pschxp
+/**
+ * \file pschxp.c
  *
- * DESCR:       set character expansion factor
- * RETURNS:   N/A
+ * \brief       set character expansion factor
  */
 FTN_SUBROUTINE(pschxp)(
                        FTN_REAL(chxp)

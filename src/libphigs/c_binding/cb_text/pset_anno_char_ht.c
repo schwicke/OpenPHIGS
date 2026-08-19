@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_anno_char_ht
+/**
+ * \file pset_anno_char_ht.c
  *
- * DESCR:   Creates a new element - set annotation char height
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_anno_char_ht(
                        Pfloat height
                        )

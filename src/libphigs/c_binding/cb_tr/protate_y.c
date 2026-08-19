@@ -53,12 +53,10 @@ SOFTWARE.
 #include "phg.h"
 #include "util.h"
 
-/*******************************************************************************
- * protate_y
+/**
+ * \file protate_y.c
  *
- * DESCR:       Generate matrix for rotation around y-axis
- * RETURNS:     N/A
- */
+ * \brief       Generate matrix for rotation around y */
 void protate_y(
                Pfloat angle,              /* rotation angle */
                Pint *error_ind,           /* OUT error indicator */

@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_refl_props
+/**
+ * \file pset_refl_props.c
  *
- * DESCR:   Creates a new element - Set surface reflectance properties
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_refl_props(
                      Prefl_props *refl_props
                      )

@@ -53,11 +53,10 @@ SOFTWARE.
 #include "phg.h"
 #include "util.h"
 
-/*******************************************************************************
- * protate
+/**
+ * \file protate.c
  *
- * DESCR:       Generate rotation matrix
- * RETURNS:     N/A
+ * \brief       Generate rotation matrix
  */
 void protate(
              Pfloat angle,              /* rotation angle */

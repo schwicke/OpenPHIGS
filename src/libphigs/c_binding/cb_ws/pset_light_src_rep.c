@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_light_src_rep
+/**
+ * \file pset_light_src_rep.c
  *
- * DESCR:   Set light source for workstation
- * RETURNS:   N/A
+ * \brief       Set light source for workstation
  */
 void pset_light_src_rep(
                         Pint ws_id,

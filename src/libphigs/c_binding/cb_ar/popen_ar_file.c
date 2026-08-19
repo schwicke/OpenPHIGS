@@ -29,11 +29,10 @@
 #include "private/cbP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * popen_ar_file
+/**
+ * \file popen_ar_file.c
  *
- * DESCR:       Open archive file
- * RETURNS:     N/A
+ * \brief       Open archive file
  */
 void popen_ar_file(
                    Pint archive_id,

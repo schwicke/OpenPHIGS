@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_elem_content
+/**
+ * \file pinq_elem_content.c
  *
- * DESCR:   Get element content
- * RETURNS:   N/A
+ * \brief       Get element content
  */
 void pinq_elem_content(
                        Pint struct_id,

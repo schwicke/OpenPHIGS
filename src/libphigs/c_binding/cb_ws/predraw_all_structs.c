@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * predraw_all_structs
+/**
+ * \file predraw_all_structs.c
  *
- * DESCR:   Redraw all structures on workstation
- * RETURNS:   N/A
+ * \brief       Redraw all structures on workstation
  */
 void predraw_all_structs(
                          Pint ws_id,

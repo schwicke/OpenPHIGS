@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pstxci
+/**
+ * \file pstxci.c
  *
- * DESCR:       Set text colour index
- * RETURNS:     N/A
+ * \brief       Set text colour index
  */
 FTN_SUBROUTINE(pstxci)(
                        FTN_INTEGER(coli)

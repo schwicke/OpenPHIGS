@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psici
+/**
+ * \file psici.c
  *
- * DESCR:   set interior colour index for front face
- * RETURNS:   N/A
+ * \brief       set interior colour index for front face
  */
 FTN_SUBROUTINE(psici)(
                       FTN_INTEGER(coli)

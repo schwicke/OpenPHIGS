@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * psmk
+/**
+ * \file psmk.c
  *
- * DESCR:       set marker type
- * RETURNS:   N/A
+ * \brief       set marker type
  */
 FTN_SUBROUTINE(psmk)(
                      FTN_INTEGER(mtype)

@@ -28,12 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pschh
+/**
+ * \file pschh.c
  *
- * DESCR:       Creates a new element - Character height Attribute
- * RETURNS:     N/A
- */
+ * \brief       Creates a new element  */
 
 FTN_SUBROUTINE(pschh)(
                       FTN_REAL(chh)

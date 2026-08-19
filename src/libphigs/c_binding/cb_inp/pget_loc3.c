@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * pget_loc3
+/**
+ * \file pget_loc3.c
  *
- * DESCR:       Get locator event from event queue 3D
- * RETURNS:     N/A
+ * \brief       Get locator event from event queue 3D
  */
 void pget_loc3(
                Pint *view_ind,

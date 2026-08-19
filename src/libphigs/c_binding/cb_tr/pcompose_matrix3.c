@@ -53,11 +53,10 @@ SOFTWARE.
 #include "phg.h"
 #include "util.h"
 
-/*******************************************************************************
- * pcompose_matrix3
+/**
+ * \file pcompose_matrix3.c
  *
- * DESCR:       Generate combined 3D transformation matrix
- * RETURNS:     N/A
+ * \brief       Generate combined 3D transformation matrix
  */
 void pcompose_matrix3(
                       Pmatrix3 a,                /* matrix a */

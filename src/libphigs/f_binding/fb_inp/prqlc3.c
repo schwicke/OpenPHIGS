@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * prqlc3
+/**
+ * \file prqlc3.c
  *
- * DESCR:       request locator 3
- * RETURNS:   status, view index, point in WC
+ * \brief       request locator 3
+ * \return status, view index, point in WC
  */
 FTN_SUBROUTINE(prqlc3)(
                        FTN_INTEGER(wkid),

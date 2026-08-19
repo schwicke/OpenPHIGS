@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_invis_filter
+/**
+ * \file pset_invis_filter.c
  *
- * DESCR:   Set workstation invisibility filter
- * RETURNS:   N/A
+ * \brief       Set workstation invisibility filter
  */
 void pset_invis_filter(
                        Pint ws_id,

@@ -27,12 +27,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pset_refl_model
+/**
+ * \file pset_refl_model.c
  *
- * DESCR:   Creates a new element - Set surface reflectance equation
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pset_refl_model(
                    Pint refl_model
                    )

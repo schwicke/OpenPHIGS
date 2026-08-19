@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pqhrm
+/**
+ * \file pqhrm.c
  *
- * DESCR:       Inquire hlhsr mode
- * RETURNS:     N/A
+ * \brief       Inquire hlhsr mode
  */
 
 FTN_SUBROUTINE(pqhrm)(

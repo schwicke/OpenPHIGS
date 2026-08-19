@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * pset_marker_rep
+/**
+ * \file pset_marker_rep.c
  *
- * DESCR:   Set workstation marker represenation
- * RETURNS:   N/A
+ * \brief       Set workstation marker represenation
  */
 void pset_marker_rep(
                      Pint ws_id,

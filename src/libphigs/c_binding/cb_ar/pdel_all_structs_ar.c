@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pdel_all_structs_ar
+/**
+ * \file pdel_all_structs_ar.c
  *
- * DESCR:       Delete all structures from archive
- * RETURNS:     N/A
+ * \brief       Delete all structures from archive
  */
 void pdel_all_structs_ar(
                          Pint archive_id

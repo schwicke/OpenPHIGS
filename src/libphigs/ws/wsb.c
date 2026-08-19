@@ -63,28 +63,29 @@ SOFTWARE.
 #include "util.h"
 #include "ws.h"
 #include "cp.h"
+#include "private/sinP.h"    // FIXME restructure so that we do not need this here
 #include "private/wsbP.h"
 #include "private/wsglP.h"
 #include "private/wsxP.h"
 #include "css.h"
 #include "alloc.h"
 
-#define WSB_NONE_POSTED(posted_ptr) \
+#define WSB_NONE_POSTED(posted_ptr)                       \
   ((posted_ptr)->lowest.higher == &(posted_ptr)->highest)
 
-#define WSB_SOME_POSTED(posted_ptr) \
+#define WSB_SOME_POSTED(posted_ptr)                       \
   ((posted_ptr)->lowest.higher != &(posted_ptr)->highest)
 
-#define WSB_CHECK_POSTED(posted_ptr) \
-  assert(((posted_ptr)->lowest.higher == &(posted_ptr)->highest)        \
+#define WSB_CHECK_POSTED(posted_ptr)                                \
+  assert(((posted_ptr)->lowest.higher == &(posted_ptr)->highest)    \
          == ((posted_ptr)->highest.lower == &(posted_ptr)->lowest))
 
 #define WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, now_action_ptr)  \
-{                                                               \
-  if ( *(now_action_ptr) == PHG_UPDATE_IF_IG ||                 \
-       *(now_action_ptr) == PHG_UPDATE_IF_IL)                   \
-    phg_wsb_resolve_now_action(ws, now_action_ptr);             \
-}
+  {                                                             \
+    if ( *(now_action_ptr) == PHG_UPDATE_IF_IG ||               \
+         *(now_action_ptr) == PHG_UPDATE_IF_IL)                 \
+      phg_wsb_resolve_now_action(ws, now_action_ptr);           \
+  }
 
 static void wsb_load_funcs(
                            Ws *ws
@@ -146,102 +147,102 @@ static void wsb_load_funcs(
 /*
  * Tables that determine what update action is valid at a give point
  * in time.  The table has 3 axes:
- *	[Time] [Modification Mode] [Deferral Mode].
+ *    [Time] [Modification Mode] [Deferral Mode].
  */
 
 static Ws_action_table default_action_table =
   {
     {   /* PHG_TIME_NOW */
       {   /* NIVE */
-        PHG_UPDATE_ACCURATE, 		/* ASAP */
-        PHG_UPDATE_IF_IG,	 	/* BNIG */
-        PHG_UPDATE_IF_IL, 		/* BNIL */
-        PHG_UPDATE_NOTHING, 		/* ASTI */
-        PHG_UPDATE_NOTHING		/* WAIT */
+        PHG_UPDATE_ACCURATE,         /* ASAP */
+        PHG_UPDATE_IF_IG,         /* BNIG */
+        PHG_UPDATE_IF_IL,         /* BNIL */
+        PHG_UPDATE_NOTHING,         /* ASTI */
+        PHG_UPDATE_NOTHING        /* WAIT */
       },
       {   /* UWOR */
-        PHG_UPDATE_ACCURATE, 		/* ASAP */
-        PHG_UPDATE_IF_IG, 		/* BNIG */
-        PHG_UPDATE_IF_IL, 		/* BNIL */
-        PHG_UPDATE_UWOR, 		/* ASTI */
-        PHG_UPDATE_UWOR		/* WAIT */
+        PHG_UPDATE_ACCURATE,         /* ASAP */
+        PHG_UPDATE_IF_IG,         /* BNIG */
+        PHG_UPDATE_IF_IL,         /* BNIL */
+        PHG_UPDATE_UWOR,         /* ASTI */
+        PHG_UPDATE_UWOR        /* WAIT */
       },
       {   /* UQUM */
-        PHG_UPDATE_ACCURATE, 		/* ASAP */
-        PHG_UPDATE_IF_IG, 		/* BNIG */
-        PHG_UPDATE_IF_IL, 		/* BNIL */
-        PHG_UPDATE_UQUM, 		/* ASTI */
-        PHG_UPDATE_UQUM		/* WAIT */
+        PHG_UPDATE_ACCURATE,         /* ASAP */
+        PHG_UPDATE_IF_IG,         /* BNIG */
+        PHG_UPDATE_IF_IL,         /* BNIL */
+        PHG_UPDATE_UQUM,         /* ASTI */
+        PHG_UPDATE_UQUM        /* WAIT */
       },
     },
 
     {   /* PHG_TIME_BIG */
       {   /* NIVE */
-        ASSURE_CORRECT, 		/* ASAP */
-        PHG_UPDATE_ACCURATE, 		/* BNIG */
-        PHG_UPDATE_NOTHING, 		/* BNIL */
-        PHG_UPDATE_NOTHING, 		/* ASTI */
-        PHG_UPDATE_NOTHING		/* WAIT */
+        ASSURE_CORRECT,         /* ASAP */
+        PHG_UPDATE_ACCURATE,         /* BNIG */
+        PHG_UPDATE_NOTHING,         /* BNIL */
+        PHG_UPDATE_NOTHING,         /* ASTI */
+        PHG_UPDATE_NOTHING        /* WAIT */
       },
       {   /* UWOR */
-        ASSURE_CORRECT, 		/* ASAP */
-        PHG_UPDATE_ACCURATE, 		/* BNIG */
-        PHG_UPDATE_NOTHING, 		/* BNIL */
-        PHG_UPDATE_NOTHING, 		/* ASTI */
-        PHG_UPDATE_NOTHING		/* WAIT */
+        ASSURE_CORRECT,         /* ASAP */
+        PHG_UPDATE_ACCURATE,         /* BNIG */
+        PHG_UPDATE_NOTHING,         /* BNIL */
+        PHG_UPDATE_NOTHING,         /* ASTI */
+        PHG_UPDATE_NOTHING        /* WAIT */
       },
       {   /* UQUM */
-        ASSURE_CORRECT, 		/* ASAP */
-        PHG_UPDATE_ACCURATE, 		/* BNIG */
-        PHG_UPDATE_NOTHING, 		/* BNIL */
-        PHG_UPDATE_NOTHING, 		/* ASTI */
-        PHG_UPDATE_NOTHING		/* WAIT */
+        ASSURE_CORRECT,         /* ASAP */
+        PHG_UPDATE_ACCURATE,         /* BNIG */
+        PHG_UPDATE_NOTHING,         /* BNIL */
+        PHG_UPDATE_NOTHING,         /* ASTI */
+        PHG_UPDATE_NOTHING        /* WAIT */
       },
     },
     {   /* PHG_TIME_BIL */
       {   /* NIVE */
-        ASSURE_CORRECT, 		/* ASAP */
-        PHG_UPDATE_ACCURATE, 		/* BNIG */
-        PHG_UPDATE_ACCURATE, 		/* BNIL */
-        PHG_UPDATE_NOTHING, 		/* ASTI */
-        PHG_UPDATE_NOTHING		/* WAIT */
+        ASSURE_CORRECT,         /* ASAP */
+        PHG_UPDATE_ACCURATE,         /* BNIG */
+        PHG_UPDATE_ACCURATE,         /* BNIL */
+        PHG_UPDATE_NOTHING,         /* ASTI */
+        PHG_UPDATE_NOTHING        /* WAIT */
       },
       {   /* UWOR */
-        ASSURE_CORRECT, 		/* ASAP */
-        PHG_UPDATE_ACCURATE, 		/* BNIG */
-        PHG_UPDATE_ACCURATE, 		/* BNIL */
-        PHG_UPDATE_NOTHING, 		/* ASTI */
-        PHG_UPDATE_NOTHING		/* WAIT */
+        ASSURE_CORRECT,         /* ASAP */
+        PHG_UPDATE_ACCURATE,         /* BNIG */
+        PHG_UPDATE_ACCURATE,         /* BNIL */
+        PHG_UPDATE_NOTHING,         /* ASTI */
+        PHG_UPDATE_NOTHING        /* WAIT */
       },
       {   /* UQUM */
-        ASSURE_CORRECT, 		/* ASAP */
-        PHG_UPDATE_ACCURATE, 		/* BNIG */
-        PHG_UPDATE_ACCURATE, 		/* BNIL */
-        PHG_UPDATE_NOTHING, 		/* ASTI */
-        PHG_UPDATE_NOTHING		/* WAIT */
+        ASSURE_CORRECT,         /* ASAP */
+        PHG_UPDATE_ACCURATE,         /* BNIG */
+        PHG_UPDATE_ACCURATE,         /* BNIL */
+        PHG_UPDATE_NOTHING,         /* ASTI */
+        PHG_UPDATE_NOTHING        /* WAIT */
       },
     },
     {   /* PHG_TIME_ATI */
       {   /* NIVE */
-        ASSURE_CORRECT, 		/* ASAP */
-        PHG_UPDATE_IF_INCORRECT, 	/* BNIG */
-        PHG_UPDATE_IF_INCORRECT, 	/* BNIL */
-        PHG_UPDATE_ACCURATE, 		/* ASTI */
-        PHG_UPDATE_NOTHING		/* WAIT */
+        ASSURE_CORRECT,         /* ASAP */
+        PHG_UPDATE_IF_INCORRECT,     /* BNIG */
+        PHG_UPDATE_IF_INCORRECT,     /* BNIL */
+        PHG_UPDATE_ACCURATE,         /* ASTI */
+        PHG_UPDATE_NOTHING        /* WAIT */
       },
       {   /* UWOR */
-        ASSURE_CORRECT, 		/* ASAP */
-        PHG_UPDATE_IF_INCORRECT, 	/* BNIG */
-        PHG_UPDATE_IF_INCORRECT, 	/* BNIL */
-        PHG_UPDATE_ACCURATE, 		/* ASTI */
-        PHG_UPDATE_NOTHING		/* WAIT */
+        ASSURE_CORRECT,         /* ASAP */
+        PHG_UPDATE_IF_INCORRECT,     /* BNIG */
+        PHG_UPDATE_IF_INCORRECT,     /* BNIL */
+        PHG_UPDATE_ACCURATE,         /* ASTI */
+        PHG_UPDATE_NOTHING        /* WAIT */
       },
       {   /* UQUM */
-        ASSURE_CORRECT, 		/* ASAP */
-        PHG_UPDATE_IF_INCORRECT, 	/* BNIG */
-        PHG_UPDATE_IF_INCORRECT, 	/* BNIL */
-        PHG_UPDATE_ACCURATE, 		/* ASTI */
-        PHG_UPDATE_NOTHING		/* WAIT */
+        ASSURE_CORRECT,         /* ASAP */
+        PHG_UPDATE_IF_INCORRECT,     /* BNIG */
+        PHG_UPDATE_IF_INCORRECT,     /* BNIL */
+        PHG_UPDATE_ACCURATE,         /* ASTI */
+        PHG_UPDATE_NOTHING        /* WAIT */
       },
     }
   };
@@ -250,8 +251,8 @@ static void init_update_state(
                               Ws *ws
                               )
 {
-  Ws_output_ws	*ows = &ws->out_ws;
-  Wsb_output_ws	*owsb = &ows->model.b;
+  Ws_output_ws    *ows = &ws->out_ws;
+  Wsb_output_ws    *owsb = &ows->model.b;
 
   ows->def_mode = ws->type->desc_tbl.phigs_dt.out_dt.deferral_mode;
   ows->mod_mode = ws->type->desc_tbl.phigs_dt.out_dt.modification_mode;
@@ -642,7 +643,7 @@ void wsb_free_all_posted(
                          Wsb_output_ws *owsb
                          )
 {
-  Ws_post_str	*cur, *end;
+  Ws_post_str    *cur, *end;
 
   cur = owsb->posted.lowest.higher;
   end = &owsb->posted.highest;
@@ -654,15 +655,32 @@ void wsb_free_all_posted(
   end->lower = &owsb->posted.lowest;
 }
 
+static void destroy_view_list(List *pList)
+{
+  Node *pNode, *pNext;
+  Ws_view_ref *vref;
+
+  for (pNode = LIST_HEAD(pList); pNode != NULL; pNode = pNext) {
+    pNext = NODE_NEXT(pNode);
+    vref = (Ws_view_ref *) ((char *) pNode - offsetof(Ws_view_ref, node));
+    free(vref);
+  }
+  list_init(pList);
+}
+
 void wsb_destroy_ws(
                     Ws *ws
                     )
 {
   if ( ws ) {
-    if ( ws->display ) {
-      if ( ws->drawable_id )
-        phg_wsx_release_window( ws );
+    Ws_output_ws *ows = &ws->out_ws;
+    Wsb_output_ws *owsb = &ows->model.b;
 
+    /* close inputs */
+    phg_ws_input_close( ws );
+
+    if ( ws->display ) {
+      if ( ws->drawable_id ) phg_wsx_release_window( ws );
       destroy_resources(ws);
 
       /* NOTE:
@@ -672,6 +690,17 @@ void wsb_destroy_ws(
 
       XFlush( ws->display );
     }
+    /* Free views */
+    destroy_view_list(&owsb->pending_views);
+    destroy_view_list(&owsb->views);
+    /* Free hash tables */
+    phg_wsb_destroy_LUTs(ws);
+    /* Free Scratch space */
+    if (ws->scratch.size > 0){
+      free(ws->scratch.buf);
+      ws->scratch.size = 0;
+    }
+    /* free the ws pointer and set it to NULL */
     phg_wsx_destroy( ws );
   }
 }
@@ -774,6 +803,7 @@ void phg_wsb_make_requested_current(
 #endif
         list_remove(&owsb->views, &dupref->node);
         free(dupref);
+        dupref = NULL;
       }
 
       list_enqueue(&owsb->views, &vref->node, vref->priority);
@@ -815,7 +845,7 @@ void phg_wsb_repaint_all(
                          Pctrl_flag clear_control
                          )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
   /* assuming this stuff does clear */
   if (clear_control == PFLAG_ALWAYS
@@ -833,15 +863,15 @@ void phg_wsb_repaint_all(
   }
   owsb->surf_state = PSURF_EMPTY;
 
-    phg_wsb_traverse_all_postings(ws);
+  phg_wsb_traverse_all_postings(ws);
 
-    /* now swap the buffers and update the drawable indices */
-    wsgl_flush(ws);
+  /* now swap the buffers and update the drawable indices */
+  wsgl_flush(ws);
 
 #if TODO
-    /* Redraw input prompts & echos of any active input devices. */
-    if ( ws->input_repaint && WS_ANY_INP_DEV_ACTIVE(ws) )
-      (ws->input_repaint)( ws, num_rects, exposure_rects );
+  /* Redraw input prompts & echos of any active input devices. */
+  if ( ws->input_repaint && WS_ANY_INP_DEV_ACTIVE(ws) )
+    (ws->input_repaint)( ws, num_rects, exposure_rects );
 #endif
 }
 
@@ -927,8 +957,8 @@ void phg_wsb_add_el(
                     Ws *ws
                     )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
-  El_handle		cur_el = CSS_CUR_ELP(owsb->cssh);
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
+  El_handle        cur_el = CSS_CUR_ELP(owsb->cssh);
 
 #ifdef DEBUG
   printf("wsb: Add\n");
@@ -958,7 +988,7 @@ int phg_wsb_asti_update(
 {
   /* Returns non-zero if redraw occurred. */
 
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
 #ifdef DEBUG
   printf("wsb: Asti\n");
@@ -994,7 +1024,7 @@ void phg_wsb_close_struct(
                           Struct_handle structh
                           )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
 #ifdef DEBUG
   printf("wsb: Close\n");
@@ -1011,110 +1041,110 @@ void phg_wsb_close_struct(
     break;
   }
 
-    /* Updates are implementation dependent in ASTI mode.  This is one
-     * of the cases where we do an ASTI update;  we're hopefully doing the
-     * application a favor.
-     */
-    (void)phg_wsb_asti_update( ws, PFLAG_COND );
+  /* Updates are implementation dependent in ASTI mode.  This is one
+   * of the cases where we do an ASTI update;  we're hopefully doing the
+   * application a favor.
+   */
+  (void)phg_wsb_asti_update( ws, PFLAG_COND );
 }
 
 static void wsb_update_a_posting(
-    Ws *ws,
-    Ws_post_str *posting
-    )
+                                 Ws *ws,
+                                 Ws_post_str *posting
+                                 )
 {
-    Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
 #ifdef DEBUG
-    printf("wsb: Posting\n");
+  printf("wsb: Posting\n");
 #endif
 
-    WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, &owsb->now_action);
-    switch ( owsb->now_action ) {
-    case_PHG_UPDATE_ACCURATE_or_IF_Ix:
-      (*ws->redraw_all)( ws, PFLAG_COND );
-      break;
+  WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, &owsb->now_action);
+  switch ( owsb->now_action ) {
+  case_PHG_UPDATE_ACCURATE_or_IF_Ix:
+    (*ws->redraw_all)( ws, PFLAG_COND );
+    break;
 
-    case PHG_UPDATE_UWOR:
-    case PHG_UPDATE_NOTHING:
-    case PHG_UPDATE_UQUM:
-      owsb->vis_rep = PVISUAL_ST_DEFER;
-      break;
-    default:
-      /* Default */
-      break;
-    }
+  case PHG_UPDATE_UWOR:
+  case PHG_UPDATE_NOTHING:
+  case PHG_UPDATE_UQUM:
+    owsb->vis_rep = PVISUAL_ST_DEFER;
+    break;
+  default:
+    /* Default */
+    break;
+  }
 }
 
 void phg_wsb_post(
-    Ws *ws,
-    Struct_handle structh,
-    Pfloat priority,
-    Pint first_posting
-    )
+                  Ws *ws,
+                  Struct_handle structh,
+                  Pfloat priority,
+                  Pint first_posting
+                  )
 {
-    Ws_post_str 	*start;
+  Ws_post_str     *start;
 
-    Wsb_output_ws	*owsb = &ws->out_ws.model.b;
-    Ws_post_str 	*cur, *end;
-    Ws_post_str 	*new;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
+  Ws_post_str     *cur, *end;
+  Ws_post_str     *new;
 
-    if ( !first_posting ) {
-      /* Check to see if structure is already posted. */
-      cur = owsb->posted.lowest.higher;
-      end = &owsb->posted.highest;
-      while ( cur != end && cur->structh != structh )
-        cur = cur->higher;
-    }
+  if ( !first_posting ) {
+    /* Check to see if structure is already posted. */
+    cur = owsb->posted.lowest.higher;
+    end = &owsb->posted.highest;
+    while ( cur != end && cur->structh != structh )
+      cur = cur->higher;
+  }
 
-    /* The structure is already_posted if (cur != end). */
-    if ( !first_posting && cur != end ) {
-      if( cur->higher != end && priority >= cur->higher->disp_pri ) {
-        start = end->lower;
-        assert(start == owsb->posted.highest.lower);
-        end = cur->higher;	/* insert betw. cur->higher & posted.highest */
-      } else if ( cur->lower != &owsb->posted.lowest
-                  && priority < cur->lower->disp_pri ) {
-        /* Will insert between start and cur->lower. */
-        start = cur->lower;
-        end = &owsb->posted.lowest;
-      } else {
-        /* This is a reposting with the same *relative* prio. */
-        cur->disp_pri = priority;
-        return;
-      }
-
-      /* Struct is posted.  Remove it, but re-use its Ws_post_str entry */
-      cur->lower->higher = cur->higher;
-      cur->higher->lower = cur->lower;
-      new = cur;
-
-    } else {
-      /* Struct is not currently posted, malloc an element. */
-      if ( !(new = (Ws_post_str *)malloc(sizeof(Ws_post_str))) ) {
-        ERR_BUF( ws->erh, ERR900);
-        return;
-      }
-      start = owsb->posted.highest.lower;
+  /* The structure is already_posted if (cur != end). */
+  if ( !first_posting && cur != end ) {
+    if( cur->higher != end && priority >= cur->higher->disp_pri ) {
+      start = end->lower;
+      assert(start == owsb->posted.highest.lower);
+      end = cur->higher;    /* insert betw. cur->higher & posted.highest */
+    } else if ( cur->lower != &owsb->posted.lowest
+                && priority < cur->lower->disp_pri ) {
+      /* Will insert between start and cur->lower. */
+      start = cur->lower;
       end = &owsb->posted.lowest;
+    } else {
+      /* This is a reposting with the same *relative* prio. */
+      cur->disp_pri = priority;
+      return;
     }
 
-    /* Now figure out where to insert it, working backwards from start
-     * to end
-     */
-    cur = start;
-    while ( cur != end && cur->disp_pri > priority )
-      cur = cur->lower;	/* if priorities equal, new after cur */
-    /* insert new element w/prio >= than cur's, so cur->higher will be new */
-    new->lower = cur;
-    new->higher = cur->higher;
-    cur->higher = new;
-    new->higher->lower = new;
-    new->structh = structh;
-    new->disp_pri = priority;
+    /* Struct is posted.  Remove it, but re-use its Ws_post_str entry */
+    cur->lower->higher = cur->higher;
+    cur->higher->lower = cur->lower;
+    new = cur;
 
-    if ( structh->num_el != 0 )
-      wsb_update_a_posting( ws, new );
+  } else {
+    /* Struct is not currently posted, malloc an element. */
+    if ( !(new = (Ws_post_str *)malloc(sizeof(Ws_post_str))) ) {
+      ERR_BUF( ws->erh, ERR900);
+      return;
+    }
+    start = owsb->posted.highest.lower;
+    end = &owsb->posted.lowest;
+  }
+
+  /* Now figure out where to insert it, working backwards from start
+   * to end
+   */
+  cur = start;
+  while ( cur != end && cur->disp_pri > priority )
+    cur = cur->lower;    /* if priorities equal, new after cur */
+  /* insert new element w/prio >= than cur's, so cur->higher will be new */
+  new->lower = cur;
+  new->higher = cur->higher;
+  cur->higher = new;
+  new->higher->lower = new;
+  new->structh = structh;
+  new->disp_pri = priority;
+
+  if ( structh->num_el != 0 )
+    wsb_update_a_posting( ws, new );
 }
 
 /* This function only called from the css for change struct ids/refs -
@@ -1126,13 +1156,13 @@ void phg_wsb_post(
  */
 
 void phg_wsb_change_posting(
-    Ws *ws,
-    Struct_handle unpost,
-    Struct_handle post
-    )
+                            Ws *ws,
+                            Struct_handle unpost,
+                            Struct_handle post
+                            )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
-  Ws_post_str 	*cur, *end;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
+  Ws_post_str     *cur, *end;
 
   cur = owsb->posted.lowest.higher;
   end = &owsb->posted.highest;
@@ -1160,64 +1190,39 @@ void phg_wsb_change_posting(
  * If not, return NULL.
  */
 static Ws_post_str* wsb_unpost_struct_if_found(
-    Wsb_output_ws *owsb,
-    Struct_handle structh
-    )
+                                               Wsb_output_ws *owsb,
+                                               Struct_handle structh
+                                               )
 {
-    Ws_post_str	*cur, *end;
+  Ws_post_str    *cur, *end;
 
-    cur = owsb->posted.lowest.higher;
-    end = &owsb->posted.highest;
-    while ( cur != end && cur->structh != structh )
-      cur = cur->higher;
-    if ( cur != end ) {
-      /* Found it -- now delete it */
-      cur->lower->higher = cur->higher;
-      cur->higher->lower = cur->lower;
-      end = cur->higher;	/* Save this around the free */
-      free( (char *)cur );
-      return end;
-    } else
-      return (Ws_post_str*)NULL;
+  cur = owsb->posted.lowest.higher;
+  end = &owsb->posted.highest;
+  while ( cur != end && cur->structh != structh )
+    cur = cur->higher;
+  if ( cur != end ) {
+    /* Found it -- now delete it */
+    cur->lower->higher = cur->higher;
+    cur->higher->lower = cur->lower;
+    end = cur->higher;    /* Save this around the free */
+    free( (char *)cur );
+    return end;
+  } else
+    return (Ws_post_str*)NULL;
 }
 
 void phg_wsb_unpost(
-    Ws *ws,
-    Struct_handle structh
-    )
+                    Ws *ws,
+                    Struct_handle structh
+                    )
 {
-    Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
-    if ( !wsb_unpost_struct_if_found( owsb, structh ) )
-      /* Tried to unpost structure that wasn't there; but that's okay. */
-      return;
+  if ( !wsb_unpost_struct_if_found( owsb, structh ) )
+    /* Tried to unpost structure that wasn't there; but that's okay. */
+    return;
 
-    if ( structh->num_el != 0 ) {
-      WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, &owsb->now_action);
-      switch ( owsb->now_action ) {
-      case_PHG_UPDATE_ACCURATE_or_IF_Ix:
-        (*ws->redraw_all)( ws, PFLAG_COND );
-        break;
-
-      case PHG_UPDATE_UWOR:
-      case PHG_UPDATE_NOTHING:
-      case PHG_UPDATE_UQUM:
-        owsb->vis_rep = PVISUAL_ST_DEFER;
-        break;
-      default:
-        /* Default */
-        break;
-      }
-    }
-}
-
-void phg_wsb_unpost_all(
-    Ws *ws
-    )
-{
-    Wsb_output_ws	*owsb = &ws->out_ws.model.b;
-
-    wsb_free_all_posted( owsb );
+  if ( structh->num_el != 0 ) {
     WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, &owsb->now_action);
     switch ( owsb->now_action ) {
     case_PHG_UPDATE_ACCURATE_or_IF_Ix:
@@ -1233,16 +1238,41 @@ void phg_wsb_unpost_all(
       /* Default */
       break;
     }
+  }
+}
+
+void phg_wsb_unpost_all(
+                        Ws *ws
+                        )
+{
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
+
+  wsb_free_all_posted( owsb );
+  WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, &owsb->now_action);
+  switch ( owsb->now_action ) {
+  case_PHG_UPDATE_ACCURATE_or_IF_Ix:
+    (*ws->redraw_all)( ws, PFLAG_COND );
+    break;
+
+  case PHG_UPDATE_UWOR:
+  case PHG_UPDATE_NOTHING:
+  case PHG_UPDATE_UQUM:
+    owsb->vis_rep = PVISUAL_ST_DEFER;
+    break;
+  default:
+    /* Default */
+    break;
+  }
 }
 
 void phg_wsb_delete_all_structs(
-    Ws *ws
-    )
+                                Ws *ws
+                                )
 {
-    Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
-    WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, &owsb->now_action);
-    phg_wsb_unpost_all( ws );
+  WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, &owsb->now_action);
+  phg_wsb_unpost_all( ws );
 }
 
 int phg_wsb_delete_struct(
@@ -1255,26 +1285,26 @@ int phg_wsb_delete_struct(
   int           call_again = 0;
 
   WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, &owsb->now_action);
-    switch ( owsb->now_action ) {
-    case_PHG_UPDATE_ACCURATE_or_IF_Ix:
-      if ( flag == WS_PRE_CSS_DELETE ) {
-        (void)wsb_unpost_struct_if_found( owsb, structh );
-        call_again = 1;
-      } else
-        (*ws->redraw_all)( ws, PFLAG_COND );
-      break;
-
-    case PHG_UPDATE_UWOR:
-    case PHG_UPDATE_NOTHING:
-    case PHG_UPDATE_UQUM:
+  switch ( owsb->now_action ) {
+  case_PHG_UPDATE_ACCURATE_or_IF_Ix:
+    if ( flag == WS_PRE_CSS_DELETE ) {
       (void)wsb_unpost_struct_if_found( owsb, structh );
-      owsb->vis_rep = PVISUAL_ST_DEFER;
-      break;
-    default:
-      /* Default */
-      break;
-    }
-    return call_again;
+      call_again = 1;
+    } else
+      (*ws->redraw_all)( ws, PFLAG_COND );
+    break;
+
+  case PHG_UPDATE_UWOR:
+  case PHG_UPDATE_NOTHING:
+  case PHG_UPDATE_UQUM:
+    (void)wsb_unpost_struct_if_found( owsb, structh );
+    owsb->vis_rep = PVISUAL_ST_DEFER;
+    break;
+  default:
+    /* Default */
+    break;
+  }
+  return call_again;
 }
 
 int phg_wsb_delete_struct_net(
@@ -1337,7 +1367,7 @@ int phg_wsb_delete_el(
         call_again = 0; /* avoid second call. */
       else
         call_again = 1;
-    } else		/* POST_CSS_DELETE */
+    } else        /* POST_CSS_DELETE */
       (*ws->redraw_all)(ws, PFLAG_COND);
     break;
 
@@ -1358,7 +1388,7 @@ void phg_wsb_conditional_redraw(
                                 Ws *ws
                                 )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
   WSB_CHECK_FOR_INTERACTION_UNDERWAY(ws, &owsb->now_action);
   switch ( owsb->now_action ) {
@@ -1389,7 +1419,7 @@ void phg_wsb_resolve_now_action(
                                 Ws_update_action *now_action_ptr
                                 )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
   switch ( *now_action_ptr ) {
   case PHG_UPDATE_IF_IL:
@@ -1421,7 +1451,7 @@ void phg_wsb_update(
                     Pregen_flag flag
                     )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
   if ( flag != PFLAG_POSTPONE && owsb->vis_rep != PVISUAL_ST_CORRECT )
     (*ws->redraw_all)( ws, PFLAG_COND );
@@ -1435,10 +1465,10 @@ void phg_wsb_set_disp_update_state(
                                    Pmod_mode mod_mode
                                    )
 {
-  Ws_update_action	previous_now_action;
+  Ws_update_action    previous_now_action;
 
-  Ws_output_ws	*out_ws = &ws->out_ws;
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Ws_output_ws    *out_ws = &ws->out_ws;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
   out_ws->def_mode = def_mode;
   out_ws->mod_mode = mod_mode;
@@ -1467,7 +1497,7 @@ void phg_wsb_set_hlhsr_mode(
                             Pint mode
                             )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
   owsb->req_hlhsr_mode = mode;
   owsb->hlhsr_mode_pending = PUPD_PEND;
@@ -1493,10 +1523,10 @@ void phg_wsb_set_ws_window(
                            Plimit3 *limits
                            )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
   owsb->ws_window_pending = PUPD_PEND;
-  if ( two_d ) {	/* leave the z values as they are */
+  if ( two_d ) {    /* leave the z values as they are */
     owsb->req_ws_window.x_min = limits->x_min;
     owsb->req_ws_window.x_max = limits->x_max;
     owsb->req_ws_window.y_min = limits->y_min;
@@ -1525,10 +1555,10 @@ void phg_wsb_set_ws_vp(
                        Plimit3 *limits
                        )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
   owsb->ws_viewport_pending = PUPD_PEND;
-  if ( two_d ) {	/* leave the z values as they are */
+  if ( two_d ) {    /* leave the z values as they are */
     owsb->req_ws_viewport.x_min = limits->x_min;
     owsb->req_ws_viewport.x_max = limits->x_max;
     owsb->req_ws_viewport.y_min = limits->y_min;
@@ -1594,7 +1624,7 @@ void phg_wsb_set_rep(
                      Phg_args_rep_data *rep
                      )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
   Pgcolr      gcolr;
 
   switch ( type ) {
@@ -1726,11 +1756,11 @@ void phg_wsb_inq_posted(
                         Phg_ret *ret
                         )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
-  Ws_post_str	*cur, *end;
-  int		cnt;
-  Pposted_struct	*list;
+  Ws_post_str    *cur, *end;
+  int        cnt;
+  Pposted_struct    *list;
 
   cur = owsb->posted.lowest.higher;
   end = &owsb->posted.highest;
@@ -1767,7 +1797,7 @@ void phg_wsb_inq_disp_update_state(
                                    Phg_ret *ret
                                    )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
   ret->err = 0;
   ret->data.update_state.def_mode = ws->out_ws.def_mode;
@@ -1781,7 +1811,7 @@ void phg_wsb_inq_hlhsr_mode(
                             Phg_ret *ret
                             )
 {
-  Wsb_output_ws	*owsb = &ws->out_ws.model.b;
+  Wsb_output_ws    *owsb = &ws->out_ws.model.b;
 
   ret->err = 0;
   ret->data.hlhsr_mode.state =  owsb->hlhsr_mode_pending;
@@ -2327,12 +2357,12 @@ int phg_wsb_resolve_pick(
   Pint i;
   Ws_post_str *post_str, *end;
   Ws_hit_box box;
-  Ws_pick_elmt *elmts;
-  Pint err_ind, depth;
+  Ws_pick_elmt *elmts = NULL;
+  Pint err_ind, depth = 0;
   Wsb_output_ws *owsb = &ws->out_ws.model.b;
 
 #ifdef DEBUGINP
-    printf("phg_wsb_resolve_pick called\n");
+  printf("phg_wsb_resolve_pick called\n");
 #endif
 
   WSB_CHECK_POSTED(&owsb->posted);
@@ -2374,27 +2404,23 @@ int phg_wsb_resolve_pick(
   if (err_ind != 0) {
     ERR_REPORT(ws->erh, err_ind);
     status = FALSE;
-  }
-  else if (depth > 0) {
+  } else if (depth > 0) {
     pick->pick_path.depth = depth;
-    pick->pick_path.path_list = (Ppick_path_elem *)
-      malloc(sizeof(Ppick_path_elem) * depth);
+    pick->pick_path.path_list = (Ppick_path_elem *) malloc(sizeof(Ppick_path_elem) * depth);
     if (pick->pick_path.path_list == NULL) {
 #ifdef DEBUGINP
       printf("phg_wsb_resolve_pick path list is NULL\n");
 #endif
       pick->status = PIN_STATUS_NONE;
       ERR_REPORT(ws->erh, ERR900);
-      free(elmts);
+      if (elmts != NULL) free(elmts);
       status = FALSE;
-    }
-    else {
+    } else {
       pick->status = PIN_STATUS_OK;
 #ifdef DEBUGINP
       printf("phg_wsb_resolve_pick status is OK\n");
 #endif
       if (dev->order == PORDER_BOTTOM_FIRST) {
-
         for (i = 0; i < depth; i++) {
           pick->pick_path.path_list[i].struct_id =
             elmts[depth - i - 1].sid;
@@ -2419,7 +2445,7 @@ int phg_wsb_resolve_pick(
 #ifdef DEBUGINP
     printf("phg_wsb_resolve_pick depth is zero\n");
 #endif
-  pick->status = PIN_STATUS_NONE;
+    pick->status = PIN_STATUS_NONE;
     pick->pick_path.depth = 0;
     status = TRUE;
   }

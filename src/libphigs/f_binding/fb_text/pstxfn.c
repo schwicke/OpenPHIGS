@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pstxfn
+/**
+ * \file pstxfn.c
  *
- * DESCR:       Set text font
- * RETURNS:     N/A
+ * \brief       Set text font
  */
 FTN_SUBROUTINE(pstxfn)(
                        FTN_INTEGER(font)

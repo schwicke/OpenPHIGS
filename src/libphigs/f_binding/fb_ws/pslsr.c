@@ -36,11 +36,10 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pslsr
+/**
+ * \file pslsr.c
  *
- * DESCR:       Set light source representation
- * RETURNS:     N/A
+ * \brief       Set light source representation
  * NOTES:       Not part of the standard
  */
 FTN_SUBROUTINE(pslsr)(

@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * psmst
+/**
+ * \file psmst.c
  *
- * DESCR:       sample string
- * RETURNS:   string length, string
+ * \brief       sample string
+ * \return string length, string
  */
 FTN_SUBROUTINE(psmst)(
                       FTN_INTEGER(wkid),

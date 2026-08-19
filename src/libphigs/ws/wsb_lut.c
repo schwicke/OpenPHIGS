@@ -128,6 +128,19 @@ int phg_wsb_create_LUTs(
 }
 
 /*******************************************************************************
+ * destroy_lu_:entry
+ *
+ * DESCR:     Destroy LUT payload
+ * RETURNS:»  N/A
+ */
+static void destroy_lut_entry(int key, caddr_t cdata)
+{
+   (void) key;
+   if (cdata != NULL)
+      free((char *) cdata);
+}
+
+/*******************************************************************************
  * phg_wsb_destroy_LUTs
  *
  * DESCR:	Destroy workstation lookup tables
@@ -140,22 +153,15 @@ void phg_wsb_destroy_LUTs(
 {
   Ws_output_ws *ows = &ws->out_ws;
 
-  if (ows->htab.line)
-    phg_htab_destroy(ows->htab.line, (void(*)(int, char *))NULL);
-  if (ows->htab.marker)
-    phg_htab_destroy(ows->htab.marker, (void(*)(int, char *))NULL);
-  if (ows->htab.text)
-    phg_htab_destroy(ows->htab.text, (void(*)(int, char *))NULL);
-  if (ows->htab.interior)
-    phg_htab_destroy(ows->htab.interior, (void(*)(int, char *))NULL);
-  if (ows->htab.edge)
-    phg_htab_destroy(ows->htab.edge, (void(*)(int, char*))NULL);
-  if (ows->htab.colour)
-    phg_htab_destroy(ows->htab.colour, (void(*)(int, char *))NULL);
-  if (ows->htab.view)
-    phg_htab_destroy(ows->htab.view, (void(*)(int, char *))NULL);
-  if (ows->htab.light_source)
-    phg_htab_destroy(ows->htab.light_source, (void(*)(int, char *))NULL);
+  if (ows->htab.line)         phg_htab_destroy(ows->htab.line,         destroy_lut_entry);
+  if (ows->htab.marker)       phg_htab_destroy(ows->htab.marker,       destroy_lut_entry);
+  if (ows->htab.text)         phg_htab_destroy(ows->htab.text,         destroy_lut_entry);
+  if (ows->htab.interior)     phg_htab_destroy(ows->htab.interior,     destroy_lut_entry);
+  if (ows->htab.edge)         phg_htab_destroy(ows->htab.edge,         destroy_lut_entry);
+  if (ows->htab.colour)       phg_htab_destroy(ows->htab.colour,       destroy_lut_entry);
+  if (ows->htab.view)         phg_htab_destroy(ows->htab.view,         destroy_lut_entry);
+  if (ows->htab.light_source) phg_htab_destroy(ows->htab.light_source, destroy_lut_entry);
+
 }
 
 /*******************************************************************************
@@ -180,20 +186,31 @@ void phg_wsb_set_LUT_entry(
 #ifdef DEBUG
     printf("Set lnrep %d\n", rep->index);
 #endif
-    data = malloc(sizeof(Pline_bundle_plus));
-    if (data != NULL) {
+    if (phg_htab_get_entry(ows->htab.line, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memset(data, 0, sizeof(Pline_bundle_plus));
       ((Pline_bundle_plus *) data)->type = rep->bundl.lnrep.type;
       ((Pline_bundle_plus *) data)->width = rep->bundl.lnrep.width;
       ((Pline_bundle_plus *) data)->colr.type = PINDIRECT;
       ((Pline_bundle_plus *) data)->colr.val.ind =
         rep->bundl.lnrep.colr_ind;
-      if (!phg_htab_add_entry(ows->htab.line, rep->index, data)) {
+    } else {
+      data = malloc(sizeof(Pline_bundle_plus));
+      if (data != NULL) {
+        memset(data, 0, sizeof(Pline_bundle_plus));
+        ((Pline_bundle_plus *) data)->type = rep->bundl.lnrep.type;
+        ((Pline_bundle_plus *) data)->width = rep->bundl.lnrep.width;
+        ((Pline_bundle_plus *) data)->colr.type = PINDIRECT;
+        ((Pline_bundle_plus *) data)->colr.val.ind =
+          rep->bundl.lnrep.colr_ind;
+        if (!phg_htab_add_entry(ows->htab.line, rep->index, data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
         ERR_BUF(ws->erh, ERR900);
       }
-    }
-    else {
-      ERR_BUF(ws->erh, ERR900);
     }
     break;
 
@@ -201,15 +218,22 @@ void phg_wsb_set_LUT_entry(
 #ifdef DEBUG
     printf("Set extlnrep: %d\n", rep->index);
 #endif
-    data = malloc(sizeof(Pline_bundle_plus));
-    if (data != NULL) {
+    if (phg_htab_get_entry(ows->htab.line, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memcpy(data, &rep->bundl.extlnrep, sizeof(Pline_bundle_plus));
-      if (!phg_htab_add_entry(ows->htab.line, rep->index, data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Pline_bundle_plus));
+      if (data != NULL) {
+        memcpy(data, &rep->bundl.extlnrep, sizeof(Pline_bundle_plus));
+        if (!phg_htab_add_entry(ows->htab.line, rep->index, data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
@@ -217,20 +241,32 @@ void phg_wsb_set_LUT_entry(
 #ifdef DEBUG
     printf("Set mkrep: %d\n", rep->index);
 #endif
-    data = malloc(sizeof(Pmarker_bundle_plus));
-    if (data != NULL) {
+    if (phg_htab_get_entry(ows->htab.marker, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memset(data, 0, sizeof(Pmarker_bundle_plus));
       ((Pmarker_bundle_plus *) data)->type = rep->bundl.mkrep.type;
       ((Pmarker_bundle_plus *) data)->size = rep->bundl.mkrep.size;
       ((Pmarker_bundle_plus *) data)->colr.type = PINDIRECT;
       ((Pmarker_bundle_plus *) data)->colr.val.ind =
         rep->bundl.mkrep.colr_ind;
-      if (!phg_htab_add_entry(ows->htab.marker, rep->index, data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Pmarker_bundle_plus));
+      if (data != NULL) {
+        memset(data, 0, sizeof(Pmarker_bundle_plus));
+        ((Pmarker_bundle_plus *) data)->type = rep->bundl.mkrep.type;
+        ((Pmarker_bundle_plus *) data)->size = rep->bundl.mkrep.size;
+        ((Pmarker_bundle_plus *) data)->colr.type = PINDIRECT;
+        ((Pmarker_bundle_plus *) data)->colr.val.ind =
+          rep->bundl.mkrep.colr_ind;
+        if (!phg_htab_add_entry(ows->htab.marker, rep->index, data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
@@ -238,15 +274,22 @@ void phg_wsb_set_LUT_entry(
 #ifdef DEBUG
     printf("Set extmkrep: %d\n", rep->index);
 #endif
-    data = malloc(sizeof(Pmarker_bundle_plus));
-    if (data != NULL) {
+    if (phg_htab_get_entry(ows->htab.marker, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memcpy(data, &rep->bundl.extmkrep, sizeof(Pmarker_bundle_plus));
-      if (!phg_htab_add_entry(ows->htab.marker, rep->index, data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Pmarker_bundle_plus));
+      if (data != NULL) {
+        memcpy(data, &rep->bundl.extmkrep, sizeof(Pmarker_bundle_plus));
+        if (!phg_htab_add_entry(ows->htab.marker, rep->index, data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
@@ -254,19 +297,30 @@ void phg_wsb_set_LUT_entry(
 #ifdef DEBUG
     printf("Set txrep: %d\n", rep->index);
 #endif
-    data = malloc(sizeof(Ptext_bundle_plus));
-    if (data != NULL) {
+    if (phg_htab_get_entry(ows->htab.text, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memset(data, 0, sizeof(Ptext_bundle_plus));
       ((Ptext_bundle_plus *) data)->font = rep->bundl.txrep.font;
       ((Ptext_bundle_plus *) data)->colr.type = PINDIRECT;
       ((Ptext_bundle_plus *) data)->colr.val.ind =
         rep->bundl.txrep.colr_ind;
-      if (!phg_htab_add_entry(ows->htab.text, rep->index, data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Ptext_bundle_plus));
+      if (data != NULL) {
+        memset(data, 0, sizeof(Ptext_bundle_plus));
+        ((Ptext_bundle_plus *) data)->font = rep->bundl.txrep.font;
+        ((Ptext_bundle_plus *) data)->colr.type = PINDIRECT;
+        ((Ptext_bundle_plus *) data)->colr.val.ind =
+          rep->bundl.txrep.colr_ind;
+        if (!phg_htab_add_entry(ows->htab.text, rep->index, data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
@@ -274,15 +328,22 @@ void phg_wsb_set_LUT_entry(
 #ifdef DEBUG
     printf("Set exttxrep: %d\n", rep->index);
 #endif
-    data = malloc(sizeof(Ptext_bundle_plus));
-    if (data != NULL) {
+    if (phg_htab_get_entry(ows->htab.text, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memcpy(data, &rep->bundl.exttxrep, sizeof(Ptext_bundle_plus));
-      if (!phg_htab_add_entry(ows->htab.text, rep->index, data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Ptext_bundle_plus));
+      if (data != NULL) {
+        memcpy(data, &rep->bundl.exttxrep, sizeof(Ptext_bundle_plus));
+        if (!phg_htab_add_entry(ows->htab.text, rep->index, data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
@@ -290,8 +351,8 @@ void phg_wsb_set_LUT_entry(
 #ifdef DEBUG
     printf("Set interrep: %d\n", rep->index);
 #endif
-    data = malloc(sizeof(Pint_bundle_plus));
-    if (data != NULL) {
+    if (phg_htab_get_entry(ows->htab.interior, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memset(data, 0, sizeof(Pint_bundle_plus));
       ((Pint_bundle_plus *) data)->style = rep->bundl.interrep.style;
       ((Pint_bundle_plus *) data)->style_ind =
@@ -302,14 +363,30 @@ void phg_wsb_set_LUT_entry(
       ((Pint_bundle_plus *) data)->back_colr.type = PINDIRECT;
       ((Pint_bundle_plus *) data)->back_colr.val.ind =
         rep->bundl.interrep.colr_ind;
-      if (!phg_htab_add_entry(ows->htab.interior,
-                              rep->index,
-                              data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Pint_bundle_plus));
+      if (data != NULL) {
+        memset(data, 0, sizeof(Pint_bundle_plus));
+        ((Pint_bundle_plus *) data)->style = rep->bundl.interrep.style;
+        ((Pint_bundle_plus *) data)->style_ind =
+          rep->bundl.interrep.style_ind;
+        ((Pint_bundle_plus *) data)->colr.type = PINDIRECT;
+        ((Pint_bundle_plus *) data)->colr.val.ind =
+          rep->bundl.interrep.colr_ind;
+        ((Pint_bundle_plus *) data)->back_colr.type = PINDIRECT;
+        ((Pint_bundle_plus *) data)->back_colr.val.ind =
+          rep->bundl.interrep.colr_ind;
+        if (!phg_htab_add_entry(ows->htab.interior,
+                                rep->index,
+                                data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
@@ -317,19 +394,26 @@ void phg_wsb_set_LUT_entry(
 #ifdef DEBUG
     printf("Set extinterrep: %d\n", rep->index);
 #endif
-    data = malloc(sizeof(Pint_bundle_plus));
-    if (data != NULL) {
-      memcpy(data,
-             &rep->bundl.extinterrep,
-             sizeof(Pint_bundle_plus));
-      if (!phg_htab_add_entry(ows->htab.interior,
-                              rep->index,
-                              data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
+    if (phg_htab_get_entry(ows->htab.interior, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
+      memcpy(data, &rep->bundl.extinterrep, sizeof(Pint_bundle_plus));
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Pint_bundle_plus));
+      if (data != NULL) {
+        memcpy(data,
+               &rep->bundl.extinterrep,
+               sizeof(Pint_bundle_plus));
+        if (!phg_htab_add_entry(ows->htab.interior,
+                                rep->index,
+                                data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
@@ -337,8 +421,8 @@ void phg_wsb_set_LUT_entry(
 #ifdef DEBUG
     printf("Set edgerep: %d\n", rep->index);
 #endif
-    data = malloc(sizeof(Pedge_bundle_plus));
-    if (data != NULL) {
+    if (phg_htab_get_entry(ows->htab.edge, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memset(data, 0, sizeof(Pedge_bundle_plus));
       ((Pedge_bundle_plus *) data)->flag = rep->bundl.edgerep.flag;
       ((Pedge_bundle_plus *) data)->type = rep->bundl.edgerep.type;
@@ -346,12 +430,25 @@ void phg_wsb_set_LUT_entry(
       ((Pedge_bundle_plus *) data)->colr.type = PINDIRECT;
       ((Pedge_bundle_plus *) data)->colr.val.ind =
         rep->bundl.edgerep.colr_ind;
-      if (!phg_htab_add_entry(ows->htab.edge, rep->index, data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Pedge_bundle_plus));
+      if (data != NULL) {
+        memset(data, 0, sizeof(Pedge_bundle_plus));
+        ((Pedge_bundle_plus *) data)->flag = rep->bundl.edgerep.flag;
+        ((Pedge_bundle_plus *) data)->type = rep->bundl.edgerep.type;
+        ((Pedge_bundle_plus *) data)->width = rep->bundl.edgerep.width;
+        ((Pedge_bundle_plus *) data)->colr.type = PINDIRECT;
+        ((Pedge_bundle_plus *) data)->colr.val.ind =
+          rep->bundl.edgerep.colr_ind;
+        if (!phg_htab_add_entry(ows->htab.edge, rep->index, data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
@@ -359,39 +456,42 @@ void phg_wsb_set_LUT_entry(
 #ifdef DEBUG
     printf("Set extedgerep: %d\n", rep->index);
 #endif
-    data = malloc(sizeof(Pedge_bundle_plus));
-    if (data != NULL) {
+    if (phg_htab_get_entry(ows->htab.edge, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memcpy(data, &rep->bundl.extedgerep, sizeof(Pedge_bundle_plus));
-      if (!phg_htab_add_entry(ows->htab.edge, rep->index, data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Pedge_bundle_plus));
+      if (data != NULL) {
+        memcpy(data, &rep->bundl.extedgerep, sizeof(Pedge_bundle_plus));
+        if (!phg_htab_add_entry(ows->htab.edge, rep->index, data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
   case PHG_ARGS_COREP:
-#ifdef DEBUG
-    printf("Set corep: %d\n", rep->index);
-#endif
-    data = malloc(sizeof(Pgcolr));
-    if (data != NULL) {
-#ifdef DEBUG
-      printf("Setting gcolr for index=%d %f %f %f\n", rep->index,
-             gcolr->val.general.x,
-             gcolr->val.general.y,
-             gcolr->val.general.z,
-             gcolr->val.general.a
-             );
-#endif
+    if (phg_htab_get_entry(ows->htab.colour, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memcpy(data, gcolr, sizeof(Pgcolr));
-      if (!phg_htab_add_entry(ows->htab.colour, rep->index, data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Pgcolr));
+      if (data != NULL) {
+        memcpy(data, gcolr, sizeof(Pgcolr));
+        if (!phg_htab_add_entry(ows->htab.colour, rep->index, data)) {
+          free(data);              /* don't leak on add failure either */
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
@@ -402,15 +502,22 @@ void phg_wsb_set_LUT_entry(
     printf("\n");
     phg_mat_print(rep->bundl.viewrep.map_matrix);
 #endif
-    data = malloc(sizeof(Pview_rep3));
-    if (data != NULL) {
+    if (phg_htab_get_entry(ows->htab.view, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
       memcpy(data, &rep->bundl.viewrep, sizeof(Pview_rep3));
-      if (!phg_htab_add_entry(ows->htab.view, rep->index, data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Pview_rep3));
+      if (data != NULL) {
+        memcpy(data, &rep->bundl.viewrep, sizeof(Pview_rep3));
+        if (!phg_htab_add_entry(ows->htab.view, rep->index, data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 
@@ -418,19 +525,26 @@ void phg_wsb_set_LUT_entry(
 #ifdef DEBUG
     printf("Set lightsrcrep: %d\n", rep->index);
 #endif
-    data = malloc(sizeof(Plight_src_bundle));
-    if (data != NULL) {
-      memcpy(data,
-             &rep->bundl.lightsrcrep,
-             sizeof(Plight_src_bundle));
-      if (!phg_htab_add_entry(ows->htab.light_source,
-                              rep->index,
-                              data)) {
-        ERR_BUF(ws->erh, ERR900);
-      }
+    if (phg_htab_get_entry(ows->htab.light_source, rep->index, &data)){
+      /* Entry exists: overwrite in place, no allocation */
+      memcpy(data, &rep->bundl.lightsrcrep, sizeof(Plight_src_bundle));
     }
     else {
-      ERR_BUF(ws->erh, ERR900);
+      data = malloc(sizeof(Plight_src_bundle));
+      if (data != NULL) {
+        memcpy(data,
+               &rep->bundl.lightsrcrep,
+               sizeof(Plight_src_bundle));
+        if (!phg_htab_add_entry(ows->htab.light_source,
+                                rep->index,
+                                data)) {
+          free(data);
+          ERR_BUF(ws->erh, ERR900);
+        }
+      }
+      else {
+        ERR_BUF(ws->erh, ERR900);
+      }
     }
     break;
 

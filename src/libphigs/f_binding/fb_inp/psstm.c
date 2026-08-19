@@ -28,11 +28,10 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * psstm
+/**
+ * \file psstm.c
  *
- * DESCR:       set string mode
- * RETURNS:   N/A
+ * \brief       set string mode
  */
 FTN_SUBROUTINE(psstm)(
                       FTN_INTEGER(wkid),

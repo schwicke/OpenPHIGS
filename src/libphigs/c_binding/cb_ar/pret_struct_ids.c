@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pret_struct_ids
+/**
+ * \file pret_struct_ids.c
  *
- * DESCR:       Retreive all structures identifiers for archive
- * RETURNS:     N/A
+ * \brief       Retreive all structures identifiers for archive
  */
 void pret_struct_ids(
                      Pint archive_id,

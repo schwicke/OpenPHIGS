@@ -28,11 +28,11 @@
 #include <private/wsxP.h>
 #include <util/ftn.h>
 
-/*******************************************************************************
- * pqdlc3
+/**
+ * \file pqdlc3.c
  *
- * DESCR:       inquire default locator device data 3
- * RETURNS:   error index, init position in WC, number of echoes, echoes,
+ * \brief       inquire default locator device data 3
+ * \return error index, init position in WC, number of echoes, echoes,
  *              echo volume in DC, number of elements in data record, data record
  */
 FTN_SUBROUTINE(pqdlc3)(

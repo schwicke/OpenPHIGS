@@ -26,11 +26,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * ptx3
+/**
+ * \file ptx3.c
  *
- * DESCR:       TEXT 3
- * RETURNS:     N/A
+ * \brief       TEXT 3
  */
 FTN_SUBROUTINE(ptx3)(
                      FTN_REAL(px),

@@ -36,11 +36,11 @@
 #include "phconf.h"
 
 extern int record_geom;
-/*******************************************************************************
- * pqwkpo
+/**
+ * \file pqwkpo.c
  *
- * DESCR:       Inquire set member of workstations to which posted
- * RETURNS:     error index, number of workstations to which the structure is posted,
+ * \brief       Inquire set member of workstations to which posted
+ * \return error index, number of workstations to which the structure is posted,
  *              Nth member of set of workstations to which the structure is posted
  */
 

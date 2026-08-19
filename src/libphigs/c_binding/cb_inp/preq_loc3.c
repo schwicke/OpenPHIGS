@@ -29,11 +29,10 @@
 #include "private/wsxP.h"
 #include "private/cb_internal.h"
 
-/*******************************************************************************
- * preq_loc3
+/**
+ * \file preq_loc3.c
  *
- * DESCR:       Request input from locator device 3D
- * RETURNS:     N/A
+ * \brief       Request input from locator device 3D
  */
 void preq_loc3(
                Pint ws_id,

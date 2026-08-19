@@ -43,11 +43,10 @@
 #include "private/wsxP.h"
 #include "phconf.h"
 
-/*******************************************************************************
- * ppost_struct
+/**
+ * \file ppost_struct.c
  *
- * DESCR:   Post structure to workstation
- * RETURNS:   N/A
+ * \brief       Post structure to workstation
  */
 void ppost_struct(
                   Pint ws_id,

@@ -26,13 +26,12 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pdel_elems_labels
+/**
+ * \file pdel_elems_labels.c
  *
- * DESCR:   Deletes all elements in the structure that lie between the
+ * \brief       Deletes all elements in the structure that lie between the
  *      given labels, but not the labels themselves.  The element
  *      pointer is left pointing to the first label.
- * RETURNS:   N/A
  */
 void pdel_elems_labels(
                        Pint label1_id,

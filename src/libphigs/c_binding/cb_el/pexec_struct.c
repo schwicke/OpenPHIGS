@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * pexec_struct
+/**
+ * \file pexec_struct.c
  *
- * DESCR:   Creates a new element - Nested Structure
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void pexec_struct(
                   Pint struct_id
                   )

@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "util/ftn.h"
 
-/*******************************************************************************
- * pschsp
+/**
+ * \file pschsp.c
  *
- * DESCR:       set character spacing
- * RETURNS:   N/A
+ * \brief       set character spacing
  */
 FTN_SUBROUTINE(pschsp)(
                        FTN_REAL(chsp)

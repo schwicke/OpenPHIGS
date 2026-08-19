@@ -31,11 +31,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pinq_light_src_rep
+/**
+ * \file pinq_light_src_rep.c
  *
- * DESCR:       inquire light source respresentation
- * RETURNS:     N/A
+ * \brief       inquire light source respresentation
  */
 void pinq_light_src_rep(
 			Pint ws_id,

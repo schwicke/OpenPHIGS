@@ -28,11 +28,10 @@
 #include "private/phgP.h"
 #include "private/cbP.h"
 
-/*******************************************************************************
- * pclose_ar_file
+/**
+ * \file pclose_ar_file.c
  *
- * DESCR:       Close archive file
- * RETURNS:     N/A
+ * \brief       Close archive file
  */
 void pclose_ar_file(
                     Pint archive_id

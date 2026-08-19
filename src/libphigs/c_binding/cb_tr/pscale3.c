@@ -53,11 +53,10 @@ SOFTWARE.
 #include "phg.h"
 #include "util.h"
 
-/*******************************************************************************
- * pscale3
+/**
+ * \file pscale3.c
  *
- * DESCR:       Generate 3D scaling matrix
- * RETURNS:     N/A
+ * \brief       Generate 3D scaling matrix
  */
 void pscale3(
              Pvec3 *scale_vector,       /* scale factor vector */

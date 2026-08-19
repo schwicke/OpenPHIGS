@@ -53,11 +53,10 @@ SOFTWARE.
 #include "phg.h"
 #include "util.h"
 
-/*******************************************************************************
- * ptran_point
+/**
+ * \file ptran_point.c
  *
- * DESCR:       Translate point using transformation matrix
- * RETURNS:     N/A
+ * \brief       Translate point using transformation matrix
  */
 void ptran_point(
                  Ppoint *p,                 /* point */
@@ -96,11 +95,10 @@ void ptran_point(
   }
 }
 
-/*******************************************************************************
+/**
  * void build_transform3
  *
- * DESCR:       Generate 3D transformation matrix helper function
- * RETURNS:     N/A
+ * \brief       Generate 3D transformation matrix helper function
  */
 static void build_transform3(
                              Ppoint3 *pt,               /* fixed point */

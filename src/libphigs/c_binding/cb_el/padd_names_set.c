@@ -28,12 +28,10 @@
 #include "css.h"
 #include "private/phgP.h"
 
-/*******************************************************************************
- * padd_names_set
+/**
+ * \file padd_names_set.c
  *
- * DESCR:   Creates a new element - name set Inclusion
- * RETURNS:   N/A
- */
+ * \brief       Creates a new element  */
 void padd_names_set(
                     Pint_list *names
                     )

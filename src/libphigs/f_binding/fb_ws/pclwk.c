@@ -34,15 +34,19 @@
 #include "ws.h"
 #include "util/ftn.h"
 #include "phconf.h"
-
+/** \internal recording flag for printing */
 extern int record_geom;
-/*******************************************************************************
- * pclwk
+/**
+ * \brief       Close a workstation
  *
- * DESCR:       Close workstation
- * RETURNS:     N/A
+ * \file pclwk.c
+ *
+ * \param       wkid workstation ID
+ *
+ * \pre The workstation must be open
+ * \sa popwk
+ *
  */
-
 FTN_SUBROUTINE(pclwk)(
                       FTN_INTEGER(wkid)
                       )
@@ -52,4 +56,3 @@ FTN_SUBROUTINE(pclwk)(
 #endif
   pclose_ws(FTN_INTEGER_GET(wkid));
 }
-

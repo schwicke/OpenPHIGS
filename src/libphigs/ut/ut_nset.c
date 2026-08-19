@@ -103,7 +103,7 @@ int phg_nset_name_set(
    int status;
    uint32_t bit;
 
-   if (name > nset->max_names) {
+   if (name >= nset->max_names) {
       status = FALSE;
    }
    else {
@@ -130,7 +130,7 @@ int phg_nset_name_clear(
    int status;
    uint32_t bit;
 
-   if (name > nset->max_names) {
+   if (name >= nset->max_names) {
       status = FALSE;
    }
    else {
@@ -299,7 +299,7 @@ int phg_nset_name_is_set(
    int status;
    uint32_t bit;
 
-   if (name > nset->max_names) {
+   if (name >= nset->max_names) {
       status = FALSE;
    }
    else {
