@@ -60,6 +60,10 @@ GLfloat t_plane[] = {0.0f, 1.0f, 0.0f, 0.0f};
 #include "private/vs130.h"
 #include "private/fs130.h"
 
+/* version 4.20 vertex and fragment shaders */
+#include "private/vs420.h"
+#include "private/fs420.h"
+
 // FIXME: this should be moved into a header file
 extern void wsgl_setup_patterns();
 
@@ -135,9 +139,12 @@ void wsgl_shaders(Ws * ws){
     case 130:
       glShaderSource(vertex_shader, 1, &vertex_shader_text_130, NULL);
       break;
+    case 420:
+      glShaderSource(vertex_shader, 1, &vertex_shader_text_420, NULL);
+      break;
     default:
       printf("[ERROR] Unsupported vertex shader version %d\n", wsgl_vert_shader_version);
-      printf("[ERROR] Please use one of 120 or 130\n");
+      printf("[ERROR] Please use one of 120, 130 or 420\n");
       abort();
       break;
     }
@@ -148,9 +155,12 @@ void wsgl_shaders(Ws * ws){
     case 130:
       glShaderSource(fragment_shader, 1, &fragment_shader_text_130, NULL);
       break;
+    case 420:
+      glShaderSource(fragment_shader, 1, &fragment_shader_text_420, NULL);
+      break;
     default:
       printf("[ERROR]Unsupported fragment shader version %d\n", wsgl_frag_shader_version);
-      printf("[ERROR] Please use one of 120 or 130\n");
+      printf("[ERROR] Please use one of 120, 130 or 420\n");
       abort();
       break;
     }
