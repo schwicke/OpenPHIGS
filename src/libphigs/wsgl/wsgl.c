@@ -446,6 +446,14 @@ void wsgl_begin_rendering(
   }
   glDepthMask (GL_TRUE);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  /*
+    Start every frame with empty fragment lists. This has to happen here and
+    not in wsgl_clear(), which only runs when the viewport or the window
+    changed. Left over lists show up as remnants of the previous frame, and
+    the fragment counter would keep growing until it runs off the end of the
+    list buffer.
+  */
+  wsgl_oir_reset(ws->ws_rect.width, ws->ws_rect.height);
   init_rendering_state(ws);
 }
 
@@ -462,6 +470,13 @@ void wsgl_end_rendering(
 #ifdef DEBUG
   printf("End rendering\n");
 #endif
+
+  /*
+    All geometry of this frame has been rasterised, so the transparent
+    fragments collected in the per pixel lists can now be composited over the
+    opaque image. Does nothing unless order independent rendering is in use.
+  */
+  wsgl_oir_resolve(ws);
 
   if (ws->has_double_buffer) {
 #ifdef DEBUG

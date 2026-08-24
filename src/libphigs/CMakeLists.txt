@@ -59,6 +59,7 @@ SET(P_WSGL_SRCS
   wsgl/wsgl_sofas3edge.c
   wsgl/wsgl_sofas3fill.c
   wsgl/wsgl_text.c
+  wsgl/wsgl_oir.c
 )
 
 SET(P_SIN_SRCS

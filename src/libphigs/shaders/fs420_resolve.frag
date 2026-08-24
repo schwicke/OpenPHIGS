@@ -1,0 +1,111 @@
+#version 420 compatibility
+/*
+ * Order independent rendering, pass 2 of 2: resolve.
+ *
+ * One invocation per pixel, run after all geometry has been rasterised by
+ * pass 1. It walks the linked list of transparent fragments belonging to the
+ * pixel, sorts them back to front and composites them into a single colour.
+ *
+ * Only transparent fragments are in the list. Opaque geometry was written
+ * straight to the framebuffer by pass 1, so the result of this pass is
+ * blended over it, which is what lets an opaque track stay visible behind a
+ * transparent surface.
+ *
+ * The bindings have to match the ones wsgl_oir_reset() sets up, and the ones
+ * fs420.frag appends through.
+ */
+layout (binding = 0, r32ui)    uniform uimage2D     head_pointer_image;
+layout (binding = 1, rgba32ui) uniform uimageBuffer list_buffer;
+
+#define MAX_FRAGMENTS 15
+#define LIST_END 0xFFFFFFFFu
+
+uvec4 fragments[MAX_FRAGMENTS];
+
+/*
+ * createFragmentList: collect the fragments of this pixel, head first.
+ *
+ * The head is the most recently appended fragment, so when a pixel holds more
+ * than MAX_FRAGMENTS transparent layers the ones dropped here are the ones
+ * that were drawn first.
+ */
+int createFragmentList(){
+  int n = 0;
+  uint current = imageLoad(head_pointer_image, ivec2(gl_FragCoord.xy)).x;
+  while (current != LIST_END && n < MAX_FRAGMENTS){
+    uvec4 item = imageLoad(list_buffer, int(current));
+    current = item.x;
+    fragments[n] = item;
+    n++;
+  }
+  return(n);
+}
+
+/*
+ * sortFragments: farthest fragment first, so that the loop in finalColor()
+ * can composite each nearer fragment over what is already accumulated
+ */
+void sortFragments(int n){
+  int i, j;
+  for (i=0; i<n-1; i++){
+    for (j=0; j<n-1-i; j++){
+      float depth_j  = uintBitsToFloat(fragments[j].z);
+      float depth_j1 = uintBitsToFloat(fragments[j+1].z);
+      if (depth_j < depth_j1){
+        uvec4 tmp = fragments[j];
+        fragments[j] = fragments[j+1];
+        fragments[j+1] = tmp;
+      }
+    }
+  }
+}
+
+/*
+ * finalColor: composite the sorted fragments with the over operator.
+ *
+ * The accumulation is premultiplied, but the result is handed back with the
+ * colour divided out again, so that the ordinary
+ * GL_SRC_ALPHA / GL_ONE_MINUS_SRC_ALPHA blend puts it over the opaque image
+ * correctly.
+ */
+vec4 finalColor(int nfrag){
+  vec3 acc = vec3(0.0, 0.0, 0.0);
+  float alpha = 0.0;
+  int i;
+  for (i=0; i<nfrag; i++){
+    vec4 inCol = unpackUnorm4x8(fragments[i].y);
+    acc   = acc   * (1.0 - inCol.a) + inCol.rgb * inCol.a;
+    alpha = alpha * (1.0 - inCol.a) + inCol.a;
+  }
+  if (alpha <= 0.0) return vec4(0.0, 0.0, 0.0, 0.0);
+  return vec4(acc / alpha, alpha);
+}
+
+/*
+ * nearestDepth: depth of the transparent fragment closest to the viewer
+ */
+float nearestDepth(int nfrag){
+  float d = 1.0;
+  int i;
+  for (i=0; i<nfrag; i++){
+    d = min(d, uintBitsToFloat(fragments[i].z));
+  }
+  return d;
+}
+
+void main()
+{
+  int nFragments = createFragmentList();
+  /* nothing transparent here, leave the opaque image alone */
+  if (nFragments == 0) discard;
+  sortFragments(nFragments);
+  /*
+    Hand the depth of the nearest transparent fragment to the depth test, so
+    that the opaque image still occludes this pixel's transparent surfaces
+    when it is in front of them. Without this the resolve would paint over
+    opaque geometry that was drawn after the transparent surfaces had already
+    been appended, for instance a banner drawn on top of the scene.
+  */
+  gl_FragDepth = nearestDepth(nFragments);
+  gl_FragColor = finalColor(nFragments);
+}

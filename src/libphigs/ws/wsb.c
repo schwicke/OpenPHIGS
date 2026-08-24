@@ -563,7 +563,7 @@ Ws* phg_wsb_open_ws(
       goto abort;
     }
   }
-
+  wsgl_oir_ini(args->width, args->height);
   if (dt->ws_category == PCAT_OUTIN) {
     ws->input_overlay_window = phg_wsx_create_overlay(ws);
     if (ws->input_overlay_window == 0) {

@@ -1,4 +1,12 @@
 #version 420 compatibility
+/*
+ * Order independent rendering, pass 1 of 2: geometry.
+ *
+ * This stage is unchanged with respect to vs120: it only transforms the
+ * geometry and hands the interpolants to the fragment stage. The per pixel
+ * fragment list is built in fs420.frag, because the list is keyed by
+ * gl_FragCoord, which does not exist here.
+ */
 uniform mat4 ModelViewMatrix;
 uniform mat4 ProjectionMatrix;
 uniform vec4 sPlane;
@@ -17,6 +25,5 @@ void main()
   Color = vColor;
   Normal = normalize(ModelViewMatrix * vec4(gl_Normal, 1));
   gl_Position = ProjectionMatrix * ModelViewMatrix * gl_Vertex;
-  //TexCoord =  gl_MultiTexCoord0.st;
   TexCoord = vec2(dot(gl_Vertex, sPlane), dot(gl_Vertex, tPlane));
 }

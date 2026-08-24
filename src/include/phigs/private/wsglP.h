@@ -31,11 +31,15 @@ extern "C" {
 
 #define WS_CLEAR_AREA_OFFSET   2.0
 #define WS_FILL_AREA_OFFSET    1.0
+#define MAX_VERTICES 10000
 
   /* option to switch usage of shaders on or off */
   extern short int wsgl_use_shaders;
   extern short int wsgl_vert_shader_version;
   extern short int wsgl_frag_shader_version;
+
+  extern Phg_font *fnt_fonts[];
+  extern unsigned char *wsgl_hatch_tbl[];
 
   typedef struct {
     Pint x, y;
@@ -148,7 +152,6 @@ extern "C" {
   extern int record_geom_fill;
   extern int normal_valid;
 
-#define MAX_VERTICES 10000
   /*******************************************************************************
    * wsgl_set_current_normal(float x, float y, float z)
    *
@@ -1301,8 +1304,38 @@ extern "C" {
    */
   void wsgl_shaders(Ws * ws);
 
-  extern Phg_font *fnt_fonts[];
-  extern unsigned char *wsgl_hatch_tbl[];
+  /*******************************************************************************
+   * wsgl_oir_ini
+   *
+   * DESCR:       Initialise Order Independent Rendering
+   *              Called when opening the workstation.
+   * RETURNS:     N/A
+   * BUGS:        Possible conflicts in case of serveral workstations ?
+   */
+  void wsgl_oir_ini(Pint width, Pint height);
+
+
+  /*******************************************************************************
+   * wsgl_oir_reset
+   *
+   * DESCR:       Reset Order Independent Rendering
+   *              Called for each new frame
+   * RETURNS:     N/A
+   * BUGS:        Possible conflicts in case of serveral workstations ?
+   */
+  void wsgl_oir_reset(Pint width, Pint height);
+
+
+  /*******************************************************************************
+   * wsgl_oir_resolve
+   *
+   * DESCR:       Resolve Order Independent Rendering
+   *              Called at the end of each frame, once all geometry has been
+   *              rasterised and before the buffers are swapped.
+   * RETURNS:     N/A
+   */
+  void wsgl_oir_resolve(Ws * ws);
+
 
 #ifdef __cplusplus
 }

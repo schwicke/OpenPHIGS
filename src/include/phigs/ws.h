@@ -245,6 +245,9 @@ typedef struct _Ws {
    GLuint       fbuf, depthbuf, colorbuf;
    GLint        old_viewport[4];
    GLint        program;
+   /* second program used to resolve the order independent rendering lists,
+      zero when order independent rendering is not in use */
+   GLint        oir_program;
 
    /* Output LUN for some work station types, e.g. to print out stuff here */
    Pint         lun;

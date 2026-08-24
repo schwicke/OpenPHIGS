@@ -17,6 +17,8 @@
  *   You should have received a copy of the GNU Lesser General Public License
  *   along with Open PHIGS. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
+#include <stdio.h>
+#include <string.h>
 #include <X11/StringDefs.h>
 #include <X11/Shell.h>
 #include <X11/Xlib.h>
@@ -37,6 +39,38 @@ static GLuint head_p_texture;
 static GLuint head_p_initializer;
 static GLuint acounter_buffer;
 static GLuint frag_storage_buffer;
+/*
+ * The fragment list is a buffer object, but the shader reaches it as an image,
+ * which needs a buffer texture on top of the buffer.
+ */
+static GLuint frag_storage_texture;
+
+/*
+ * Image units the shaders expect the two objects on. These have to agree with
+ * the binding qualifiers in fs420.frag and fs420_resolve.frag.
+ */
+#define OIR_HEAD_POINTER_UNIT 0
+#define OIR_LIST_BUFFER_UNIT  1
+
+/*
+ * How many transparent fragments per pixel the list is sized for.
+ *
+ * Only transparent geometry goes into the list, opaque geometry is written
+ * straight to the framebuffer by fs420.frag, so this is the number of
+ * transparent surfaces that may overlap in one pixel before fragments start
+ * being dropped. Each entry is a uvec4, so the cost is 16 bytes per pixel per
+ * layer: at 1024x1024 that is 16.8 MB per layer.
+ *
+ * There is no point going above MAX_FRAGMENTS in fs420_resolve.frag, since
+ * the resolve will not walk more than that many entries anyway.
+ */
+#define OIR_LAYERS_PER_PIXEL 8
+
+/* entries the list can hold, handed to the shaders as list_capacity */
+static GLuint frag_list_capacity;
+/* size of the head pointer image, so that the resolve can cover all of it */
+static Pint oir_width;
+static Pint oir_height;
 /*******************************************************************************
  * wsgl_oir_ini
  *
@@ -46,7 +80,22 @@ static GLuint frag_storage_buffer;
  * BUGS:        Possible conflicts in case of serveral workstations ?
  */
 void wsgl_oir_ini(Pint width, Pint height){
+  if (!wsgl_use_shaders) return;
+  /*
+    Only the 4.20 shaders build a fragment list. Without this the older
+    shader versions would still pay for the head pointer image and the
+    fragment list, which is a lot of memory for nothing.
+  */
+  if (wsgl_frag_shader_version != 420) return;
   size_t n_pixels = width * height;
+  /*
+    Called from both phg_wsx_setup_tool() and phg_wsb_open_ws(), so on the X
+    path it runs twice for one workstation. Without this guard the second call
+    would allocate a second set of objects and leak the first.
+  */
+  if (head_p_texture != 0) return;
+  oir_width  = width;
+  oir_height = height;
   glGenTextures(1, &head_p_texture);
   glBindTexture(GL_TEXTURE_2D, head_p_texture);
   glTexImage2D(GL_TEXTURE_2D, 0,
@@ -61,16 +110,37 @@ void wsgl_oir_ini(Pint width, Pint height){
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_p_initializer);
   glBufferData(GL_PIXEL_UNPACK_BUFFER, n_pixels* sizeof(GLuint), NULL, GL_STATIC_DRAW);
   data = (char*)glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+  if (data == NULL){
+    fprintf(stderr, "WARNING: could not map the head pointer initialiser,"
+            " order independent rendering is disabled\n");
+    head_p_texture = 0;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    return;
+  }
   memset(data, 0xFF, n_pixels*sizeof(GLuint));
   glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+  /* leaving this bound would turn the data pointer of every later texture
+     upload in the library into an offset into this buffer */
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
   glGenBuffers(1, &acounter_buffer);
   glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, acounter_buffer);
   glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), NULL, GL_DYNAMIC_COPY);
 
+  frag_list_capacity = (GLuint)(OIR_LAYERS_PER_PIXEL * n_pixels);
   glGenBuffers(1, &frag_storage_buffer);
   glBindBuffer(GL_TEXTURE_BUFFER, frag_storage_buffer);
-  glBufferData(GL_TEXTURE_BUFFER, 2*n_pixels*4*sizeof(GLfloat), NULL, GL_DYNAMIC_COPY);
+  glBufferData(GL_TEXTURE_BUFFER,
+               (GLsizeiptr)frag_list_capacity * 4 * sizeof(GLuint),
+               NULL, GL_DYNAMIC_COPY);
+  printf("[INFO] OIR fragment list: %u entries (%.1f MB), %d layers per pixel\n",
+         frag_list_capacity,
+         (double)frag_list_capacity * 4.0 * sizeof(GLuint) / (1024.0*1024.0),
+         OIR_LAYERS_PER_PIXEL);
+  /* the shader sees the list as an image, which needs a buffer texture */
+  glGenTextures(1, &frag_storage_texture);
+  glBindTexture(GL_TEXTURE_BUFFER, frag_storage_texture);
+  glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32UI, frag_storage_buffer);
 }
 
 /*******************************************************************************
@@ -82,8 +152,15 @@ void wsgl_oir_ini(Pint width, Pint height){
  * BUGS:        Possible conflicts in case of serveral workstations ?
  */
 void wsgl_oir_reset(Pint width, Pint height){
+  if (!wsgl_use_shaders) return;
+  if (head_p_texture == 0) return;
+  /*
+    Set every head pointer back to the end of list marker by uploading the
+    0xFF filled buffer built in wsgl_oir_ini(). With a pixel unpack buffer
+    bound the NULL below is an offset into that buffer, not a host pointer.
+  */
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_p_initializer);
-  glBindTexture(GL_TEXTURE_2D, head_p_initializer);
+  glBindTexture(GL_TEXTURE_2D, head_p_texture);
   glTexImage2D(GL_TEXTURE_2D, 0,
                GL_R32UI,
                width, height,
@@ -91,14 +168,105 @@ void wsgl_oir_reset(Pint width, Pint height){
                GL_RED_INTEGER,
                GL_UNSIGNED_INT,
                NULL );
-  glBindImageTexture(0,
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+  glBindImageTexture(OIR_HEAD_POINTER_UNIT,
                      head_p_texture,
                      0,
                      GL_FALSE,
                      0,
                      GL_READ_WRITE,
                      GL_R32UI);
+  glBindImageTexture(OIR_LIST_BUFFER_UNIT,
+                     frag_storage_texture,
+                     0,
+                     GL_FALSE,
+                     0,
+                     GL_READ_WRITE,
+                     GL_RGBA32UI);
   glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, acounter_buffer);
   const GLuint zero = 0;
   glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(zero), &zero);
+  /*
+    Tell the append shader how much room it has. Taken from the current
+    program rather than passed in, so that this stays self contained.
+  */
+  {
+    GLint program = 0;
+    GLint loc;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &program);
+    if (program != 0){
+      loc = glGetUniformLocation(program, "list_capacity");
+      if (loc >= 0) glUniform1ui(loc, frag_list_capacity);
+    }
+  }
+}
+
+/*******************************************************************************
+ * wsgl_oir_resolve
+ *
+ * DESCR:       Resolve Order Independent Rendering
+ *              Called at the end of each frame, after all geometry has been
+ *              rasterised and before the buffers are swapped. Walks the per
+ *              pixel fragment lists built during the frame and blends the
+ *              result over the opaque image already in the framebuffer.
+ * RETURNS:     N/A
+ */
+void wsgl_oir_resolve(Ws * ws){
+  GLboolean depth_test, blend, depth_mask;
+  GLint viewport[4];
+
+  if (!wsgl_use_shaders) return;
+  if (head_p_texture == 0) return;
+  if (ws->oir_program == 0) return;
+
+  /* make the appends of this frame visible to the reads below */
+  glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT |
+                  GL_TEXTURE_FETCH_BARRIER_BIT);
+
+  depth_test = glIsEnabled(GL_DEPTH_TEST);
+  blend      = glIsEnabled(GL_BLEND);
+  glGetBooleanv(GL_DEPTH_WRITEMASK, &depth_mask);
+  glGetIntegerv(GL_VIEWPORT, viewport);
+
+  /*
+    The resolve covers the viewport with one quad, so it must not be depth
+    tested against the geometry it is compositing over, and it must not
+    disturb the depth buffer.
+  */
+  /*
+    The depth test stays on: fs420_resolve.frag reports the depth of the
+    nearest transparent fragment, so opaque geometry in front of a
+    transparent surface still hides it. The depth buffer itself must not be
+    disturbed, hence the write mask.
+  */
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LESS);
+  glDepthMask(GL_FALSE);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  /*
+    The lists are indexed by window coordinate and a frame may have drawn
+    several views, each with its own viewport, so the resolve has to cover
+    the whole head pointer image rather than whatever viewport happens to be
+    current.
+  */
+  glViewport(0, 0, (GLsizei) oir_width, (GLsizei) oir_height);
+
+  glUseProgram(ws->oir_program);
+  /*
+    The quad is given in clip coordinates and vs420_resolve.vert passes it
+    through unchanged, so the current matrices are irrelevant here.
+  */
+  glBegin(GL_QUADS);
+    glVertex4f(-1.0f, -1.0f, 0.0f, 1.0f);
+    glVertex4f( 1.0f, -1.0f, 0.0f, 1.0f);
+    glVertex4f( 1.0f,  1.0f, 0.0f, 1.0f);
+    glVertex4f(-1.0f,  1.0f, 0.0f, 1.0f);
+  glEnd();
+
+  glUseProgram(ws->program);
+  glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+  if (!blend) glDisable(GL_BLEND);
+  if (!depth_test) glDisable(GL_DEPTH_TEST);
+  glDepthMask(depth_mask);
 }

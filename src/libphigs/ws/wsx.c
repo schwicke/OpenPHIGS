@@ -181,6 +181,7 @@ int phg_wsx_setup_tool(
           status = FALSE;
         }
         else {
+          wsgl_oir_ini(size_hints.width, size_hints.height);
           status = TRUE;
         }
       }
