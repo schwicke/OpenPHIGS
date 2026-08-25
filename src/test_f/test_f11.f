@@ -24,7 +24,10 @@ C     Include PHIGS enumeration file
       INTEGER N, MAXSTR
       PARAMETER(N=5, MAXSTR=30)
       CHARACTER(LEN=MAXSTR) STRING(N+1)
-      CHARACTER(LEN=80) DATREC(MAXSTR)
+      CHARACTER(LEN=80) DATREC1(MAXSTR)
+      CHARACTER(LEN=80) DATREC2(10)
+      COMMON /DATA/ STRING, DATREC1, DATREC2
+
       INTEGER PROMPT(N),LSTR(N+1)
       INTEGER WKID, I, ISTAT
       INTEGER CHDNR, ICHNR, MLDR, IERR, LDR, PET
@@ -52,9 +55,9 @@ C Init prompts and actual string length
       LSTR(N+1) = LEN(STRING(N+1))
 
       CALL PPREC(4, PROMPT, 0, EMPTY, N+1, LSTR, STRING, MLDR,
-     +     IERR, LDR, DATREC)
+     +     IERR, LDR, DATREC1)
       CALL PSCHM(WKID, CHDNR, PREQU, PECHO)
-      CALL PINCH3(WKID, CHDNR, ISTAT, ICHNR, PET, EVOL, LDR, DATREC)
+      CALL PINCH3(WKID, CHDNR, ISTAT, ICHNR, PET, EVOL, LDR, DATREC1)
       END
 
       SUBROUTINE INITVAL(WKID)
@@ -67,8 +70,14 @@ C     Include PHIGS enumeration file
       DATA CONFIG /"Input:", "%8.3g", "min", "max"/
       REAL EVOL(6), RA(2), DEFAULT, VALUE
       INTEGER MLDR, VLDNR
-      CHARACTER(LEN=80) DATREC(10)
       PARAMETER(MLDR=20)
+
+      INTEGER N, MAXSTR
+      PARAMETER(N=5, MAXSTR=30)
+      CHARACTER(LEN=MAXSTR) STRING(N+1)
+      CHARACTER(LEN=80) DATREC1(MAXSTR)
+      CHARACTER(LEN=80) DATREC2(10)
+      COMMON /DATA/ STRING, DATREC1, DATREC2
 
 C     Init the string lengths
       DO I=1, 4
@@ -80,7 +89,7 @@ C     scale from .. to
 C     create 5 sliders
       NSLID(1) = 5
       CALL PPREC(1, NSLID(1), 2, RA, 4, LSTR, CONFIG,
-     +     MLDR, IERR, LDR, DATREC)
+     +     MLDR, IERR, LDR, DATREC2)
 
 C     for echo type -1: as for 1 but we can specify the strings
       PET = -3
@@ -97,7 +106,7 @@ C     create 5 sliders
       VLDNR = 1
       DO I=1, NSLID(1)
          CALL PSVLM(WKID, VLDNR+I-1, PREQU, PECHO)
-         CALL PINVL3(WKID, VLDNR+I-1, DEFAULT, PET, EVOL, LDR, DATREC)
+         CALL PINVL3(WKID, VLDNR+I-1, DEFAULT, PET, EVOL, LDR, DATREC2)
          CALL PSVLM(WKID, VLDNR+I-1, PEVENT, PECHO)
       ENDDO
 
@@ -119,6 +128,14 @@ C     Delcare variables
       REAL TIMOUT
 C     Delcare arrays
       REAL COLR(1:3)
+      INTEGER N, MAXSTR
+C     Allocate space in Common block for storage of strings and other
+C     stuff in the data record.
+      PARAMETER(N=5, MAXSTR=30)
+      CHARACTER(LEN=MAXSTR) STRING(N+1)
+      CHARACTER(LEN=80) DATREC1(MAXSTR)
+      CHARACTER(LEN=80) DATREC2(10)
+      COMMON /DATA/ STRING, DATREC1, DATREC2
 
 C     Set some parameters
 C     Workstation ID
