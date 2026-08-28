@@ -80,13 +80,16 @@ static Pint oir_height;
  * BUGS:        Possible conflicts in case of serveral workstations ?
  */
 void wsgl_oir_ini(Pint width, Pint height){
+  printf("OIR INI with %d x %d\n", width, height);
   if (!wsgl_use_shaders) return;
   /*
     Only the 4.20 shaders build a fragment list. Without this the older
     shader versions would still pay for the head pointer image and the
     fragment list, which is a lot of memory for nothing.
   */
+  printf("OIR INI 1\n");
   if (wsgl_frag_shader_version != 420) return;
+  printf("OIR INI 2\n");
   size_t n_pixels = width * height;
   /*
     Called from both phg_wsx_setup_tool() and phg_wsb_open_ws(), so on the X
@@ -159,6 +162,7 @@ void wsgl_oir_reset(Pint width, Pint height){
     0xFF filled buffer built in wsgl_oir_ini(). With a pixel unpack buffer
     bound the NULL below is an offset into that buffer, not a host pointer.
   */
+  printf("OIR RESET with %d x %d\n", width, height);
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_p_initializer);
   glBindTexture(GL_TEXTURE_2D, head_p_texture);
   glTexImage2D(GL_TEXTURE_2D, 0,

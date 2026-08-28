@@ -480,9 +480,11 @@ Ws* phg_wsb_open_ws(
   Arg  arglist[3] ;
   Pint err;
 
+  printf("phg_wsb_open_ws: Opening new work station\n");
   ret->err = -1;
   ws = phg_wsx_create(args);
   if (ws == NULL) {
+    printf("phg_wsx_create returned NULL\n");
     return ws;
   }
 
@@ -500,6 +502,9 @@ Ws* phg_wsb_open_ws(
     xdt->tool.y            = args->y;
     xdt->tool.width        = args->width;
     xdt->tool.height       = args->height;
+    printf("hardcopy type dim %d %d\n", args->width, args->height);
+    printf("hardcopy scale factor %f\n", ws->hcsf);
+
     xdt->tool.border_width = args->border_width;
     strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
     strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
@@ -563,7 +568,7 @@ Ws* phg_wsb_open_ws(
       goto abort;
     }
   }
-  wsgl_oir_ini(args->width, args->height);
+  wsgl_oir_ini(xdt->tool.width,xdt->tool.height);
   if (dt->ws_category == PCAT_OUTIN) {
     ws->input_overlay_window = phg_wsx_create_overlay(ws);
     if (ws->input_overlay_window == 0) {
