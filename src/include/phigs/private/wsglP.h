@@ -1312,7 +1312,7 @@ extern "C" {
    * RETURNS:     N/A
    * BUGS:        Possible conflicts in case of serveral workstations ?
    */
-  void wsgl_oir_ini(Pint width, Pint height);
+  void wsgl_oir_ini(Ws * ws);
 
 
   /*******************************************************************************
@@ -1323,7 +1323,7 @@ extern "C" {
    * RETURNS:     N/A
    * BUGS:        Possible conflicts in case of serveral workstations ?
    */
-  void wsgl_oir_reset(Pint width, Pint height);
+  void wsgl_oir_reset(Ws * ws);
 
 
   /*******************************************************************************

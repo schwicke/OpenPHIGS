@@ -568,7 +568,6 @@ Ws* phg_wsb_open_ws(
       goto abort;
     }
   }
-  wsgl_oir_ini(xdt->tool.width,xdt->tool.height);
   if (dt->ws_category == PCAT_OUTIN) {
     ws->input_overlay_window = phg_wsx_create_overlay(ws);
     if (ws->input_overlay_window == 0) {
@@ -609,6 +608,8 @@ Ws* phg_wsb_open_ws(
     goto abort;
   }
 
+  /* init order independent rendering */
+  wsgl_oir_ini(ws);
   init_update_state(ws);
 
   /* NOTE:

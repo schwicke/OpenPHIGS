@@ -453,8 +453,7 @@ void wsgl_begin_rendering(
     the fragment counter would keep growing until it runs off the end of the
     list buffer.
   */
-  printf("Reset in wsgl_begin_rendering: ws=%d: %d x %d\n", ws->id, ws->ws_rect.width, ws->ws_rect.height);
-  wsgl_oir_reset(ws->ws_rect.width, ws->ws_rect.height);
+  wsgl_oir_reset(ws);
   init_rendering_state(ws);
 }
 

@@ -34,11 +34,6 @@
 #include "ws.h"
 #include "private/wsglP.h"
 
-static char* data;
-static GLuint head_p_texture;
-static GLuint head_p_initializer;
-static GLuint acounter_buffer;
-static GLuint frag_storage_buffer;
 /*
  * The fragment list is a buffer object, but the shader reaches it as an image,
  * which needs a buffer texture on top of the buffer.
@@ -66,11 +61,6 @@ static GLuint frag_storage_texture;
  */
 #define OIR_LAYERS_PER_PIXEL 8
 
-/* entries the list can hold, handed to the shaders as list_capacity */
-static GLuint frag_list_capacity;
-/* size of the head pointer image, so that the resolve can cover all of it */
-static Pint oir_width;
-static Pint oir_height;
 /*******************************************************************************
  * wsgl_oir_ini
  *
@@ -79,28 +69,27 @@ static Pint oir_height;
  * RETURNS:     N/A
  * BUGS:        Possible conflicts in case of serveral workstations ?
  */
-void wsgl_oir_ini(Pint width, Pint height){
-  printf("OIR INI with %d x %d\n", width, height);
+void wsgl_oir_ini(Ws *ws){
+  Pint width = ws->ws_rect.width;
+  Pint height = ws->ws_rect.height;
   if (!wsgl_use_shaders) return;
   /*
     Only the 4.20 shaders build a fragment list. Without this the older
     shader versions would still pay for the head pointer image and the
     fragment list, which is a lot of memory for nothing.
   */
-  printf("OIR INI 1\n");
   if (wsgl_frag_shader_version != 420) return;
-  printf("OIR INI 2\n");
   size_t n_pixels = width * height;
   /*
     Called from both phg_wsx_setup_tool() and phg_wsb_open_ws(), so on the X
     path it runs twice for one workstation. Without this guard the second call
     would allocate a second set of objects and leak the first.
   */
-  if (head_p_texture != 0) return;
-  oir_width  = width;
-  oir_height = height;
-  glGenTextures(1, &head_p_texture);
-  glBindTexture(GL_TEXTURE_2D, head_p_texture);
+  if (ws->oir.head_p_texture != 0) return;
+  ws->oir.oir_width  = width;
+  ws->oir.oir_height = height;
+  glGenTextures(1, &ws->oir.head_p_texture);
+  glBindTexture(GL_TEXTURE_2D, ws->oir.head_p_texture);
   glTexImage2D(GL_TEXTURE_2D, 0,
                GL_R32UI,
                width, height,
@@ -109,41 +98,41 @@ void wsgl_oir_ini(Pint width, Pint height){
                GL_UNSIGNED_INT,
                NULL
                );
-  glGenBuffers(1, &head_p_initializer);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_p_initializer);
+  glGenBuffers(1, &ws->oir.head_p_initializer);
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, ws->oir.head_p_initializer);
   glBufferData(GL_PIXEL_UNPACK_BUFFER, n_pixels* sizeof(GLuint), NULL, GL_STATIC_DRAW);
-  data = (char*)glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
-  if (data == NULL){
+  ws->oir.data = (char*)glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+  if (ws->oir.data == NULL){
     fprintf(stderr, "WARNING: could not map the head pointer initialiser,"
             " order independent rendering is disabled\n");
-    head_p_texture = 0;
+    ws->oir.head_p_texture = 0;
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
     return;
   }
-  memset(data, 0xFF, n_pixels*sizeof(GLuint));
+  memset(ws->oir.data, 0xFF, n_pixels*sizeof(GLuint));
   glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
   /* leaving this bound would turn the data pointer of every later texture
      upload in the library into an offset into this buffer */
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
-  glGenBuffers(1, &acounter_buffer);
-  glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, acounter_buffer);
+  glGenBuffers(1, &ws->oir.acounter_buffer);
+  glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, ws->oir.acounter_buffer);
   glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), NULL, GL_DYNAMIC_COPY);
 
-  frag_list_capacity = (GLuint)(OIR_LAYERS_PER_PIXEL * n_pixels);
-  glGenBuffers(1, &frag_storage_buffer);
-  glBindBuffer(GL_TEXTURE_BUFFER, frag_storage_buffer);
+  ws->oir.frag_list_capacity = (GLuint)(OIR_LAYERS_PER_PIXEL * n_pixels);
+  glGenBuffers(1, &ws->oir.frag_storage_buffer);
+  glBindBuffer(GL_TEXTURE_BUFFER, ws->oir.frag_storage_buffer);
   glBufferData(GL_TEXTURE_BUFFER,
-               (GLsizeiptr)frag_list_capacity * 4 * sizeof(GLuint),
+               (GLsizeiptr)ws->oir.frag_list_capacity * 4 * sizeof(GLuint),
                NULL, GL_DYNAMIC_COPY);
   printf("[INFO] OIR fragment list: %u entries (%.1f MB), %d layers per pixel\n",
-         frag_list_capacity,
-         (double)frag_list_capacity * 4.0 * sizeof(GLuint) / (1024.0*1024.0),
+         ws->oir.frag_list_capacity,
+         (double)ws->oir.frag_list_capacity * 4.0 * sizeof(GLuint) / (1024.0*1024.0),
          OIR_LAYERS_PER_PIXEL);
   /* the shader sees the list as an image, which needs a buffer texture */
   glGenTextures(1, &frag_storage_texture);
   glBindTexture(GL_TEXTURE_BUFFER, frag_storage_texture);
-  glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32UI, frag_storage_buffer);
+  glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32UI, ws->oir.frag_storage_buffer);
 }
 
 /*******************************************************************************
@@ -154,17 +143,18 @@ void wsgl_oir_ini(Pint width, Pint height){
  * RETURNS:     N/A
  * BUGS:        Possible conflicts in case of serveral workstations ?
  */
-void wsgl_oir_reset(Pint width, Pint height){
+void wsgl_oir_reset(Ws * ws){
+  Pint width = ws->ws_rect.width;
+  Pint height = ws->ws_rect.height;  
   if (!wsgl_use_shaders) return;
-  if (head_p_texture == 0) return;
+  if (ws->oir.head_p_texture == 0) return;
   /*
     Set every head pointer back to the end of list marker by uploading the
     0xFF filled buffer built in wsgl_oir_ini(). With a pixel unpack buffer
     bound the NULL below is an offset into that buffer, not a host pointer.
   */
-  printf("OIR RESET with %d x %d\n", width, height);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_p_initializer);
-  glBindTexture(GL_TEXTURE_2D, head_p_texture);
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, ws->oir.head_p_initializer);
+  glBindTexture(GL_TEXTURE_2D, ws->oir.head_p_texture);
   glTexImage2D(GL_TEXTURE_2D, 0,
                GL_R32UI,
                width, height,
@@ -174,7 +164,7 @@ void wsgl_oir_reset(Pint width, Pint height){
                NULL );
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
   glBindImageTexture(OIR_HEAD_POINTER_UNIT,
-                     head_p_texture,
+                     ws->oir.head_p_texture,
                      0,
                      GL_FALSE,
                      0,
@@ -187,7 +177,7 @@ void wsgl_oir_reset(Pint width, Pint height){
                      0,
                      GL_READ_WRITE,
                      GL_RGBA32UI);
-  glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, acounter_buffer);
+  glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, ws->oir.acounter_buffer);
   const GLuint zero = 0;
   glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(zero), &zero);
   /*
@@ -200,7 +190,7 @@ void wsgl_oir_reset(Pint width, Pint height){
     glGetIntegerv(GL_CURRENT_PROGRAM, &program);
     if (program != 0){
       loc = glGetUniformLocation(program, "list_capacity");
-      if (loc >= 0) glUniform1ui(loc, frag_list_capacity);
+      if (loc >= 0) glUniform1ui(loc, ws->oir.frag_list_capacity);
     }
   }
 }
@@ -220,7 +210,7 @@ void wsgl_oir_resolve(Ws * ws){
   GLint viewport[4];
 
   if (!wsgl_use_shaders) return;
-  if (head_p_texture == 0) return;
+  if (ws->oir.head_p_texture == 0) return;
   if (ws->oir_program == 0) return;
 
   /* make the appends of this frame visible to the reads below */
@@ -254,7 +244,7 @@ void wsgl_oir_resolve(Ws * ws){
     the whole head pointer image rather than whatever viewport happens to be
     current.
   */
-  glViewport(0, 0, (GLsizei) oir_width, (GLsizei) oir_height);
+  glViewport(0, 0, (GLsizei) ws->oir.oir_width, (GLsizei) ws->oir.oir_height);
 
   glUseProgram(ws->oir_program);
   /*

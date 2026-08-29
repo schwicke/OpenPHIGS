@@ -130,7 +130,7 @@ CDECK  ID>, KYSABL.
       INTEGER IBLACK, IWHIT, IRED, IGREEN, IBLUE, IYEL, IMAG, ICYAN
       print*, "Defining structures for hour glass"
       CALL POPST (NSGSAB)
-      print*, "Open structure"
+      print*, "Opened structure"
       IBLACK=1
       IWHIT=2
       IRED=3
@@ -140,9 +140,13 @@ CDECK  ID>, KYSABL.
       IMAG=7
       ICYAN=8
       CALL PSLWSC(1.)
+      print*, "After PSLWSC"
       CALL PSFCM (0)
+      print*, "After PSFCM"
       CALL PSVWI (NVWGEN)
+      print*, "After PSVWI"
       CALL PSIS (PSOLID)
+      print*, "After PSIS"
       CALL PSICI (IRED)
       CALL PFA3 (5, XRECT1, YRECT1, ALLZS)
       CALL PFA3 (5, XRECT1, YRECT2, ALLZS)
@@ -226,10 +230,8 @@ C     Check scaling settings
       print*, "Scale factor for hardcopy: ", SFH
 C     set the output filename
       CALL PSFNAME(WKTOUT, "hourglass.png")
-C     post again
-C      CALL DUMPSTR(NSGSAB)
+C     post to output workstation
       CALL PPOST (WKTOUT,NSGSAB,1.)
-C      CALL KYSABL(WKTOUT)
 C     close workstations
       CALL PCLWK(WKTOUT)
 C     Refresh 

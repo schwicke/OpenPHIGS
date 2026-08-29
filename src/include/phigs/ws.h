@@ -209,6 +209,25 @@ typedef struct {
    } model;
 } Ws_output_ws;
 
+typedef struct {
+  /* size of the head pointer image, so that the resolve can cover all of it */
+  Pint oir_width;
+  Pint oir_height;
+  /* entries the list can hold, handed to the shaders as list_capacity */
+  GLuint frag_list_capacity;
+  char * data;
+  GLuint head_p_texture;
+  GLuint head_p_initializer;
+  GLuint acounter_buffer;
+  GLuint frag_storage_buffer;
+/*
+ * The fragment list is a buffer object, but the shader reaches it as an image,
+ * which needs a buffer texture on top of the buffer.
+ */
+  GLuint frag_storage_texture;
+} Wsgl_oir;
+
+  
 struct _Wsgl;
 typedef struct _Wsgl *Wsgl_handle;
 
@@ -231,6 +250,7 @@ typedef struct _Ws {
    XtAppContext app_context;
    Window       input_overlay_window;
    Wsgl_handle  render_context;
+   Wsgl_oir     oir;
    int          has_double_buffer;
    XRectangle   ws_rect;
    Widget       top_level; /* only in PM */
@@ -248,6 +268,7 @@ typedef struct _Ws {
    /* second program used to resolve the order independent rendering lists,
       zero when order independent rendering is not in use */
    GLint        oir_program;
+   
 
    /* Output LUN for some work station types, e.g. to print out stuff here */
    Pint         lun;
