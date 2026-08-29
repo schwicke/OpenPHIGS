@@ -35,7 +35,9 @@
  * \param   wkid work station ID
  * \param   hcsf scale factor, a positive real number
  *
- * \note This setting is only relevant for work station types 4 - 9 and is ignored for other work station types. See popen_wk(3) for available work station types.
+ * \note This setting is only relevant for work station types 4 - 9 and is ignored for other work station types. See popen_wk(3) for available work station types. The function must be called BEFORE the workstation is opened.
+ *
+ * \pre The workstation WKID must not be open yet.
  *
  * \sa popwk
  */

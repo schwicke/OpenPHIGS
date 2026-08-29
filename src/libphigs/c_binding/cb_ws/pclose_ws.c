@@ -82,7 +82,7 @@ void pclose_ws(
     int height = wsh->type->desc_tbl.xwin_dt.tool.height;
     wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
     dt = &wsinfo->wstype->desc_tbl.phigs_dt;
-    printf("Reset in Close WS: %d %d", width, height);
+    printf("Reset in Close WS: ws=%d: %dx%d\n", ws_id, width, height);
     //    wsgl_oir_reset((int)(0.5+width*wsh->hcsf), (int)(0.5+wsh->hcsf*height));
     wsgl_oir_reset(width, height);
     (*wsh->redraw_all)( wsh, PFLAG_ALWAYS);
