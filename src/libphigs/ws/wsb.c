@@ -1043,6 +1043,7 @@ void phg_wsb_close_struct(
   default:
     break;
   }
+  wsgl_close_struct();
 
   /* Updates are implementation dependent in ASTI mode.  This is one
    * of the cases where we do an ASTI update;  we're hopefully doing the

@@ -72,7 +72,6 @@ void query_settings(){
   /* set default values for all workstations */
   for (i=0; i <= max_wkid; i++){
     cf = &config[i];
-    printf("%d %d\n", i, cf->wkid);
     if (cf->wkid >= 0){
       printf("Workstation   ID %d:\n", cf->wkid);
       printf("  Order Independent Renderging: %d:\n", cf->oir);
@@ -157,10 +156,8 @@ void read_config(char * config_file){
     set_defaults(&newconfig);
     while (fgets(line, maxsize, fh) != NULL){
       if (line[0] == '%'){
-        printf("READING: %s\n", line);
         /* get work station ID */
         if (sscanf(line, "%%wk %d", &wk)>0){
-          printf("New workstation id %d\n", wk);
           if (wk > max_wkid){
             printf("Error: maximum workstation number exceeded: %d > %d\n", wk, max_wkid);
           }
@@ -274,9 +271,7 @@ void read_config(char * config_file){
     memcpy(&config[newconfig.wkid], &newconfig, sizeof(Pophconf));
   }
   if (printconf){
-    printf("Printing configuration ...\n");
     query_settings();
   } else {
-    printf("NOT printing configuration ...\n");
   }
 }

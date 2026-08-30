@@ -122,6 +122,17 @@ int wsgl_init(
 }
 
 /*******************************************************************************
+ * wsgl_close_struct
+ *
+ * DESCR:       Close
+ * RETURNS:     N/A
+ */
+
+void wsgl_close_struct(){
+  glDisable(GL_SCISSOR_TEST);
+}
+
+/*******************************************************************************
  * wsgl_close
  *
  * DESCR:       Close

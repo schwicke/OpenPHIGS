@@ -50,8 +50,6 @@
  * BUGS:
  */
 void wsgl_oir_ini(Ws *ws){
-  Pint width = ws->ws_rect.width;
-  Pint height = ws->ws_rect.height;
   if (!ws->oir.enable) return;
   if (!wsgl_use_shaders) return;
   /*
@@ -60,7 +58,13 @@ void wsgl_oir_ini(Ws *ws){
     fragment list, which is a lot of memory for nothing.
   */
   if (wsgl_frag_shader_version != 420) return;
+  Pint width = ws->ws_rect.width;
+  Pint height = ws->ws_rect.height;
   size_t n_pixels = width * height;
+  if (n_pixels <= 0){
+    /* At the first call things may not be initialised yet. Capture this and just ignore the call */
+    return;
+  }
   /*
     Called from both phg_wsx_setup_tool() and phg_wsb_open_ws(), so on the X
     path it runs twice for one workstation. Without this guard the second call
@@ -87,11 +91,10 @@ void wsgl_oir_ini(Ws *ws){
     fprintf(stderr, "WARNING: could not map the head pointer initialiser,"
             " order independent rendering is disabled\n");
     ws->oir.head_p_texture = 0;
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
     ws->oir.enable = 0;
     glDeleteBuffers(1, &ws->oir.head_p_initializer);
-    ws->oir.head_p_initializer = 0;
     glDeleteTextures(1, &ws->oir.head_p_texture);
+    ws->oir.head_p_initializer = 0;
     ws->oir.head_p_texture = 0;
     return;
   }
@@ -133,7 +136,6 @@ void wsgl_oir_cleanup(Ws * ws){
   if (!ws->oir.enable) return;
   if (!wsgl_use_shaders) return;
   if (wsgl_frag_shader_version != 420) return;
-  printf("Cleaning up OIR for WS=%d\n", ws->id);
   glDeleteTextures(1, &ws->oir.frag_storage_texture); ws->oir.frag_storage_texture = 0;
   glDeleteBuffers(1, &ws->oir.frag_storage_buffer); ws->oir.frag_storage_buffer = 0;
   ws->oir.frag_list_capacity = 0;

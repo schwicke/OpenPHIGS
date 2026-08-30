@@ -1347,6 +1347,13 @@ extern "C" {
    */
   void wsgl_oir_resolve(Ws * ws);
 
+  /*******************************************************************************
+   * wsgl_close_struct
+   *
+   * DESCR:       Close
+   * RETURNS:     N/A
+   */
+  void wsgl_close_struct();
 
 #ifdef __cplusplus
 }
