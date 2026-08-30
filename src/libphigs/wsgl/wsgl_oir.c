@@ -88,6 +88,11 @@ void wsgl_oir_ini(Ws *ws){
             " order independent rendering is disabled\n");
     ws->oir.head_p_texture = 0;
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    ws->oir.enable = 0;
+    glDeleteBuffers(1, &ws->oir.head_p_initializer);
+    ws->oir.head_p_initializer = 0;
+    glDeleteTextures(1, &ws->oir.head_p_texture);
+    ws->oir.head_p_texture = 0;
     return;
   }
   memset(ws->oir.data, 0xFF, n_pixels*sizeof(GLuint));

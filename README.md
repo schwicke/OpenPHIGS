@@ -148,12 +148,14 @@ In COLORMODE=2 same as above. In addition, it will create 5 levels of transparen
 * PXQHCSF(INTEGER IWK, REAL VALUE): Inquire the current scale factor for workstation ID WKID. The value is returned in the second argument.
 * PSFNAME(INTEGER IWK, CHARACTER FNAME): set output file name for workstation ID IWK
 * PXSCM(): Set color map
+* PXOIRM(InTEGER IWK, INTEGER mode): OIR mode. 0=OIR disabled, >0 number of layers per pixel
 
 ### C-bindings
 * pxset_conf_file_name(char* path): set the configuration location and file name
 * pxset_conf_hcsf(int wkid, Pfloat value): Set hardcopy scale factor for workstation ID WKID. Must be set before the workstation is being opened
 * Pfloat pxinq_conf_hcsf(int wkid): Inquire the current hardcopy scale factor for workstation ID WKID.
 * pxset_color_map(int wkid): set color map
+* pxset_oir_mode(int wkid, int mode): OIR mode. 0=OIR disabled, >0 number of layers per pixel
 
 ### Configuration file
 By default, OpenPHIGS will look for a file named phigs.def in the current directly, and use it to apply default values. This is where you can set window names, backgrounds etc. Explanations can be found in the template shipped with the distribution.
