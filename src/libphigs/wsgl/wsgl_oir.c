@@ -35,12 +35,6 @@
 #include "private/wsglP.h"
 
 /*
- * The fragment list is a buffer object, but the shader reaches it as an image,
- * which needs a buffer texture on top of the buffer.
- */
-static GLuint frag_storage_texture;
-
-/*
  * Image units the shaders expect the two objects on. These have to agree with
  * the binding qualifiers in fs420.frag and fs420_resolve.frag.
  */
@@ -59,15 +53,15 @@ static GLuint frag_storage_texture;
  * There is no point going above MAX_FRAGMENTS in fs420_resolve.frag, since
  * the resolve will not walk more than that many entries anyway.
  */
-#define OIR_LAYERS_PER_PIXEL 8
+#define OIR_LAYERS_PER_PIXEL 16
 
 /*******************************************************************************
  * wsgl_oir_ini
  *
  * DESCR:       Initialise Order Independent Rendering
- *              Called when opening the workstation. 
+ *              Called when opening the workstation.
  * RETURNS:     N/A
- * BUGS:        Possible conflicts in case of serveral workstations ?
+ * BUGS:
  */
 void wsgl_oir_ini(Ws *ws){
   Pint width = ws->ws_rect.width;
@@ -130,22 +124,43 @@ void wsgl_oir_ini(Ws *ws){
          (double)ws->oir.frag_list_capacity * 4.0 * sizeof(GLuint) / (1024.0*1024.0),
          OIR_LAYERS_PER_PIXEL);
   /* the shader sees the list as an image, which needs a buffer texture */
-  glGenTextures(1, &frag_storage_texture);
-  glBindTexture(GL_TEXTURE_BUFFER, frag_storage_texture);
+  glGenTextures(1, &ws->oir.frag_storage_texture);
+  glBindTexture(GL_TEXTURE_BUFFER, ws->oir.frag_storage_texture);
   glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32UI, ws->oir.frag_storage_buffer);
+}
+
+/*******************************************************************************
+ * wsgl_oir_cleanup
+ *
+ * DESCR:       Cleanup Order Independent Rendering
+ *              Called when closing the workstation.
+ * RETURNS:     N/A
+ * BUGS:
+ */
+void wsgl_oir_cleanup(Ws * ws){
+  if (!wsgl_use_shaders) return;
+  if (wsgl_frag_shader_version != 420) return;
+  printf("Cleaning up OIR for WS=%d\n", ws->id);
+  glDeleteTextures(1, &ws->oir.frag_storage_texture); ws->oir.frag_storage_texture = 0;
+  glDeleteBuffers(1, &ws->oir.frag_storage_buffer); ws->oir.frag_storage_buffer = 0;
+  ws->oir.frag_list_capacity = 0;
+  glDeleteBuffers(1, &ws->oir.acounter_buffer); ws->oir.acounter_buffer = 0;
+  glDeleteBuffers(1, &ws->oir.head_p_initializer);ws->oir.head_p_initializer = 0;
+  ws->oir.data = NULL;
+  glDeleteTextures(1, &ws->oir.head_p_texture); ws->oir.head_p_texture = 0;
 }
 
 /*******************************************************************************
  * wsgl_oir_reset
  *
  * DESCR:       Reset Order Independent Rendering
- *              Called for each new frame 
+ *              Called for each new frame
  * RETURNS:     N/A
- * BUGS:        Possible conflicts in case of serveral workstations ?
+ * BUGS:
  */
 void wsgl_oir_reset(Ws * ws){
   Pint width = ws->ws_rect.width;
-  Pint height = ws->ws_rect.height;  
+  Pint height = ws->ws_rect.height;
   if (!wsgl_use_shaders) return;
   if (ws->oir.head_p_texture == 0) return;
   /*
@@ -171,7 +186,7 @@ void wsgl_oir_reset(Ws * ws){
                      GL_READ_WRITE,
                      GL_R32UI);
   glBindImageTexture(OIR_LIST_BUFFER_UNIT,
-                     frag_storage_texture,
+                     ws->oir.frag_storage_texture,
                      0,
                      GL_FALSE,
                      0,

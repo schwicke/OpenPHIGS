@@ -480,7 +480,6 @@ Ws* phg_wsb_open_ws(
   Arg  arglist[3] ;
   Pint err;
 
-  printf("phg_wsb_open_ws: Opening new work station\n");
   ret->err = -1;
   ws = phg_wsx_create(args);
   if (ws == NULL) {

@@ -17,7 +17,7 @@
 layout (binding = 0, r32ui)    uniform uimage2D     head_pointer_image;
 layout (binding = 1, rgba32ui) uniform uimageBuffer list_buffer;
 
-#define MAX_FRAGMENTS 15
+#define MAX_FRAGMENTS 16
 #define LIST_END 0xFFFFFFFFu
 
 uvec4 fragments[MAX_FRAGMENTS];

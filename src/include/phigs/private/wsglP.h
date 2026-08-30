@@ -1316,12 +1316,23 @@ extern "C" {
 
 
   /*******************************************************************************
+   * wsgl_oir_cleanup
+   *
+   * DESCR:       Initialise Order Independent Rendering
+   *              Called when opening the workstation.
+   * RETURNS:     N/A
+   * BUGS:
+   */
+  void wsgl_oir_cleanup(Ws * ws);
+
+
+  /*******************************************************************************
    * wsgl_oir_reset
    *
    * DESCR:       Reset Order Independent Rendering
    *              Called for each new frame
    * RETURNS:     N/A
-   * BUGS:        Possible conflicts in case of serveral workstations ?
+   * BUGS:
    */
   void wsgl_oir_reset(Ws * ws);
 

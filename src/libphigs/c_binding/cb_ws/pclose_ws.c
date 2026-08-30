@@ -253,6 +253,7 @@ void pclose_ws(
       str = str->higher;
     }
     /* cleanup */
+    wsgl_oir_cleanup(wsh);
     if (wsh->glx_context){
       glXDestroyContext(wsh->display, wsh->glx_context);
     }
@@ -274,6 +275,7 @@ void pclose_ws(
     phg_psl_rem_ws(PHG_PSL, ws_id);
 
   } else {
-    printf("PCLOSEWS ERROR: workstation was not open. Ignoring function.");
+    printf("WARNING in pclose_ws: workstation ID=%d\n", ws_id);
+    ERR_REPORT(PHG_ERH, ERR54);
   }
 }
