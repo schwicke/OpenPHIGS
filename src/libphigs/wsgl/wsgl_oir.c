@@ -41,20 +41,6 @@
 #define OIR_HEAD_POINTER_UNIT 0
 #define OIR_LIST_BUFFER_UNIT  1
 
-/*
- * How many transparent fragments per pixel the list is sized for.
- *
- * Only transparent geometry goes into the list, opaque geometry is written
- * straight to the framebuffer by fs420.frag, so this is the number of
- * transparent surfaces that may overlap in one pixel before fragments start
- * being dropped. Each entry is a uvec4, so the cost is 16 bytes per pixel per
- * layer: at 1024x1024 that is 16.8 MB per layer.
- *
- * There is no point going above MAX_FRAGMENTS in fs420_resolve.frag, since
- * the resolve will not walk more than that many entries anyway.
- */
-#define OIR_LAYERS_PER_PIXEL 16
-
 /*******************************************************************************
  * wsgl_oir_ini
  *
@@ -66,6 +52,7 @@
 void wsgl_oir_ini(Ws *ws){
   Pint width = ws->ws_rect.width;
   Pint height = ws->ws_rect.height;
+  if (!ws->oir.enable) return;
   if (!wsgl_use_shaders) return;
   /*
     Only the 4.20 shaders build a fragment list. Without this the older
@@ -113,7 +100,7 @@ void wsgl_oir_ini(Ws *ws){
   glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, ws->oir.acounter_buffer);
   glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), NULL, GL_DYNAMIC_COPY);
 
-  ws->oir.frag_list_capacity = (GLuint)(OIR_LAYERS_PER_PIXEL * n_pixels);
+  ws->oir.frag_list_capacity = (GLuint)(ws->oir.layersPerPixel * n_pixels);
   glGenBuffers(1, &ws->oir.frag_storage_buffer);
   glBindBuffer(GL_TEXTURE_BUFFER, ws->oir.frag_storage_buffer);
   glBufferData(GL_TEXTURE_BUFFER,
@@ -122,7 +109,7 @@ void wsgl_oir_ini(Ws *ws){
   printf("[INFO] OIR fragment list: %u entries (%.1f MB), %d layers per pixel\n",
          ws->oir.frag_list_capacity,
          (double)ws->oir.frag_list_capacity * 4.0 * sizeof(GLuint) / (1024.0*1024.0),
-         OIR_LAYERS_PER_PIXEL);
+         ws->oir.layersPerPixel);
   /* the shader sees the list as an image, which needs a buffer texture */
   glGenTextures(1, &ws->oir.frag_storage_texture);
   glBindTexture(GL_TEXTURE_BUFFER, ws->oir.frag_storage_texture);
@@ -138,6 +125,7 @@ void wsgl_oir_ini(Ws *ws){
  * BUGS:
  */
 void wsgl_oir_cleanup(Ws * ws){
+  if (!ws->oir.enable) return;
   if (!wsgl_use_shaders) return;
   if (wsgl_frag_shader_version != 420) return;
   printf("Cleaning up OIR for WS=%d\n", ws->id);
@@ -161,6 +149,7 @@ void wsgl_oir_cleanup(Ws * ws){
 void wsgl_oir_reset(Ws * ws){
   Pint width = ws->ws_rect.width;
   Pint height = ws->ws_rect.height;
+  if (!ws->oir.enable) return;
   if (!wsgl_use_shaders) return;
   if (ws->oir.head_p_texture == 0) return;
   /*
@@ -224,6 +213,7 @@ void wsgl_oir_resolve(Ws * ws){
   GLboolean depth_test, blend, depth_mask;
   GLint viewport[4];
 
+  if (!ws->oir.enable) return;
   if (!wsgl_use_shaders) return;
   if (ws->oir.head_p_texture == 0) return;
   if (ws->oir_program == 0) return;

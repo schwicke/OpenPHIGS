@@ -501,8 +501,6 @@ Ws* phg_wsb_open_ws(
     xdt->tool.y            = args->y;
     xdt->tool.width        = args->width;
     xdt->tool.height       = args->height;
-    printf("hardcopy type dim %d %d\n", args->width, args->height);
-    printf("hardcopy scale factor %f\n", ws->hcsf);
 
     xdt->tool.border_width = args->border_width;
     strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);

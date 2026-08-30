@@ -506,7 +506,7 @@ void wsgl_shaders(Ws * ws){
       rendering path is exactly what it always was.
     */
     ws->oir_program = 0;
-    if (wsgl_frag_shader_version == 420){
+    if (wsgl_frag_shader_version == 420 && ws->oir.enable != 0){
       ws->oir_program = wsgl_build_program(vertex_shader_text_420_resolve,
                                            fragment_shader_text_420_resolve,
                                            "OIR resolve");

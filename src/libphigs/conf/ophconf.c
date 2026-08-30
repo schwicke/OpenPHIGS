@@ -62,14 +62,8 @@ void set_defaults(Pophconf* config){
     config->vpos.y_max = 1.;
     config->set_window_pos = 1;
     config->hcsf = 1.0;
-}
-
-void init_defaults(){
-  int i;
-  /* set default values for all workstations */
-  for (i=0; i <= max_wkid; i++){
-    set_defaults(&config[i]);
-  }
+    config->oir = 0;
+    config->layersPerPixel = 16;
 }
 
 void query_settings(){
@@ -78,8 +72,11 @@ void query_settings(){
   /* set default values for all workstations */
   for (i=0; i <= max_wkid; i++){
     cf = &config[i];
+    printf("%d %d\n", i, cf->wkid);
     if (cf->wkid >= 0){
       printf("Workstation   ID %d:\n", cf->wkid);
+      printf("  Order Independent Renderging: %d:\n", cf->oir);
+      printf("  OIR layers per pixel: %d:\n", cf->layersPerPixel);
       printf("  Title:         %s\n", cf->window_title);
       printf("  Background rgb %f %f %f\n",
              cf->background_color_rgb.rgb.red,
@@ -105,6 +102,15 @@ void query_settings(){
   }
 }
 
+void init_defaults(){
+  int i;
+  /* set default values for all workstations */
+  for (i=0; i <= max_wkid; i++){
+    set_defaults(&config[i]);
+  }
+  query_settings();
+}
+
 void read_config(char * config_file){
   /* read configuraton for works station from file */
   FILE* fh;
@@ -122,6 +128,8 @@ void read_config(char * config_file){
   int use_shaders;
   int vertex_shader;
   int fragment_shader;
+  int oir_enabled;
+  int oir_lpp;
 
   /* initialize output */
   newconfig.wkid = -1;
@@ -131,6 +139,8 @@ void read_config(char * config_file){
   /* defaults for updated configs */
   init_defaults();
   wsgl_use_shaders = 1;
+  oir_enabled = 0;
+  oir_lpp = 16;
 
   if (config_file == NULL){
     printf("No configuration file name defined. Using defaults instead.\n");
@@ -147,6 +157,7 @@ void read_config(char * config_file){
     set_defaults(&newconfig);
     while (fgets(line, maxsize, fh) != NULL){
       if (line[0] == '%'){
+        printf("READING: %s\n", line);
         /* get work station ID */
         if (sscanf(line, "%%wk %d", &wk)>0){
           printf("New workstation id %d\n", wk);
@@ -163,14 +174,20 @@ void read_config(char * config_file){
             if (newconfig.wkid < max_wkid){
               /* save the last parsed config */
               memcpy(&config[newconfig.wkid], &newconfig, sizeof(Pophconf));
-              /* reset defaults for the next one */
-              set_defaults(&newconfig);
-              /* store workstation number */
+              /* initialise with config for wkid 0 if that is set */
+              if (config[0].wkid == 0) {
+                /* init with config for wkid=0 if that exists */
+                memcpy(&newconfig, &config[0], sizeof(Pophconf));
+              } else {
+                /* reset to defaults for the next one */
+                set_defaults(&newconfig);
+              }
+              /* store the new workstation number */
               newconfig.wkid = wk;
             }
           }
         }
-        if (sscanf(line, "%%wn %s", text) > 0){
+        if (sscanf(line, "%%wn %[^\n]", text) > 0){
           strncpy(newconfig.window_title, text, max_text);
         }
         if (sscanf(line, "%%wf %s", text) > 0){
@@ -208,6 +225,24 @@ void read_config(char * config_file){
           newconfig.hcsf = hcsf;
           printf("Scale factor  is: %f\n", hcsf);
         }
+        if (sscanf(line, "%%lpp %d", &oir_lpp) > 0){
+          if (oir_lpp > 16 || oir_lpp < 1){
+            printf("ERROR: OIR Layer per pixels out of range\n");
+            printf("ERROR: must be >0 and <=16\n");
+          } else {
+            newconfig.layersPerPixel = oir_lpp;
+            printf("OIR Layers per pixel: %d\n", oir_lpp);
+          }
+        }
+         if (sscanf(line, "%%oir %d", &oir_enabled) > 0){
+          if (oir_enabled == 0){
+            newconfig.oir = 0;
+            printf("OIR is DISABLED by configuration\n");
+          } else {
+            newconfig.oir = 1;
+            printf("OIR is ENABLED by configuration\n");
+          }
+        }
         if (sscanf(line, "%%gs %d", &use_shaders) > 0){
           if (use_shaders == 0){
             wsgl_use_shaders = 0;
@@ -239,6 +274,9 @@ void read_config(char * config_file){
     memcpy(&config[newconfig.wkid], &newconfig, sizeof(Pophconf));
   }
   if (printconf){
+    printf("Printing configuration ...\n");
     query_settings();
+  } else {
+    printf("NOT printing configuration ...\n");
   }
 }

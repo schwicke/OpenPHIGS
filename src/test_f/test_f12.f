@@ -140,13 +140,9 @@ CDECK  ID>, KYSABL.
       IMAG=7
       ICYAN=8
       CALL PSLWSC(1.)
-      print*, "After PSLWSC"
       CALL PSFCM (0)
-      print*, "After PSFCM"
       CALL PSVWI (NVWGEN)
-      print*, "After PSVWI"
       CALL PSIS (PSOLID)
-      print*, "After PSIS"
       CALL PSICI (IRED)
       CALL PFA3 (5, XRECT1, YRECT1, ALLZS)
       CALL PFA3 (5, XRECT1, YRECT2, ALLZS)
@@ -218,7 +214,7 @@ c      CALL DUMPSTR(NSGSAB)
 C     Wait for user interaction
       CALL PMSG(WKID, "Create a hard copy to file.");
 C     Set scale factor for output before opening the workstation
-      CALL PXSHCSF(WKTOUT, 3.)
+      CALL PXSHCSF(WKTOUT, 4.)
 C     Open output workstation
       CALL POPWK (WKTOUT, LUNPS, WKFORM)
 c     Define colors for output workstation
