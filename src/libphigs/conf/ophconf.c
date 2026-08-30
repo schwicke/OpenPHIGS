@@ -154,6 +154,7 @@ void read_config(char * config_file){
     }
     /* set initial defaults for this configuration */
     set_defaults(&newconfig);
+    memset(&line[0], 0, maxsize);
     while (fgets(line, maxsize, fh) != NULL){
       if (line[0] == '%'){
         /* get work station ID */
@@ -184,14 +185,18 @@ void read_config(char * config_file){
             }
           }
         }
+        memset(&text[0], 0, maxsize);
         if (sscanf(line, "%%wn %[^\n]", text) > 0){
-          strncpy(newconfig.window_title, text, max_text);
+          strncpy(newconfig.window_title, text, maxsize);
+          memset(&text[0], 0, maxsize);
         }
         if (sscanf(line, "%%wf %s", text) > 0){
-          strncpy(newconfig.filename, text, max_text);
+          strncpy(newconfig.filename, text, maxsize);
+          memset(&text[0], 0, maxsize);
         }
         if (sscanf(line, "%%wi %s", text) > 0){
-          strncpy(newconfig.window_icon, text, max_text);
+          strncpy(newconfig.window_icon, text, maxsize);
+          memset(&text[0], 0, maxsize);
         }
         if (sscanf(line, "%%wp %f %f %f %f", &xmin, &xmax, &ymin, &ymax) > 0){
           newconfig.vpos.x_min = xmin;
@@ -263,6 +268,7 @@ void read_config(char * config_file){
           }
         }
       }
+      memset(&line[0], 0, maxsize);
     }
     fclose(fh);
   }
