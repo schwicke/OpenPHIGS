@@ -28,25 +28,25 @@
 #include "phconf.h"
 
 /**
- * \file pxshcsf.c
+ * \file pxoirm.c
  *
- * \brief       set the hardcopy scale factor for workstation (OpenPHIGS extension)
+ * \brief   set the hardcopy scale factor for workstation (OpenPHIGS extension)
  *
  * \param   wkid work station ID
  * \param   hcsf scale factor, a positive real number
  *
- * \note This setting is only relevant for work station types 4 - 9 and is ignored for other work station types. See popen_wk(3) for available work station types. The function must be called BEFORE the workstation is opened.
+ * \note This setting is only relevant if shader version 420 is in use. Mode must be lower or equal to 16. Note that the larger the number, the more memory hungry the system will be.
  *
- * \pre The workstation WKID must not be open yet.
- *
+ * \pre This setting can be set via the configuration as well. As it is used to configure the workstation, the workstation must not be open yet in order to have an effect.
+ *.
  * \sa popwk
  */
-FTN_SUBROUTINE(pxshcsf)(
+FTN_SUBROUTINE(pxoirm)(
                         FTN_INTEGER(wkid),
-                        FTN_REAL(hcsf)
+                        FTN_INTEGER(mode)
                        )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
-  Pfloat hc_sf = FTN_REAL_GET(hcsf);
-  pxset_conf_hcsf(ws_id, hc_sf);
+  Pint oirmode = FTN_REAL_GET(mode);
+  pxset_oir_mode(ws_id, oirmode);
 }

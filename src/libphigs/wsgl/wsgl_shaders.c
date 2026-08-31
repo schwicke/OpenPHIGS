@@ -60,8 +60,268 @@ GLfloat t_plane[] = {0.0f, 1.0f, 0.0f, 0.0f};
 #include "private/vs130.h"
 #include "private/fs130.h"
 
+/* version 4.20 vertex and fragment shaders */
+#include "private/vs420.h"
+#include "private/fs420.h"
+
+/* version 4.20 order independent rendering resolve pass */
+#include "private/vs420_resolve.h"
+#include "private/fs420_resolve.h"
+
 // FIXME: this should be moved into a header file
 extern void wsgl_setup_patterns();
+
+/*
+ * Table of the shader sources built into the library. Adding a version means
+ * adding one line here, plus the #include above and the rule that generates
+ * the header in libphigs/shaders/CMakeLists.txt. The diagnostics below pick
+ * up new entries automatically.
+ *
+ * The sources are addressed indirectly because the generated symbols are
+ * variables, not compile time constants.
+ */
+typedef struct {
+  int version;
+  const char ** vertex_source;
+  const char ** fragment_source;
+} Wsgl_shader_set;
+
+static const Wsgl_shader_set wsgl_shader_sets[] = {
+  { 120, &vertex_shader_text_120, &fragment_shader_text_120 },
+  { 130, &vertex_shader_text_130, &fragment_shader_text_130 },
+  { 420, &vertex_shader_text_420, &fragment_shader_text_420 }
+};
+
+#define WSGL_NUM_SHADER_SETS \
+  (sizeof(wsgl_shader_sets) / sizeof(wsgl_shader_sets[0]))
+
+/*******************************************************************************
+ * wsgl_shader_source
+ *
+ * DESCR:	Look up the built in source of one shader stage
+ * RETURNS:	Source text, or NULL if the version is not built in
+ */
+
+static const char * wsgl_shader_source(GLenum type, int version)
+{
+  unsigned int i;
+
+  for (i = 0; i < WSGL_NUM_SHADER_SETS; i++){
+    if (wsgl_shader_sets[i].version == version){
+      if (type == GL_VERTEX_SHADER){
+        return *wsgl_shader_sets[i].vertex_source;
+      } else {
+        return *wsgl_shader_sets[i].fragment_source;
+      }
+    }
+  }
+  return NULL;
+}
+
+/*******************************************************************************
+ * wsgl_print_shader_versions
+ *
+ * DESCR:	List the shader versions built into the library
+ * RETURNS:	N/A
+ */
+
+static void wsgl_print_shader_versions(void)
+{
+  unsigned int i;
+
+  fprintf(stderr, "[ERROR] Please use one of");
+  for (i = 0; i < WSGL_NUM_SHADER_SETS; i++){
+    fprintf(stderr, "%s %d",
+            (i == 0) ? "" : ((i + 1 == WSGL_NUM_SHADER_SETS) ? " or" : ","),
+            wsgl_shader_sets[i].version);
+  }
+  fprintf(stderr, "\n");
+}
+
+/*******************************************************************************
+ * wsgl_glsl_version
+ *
+ * DESCR:	Turn the driver GLSL version string ("4.60", "1.30 Mesa ...")
+ *		into the integer form used to select the shaders (460, 130)
+ * RETURNS:	Version number, or 0 if it could not be parsed
+ */
+
+static int wsgl_glsl_version(const char * version_string)
+{
+  int major, minor;
+
+  if (version_string == NULL) return 0;
+  if (sscanf(version_string, "%d.%d", &major, &minor) != 2) return 0;
+  /* the minor number is two digits: "4.2" means 420, "1.30" means 130 */
+  if (minor < 10) minor *= 10;
+  return major * 100 + minor;
+}
+
+/*******************************************************************************
+ * wsgl_print_shader_log
+ *
+ * DESCR:	Print the compiler log of one shader stage. The log is fetched
+ *		with the length the driver reports, so it is never truncated.
+ * RETURNS:	N/A
+ */
+
+static void wsgl_print_shader_log(GLuint shader, const char * what)
+{
+  GLint length = 0;
+  GLchar * log;
+
+  glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+  /* an empty log is reported either as 0 or as 1 (the terminating NUL) */
+  if (length <= 1) return;
+  log = (GLchar *) malloc((size_t) length);
+  if (log == NULL) return;
+  glGetShaderInfoLog(shader, length, NULL, log);
+  fprintf(stderr, "----- %s shader compiler log -----\n%s\n", what, log);
+  free(log);
+}
+
+/*******************************************************************************
+ * wsgl_print_program_log
+ *
+ * DESCR:	Print the linker log of a shader program
+ * RETURNS:	N/A
+ */
+
+static void wsgl_print_program_log(GLuint program)
+{
+  GLint length = 0;
+  GLchar * log;
+
+  glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
+  if (length <= 1) return;
+  log = (GLchar *) malloc((size_t) length);
+  if (log == NULL) return;
+  glGetProgramInfoLog(program, length, NULL, log);
+  fprintf(stderr, "----- shader program linker log -----\n%s\n", log);
+  free(log);
+}
+
+/*******************************************************************************
+ * wsgl_print_shader_source
+ *
+ * DESCR:	Echo a shader source with line numbers, so that the line
+ *		numbers the GLSL compiler reports can be looked up directly.
+ *		The sources are generated into headers, so the numbering here
+ *		matches the .vert / .frag file it was generated from.
+ * RETURNS:	N/A
+ */
+
+static void wsgl_print_shader_source(const char * source)
+{
+  const char * line = source;
+  const char * eol;
+  int number = 1;
+
+  if (source == NULL) return;
+  fprintf(stderr, "----- shader source -----\n");
+  while (*line != '\0'){
+    eol = strchr(line, '\n');
+    if (eol != NULL){
+      fprintf(stderr, "%4d | %.*s\n", number, (int) (eol - line), line);
+      line = eol + 1;
+    } else {
+      fprintf(stderr, "%4d | %s\n", number, line);
+      break;
+    }
+    number++;
+  }
+  fprintf(stderr, "-------------------------\n");
+}
+
+/*******************************************************************************
+ * wsgl_compile_shader
+ *
+ * DESCR:	Load and compile one shader stage. On failure the driver log
+ *		and the numbered source are printed before giving up.
+ * RETURNS:	N/A
+ */
+
+static void wsgl_compile_shader(GLuint shader, GLenum type, int version)
+{
+  const char * what = (type == GL_VERTEX_SHADER) ? "vertex" : "fragment";
+  const char * source = wsgl_shader_source(type, version);
+  GLint result = GL_FALSE;
+
+  if (source == NULL){
+    fprintf(stderr, "[ERROR] Unsupported %s shader version %d\n",
+            what, version);
+    wsgl_print_shader_versions();
+    abort();
+  }
+  printf("[INFO] Using shader version %d for %s shader\n", version, what);
+  glShaderSource(shader, 1, &source, NULL);
+  glCompileShader(shader);
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
+  if (!result){
+    fprintf(stderr, "[ERROR] Compilation of the %s shader failed"
+            " (requested version %d)\n", what, version);
+    wsgl_print_shader_log(shader, what);
+    wsgl_print_shader_source(source);
+    abort();
+  }
+  /* it compiled, but the driver may still have warnings worth seeing */
+  wsgl_print_shader_log(shader, what);
+}
+
+/*******************************************************************************
+ * wsgl_build_program
+ *
+ * DESCR:	Compile and link one program from a pair of shader sources.
+ *		Used for the order independent rendering resolve pass, which
+ *		is not part of the version table because it is not something
+ *		the user selects.
+ * RETURNS:	Program name, or 0 on failure
+ */
+
+static GLint wsgl_build_program(const char * vertex_source,
+                                const char * fragment_source,
+                                const char * name)
+{
+  GLuint vs, fs;
+  GLint program, result = GL_FALSE, linked = GL_FALSE;
+
+  vs = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vs, 1, &vertex_source, NULL);
+  glCompileShader(vs);
+  glGetShaderiv(vs, GL_COMPILE_STATUS, &result);
+  if (!result){
+    fprintf(stderr, "[ERROR] Compilation of the %s vertex shader failed\n", name);
+    wsgl_print_shader_log(vs, name);
+    wsgl_print_shader_source(vertex_source);
+    return 0;
+  }
+  wsgl_print_shader_log(vs, name);
+
+  fs = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fs, 1, &fragment_source, NULL);
+  glCompileShader(fs);
+  glGetShaderiv(fs, GL_COMPILE_STATUS, &result);
+  if (!result){
+    fprintf(stderr, "[ERROR] Compilation of the %s fragment shader failed\n", name);
+    wsgl_print_shader_log(fs, name);
+    wsgl_print_shader_source(fragment_source);
+    return 0;
+  }
+  wsgl_print_shader_log(fs, name);
+
+  program = glCreateProgram();
+  glAttachShader(program, vs);
+  glAttachShader(program, fs);
+  glLinkProgram(program);
+  glGetProgramiv(program, GL_LINK_STATUS, &linked);
+  if (!linked){
+    fprintf(stderr, "[ERROR] Linking the %s program failed\n", name);
+    wsgl_print_program_log(program);
+    return 0;
+  }
+  wsgl_print_program_log(program);
+  return program;
+}
 
 /*******************************************************************************
  * wsgl_shaders
@@ -72,11 +332,10 @@ extern void wsgl_setup_patterns();
 
 void wsgl_shaders(Ws * ws){
   GLenum err;
-  GLint result;
-  GLchar eLog[1024] = { 0 };
   /* local variables */
-  int i;
   GLint linked;
+  GLint vColorLoc;
+  int driver_glsl;
 
   if (ws->drawable_id){
     glXMakeCurrent(ws->display, ws->drawable_id, ws->glx_context);
@@ -124,65 +383,62 @@ void wsgl_shaders(Ws * ws){
         printf("Using default shaders version 1.20\n");
       }
     }
-    printf("[INFO] Using shader version %d for vertex shader\n", wsgl_vert_shader_version);
-    printf("[INFO] Using shader version %d for fragment shader\n", wsgl_frag_shader_version);
+    /*
+      Warn up front if we are about to feed the driver a shader it cannot
+      possibly accept. The compile below would fail anyway, but the driver
+      message alone tends to be cryptic.
+    */
+    driver_glsl = wsgl_glsl_version(ShaderVersion);
+    if (driver_glsl > 0){
+      if (wsgl_vert_shader_version > driver_glsl){
+        fprintf(stderr, "WARNING: Requested vertex shader version %d is newer"
+                " than the %d supported by the driver\n",
+                wsgl_vert_shader_version, driver_glsl);
+      }
+      if (wsgl_frag_shader_version > driver_glsl){
+        fprintf(stderr, "WARNING: Requested fragment shader version %d is newer"
+                " than the %d supported by the driver\n",
+                wsgl_frag_shader_version, driver_glsl);
+      }
+    }
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    switch (wsgl_vert_shader_version){
-    case 120:
-      glShaderSource(vertex_shader, 1, &vertex_shader_text_120, NULL);
-      break;
-    case 130:
-      glShaderSource(vertex_shader, 1, &vertex_shader_text_130, NULL);
-      break;
-    default:
-      printf("[ERROR] Unsupported vertex shader version %d\n", wsgl_vert_shader_version);
-      printf("[ERROR] Please use one of 120 or 130\n");
-      abort();
-      break;
-    }
-    switch (wsgl_frag_shader_version){
-    case 120:
-      glShaderSource(fragment_shader, 1, &fragment_shader_text_120, NULL);
-      break;
-    case 130:
-      glShaderSource(fragment_shader, 1, &fragment_shader_text_130, NULL);
-      break;
-    default:
-      printf("[ERROR]Unsupported fragment shader version %d\n", wsgl_frag_shader_version);
-      printf("[ERROR] Please use one of 120 or 130\n");
-      abort();
-      break;
-    }
+    wsgl_compile_shader(vertex_shader, GL_VERTEX_SHADER,
+                        wsgl_vert_shader_version);
+    wsgl_compile_shader(fragment_shader, GL_FRAGMENT_SHADER,
+                        wsgl_frag_shader_version);
 
-    /* compile vertex shader */
-    glCompileShader(vertex_shader);
-    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &result);
-    if (!result){
-      glGetShaderInfoLog(vertex_shader, 1024, NULL, eLog);
-      fprintf(stderr, "Error compiling the vertex shader: '%s'\n", eLog);
-      abort();
-    }
-    /* compile fragment shader */
-    glCompileShader(fragment_shader);
-    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &result);
-    if (!result){
-      glGetShaderInfoLog(fragment_shader, 1024, NULL, eLog);
-      fprintf(stderr, "Error compiling the fragment shader: '%s'\n", eLog);
-      abort();
-    }
     ws->program = glCreateProgram();
     glAttachShader(ws->program, vertex_shader);
     glAttachShader(ws->program, fragment_shader);
     glLinkProgram(ws->program);
     glGetProgramiv(ws->program, GL_LINK_STATUS, &linked);
     if (!linked) {
-      glGetProgramInfoLog(ws->program, sizeof(eLog), NULL, eLog);
-      fprintf(stderr, "Link error: %s\n", eLog);
+      fprintf(stderr, "[ERROR] Linking the shader program failed"
+              " (vertex version %d, fragment version %d)\n",
+              wsgl_vert_shader_version, wsgl_frag_shader_version);
+      wsgl_print_program_log(ws->program);
+      abort();
     }
+    /* it linked, but the driver may still have warnings worth seeing */
+    wsgl_print_program_log(ws->program);
     glUseProgram(ws->program);
     /* define static vColor as index 1 */
     glBindAttribLocation(ws->program, vCOLOR, "vColor");
+    /*
+      The whole colour path drives vColor through glVertexAttrib*(vCOLOR, ...),
+      so warn if the linker did not put it there. Note that the call above only
+      takes effect on the next link, so this reports the location the driver
+      picked by itself.
+    */
+    vColorLoc = glGetAttribLocation(ws->program, "vColor");
+    if (vColorLoc < 0){
+      fprintf(stderr, "WARNING: vColor is not an active attribute of the"
+              " shader program, colours will not reach the shader\n");
+    } else if (vColorLoc != vCOLOR){
+      fprintf(stderr, "WARNING: vColor was linked to attribute location %d,"
+              " but colours are sent to location %d\n", vColorLoc, vCOLOR);
+    }
     /* lighting parameters */
     vAmbient = glGetUniformLocation(ws->program, "vAmbient");
     vDiffuse = glGetUniformLocation(ws->program, "vDiffuse");
@@ -243,5 +499,25 @@ void wsgl_shaders(Ws * ws){
     tLoc = glGetUniformLocation(ws->program, "tPlane");
     glUniform4fv(sLoc, 1, s_plane);
     glUniform4fv(tLoc, 1, t_plane);
+    /*
+      Order independent rendering needs a second program to resolve the
+      per pixel fragment lists. Only the 4.20 fragment shader builds those
+      lists, so for every other version oir_program stays zero and the
+      rendering path is exactly what it always was.
+    */
+    ws->oir_program = 0;
+    if (wsgl_frag_shader_version == 420 && ws->oir.enable != 0){
+      ws->oir_program = wsgl_build_program(vertex_shader_text_420_resolve,
+                                           fragment_shader_text_420_resolve,
+                                           "OIR resolve");
+      if (ws->oir_program == 0){
+        fprintf(stderr, "[ERROR] Could not build the order independent"
+                " rendering resolve program\n");
+        abort();
+      }
+      printf("[INFO] Order independent rendering enabled\n");
+    }
+    /* the geometry program has to be the current one when we return */
+    glUseProgram(ws->program);
   }
 }

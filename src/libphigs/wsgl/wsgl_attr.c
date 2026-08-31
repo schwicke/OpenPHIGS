@@ -32,9 +32,10 @@
 #include <epoxy/glx.h>
 #endif
 #include "phg.h"
-#include "private/phgP.h"
 #include "ws.h"
+#include "private/phgP.h"
 #include "private/wsglP.h"
+#include "private/wsxP.h"
 
 extern GLint shading_mode;
 extern GLint ModelViewMatrix, ProjectionMatrix;
@@ -182,6 +183,77 @@ void wsgl_update_modelview(
 }
 
 /*******************************************************************************
+ * npc_to_dc_box
+ *
+ * DESCR:   Map an NPC limit box to a DC (window) rectangle using the
+ *          current workstation transform.
+ * RETURNS: N/A
+ */
+static void npc_to_dc_box(
+                          Ws_xform *xf,
+                          Plimit3  *npc,
+                          GLint    *x,
+                          GLint    *y,
+                          GLsizei  *w,
+                          GLsizei  *h
+                          )
+{
+  GLfloat cx_min = npc->x_min;
+  GLfloat cx_max = npc->x_max;
+  GLfloat cy_min = npc->y_min;
+  GLfloat cy_max = npc->y_max;
+
+  GLint x0 = (GLint) (xf->offset.x + xf->scale.x * cx_min);
+  GLint x1 = (GLint) (xf->offset.x + xf->scale.x * cx_max);
+  GLint y0 = (GLint) (xf->offset.y + xf->scale.y * cy_min);
+  GLint y1 = (GLint) (xf->offset.y + xf->scale.y * cy_max);
+
+  *x = x0;
+  *y = y0;
+  *w = (GLsizei) (x1 - x0);
+  *h = (GLsizei) (y1 - y0);
+}
+
+/*******************************************************************************
+ * wsgl_update_view_clip
+ *
+ * DESCR:   Apply the current view's clipping limits
+ * RETURNS: N/A
+ */
+void wsgl_update_view_clip(
+                           Ws *ws
+                           )
+{
+   Wsgl_handle wsgl = ws->render_context;
+   Pview_rep3 *vr = &wsgl->cur_struct.view_rep;
+   Ws_xform ws_xform;
+   GLint x, y;
+   GLsizei w, h;
+
+   phg_wsx_compute_ws_transform(&wsgl->cur_win, &wsgl->cur_vp, &ws_xform);
+
+   if (vr->xy_clip ==  PIND_CLIP) {
+      npc_to_dc_box(&ws_xform, &vr->clip_limit, &x, &y, &w, &h);
+      if (w < 0) { x += w; w = -w; }      /* glScissor rejects negatives */
+      if (h < 0) { y += h; h = -h; }
+      glScissor(x, y, w, h);
+      glEnable(GL_SCISSOR_TEST);
+   }
+   else {
+      /* No view clip: fall back to the workstation viewport, which is
+       * always in force.  Never simply disable the test here.
+       */
+      Plimit3 full;
+      full.x_min = 0.0; full.x_max = 1.0;
+      full.y_min = 0.0; full.y_max = 1.0;
+      full.z_min = 0.0; full.z_max = 1.0;
+      npc_to_dc_box(&ws_xform, &full, &x, &y, &w, &h);
+      glScissor(x, y, w, h);
+      glEnable(GL_SCISSOR_TEST);
+   }
+}
+
+/*******************************************************************************
  * wsgl_set_view_ind
  *
  * DESCR:    Setup view
@@ -206,6 +278,7 @@ void wsgl_set_view_ind(
            sizeof(Pview_rep3));
     wsgl_update_projection(ws);
     wsgl_update_modelview(ws);
+    wsgl_update_view_clip(ws);
   }
 }
 

@@ -141,12 +141,11 @@ void popen_ws(
             args.width = config[ws_id].display_width*config[ws_id].hcsf;
             args.height = config[ws_id].display_height*config[ws_id].hcsf;
             /* color index zero is background */
-            memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
           }
           else {
             args.conn_type = PHG_ARGS_CONN_DRAWABLE;
-            memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
           }
+          memcpy(&args.conn_info, conn_id, sizeof(Phg_args_conn_info));
         }
         switch (ws_type){
         case PWST_HCOPY_TRUE_EPS:
@@ -171,6 +170,8 @@ void popen_ws(
         args.y = config[ws_id].ypos;
         args.border_width =  config[ws_id].border_width;
         args.limits = config[ws_id].vpos;
+        args.enable_oir = config[ws_id].oir;
+        args.layersPerPixel = config[ws_id].layersPerPixel;
 
         /* Open workstation */
         PHG_WSID(ws_id) = (*wst->desc_tbl.phigs_dt.ws_open)(&args, &ret);

@@ -35,8 +35,34 @@ C *****************************************************************************
       END DO
       END
 
+      SUBROUTINE DEFCOLORS(IWK)
+************************
+*
+*     Define colors for workstation IWK
+*
+************************
+      IMPLICIT NONE
+      INTEGER IWK
+      INTEGER NCOL, I
+      PARAMETER (NCOL=12)
+      REAL CSPEC(3)
+      REAL COLR(NCOL), COLG(NCOL), COLB(NCOL)
+      DATA COLR / 0., 1., 1., 0., 0., 1., 1., 0., 1.,  0.75, 0.5, 0./
+      DATA COLG / 0., 1., 0., 1., 0., 1., 0., 1., 0.5, 1., 0.,  0.7/
+      DATA COLB / 0., 1., 0., 0., 1., 0., 1., 1., 0.,  0., 1., 0.50/
+
+      DO 11 I = 1, NCOL
+         print*, "Define color for iwk",
+     +        IWK, I, COLR(I),COLG(I),COLB(I)
+         CSPEC(1) = COLR(I)
+         CSPEC(2) = COLG(I)
+         CSPEC(3) = COLB(I)
+         CALL PSCR (IWK,I,3,CSPEC)
+ 11   CONTINUE
+      END
+
 CDECK  ID>, KYSABL.
-      SUBROUTINE KYSABL(iwk)
+      SUBROUTINE KYSABL(NSGSAB)
 ************************************************************************
 *     KYSABL                                                           *
 *                                                                      *
@@ -54,6 +80,8 @@ CDECK  ID>, KYSABL.
       IMPLICIT NONE
 *
       INCLUDE 'phigsf77.h'
+      INTEGER NSGSAB
+
       INTEGER    PLABEL     , BLABEL     , FLABEL
       PARAMETER (PLABEL=9993, BLABEL=9994, FLABEL=9995)
       INTEGER    SLABEL     , HLABEL     , PICKAB     , HIGHLI
@@ -65,70 +93,12 @@ CDECK  ID>, KYSABL.
       REAL       PTOUT      , CROTST     , PSWITH
       PARAMETER (PTOUT = 0.01, CROTST = 4., PSWITH = 2.)
 *
-*      COLOR LOOK UP TABLE DEFINITION
-*
-      COMMON /KXCCOL/ NCOL, IBLACK, IWHIT, IRED, IGREEN, IBLUE, IYEL,
-     ,                IMAG, ICYAN, IORAN, ICOL(7),
-     ,                COLR(12), COLG(12), COLB(12)
-      INTEGER         NCOL, IBLACK, IWHIT, IRED, IGREEN, IBLUE, IYEL,
-     ,                IMAG, ICYAN, IORAN, ICOL, ICLTB(16)
-      REAL            COLR    ,COLG     ,COLB
-      EQUIVALENCE    (IBLACK, ICLTB)
-*
       INTEGER NVWGEN, NVWEVT, NVWSFZ, MVWSCR, MSKSEG
       PARAMETER (NVWGEN=0,NVWEVT=1,NVWSFZ=6,MVWSCR=7,MSKSEG=2047)
       INTEGER IVWSCR(MVWSCR), MIDSEG(4), NTRSFA, NTRSFZ, NVWCSY
       PARAMETER (NTRSFA=15,NTRSFZ=16,NVWCSY=17)
       DATA IVWSCR / 11, 21, 22, 41, 42, 43, 44 /
       DATA MIDSEG / 0, 2048, 4096, 6144 /
-      INTEGER NSGTSP, NSGTIT, NSGSAB, NSGPLE, NSGPLM, NSGPLD, NSGCTB
-      INTEGER NSGSEP, NSGDET, NSGHST, NSGAXE, NSGTXT, NSGARM, NSGBEA
-      INTEGER NSGARJ, NSGTMP, NSGWIN, NSGARI, NSGBSP, NSGPVX, NSGDIP
-      INTEGER NSGSCL, NSGCSY, NSGBTG, IMKST0
-      PARAMETER (NSGDET=10000,NSGTMP=19998)
-      PARAMETER (NSGTIT=20000,NSGTSP=20005,NSGSAB=20010,NSGPLE=20011)
-      PARAMETER (NSGPLM=20012,NSGPLD=20013,NSGHST=20015,NSGAXE=20016)
-      PARAMETER (NSGCTB=20020,NSGTXT=20050,NSGBEA=20055,NSGSEP=20100)
-      PARAMETER (NSGARI=20200,NSGARJ=20300,NSGARM=20400,NSGBSP=20500)
-      PARAMETER (NSGPVX=20600,NSGBTG=20680,NSGSCL=20690,NSGCSY=20695)
-      PARAMETER (NSGDIP=20700,NSGWIN=21000,IMKST0=30000)
-      REAL ZOOM(2)
-      DATA ZOOM /1.0, 20000./
-      LOGICAL SEGENE, SEGMAS, SEGSAB, COPICK, MISVIS, UGOREP, KINVIS
-     +,       LABVIS, TXTVIS, SFTZOM, ZOOMAL, BEAXIS, XYPLOT, DELDET
-     +,       IVASAV, JETSAV, MISSAV, ENESAV, MASSAV, SEGSPE, JETVIS
-     +,       IVAVIS, FILDET, FWESOL, BKESOL, CONTRT, BTGVIS, BTGSAV
-     +,       BSPVIS, BSPSAV, PVXVIS, PVXSAV, DIPVIS, DIPSAV, LIGHTS
-     +,       DETCUT, SCAVIS, SCASAV, CSYVIS, CSYSAV, SHODCI
-      COMMON /PHIGSG/ SEGENE, SEGMAS, SEGSAB, COPICK, MISVIS, UGOREP
-     +,               KINVIS, LABVIS, TXTVIS, SFTZOM, ZOOMAL, BEAXIS
-     +,               XYPLOT, DELDET, IVASAV, JETSAV, MISSAV, ENESAV
-     +,               MASSAV, SEGSPE, JETVIS, IVAVIS, BTGVIS, BTGSAV
-     +,               FILDET, FWESOL, BKESOL, CONTRT, BSPVIS, BSPSAV
-     +,               PVXVIS, PVXSAV, DIPVIS, DIPSAV, LIGHTS, DETCUT
-     +,               SCAVIS, SCASAV, CSYVIS, CSYSAV, SHODCI
-      LOGICAL SEGDET, SEGJET, SEGMIS, SEGIVA, SEGBSP, SEGPVX, SEGDIP
-      LOGICAL SEGBTG
-      INTEGER NWNDVW, NCURVW, IVAWND, MISWND, IPROJT, SJETSG, IATJET
-      INTEGER IATIVA
-      COMMON /PHIGVW/ NWNDVW, NCURVW, IVAWND(10), MISWND, IPROJT(4)
-     +,               SEGDET(4), SEGJET(4), SEGMIS(4), SEGIVA(4)
-     +,               SJETSG(20), IATJET(10), IATIVA(10), SEGBSP(4)
-     +,               SEGPVX(4), SEGDIP(4), SEGBTG(4)
-      INTEGER SIVASG(10)
-      EQUIVALENCE (SJETSG(11),SIVASG)
-*
-*      UNITS DEFINITION
-*
-      INTEGER         LI, LO, LSTPI, LSTPO, LG, LERR, LUNDET
-      COMMON /KXCLUN/ LI, LO, LSTPI, LSTPO, LG, LERR, LUNDET
-*
-*      GKS WORKSTATION DEFINITION PARAMETERS
-*
-      INTEGER         IWKTYP, IWK1, IWKMK, IWKWIN, KCONID, SELMRK
-      LOGICAL         WKMKOP
-      COMMON /KXCWRK/ IWKTYP, IWK1, IWKMK, IWKWIN, KCONID, SELMRK
-     +,               WKMKOP
 *
       INTEGER    I
       LOGICAL    START
@@ -154,26 +124,13 @@ CDECK  ID>, KYSABL.
       DATA       XSID4  / 0.5598, 0.5012, 0.5598/
       DATA       YSID1  / 0.6465, 0.5098, 0.4902, 0.3535/
       DATA       YSID3  / 0.6465, 0.5   , 0.3535/
-C      DATA       DROPX  / 0.4990, 0.5010, 0.5010, 0.4990, 0.4990/
       DATA       DROPX   / 0.4990, 0.4990, 0.5010, 0.5010, 0.4990/
       DATA       ALLZS  /1.,1.,1.,1.,1./
 *
-      DATA COLR / 0., 1., 1., 0., 0., 1., 1., 0., 1.,  0.75, 0.5, 0./
-      DATA COLG / 0., 1., 0., 1., 0., 1., 0., 1., 0.5, 1., 0.,  0.7/
-      DATA COLB / 0., 1., 0., 0., 1., 0., 1., 1., 0.,  0., 1., 0.50/
-
-      INTEGER IWK
-      REAL CSPEC(3)
-      IWK1 = IWK
+      INTEGER IBLACK, IWHIT, IRED, IGREEN, IBLUE, IYEL, IMAG, ICYAN
+      print*, "Defining structures for hour glass"
       CALL POPST (NSGSAB)
-*     Set color table
-      NCOL=12
-      DO 11 I = 1, NCOL
-         CSPEC(1) = COLR(I)
-         CSPEC(2) = COLG(I)
-         CSPEC(3) = COLB(I)
-         CALL PSCR (IWK1,I,3,CSPEC)
- 11   CONTINUE
+      print*, "Opened structure"
       IBLACK=1
       IWHIT=2
       IRED=3
@@ -209,29 +166,17 @@ C      DATA       DROPX  / 0.4990, 0.5010, 0.5010, 0.4990, 0.4990/
          CALL PFA3 (5, DROPX, DROPY, ALLZS)
  10   CONTINUE
 *
+      print*, "Closing structure ", NSGSAB
       CALL PCLST (NSGSAB)
-      CALL PPOST (IWK1,NSGSAB,1.)
-      CALL PRST (IWK1,PCONDI)
 *
       END
 
 
       PROGRAM SABLIER
-
+      IMPLICIT NONE
 C     Include PHIGS enumeration file
       INCLUDE 'phigsf77.h'
 
-C     Delcare variables
-      INTEGER        KR4
-      REAL           VALR4(80)
-      CHARACTER(LEN=80)  NAMR4
-*
-      CHARACTER(LEN=80) TCHAR
-      CHARACTER(LEN=80) DATREC
-
-      INTEGER WKID,LENOCC,LNAMR4,LSTEDI,I
-      INTEGER STDNR,STAT,LCHAR,PET,IA(2),IERR,MLDR,LDR
-      REAL XMIN,XMAX,YMIN,YMAX
 C---- Define parameters for screen shot
 C
 C     WKPSG: Grey scale    WKPSC: Color
@@ -240,30 +185,49 @@ C
       INTEGER WKTGA, WKPNG, WKPNGA
       PARAMETER (WKTGA=4, WKPNG=5, WKPNGA=6)
 C     Output format
-      INTEGER WKTOUT, WKFORM, ICONDI
+      INTEGER WKID, WKTOUT, WKFORM, ICONDI
       INTEGER LUNPS
 C     Default output LUN
       PARAMETER (LUNPS=20)
+      INTEGER NSGSAB
+      PARAMETER (NSGSAB=20010)
+      REAL SFS, SFH
 
 C     Open PHIGS and a workstation
       WKID=1
+      ICONDI = 0
 C     workstation ID for printing
       WKTOUT=99
 C     Create color PNG
       WKFORM = WKPNG
       CALL POPPH(0, 1)
+C     Define hourglass structure
+      CALL KYSABL(NSGSAB)
+C     Open workstation
       CALL POPWK(WKID, 0, 3)
-      CALL KYSABL(WKID)
-C     Wait for user interaction
-      CALL PMSG(WKID,"Create a hard copy to file.");
-C     Refresh 
+C     Define colors
+      CALL DEFCOLORS(WKID)
+C     Post and refresh
+c      CALL DUMPSTR(NSGSAB)
+      CALL PPOST (WKID, NSGSAB, 1.)
       CALL PRST(WKID, ICONDI)
+C     Wait for user interaction
+      CALL PMSG(WKID, "Create a hard copy to file.");
+C     Set scale factor for output before opening the workstation
+      CALL PXSHCSF(WKTOUT, 4.)
 C     Open output workstation
       CALL POPWK (WKTOUT, LUNPS, WKFORM)
+c     Define colors for output workstation
+      CALL DEFCOLORS(WKTOUT)
+C     Check scaling settings      
+      CALL PXQHCSF(WKID, SFS)
+      CALL PXQHCSF(WKTOUT, SFH)
+      print*, "Scale factor for screen: ", SFS
+      print*, "Scale factor for hardcopy: ", SFH
 C     set the output filename
       CALL PSFNAME(WKTOUT, "hourglass.png")
-C     draw again
-      CALL KYSABL(WKTOUT)
+C     post to output workstation
+      CALL PPOST (WKTOUT,NSGSAB,1.)
 C     close workstations
       CALL PCLWK(WKTOUT)
 C     Refresh 

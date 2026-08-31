@@ -7,8 +7,8 @@
  * \section global Global options
  * Global options determine general features of the library
  * - \%gs 1                 Use shaders (1) or not (0)
- * - \%vs 120               Vertex shader version, recommended: 1.20
- * - \%fs 120               Fragment shader version, recommended:  1.20
+ * - \%vs 420               Vertex shader version, can be 120 or 420
+ * - \%fs 420               Fragment shader version, can be 120 or 420
  * - \%pc 1                 print configuration if set to 1. Set to 0 to disable dumping of configuration parameters.
  *
  * \section workstations Workstation specific settings
@@ -24,7 +24,10 @@
  * - \%bg  0. 0. 0.         Background color in RGB mode
  * - \%bga 0. 0. 0. 0.5     Background color in RGBA
  * - \%hs 3.                scale factor for hardcopy related work station types
+ * - \%ior 0                Ordern Independent Rendering disable (0) /enable (1). Requires shader 420
+ * - \%lpp 16               Order Independent Rendering layers per pixel (between 1 and 16). Requires shader 420
  *
+ * \note Ordern independent rendering can be quite memory intensive. If enabled for the main window, it makes sense to enable it as well for hardcopy workstation types, if these are used.
  * \bug Not all parameters may be implemented or have an actual effect, depending on the hardware and driver setup
  *
  * \sa phigsf77.h

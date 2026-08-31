@@ -4217,6 +4217,17 @@ extern "C" {
                        Pint wkid
                        );
 
+  /*******************************************************************************
+   * pxset_oir_mode
+   *
+   * DESCR:       Set Workstation Order Independent Rendering mode
+   * RETURNS:     N/A
+   */
+  void pxset_oir_mode(
+                      Pint ws_id,
+                      Pint mode
+                      );
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

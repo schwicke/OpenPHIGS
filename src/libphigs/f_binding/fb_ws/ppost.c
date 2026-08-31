@@ -68,6 +68,9 @@ FTN_SUBROUTINE(ppost)(
     if (structp != NULL) {
       (*wsh->post)(wsh, structp, priority, !status);
     }
+  } else {
+    printf("ERROR in ppost: workstation ID=%d\n", ws_id);
+    ERR_REPORT(PHG_ERH, ERR54);
   }
 }
 

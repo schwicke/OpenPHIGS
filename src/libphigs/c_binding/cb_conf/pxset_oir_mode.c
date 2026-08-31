@@ -23,25 +23,26 @@
 #include "phconf.h"
 
 /**
- * \file pxset_conf_hcsf.c
+ * \file pxset_oir_mode.c
  *
- * \brief       set the hardcopy scale factor (OpenPHIGS extension)
+ * \brief   set the Out of Order rendering mode. 0=disabled, >0 number of layers per pixel
  *
- * \param   wkid work station ID
- * \param   hcsf scale factor, a positive real number
+ * \param   ws_id workstation ID
+ * \param   mode
  *
- * \note This setting is only relevant for work station types 4 - 9 and is ignored for other work station types. See popen_wk(3) for available work station types. The function must be called BEFORE the workstation is opened.
+ * \note This setting is only relevant if shader version 420 is in use. Mode must be lower or equal to 16. Note that the larger the number, the more memory hungry the system will be.
  *
- * \pre The workstation WKID must not be open yet.
+ * \pre This setting can be set via the configuration as well. As it is used to configure the workstation, the workstation must not be open yet in order to have an effect.
+ *.
  * \sa popen_wk
  */
 #include "phg.h"
 #include "css.h"
 #include "ws.h"
 #include "private/phgP.h"
-void pxset_conf_hcsf(
+void pxset_oir_mode(
                      Pint ws_id,
-                     Pfloat hcsf
+                     Pint mode
                      ){
   Ws_handle wsh;
   if (phg_ws_open(ws_id, Pfn_close_ws) != NULL) {
@@ -50,15 +51,23 @@ void pxset_conf_hcsf(
     return;
   }
   if (ws_id >=0 && ws_id <100){
-    if (hcsf > 0. && hcsf <= 32.){
-      config[ws_id].hcsf = hcsf;
+    if (mode >=0 && mode <=16) {
+      switch (mode) {
+      case 0:
+        config[ws_id].oir = 0;
+        config[ws_id].layersPerPixel = 0;
+        break;
+      default:
+        config[ws_id].oir = 1;
+        config[ws_id].layersPerPixel = mode;
+        break;
+      }
     } else {
-      printf("ERROR: configuration error. Ignoring unreasonable scale factor of: %f\n", hcsf);
+      printf("ERROR: configuration error. OIR mode is out of range. Got %d\n", mode);
       return;
     }
   } else {
     printf("FATAL: configuration error. Work station ID out of range: %d\n", ws_id);
     exit(1);
   }
-  
 }

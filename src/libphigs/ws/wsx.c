@@ -80,6 +80,17 @@ Ws* phg_wsx_create(
    ws->valuator_box = NULL;
    ws->valuator_frame = NULL;
    ws->num_boxed_valuators = 0;
+   /* Order independent rendering */
+   ws->oir.enable = args->enable_oir;
+   ws->oir.layersPerPixel = args->layersPerPixel;
+   ws->oir.oir_width = 0;
+   ws->oir.oir_height = 0;
+   ws->oir.data = NULL;
+   ws->oir.head_p_texture = 0;
+   ws->oir.head_p_initializer = 0;
+   ws->oir.acounter_buffer = 0;
+   ws->oir.frag_storage_buffer = 0;
+   ws->oir.frag_storage_texture = 0;
    return ws;
 }
 /*******************************************************************************
@@ -181,6 +192,7 @@ int phg_wsx_setup_tool(
           status = FALSE;
         }
         else {
+          wsgl_oir_ini(ws);
           status = TRUE;
         }
       }

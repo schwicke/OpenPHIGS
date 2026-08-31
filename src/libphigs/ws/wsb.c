@@ -483,6 +483,7 @@ Ws* phg_wsb_open_ws(
   ret->err = -1;
   ws = phg_wsx_create(args);
   if (ws == NULL) {
+    printf("phg_wsx_create returned NULL\n");
     return ws;
   }
 
@@ -500,6 +501,7 @@ Ws* phg_wsb_open_ws(
     xdt->tool.y            = args->y;
     xdt->tool.width        = args->width;
     xdt->tool.height       = args->height;
+
     xdt->tool.border_width = args->border_width;
     strncpy(xdt->tool.label, args->window_name, PHIGS_MAX_NAME_LEN);
     strncpy(xdt->tool.icon_label, args->icon_name, PHIGS_MAX_NAME_LEN);
@@ -563,7 +565,6 @@ Ws* phg_wsb_open_ws(
       goto abort;
     }
   }
-
   if (dt->ws_category == PCAT_OUTIN) {
     ws->input_overlay_window = phg_wsx_create_overlay(ws);
     if (ws->input_overlay_window == 0) {
@@ -604,6 +605,8 @@ Ws* phg_wsb_open_ws(
     goto abort;
   }
 
+  /* init order independent rendering */
+  wsgl_oir_ini(ws);
   init_update_state(ws);
 
   /* NOTE:
@@ -1040,6 +1043,7 @@ void phg_wsb_close_struct(
   default:
     break;
   }
+  wsgl_close_struct();
 
   /* Updates are implementation dependent in ASTI mode.  This is one
    * of the cases where we do an ASTI update;  we're hopefully doing the

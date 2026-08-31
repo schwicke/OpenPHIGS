@@ -183,6 +183,8 @@ typedef struct _Phg_args_open_ws {
    int                x, y;
    Plimit             limits;
    float              hcsf;
+   Pint               enable_oir;
+   Pint               layersPerPixel;
 } Phg_args_open_ws;
 
 typedef struct {

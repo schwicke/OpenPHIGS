@@ -24,6 +24,7 @@ SET(P_C_BINDING_SRCS
   c_binding/cb_conf/pxinq_conf_hcsf.c
   c_binding/cb_conf/pxset_conf_file_name.c
   c_binding/cb_conf/pxset_conf_hcsf.c
+  c_binding/cb_conf/pxset_oir_mode.c
   c_binding/cb_el/padd_names_set.c
   c_binding/cb_el/pexec_struct.c
   c_binding/cb_el/pfill_area.c
@@ -254,6 +255,7 @@ SET(P_F_BINDING_SRCS
   f_binding/fb_conf/pxndef.c
   f_binding/fb_conf/pxqhcsf.c
   f_binding/fb_conf/pxshcsf.c
+  f_binding/fb_conf/pxoirm.c
   f_binding/fb_el/pads.c
   f_binding/fb_el/pexst.c
   f_binding/fb_el/pfa.c

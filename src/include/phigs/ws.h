@@ -209,6 +209,40 @@ typedef struct {
    } model;
 } Ws_output_ws;
 
+typedef struct {
+  /* enable OIS for this workstation */
+  Pint enable;
+  /*
+   * How many transparent fragments per pixel the list is sized for.
+   *
+   * Only transparent geometry goes into the list, opaque geometry is written
+   * straight to the framebuffer by fs420.frag, so this is the number of
+   * transparent surfaces that may overlap in one pixel before fragments start
+   * being dropped. Each entry is a uvec4, so the cost is 16 bytes per pixel per
+   * layer: at 1024x1024 that is 16.8 MB per layer.
+   *
+   * There is no point going above MAX_FRAGMENTS in fs420_resolve.frag, since
+   * the resolve will not walk more than that many entries anyway.
+   */
+  Pint layersPerPixel;
+  /* size of the head pointer image, so that the resolve can cover all of it */
+  Pint oir_width;
+  Pint oir_height;
+  /* entries the list can hold, handed to the shaders as list_capacity */
+  GLuint frag_list_capacity;
+  char * data;
+  GLuint head_p_texture;
+  GLuint head_p_initializer;
+  GLuint acounter_buffer;
+  GLuint frag_storage_buffer;
+/*
+ * The fragment list is a buffer object, but the shader reaches it as an image,
+ * which needs a buffer texture on top of the buffer.
+ */
+  GLuint frag_storage_texture;
+} Wsgl_oir;
+
+
 struct _Wsgl;
 typedef struct _Wsgl *Wsgl_handle;
 
@@ -231,6 +265,7 @@ typedef struct _Ws {
    XtAppContext app_context;
    Window       input_overlay_window;
    Wsgl_handle  render_context;
+   Wsgl_oir     oir;
    int          has_double_buffer;
    XRectangle   ws_rect;
    Widget       top_level; /* only in PM */
@@ -245,6 +280,10 @@ typedef struct _Ws {
    GLuint       fbuf, depthbuf, colorbuf;
    GLint        old_viewport[4];
    GLint        program;
+   /* second program used to resolve the order independent rendering lists,
+      zero when order independent rendering is not in use */
+   GLint        oir_program;
+
 
    /* Output LUN for some work station types, e.g. to print out stuff here */
    Pint         lun;

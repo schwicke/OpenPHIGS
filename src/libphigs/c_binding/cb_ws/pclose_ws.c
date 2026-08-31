@@ -82,6 +82,8 @@ void pclose_ws(
     int height = wsh->type->desc_tbl.xwin_dt.tool.height;
     wsinfo = phg_psl_get_ws_info(PHG_PSL, ws_id);
     dt = &wsinfo->wstype->desc_tbl.phigs_dt;
+    wsgl_oir_reset(wsh);
+    (*wsh->redraw_all)( wsh, PFLAG_ALWAYS);
     glFlush();
     glFinish();
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -251,6 +253,7 @@ void pclose_ws(
       str = str->higher;
     }
     /* cleanup */
+    wsgl_oir_cleanup(wsh);
     if (wsh->glx_context){
       glXDestroyContext(wsh->display, wsh->glx_context);
     }
@@ -272,6 +275,7 @@ void pclose_ws(
     phg_psl_rem_ws(PHG_PSL, ws_id);
 
   } else {
-    printf("PCLOSEWS ERROR: workstation was not open. Ignoring function.");
+    printf("WARNING in pclose_ws: workstation ID=%d\n", ws_id);
+    ERR_REPORT(PHG_ERH, ERR54);
   }
 }
