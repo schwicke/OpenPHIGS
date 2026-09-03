@@ -187,7 +187,7 @@ void read_config(char * config_file){
         }
         memset(&text[0], 0, maxsize);
         if (sscanf(line, "%%wn %[^\n]", text) > 0){
-          strncpy(newconfig.window_title, text, maxsize);
+          strncpy(newconfig.window_title, text, sizeof(newconfig.window_title));
           memset(&text[0], 0, maxsize);
         }
         if (sscanf(line, "%%wf %s", text) > 0){
@@ -195,7 +195,7 @@ void read_config(char * config_file){
           memset(&text[0], 0, maxsize);
         }
         if (sscanf(line, "%%wi %s", text) > 0){
-          strncpy(newconfig.window_icon, text, maxsize);
+          strncpy(newconfig.window_icon, text, sizeof(newconfig.window_icon));
           memset(&text[0], 0, maxsize);
         }
         if (sscanf(line, "%%wp %f %f %f %f", &xmin, &xmax, &ymin, &ymax) > 0){
