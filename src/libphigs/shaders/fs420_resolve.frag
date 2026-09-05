@@ -20,6 +20,9 @@ layout (binding = 1, rgba32ui) uniform uimageBuffer list_buffer;
 #define MAX_FRAGMENTS 16
 #define LIST_END 0xFFFFFFFFu
 
+/* Define the mode in which the final color is calculated */
+uniform int oirMode;
+
 uvec4 fragments[MAX_FRAGMENTS];
 
 /*
@@ -66,15 +69,34 @@ void sortFragments(int n){
  * The accumulation is premultiplied, but the result is handed back with the
  * colour divided out again, so that the ordinary
  * GL_SRC_ALPHA / GL_ONE_MINUS_SRC_ALPHA blend puts it over the opaque image
- * correctly.
+ * correctly. This is the default mode.
  */
-vec4 finalColor(int nfrag){
+vec4 finalColor1(int nfrag){
   vec3 acc = vec3(0.0, 0.0, 0.0);
   float alpha = 0.0;
   int i;
   for (i=0; i<nfrag; i++){
     vec4 inCol = unpackUnorm4x8(fragments[i].y);
     acc   = acc   * (1.0 - inCol.a) + inCol.rgb * inCol.a;
+    alpha = alpha * (1.0 - inCol.a) + inCol.a;
+  }
+  if (alpha <= 0.0) return vec4(0.0, 0.0, 0.0, 0.0);
+  return vec4(acc / alpha, alpha);
+}
+
+/* Alternative approach: start from the front and blend in stuff which is behind
+   scaling by a factor (e.g. 0.6) to enforce fragments which are further away
+   contribute less and being darker */
+vec4 finalColor2(int nfrag){
+  vec3 acc = vec3(0.0, 0.0, 0.0);
+  float alpha = 0.0;
+  int i;
+  vec4 inCol = unpackUnorm4x8(fragments[nfrag-1].y);
+  acc = inCol.rgb;
+  alpha = inCol.a;
+  for (i=nfrag-1; i>=0; i--){
+    vec4 inCol = unpackUnorm4x8(fragments[i].y);
+    acc = acc * (1.0 - inCol.a) + inCol.rgb*inCol.a * 0.6;
     alpha = alpha * (1.0 - inCol.a) + inCol.a;
   }
   if (alpha <= 0.0) return vec4(0.0, 0.0, 0.0, 0.0);
@@ -107,5 +129,15 @@ void main()
     been appended, for instance a banner drawn on top of the scene.
   */
   gl_FragDepth = nearestDepth(nFragments);
-  gl_FragColor = finalColor(nFragments);
+  switch (oirMode){
+  case 1:
+    gl_FragColor = finalColor1(nFragments);
+    break;    
+  case 2:
+    gl_FragColor = finalColor2(nFragments);
+    break;    
+  default:
+    gl_FragColor = finalColor1(nFragments);
+    break;
+  }
 }

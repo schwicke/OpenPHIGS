@@ -81,7 +81,7 @@ Ws* phg_wsx_create(
    ws->valuator_frame = NULL;
    ws->num_boxed_valuators = 0;
    /* Order independent rendering */
-   ws->oir.enable = args->enable_oir;
+   ws->oir.mode = args->oir_mode;
    ws->oir.layersPerPixel = args->layersPerPixel;
    ws->oir.oir_width = 0;
    ws->oir.oir_height = 0;
@@ -91,8 +91,60 @@ Ws* phg_wsx_create(
    ws->oir.acounter_buffer = 0;
    ws->oir.frag_storage_buffer = 0;
    ws->oir.frag_storage_texture = 0;
+   /* General shader pointers */
+   ws->shader.program = 0;
+   ws->shader.oir_program = 0;
+   ws->shader.applyTexture = 0;
+   ws->shader.shading_mode = 0;
+   ws->shader.sLoc = 0;
+   ws->shader.tLoc = 0;
+   ws->shader.lightSource0     = 0;
+   ws->shader.lightSourceTyp0  = 0;
+   ws->shader.lightSourceCol0  = 0;
+   ws->shader.lightSourcePos0  = 0;
+   ws->shader.lightSourceCoef0 = 0;
+   ws->shader.lightSource1     = 0;
+   ws->shader.lightSourceTyp1  = 0;
+   ws->shader.lightSourceCol1  = 0;
+   ws->shader.lightSourcePos1  = 0;
+   ws->shader.lightSourceCoef1 = 0;
+   ws->shader.lightSource2     = 0;
+   ws->shader.lightSourceTyp2  = 0;
+   ws->shader.lightSourceCol2  = 0;
+   ws->shader.lightSourcePos2  = 0;
+   ws->shader.lightSourceCoef2 = 0;
+   ws->shader.lightSource3     = 0;
+   ws->shader.lightSourceTyp3  = 0;
+   ws->shader.lightSourceCol3  = 0;
+   ws->shader.lightSourcePos3  = 0;
+   ws->shader.lightSourceCoef3 = 0;
+   ws->shader.lightSource4     = 0;
+   ws->shader.lightSourceTyp4  = 0;
+   ws->shader.lightSourceCol4  = 0;
+   ws->shader.lightSourcePos4  = 0;
+   ws->shader.lightSourceCoef4 = 0;
+   ws->shader.lightSource5     = 0;
+   ws->shader.lightSourceTyp5  = 0;
+   ws->shader.lightSourceCol5  = 0;
+   ws->shader.lightSourcePos5  = 0;
+   ws->shader.lightSourceCoef5 = 0;
+   ws->shader.lightSource6     = 0;
+   ws->shader.lightSourceTyp6  = 0;
+   ws->shader.lightSourceCol6  = 0;
+   ws->shader.lightSourcePos6  = 0;
+   ws->shader.lightSourceCoef6 = 0;
+   ws->shader.s_plane[0] = 1.0f;
+   ws->shader.s_plane[1] = 0.0f;
+   ws->shader.s_plane[2] = 0.0f;
+   ws->shader.s_plane[3] = 0.0f;
+   ws->shader.t_plane[0] = 0.0f;
+   ws->shader.t_plane[1] = 1.0f;
+   ws->shader.t_plane[2] = 0.0f;
+   ws->shader.t_plane[3] = 0.0f;
+
    return ws;
 }
+
 /*******************************************************************************
  * Error handler
  ******************************************************************************/

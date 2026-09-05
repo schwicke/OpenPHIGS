@@ -40,6 +40,7 @@ extern int record_geom;
  * \file psvwr3.c
  *
  * \brief       Set view representation 3
+ * \sa  psvwi
  */
 
 FTN_SUBROUTINE(psvwr3)(

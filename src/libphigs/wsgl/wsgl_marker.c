@@ -224,7 +224,7 @@ void wsgl_polymarker(
    point_list.num_points = *data;
    point_list.points = (Ppoint *) &data[1];
 
-   wsgl_setup_marker_attr(ast, &type, &size);
+   wsgl_setup_marker_attr(ws, ast, &type, &size);
    switch (type) {
       case PMARKER_DOT:
 	wsgl_marker_polygon(40, &point_list, size);
@@ -287,7 +287,7 @@ void wsgl_polymarker3(
    point_list.num_points = *data;
    point_list.points = (Ppoint3 *) &data[1];
 
-   wsgl_setup_line_attr(ast);
+   wsgl_setup_line_attr(ws, ast);
 
    if (PHG_SCRATCH_SPACE(&ws->scratch,
                          point_list.num_points * sizeof(Ppoint))) {
@@ -299,7 +299,7 @@ void wsgl_polymarker3(
          plist.points[i].y = point_list.points[i].y;
       }
 
-      wsgl_setup_marker_attr(ast, &type, &size);
+      wsgl_setup_marker_attr(ws, ast, &type, &size);
       switch (type) {
       case PMARKER_DOT:
 	wsgl_marker_polygon(40, &plist, size);

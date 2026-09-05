@@ -38,14 +38,6 @@
 #include "private/wsxP.h"
 #include "private/wsglP.h"
 
-extern GLint lightSource0, lightSourceTyp0, lightSourceCol0, lightSourcePos0, lightSourceCoef0;
-extern GLint lightSource1, lightSourceTyp1, lightSourceCol1, lightSourcePos1, lightSourceCoef1;
-extern GLint lightSource2, lightSourceTyp2, lightSourceCol2, lightSourcePos2, lightSourceCoef2;
-extern GLint lightSource3, lightSourceTyp3, lightSourceCol3, lightSourcePos3, lightSourceCoef3;
-extern GLint lightSource4, lightSourceTyp4, lightSourceCol4, lightSourcePos4, lightSourceCoef4;
-extern GLint lightSource5, lightSourceTyp5, lightSourceCol5, lightSourcePos5, lightSourceCoef5;
-extern GLint lightSource6, lightSourceTyp6, lightSourceCol6, lightSourcePos6, lightSourceCoef6;
-
 /*******************************************************************************
  * get_light_id
  *
@@ -81,8 +73,9 @@ static GLuint get_light_id(
  */
 
 static void setup_ambient_light(
-   Pint ind,
-   Pamb_light_src_rec *rec
+                                Ws *ws,
+                                Pint ind,
+                                Pamb_light_src_rec *rec
    )
 {
    GLfloat amb[4];
@@ -102,42 +95,42 @@ static void setup_ambient_light(
 #endif
      switch (ind){
      case 0:
-       glUniform1i(lightSource0, 0);
+       glUniform1i(ws->shader.lightSource0, 0);
        break;
      case 1:
-       glUniform1i(lightSource0, 1);
-       glUniform1i(lightSourceTyp0, PLIGHT_AMBIENT);
-       glUniform4fv(lightSourceCol0, 1, amb);
+       glUniform1i(ws->shader.lightSource0, 1);
+       glUniform1i(ws->shader.lightSourceTyp0, PLIGHT_AMBIENT);
+       glUniform4fv(ws->shader.lightSourceCol0, 1, amb);
        break;
      case 2:
-       glUniform1i(lightSource1, 1);
-       glUniform1i(lightSourceTyp1, PLIGHT_AMBIENT);
-       glUniform4fv(lightSourceCol1, 1, amb);
+       glUniform1i(ws->shader.lightSource1, 1);
+       glUniform1i(ws->shader.lightSourceTyp1, PLIGHT_AMBIENT);
+       glUniform4fv(ws->shader.lightSourceCol1, 1, amb);
        break;
      case 3:
-       glUniform1i(lightSource2, 1);
-       glUniform1i(lightSourceTyp2, PLIGHT_AMBIENT);
-       glUniform4fv(lightSourceCol2, 1, amb);
+       glUniform1i(ws->shader.lightSource2, 1);
+       glUniform1i(ws->shader.lightSourceTyp2, PLIGHT_AMBIENT);
+       glUniform4fv(ws->shader.lightSourceCol2, 1, amb);
        break;
      case 4:
-       glUniform1i(lightSource3, 1);
-       glUniform1i(lightSourceTyp3, PLIGHT_AMBIENT);
-       glUniform4fv(lightSourceCol3, 1, amb);
+       glUniform1i(ws->shader.lightSource3, 1);
+       glUniform1i(ws->shader.lightSourceTyp3, PLIGHT_AMBIENT);
+       glUniform4fv(ws->shader.lightSourceCol3, 1, amb);
        break;
      case 5:
-       glUniform1i(lightSource4, 1);
-       glUniform1i(lightSourceTyp4, PLIGHT_AMBIENT);
-       glUniform4fv(lightSourceCol4, 1, amb);
+       glUniform1i(ws->shader.lightSource4, 1);
+       glUniform1i(ws->shader.lightSourceTyp4, PLIGHT_AMBIENT);
+       glUniform4fv(ws->shader.lightSourceCol4, 1, amb);
        break;
      case 6:
-       glUniform1i(lightSource5, 1);
-       glUniform1i(lightSourceTyp5, PLIGHT_AMBIENT);
-       glUniform4fv(lightSourceCol5, 1, amb);
+       glUniform1i(ws->shader.lightSource5, 1);
+       glUniform1i(ws->shader.lightSourceTyp5, PLIGHT_AMBIENT);
+       glUniform4fv(ws->shader.lightSourceCol5, 1, amb);
        break;
      case 7:
-       glUniform1i(lightSource6, 1);
-       glUniform1i(lightSourceTyp6, PLIGHT_AMBIENT);
-       glUniform4fv(lightSourceCol6, 1, amb);
+       glUniform1i(ws->shader.lightSource6, 1);
+       glUniform1i(ws->shader.lightSourceTyp6, PLIGHT_AMBIENT);
+       glUniform4fv(ws->shader.lightSourceCol6, 1, amb);
        break;
      default:
        printf("ERROR: Unknown ambient light source index\n");
@@ -158,9 +151,10 @@ static void setup_ambient_light(
  */
 
 static void setup_directional_light(
-   Pint ind,
-   Pdir_light_src_rec *rec
-   )
+                                    Ws *ws,
+                                    Pint ind,
+                                    Pdir_light_src_rec *rec
+                                    )
 {
    GLfloat dif[4];
    GLfloat pos[4];
@@ -187,49 +181,49 @@ static void setup_directional_light(
 #endif
      switch (ind){
      case 0:
-       glUniform1i(lightSource0, 0);
+       glUniform1i(ws->shader.lightSource0, 0);
        break;
      case 1:
-       glUniform1i(lightSource0, 1);
-       glUniform1i(lightSourceTyp0, PLIGHT_DIRECTIONAL);
-       glUniform4fv(lightSourceCol0, 1, dif);
-       glUniform4fv(lightSourcePos0, 1, pos);
+       glUniform1i(ws->shader.lightSource0, 1);
+       glUniform1i(ws->shader.lightSourceTyp0, PLIGHT_DIRECTIONAL);
+       glUniform4fv(ws->shader.lightSourceCol0, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos0, 1, pos);
        break;
      case 2:
-       glUniform1i(lightSource1, 1);
-       glUniform1i(lightSourceTyp1, PLIGHT_DIRECTIONAL);
-       glUniform4fv(lightSourceCol1, 1, dif);
-       glUniform4fv(lightSourcePos1, 1, pos);
+       glUniform1i(ws->shader.lightSource1, 1);
+       glUniform1i(ws->shader.lightSourceTyp1, PLIGHT_DIRECTIONAL);
+       glUniform4fv(ws->shader.lightSourceCol1, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos1, 1, pos);
        break;
      case 3:
-       glUniform1i(lightSource2, 1);
-       glUniform1i(lightSourceTyp2, PLIGHT_DIRECTIONAL);
-       glUniform4fv(lightSourceCol2, 1, dif);
-       glUniform4fv(lightSourcePos2, 1, pos);
+       glUniform1i(ws->shader.lightSource2, 1);
+       glUniform1i(ws->shader.lightSourceTyp2, PLIGHT_DIRECTIONAL);
+       glUniform4fv(ws->shader.lightSourceCol2, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos2, 1, pos);
        break;
      case 4:
-       glUniform1i(lightSource3, 1);
-       glUniform1i(lightSourceTyp3, PLIGHT_DIRECTIONAL);
-       glUniform4fv(lightSourceCol3, 1, dif);
-       glUniform4fv(lightSourcePos3, 1, pos);
+       glUniform1i(ws->shader.lightSource3, 1);
+       glUniform1i(ws->shader.lightSourceTyp3, PLIGHT_DIRECTIONAL);
+       glUniform4fv(ws->shader.lightSourceCol3, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos3, 1, pos);
        break;
      case 5:
-       glUniform1i(lightSource4, 1);
-       glUniform1i(lightSourceTyp4, PLIGHT_DIRECTIONAL);
-       glUniform4fv(lightSourceCol4, 1, dif);
-       glUniform4fv(lightSourcePos4, 1, pos);
+       glUniform1i(ws->shader.lightSource4, 1);
+       glUniform1i(ws->shader.lightSourceTyp4, PLIGHT_DIRECTIONAL);
+       glUniform4fv(ws->shader.lightSourceCol4, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos4, 1, pos);
        break;
      case 6:
-       glUniform1i(lightSource5, 1);
-       glUniform1i(lightSourceTyp5, PLIGHT_DIRECTIONAL);
-       glUniform4fv(lightSourceCol5, 1, dif);
-       glUniform4fv(lightSourcePos5, 1, pos);
+       glUniform1i(ws->shader.lightSource5, 1);
+       glUniform1i(ws->shader.lightSourceTyp5, PLIGHT_DIRECTIONAL);
+       glUniform4fv(ws->shader.lightSourceCol5, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos5, 1, pos);
        break;
      case 7:
-       glUniform1i(lightSource6, 1);
-       glUniform1i(lightSourceTyp6, PLIGHT_DIRECTIONAL);
-       glUniform4fv(lightSourceCol6, 1, dif);
-       glUniform4fv(lightSourcePos6, 1, pos);
+       glUniform1i(ws->shader.lightSource6, 1);
+       glUniform1i(ws->shader.lightSourceTyp6, PLIGHT_DIRECTIONAL);
+       glUniform4fv(ws->shader.lightSourceCol6, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos6, 1, pos);
        break;
      default:
        printf("ERROR: Unknown directional light source index\n");
@@ -251,9 +245,10 @@ static void setup_directional_light(
  */
 
 static void setup_positional_light(
-   Pint ind,
-   Ppos_light_src_rec *rec
-   )
+                                   Ws *ws,
+                                   Pint ind,
+                                   Ppos_light_src_rec *rec
+                                   )
 {
    GLfloat dif[4];
    GLfloat pos[4];
@@ -287,56 +282,56 @@ static void setup_positional_light(
 #endif
      switch (ind){
      case 0:
-       glUniform1i(lightSource0, 0);
+       glUniform1i(ws->shader.lightSource0, 0);
        break;
      case 1:
-       glUniform1i(lightSource0, 1);
-       glUniform1i(lightSourceTyp0, PLIGHT_POSITIONAL);
-       glUniform4fv(lightSourceCol0, 1, dif);
-       glUniform4fv(lightSourcePos0, 1, pos);
-       glUniform4fv(lightSourceCoef0, 1, coef);
+       glUniform1i(ws->shader.lightSource0, 1);
+       glUniform1i(ws->shader.lightSourceTyp0, PLIGHT_POSITIONAL);
+       glUniform4fv(ws->shader.lightSourceCol0, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos0, 1, pos);
+       glUniform4fv(ws->shader.lightSourceCoef0, 1, coef);
        break;
      case 2:
-       glUniform1i(lightSource1, 1);
-       glUniform1i(lightSourceTyp1, PLIGHT_POSITIONAL);
-       glUniform4fv(lightSourceCol1, 1, dif);
-       glUniform4fv(lightSourcePos1, 1, pos);
-       glUniform4fv(lightSourceCoef1, 1, coef);
+       glUniform1i(ws->shader.lightSource1, 1);
+       glUniform1i(ws->shader.lightSourceTyp1, PLIGHT_POSITIONAL);
+       glUniform4fv(ws->shader.lightSourceCol1, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos1, 1, pos);
+       glUniform4fv(ws->shader.lightSourceCoef1, 1, coef);
        break;
      case 3:
-       glUniform1i(lightSource2, 1);
-       glUniform1i(lightSourceTyp2, PLIGHT_POSITIONAL);
-       glUniform4fv(lightSourceCol2, 1, dif);
-       glUniform4fv(lightSourcePos2, 1, pos);
-       glUniform4fv(lightSourceCoef2, 1, coef);
+       glUniform1i(ws->shader.lightSource2, 1);
+       glUniform1i(ws->shader.lightSourceTyp2, PLIGHT_POSITIONAL);
+       glUniform4fv(ws->shader.lightSourceCol2, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos2, 1, pos);
+       glUniform4fv(ws->shader.lightSourceCoef2, 1, coef);
        break;
      case 4:
-       glUniform1i(lightSource3, 1);
-       glUniform1i(lightSourceTyp3, PLIGHT_POSITIONAL);
-       glUniform4fv(lightSourceCol3, 1, dif);
-       glUniform4fv(lightSourcePos3, 1, pos);
-       glUniform4fv(lightSourceCoef3, 1, coef);
+       glUniform1i(ws->shader.lightSource3, 1);
+       glUniform1i(ws->shader.lightSourceTyp3, PLIGHT_POSITIONAL);
+       glUniform4fv(ws->shader.lightSourceCol3, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos3, 1, pos);
+       glUniform4fv(ws->shader.lightSourceCoef3, 1, coef);
        break;
      case 5:
-       glUniform1i(lightSource4, 1);
-       glUniform1i(lightSourceTyp4, PLIGHT_POSITIONAL);
-       glUniform4fv(lightSourceCol4, 1, dif);
-       glUniform4fv(lightSourcePos4, 1, pos);
-       glUniform4fv(lightSourceCoef4, 1, coef);
+       glUniform1i(ws->shader.lightSource4, 1);
+       glUniform1i(ws->shader.lightSourceTyp4, PLIGHT_POSITIONAL);
+       glUniform4fv(ws->shader.lightSourceCol4, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos4, 1, pos);
+       glUniform4fv(ws->shader.lightSourceCoef4, 1, coef);
        break;
      case 6:
-       glUniform1i(lightSource5, 1);
-       glUniform1i(lightSourceTyp5, PLIGHT_POSITIONAL);
-       glUniform4fv(lightSourceCol5, 1, dif);
-       glUniform4fv(lightSourcePos5, 1, pos);
-       glUniform4fv(lightSourceCoef5, 1, coef);
+       glUniform1i(ws->shader.lightSource5, 1);
+       glUniform1i(ws->shader.lightSourceTyp5, PLIGHT_POSITIONAL);
+       glUniform4fv(ws->shader.lightSourceCol5, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos5, 1, pos);
+       glUniform4fv(ws->shader.lightSourceCoef5, 1, coef);
        break;
      case 7:
-       glUniform1i(lightSource6, 1);
-       glUniform1i(lightSourceTyp6, PLIGHT_POSITIONAL);
-       glUniform4fv(lightSourceCol6, 1, dif);
-       glUniform4fv(lightSourcePos6, 1, pos);
-       glUniform4fv(lightSourceCoef6, 1, coef);
+       glUniform1i(ws->shader.lightSource6, 1);
+       glUniform1i(ws->shader.lightSourceTyp6, PLIGHT_POSITIONAL);
+       glUniform4fv(ws->shader.lightSourceCol6, 1, dif);
+       glUniform4fv(ws->shader.lightSourcePos6, 1, pos);
+       glUniform4fv(ws->shader.lightSourceCoef6, 1, coef);
        break;
      default:
        printf("ERROR: Unknown positional light source index\n");
@@ -385,21 +380,21 @@ void wsgl_update_light_src_state(
 #ifdef DEBUGL
           printf("Configure abient light\n");
 #endif
-          setup_ambient_light(i, &ret.data.rep.lightsrcrep.rec.ambient);
+          setup_ambient_light(ws, i, &ret.data.rep.lightsrcrep.rec.ambient);
           break;
           
         case PLIGHT_DIRECTIONAL:
 #ifdef DEBUGL
           printf("Configure directional light\n");
 #endif
-          setup_directional_light(i, &ret.data.rep.lightsrcrep.rec.directional);
+          setup_directional_light(ws, i, &ret.data.rep.lightsrcrep.rec.directional);
           break;
           
         case PLIGHT_POSITIONAL:
 #ifdef DEBUGL
           printf("Configure positional light\n");
 #endif
-          setup_positional_light(i, &ret.data.rep.lightsrcrep.rec.positional);
+          setup_positional_light(ws, i, &ret.data.rep.lightsrcrep.rec.positional);
           break;
           /* FIXME
              case PLIGHT_SPOT:
@@ -414,25 +409,25 @@ void wsgl_update_light_src_state(
       if (wsgl_use_shaders){
         switch (i){
         case 1:
-          glUniform1i(lightSource0, 0);
+          glUniform1i(ws->shader.lightSource0, 0);
           break;
         case 2:
-          glUniform1i(lightSource1, 0);
+          glUniform1i(ws->shader.lightSource1, 0);
           break;
         case 3:
-          glUniform1i(lightSource2, 0);
+          glUniform1i(ws->shader.lightSource2, 0);
           break;
         case 4:
-          glUniform1i(lightSource3, 0);
+          glUniform1i(ws->shader.lightSource3, 0);
           break;
         case 5:
-          glUniform1i(lightSource4, 0);
+          glUniform1i(ws->shader.lightSource4, 0);
           break;
         case 6:
-          glUniform1i(lightSource5, 0);
+          glUniform1i(ws->shader.lightSource5, 0);
           break;
         case 7:
-          glUniform1i(lightSource6, 0);
+          glUniform1i(ws->shader.lightSource6, 0);
           break;
         }
       } else {

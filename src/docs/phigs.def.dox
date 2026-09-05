@@ -24,7 +24,7 @@
  * - \%bg  0. 0. 0.         Background color in RGB mode
  * - \%bga 0. 0. 0. 0.5     Background color in RGBA
  * - \%hs 3.                scale factor for hardcopy related work station types
- * - \%ior 0                Ordern Independent Rendering disable (0) /enable (1). Requires shader 420
+ * - \%ior 0                Ordern Independent Rendering mode, 0=off, 1=default blending, 2=alternative blending. Requires shader 420
  * - \%lpp 16               Order Independent Rendering layers per pixel (between 1 and 16). Requires shader 420
  *
  * \note Ordern independent rendering can be quite memory intensive. If enabled for the main window, it makes sense to enable it as well for hardcopy workstation types, if these are used.

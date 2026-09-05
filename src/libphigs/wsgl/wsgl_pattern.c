@@ -38,7 +38,6 @@ static GLubyte checkImage[ImageWidth][ImageHeight][3];
 static GLubyte randomImage[ImageWidth][ImageHeight][3];
 #define NTEXTURES 2
 static unsigned int texture[NTEXTURES];
-extern GLint applyTexture;
 
 /*******************************************************************************
  * CreateRandomImage
@@ -157,7 +156,7 @@ void wsgl_select_pattern(Ws * ws, unsigned short num){
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   if (wsgl_use_shaders){
-    GLint loc = glGetUniformLocation(ws->program, "currentTexture");
+    GLint loc = glGetUniformLocation(ws->shader.program, "currentTexture");
     if (loc == -1) {
       fprintf(stderr, "currentTexture uniform not found (optimized out or wrong name)\n");
     }

@@ -445,11 +445,11 @@ void wsgl_begin_rendering(
   if (wsgl_use_shaders){
     GLint currentProgram = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
-    if (currentProgram != ws->program){
+    if (currentProgram != ws->shader.program){
 #ifdef DEBUG
       printf("Switching back to program %d\n", ws->program);
 #endif
-      glUseProgram(ws->program);
+      glUseProgram(ws->shader.program);
     }
   }
   if (ws->drawable_id != 0){

@@ -31,7 +31,10 @@
 /**
  * \file pset_view_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief    Set view index for current structure
+ * \pr       The structure must be open.
+ * \sa       pset_view_
+ */
 void pset_view_ind(
                    Pint view_ind
                    )
