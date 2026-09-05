@@ -210,8 +210,12 @@ typedef struct {
 } Ws_output_ws;
 
 typedef struct {
-  /* enable OIS for this workstation */
-  Pint enable;
+  /* choose OIS for this workstation
+     0 = OFF
+     1 = default color blending, back to forth
+     2 = alternative blending, forth to back with weighting
+   */
+  Pint mode;
   /*
    * How many transparent fragments per pixel the list is sized for.
    *

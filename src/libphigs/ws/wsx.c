@@ -81,7 +81,7 @@ Ws* phg_wsx_create(
    ws->valuator_frame = NULL;
    ws->num_boxed_valuators = 0;
    /* Order independent rendering */
-   ws->oir.enable = args->enable_oir;
+   ws->oir.mode = args->oir_mode;
    ws->oir.layersPerPixel = args->layersPerPixel;
    ws->oir.oir_width = 0;
    ws->oir.oir_height = 0;

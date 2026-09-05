@@ -50,7 +50,7 @@
  * BUGS:
  */
 void wsgl_oir_ini(Ws *ws){
-  if (!ws->oir.enable) return;
+  if (ws->oir.mode == 0) return;
   if (!wsgl_use_shaders) return;
   /*
     Only the 4.20 shaders build a fragment list. Without this the older
@@ -91,7 +91,7 @@ void wsgl_oir_ini(Ws *ws){
     fprintf(stderr, "WARNING: could not map the head pointer initialiser,"
             " order independent rendering is disabled\n");
     ws->oir.head_p_texture = 0;
-    ws->oir.enable = 0;
+    ws->oir.mode = 0;
     glDeleteBuffers(1, &ws->oir.head_p_initializer);
     glDeleteTextures(1, &ws->oir.head_p_texture);
     ws->oir.head_p_initializer = 0;
@@ -133,7 +133,7 @@ void wsgl_oir_ini(Ws *ws){
  * BUGS:
  */
 void wsgl_oir_cleanup(Ws * ws){
-  if (!ws->oir.enable) return;
+  if (ws->oir.mode == 0) return;
   if (!wsgl_use_shaders) return;
   if (wsgl_frag_shader_version != 420) return;
   glDeleteTextures(1, &ws->oir.frag_storage_texture); ws->oir.frag_storage_texture = 0;
@@ -156,7 +156,7 @@ void wsgl_oir_cleanup(Ws * ws){
 void wsgl_oir_reset(Ws * ws){
   Pint width = ws->ws_rect.width;
   Pint height = ws->ws_rect.height;
-  if (!ws->oir.enable) return;
+  if (ws->oir.mode == 0) return;
   if (!wsgl_use_shaders) return;
   if (ws->oir.head_p_texture == 0) return;
   /*
@@ -220,7 +220,7 @@ void wsgl_oir_resolve(Ws * ws){
   GLboolean depth_test, blend, depth_mask;
   GLint viewport[4];
 
-  if (!ws->oir.enable) return;
+  if (ws->oir.mode == 0) return;
   if (!wsgl_use_shaders) return;
   if (ws->oir.head_p_texture == 0) return;
   if (ws->oir_program == 0) return;

@@ -52,6 +52,9 @@ GLint sLoc, tLoc;
 GLfloat s_plane[] = {1.0f, 0.0f, 0.0f, 0.0f};
 GLfloat t_plane[] = {0.0f, 1.0f, 0.0f, 0.0f};
 
+/* OIR rendering mode */
+GLint oirMode = 0;
+
 /* version 1.20 vertex and fragment shaders */
 #include "private/vs120.h"
 #include "private/fs120.h"
@@ -506,7 +509,7 @@ void wsgl_shaders(Ws * ws){
       rendering path is exactly what it always was.
     */
     ws->oir_program = 0;
-    if (wsgl_frag_shader_version == 420 && ws->oir.enable != 0){
+    if (wsgl_frag_shader_version == 420 && ws->oir.mode > 0){
       ws->oir_program = wsgl_build_program(vertex_shader_text_420_resolve,
                                            fragment_shader_text_420_resolve,
                                            "OIR resolve");
@@ -515,6 +518,8 @@ void wsgl_shaders(Ws * ws){
                 " rendering resolve program\n");
         abort();
       }
+      /* fixme this should be stored in the workstation */
+      oirMode = glGetUniformLocation(ws->oir_program, "oirMode");
       printf("[INFO] Order independent rendering enabled\n");
     }
     /* the geometry program has to be the current one when we return */
