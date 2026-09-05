@@ -500,7 +500,7 @@ void wsgl_set_of_edge_area_set3_data(
 
   sofas3_head(&sofas3, pdata);
 
-  wsgl_setup_edge_attr(ast);
+  wsgl_setup_edge_attr(ws, ast);
   switch (sofas3.vflag) {
   case PVERT_COORD:
     for (i = 0; i < sofas3.num_sets; i++) {

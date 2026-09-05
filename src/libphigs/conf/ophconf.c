@@ -127,7 +127,7 @@ void read_config(char * config_file){
   int use_shaders;
   int vertex_shader;
   int fragment_shader;
-  int oir_enabled;
+  int oir_mode;
   int oir_lpp;
 
   /* initialize output */
@@ -138,7 +138,7 @@ void read_config(char * config_file){
   /* defaults for updated configs */
   init_defaults();
   wsgl_use_shaders = 1;
-  oir_enabled = 0;
+  oir_mode = 0;
   oir_lpp = 16;
 
   if (config_file == NULL){
@@ -187,7 +187,7 @@ void read_config(char * config_file){
         }
         memset(&text[0], 0, maxsize);
         if (sscanf(line, "%%wn %[^\n]", text) > 0){
-          strncpy(newconfig.window_title, text, maxsize);
+          strncpy(newconfig.window_title, text, sizeof(newconfig.window_title));
           memset(&text[0], 0, maxsize);
         }
         if (sscanf(line, "%%wf %s", text) > 0){
@@ -195,7 +195,7 @@ void read_config(char * config_file){
           memset(&text[0], 0, maxsize);
         }
         if (sscanf(line, "%%wi %s", text) > 0){
-          strncpy(newconfig.window_icon, text, maxsize);
+          strncpy(newconfig.window_icon, text, sizeof(newconfig.window_icon));
           memset(&text[0], 0, maxsize);
         }
         if (sscanf(line, "%%wp %f %f %f %f", &xmin, &xmax, &ymin, &ymax) > 0){
@@ -236,13 +236,13 @@ void read_config(char * config_file){
             printf("OIR Layers per pixel: %d\n", oir_lpp);
           }
         }
-         if (sscanf(line, "%%oir %d", &oir_enabled) > 0){
-          if (oir_enabled == 0){
+         if (sscanf(line, "%%oir %d", &oir_mode) > 0){
+          if (oir_mode == 0){
             newconfig.oir = 0;
             printf("OIR is DISABLED by configuration\n");
           } else {
-            newconfig.oir = 1;
-            printf("OIR is ENABLED by configuration\n");
+            newconfig.oir = oir_mode;
+            printf("OIR mode is %d\n", oir_mode);
           }
         }
         if (sscanf(line, "%%gs %d", &use_shaders) > 0){

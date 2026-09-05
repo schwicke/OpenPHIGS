@@ -528,6 +528,7 @@ extern "C" {
    */
 
   void wsgl_setup_line_attr(
+                            Ws *ws,
                             Ws_attr_st *ast
                             );
 
@@ -574,6 +575,7 @@ extern "C" {
    */
 
   void wsgl_setup_int_style(
+                            Ws *ws,
                             Pint_style style
                             );
 
@@ -632,6 +634,7 @@ extern "C" {
    */
 
   void wsgl_setup_int_reflectance_model(
+                                        Ws * ws,
                                         Pint colr_type,
                                         Pcoval *colr,
                                         Ws_attr_st *ast
@@ -645,6 +648,7 @@ extern "C" {
    */
 
   void wsgl_setup_int_refl_props(
+                                 Ws *,
                                  Pint colr_type,
                                  Pcoval *colr,
                                  Ws_attr_st *ast
@@ -684,6 +688,7 @@ extern "C" {
    */
 
   void wsgl_setup_back_int_refl_props(
+                                      Ws *ws,
                                       Pint colr_type,
                                       Pcoval *colr,
                                       Ws_attr_st *ast
@@ -758,6 +763,7 @@ extern "C" {
    */
 
   void wsgl_setup_edge_attr(
+                            Ws *ws,
                             Ws_attr_st *ast
                             );
 
@@ -782,6 +788,7 @@ extern "C" {
    */
 
   void wsgl_setup_marker_attr(
+                              Ws *ws,
                               Ws_attr_st *ast,
                               Pint *type,
                               Pfloat *size
@@ -830,6 +837,7 @@ extern "C" {
    */
 
   void wsgl_setup_text_attr(
+                            Ws *ws,
                             Ws_attr_st *ast,
                             Phg_font **fnt,
                             Pfloat *char_expan

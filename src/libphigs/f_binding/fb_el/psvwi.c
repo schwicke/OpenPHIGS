@@ -32,6 +32,7 @@
  * \file psvwi.c
  *
  * \brief       set view index
+ * \sa psvwr3
  */
 FTN_SUBROUTINE(psvwi)(
                       FTN_INTEGER(viewi)

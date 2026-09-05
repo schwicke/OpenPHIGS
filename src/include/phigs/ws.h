@@ -210,8 +210,12 @@ typedef struct {
 } Ws_output_ws;
 
 typedef struct {
-  /* enable OIS for this workstation */
-  Pint enable;
+  /* choose OIS for this workstation
+     0 = OFF
+     1 = default color blending, back to forth
+     2 = alternative blending, forth to back with weighting
+   */
+  Pint mode;
   /*
    * How many transparent fragments per pixel the list is sized for.
    *
@@ -242,6 +246,34 @@ typedef struct {
   GLuint frag_storage_texture;
 } Wsgl_oir;
 
+  typedef struct {
+    /* shader specific internal variables */
+    GLint program;
+    /* second program used to resolve the order independent rendering lists,
+       zero when order independensrc/libphigs/ws/wsx.ct rendering is not in use */
+    GLint oir_program;
+    
+    /* OIR rendering mode */
+    GLint oirMode;
+
+    GLint shading_mode;
+    GLint vAmbient, vDiffuse, vSpecular, vPositional;
+    GLint ModelViewMatrix, ProjectionMatrix;
+    //FIXME: these could become arrays
+    GLint lightSource0, lightSourceTyp0, lightSourceCol0, lightSourcePos0, lightSourceCoef0;
+    GLint lightSource1, lightSourceTyp1, lightSourceCol1, lightSourcePos1, lightSourceCoef1;
+    GLint lightSource2, lightSourceTyp2, lightSourceCol2, lightSourcePos2, lightSourceCoef2;
+    GLint lightSource3, lightSourceTyp3, lightSourceCol3, lightSourcePos3, lightSourceCoef3;
+    GLint lightSource4, lightSourceTyp4, lightSourceCol4, lightSourcePos4, lightSourceCoef4;
+    GLint lightSource5, lightSourceTyp5, lightSourceCol5, lightSourcePos5, lightSourceCoef5;
+    GLint lightSource6, lightSourceTyp6, lightSourceCol6, lightSourcePos6, lightSourceCoef6;
+
+    GLint applyTexture;
+    /* Clipping planes: support only 2 of them right now*/
+    GLint sLoc, tLoc;
+    GLfloat s_plane[4];
+    GLfloat t_plane[4];
+} Wsgl_shader;
 
 struct _Wsgl;
 typedef struct _Wsgl *Wsgl_handle;
@@ -266,6 +298,7 @@ typedef struct _Ws {
    Window       input_overlay_window;
    Wsgl_handle  render_context;
    Wsgl_oir     oir;
+   Wsgl_shader  shader;
    int          has_double_buffer;
    XRectangle   ws_rect;
    Widget       top_level; /* only in PM */
@@ -279,10 +312,6 @@ typedef struct _Ws {
    GLXFBConfig  *fbc;
    GLuint       fbuf, depthbuf, colorbuf;
    GLint        old_viewport[4];
-   GLint        program;
-   /* second program used to resolve the order independent rendering lists,
-      zero when order independent rendering is not in use */
-   GLint        oir_program;
 
 
    /* Output LUN for some work station types, e.g. to print out stuff here */

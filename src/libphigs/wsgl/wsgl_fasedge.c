@@ -475,7 +475,7 @@ void wsgl_edge_area_set_data(
   fasd3.vdata = &vdata;
   fasd3_head(&fasd3, pdata);
 
-  wsgl_setup_edge_attr(ast);
+  wsgl_setup_edge_attr(ws, ast);
   switch (fasd3.vflag) {
   case PVERT_COORD:
     for (i = 0; i < fasd3.nfa; i++) {

@@ -50,7 +50,7 @@ void wsgl_polyline(
    point_list.num_points = *data;
    point_list.points = (Ppoint *) &data[1];
 
-   wsgl_setup_line_attr(ast);
+   wsgl_setup_line_attr(ws, ast);
    glBegin(GL_LINES);
    for (i = 0; i < point_list.num_points-1; i++) {
       glVertex2f(point_list.points[i].x,
@@ -96,7 +96,7 @@ void wsgl_polyline3(
    point_list.num_points = *data;
    point_list.points = (Ppoint3 *) &data[1];
 
-   wsgl_setup_line_attr(ast);
+   wsgl_setup_line_attr(ws, ast);
    glBegin(GL_LINES);
    for (i = 0; i < point_list.num_points-1; i++) {
       glVertex3f(point_list.points[i].x,

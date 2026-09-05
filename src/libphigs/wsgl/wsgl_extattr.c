@@ -36,8 +36,6 @@
 #include "ws.h"
 #include "private/wsglP.h"
 
-extern GLint shading_mode;
-extern GLint vAmbient, vDiffuse, vSpecular;
 /*******************************************************************************
  * wsgl_get_back_int_colr
  *
@@ -101,7 +99,7 @@ void wsgl_setup_back_int_attr_nocol(
     style = ast->bundl_group.int_bundle.back_style;
   }
   if (style != wsgl->dev_st.int_style) {
-    wsgl_setup_int_style(style);
+    wsgl_setup_int_style(ws, style);
     wsgl->dev_st.int_style = style;
   }
 
@@ -135,13 +133,13 @@ void wsgl_setup_back_int_attr_nocol(
 
   if (wsgl->cur_struct.lighting) {
     if (wsgl_use_shaders) {
-      glUniform1i(shading_mode, 1);
+      glUniform1i(ws->shader.shading_mode, 1);
     } else {
       glEnable(GL_LIGHTING);
     }
   } else {
     if (wsgl_use_shaders) {
-      glUniform1i(shading_mode, 0);
+      glUniform1i(ws->shader.shading_mode, 0);
     } else {
       glDisable(GL_LIGHTING);
     }
@@ -157,6 +155,7 @@ void wsgl_setup_back_int_attr_nocol(
  * RETURNS:     N/A
  */
 void wsgl_setup_int_refl_props(
+                               Ws *ws,
                                Pint colr_type,
                                Pcoval *colr,
                                Ws_attr_st *ast
@@ -303,6 +302,7 @@ void wsgl_setup_int_refl_props(
  * RETURNS:     N/A
  */
 void wsgl_setup_back_int_refl_props(
+                                    Ws * ws,
                                     Pint colr_type,
                                     Pcoval *colr,
                                     Ws_attr_st *ast
@@ -452,6 +452,7 @@ void wsgl_setup_back_int_refl_props(
  */
 
 void wsgl_setup_int_reflectance_model(
+                                      Ws * ws,
                                       Pint colr_type,
                                       Pcoval *colr,
                                       Ws_attr_st *ast
@@ -478,7 +479,7 @@ void wsgl_setup_int_reflectance_model(
     refl_props = &ast->bundl_group.int_bundle.refl_props;
   }
 
-  if (wsgl_use_shaders) glUniform1i(shading_mode, 1);
+  if (wsgl_use_shaders) glUniform1i(ws->shader.shading_mode, 1);
 
   switch (refl_model) {
   case PREFL_AMBIENT:
@@ -609,7 +610,7 @@ void wsgl_setup_int_reflectance_model(
     diffuse[3] = 1.0;
     specular[3] = 1.0;
 
-    if (wsgl_use_shaders) glUniform1i(shading_mode, 0);
+    if (wsgl_use_shaders) glUniform1i(ws->shader.shading_mode, 0);
     break;
   }
 
@@ -632,9 +633,9 @@ void wsgl_setup_int_reflectance_model(
     default:
       break;
     }
-    glUniform4fv(vAmbient, 1, ambient);
-    glUniform4fv(vDiffuse, 1, diffuse);
-    glUniform4fv(vSpecular, 1, specular);
+    glUniform4fv(ws->shader.vAmbient, 1, ambient);
+    glUniform4fv(ws->shader.vDiffuse, 1, diffuse);
+    glUniform4fv(ws->shader.vSpecular, 1, specular);
   } else {
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
@@ -664,7 +665,7 @@ int wsgl_setup_int_colr(
     printf("wsgl_setup_int_colr: Setup int color\n");
 #endif
     // US broken?    wsgl_setup_int_refl_props(colr_type, colr, ast);
-    wsgl_setup_int_reflectance_model(colr_type, colr, ast);
+    wsgl_setup_int_reflectance_model(ws, colr_type, colr, ast);
     lighting = TRUE;
   }
   else {
@@ -731,7 +732,7 @@ int wsgl_setup_back_int_colr(
     printf("Setup back int color\n");
 #endif
     //US broken ? wsgl_setup_back_int_refl_props(colr_type, colr, ast);
-    wsgl_setup_int_reflectance_model(colr_type, colr, ast);
+    wsgl_setup_int_reflectance_model(ws, colr_type, colr, ast);
     lighting = TRUE;
   }
   else {

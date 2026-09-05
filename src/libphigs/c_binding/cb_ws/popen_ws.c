@@ -170,7 +170,7 @@ void popen_ws(
         args.y = config[ws_id].ypos;
         args.border_width =  config[ws_id].border_width;
         args.limits = config[ws_id].vpos;
-        args.enable_oir = config[ws_id].oir;
+        args.oir_mode = config[ws_id].oir;
         args.layersPerPixel = config[ws_id].layersPerPixel;
 
         /* Open workstation */
