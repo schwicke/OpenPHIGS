@@ -8,8 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+* Order independent rendering
+* Sissor test in x-y plane
+* Tesselation shader
+* additional C and Fortran bindings
+* Documentation via Doxygen
 
 ### Changed
+* Cleanup of global variables for OpenGL
+* Updated contributor list
 
 ### Removed
 

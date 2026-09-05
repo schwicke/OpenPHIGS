@@ -68,6 +68,7 @@ extern "C" {
 #define PWST_HCOPY_TRUE_PDF              8
 #define PWST_HCOPY_TRUE_SVG              9
 #define PWST_HCOPY_TRUE_OBJ              10
+#define PWST_HCOPY_TRUE_GLTF             11
 
 /* Default tables */
 #define WST_MIN_PREDEF_LINE_REPS         1

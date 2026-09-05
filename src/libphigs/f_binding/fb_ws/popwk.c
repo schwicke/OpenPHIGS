@@ -60,6 +60,7 @@ extern int record_geom;
   8  PWST_HCOPY_TRUE_PDF              Hardcopy to file as PDF, no shaders
   9  PWST_HCOPY_TRUE_SVG              Hardcopy to file as SVG, no shaders
   10 PWST_HCOPY_TRUE_OBJ              Export geometry as OBJ
+  11 PWST_HCOPY_TRUE_GLTF             Export geometry as GLTF
  * \endverbatim
  *
  * \note The implementation for geometry export as OBJ is relatively basic and does not include any material or color schemas. The scale factor for TGA and PNG output can be set with the function PXSHCSF.
@@ -149,7 +150,8 @@ FTN_SUBROUTINE(popwk)(
               ws_type == PWST_HCOPY_TRUE_EPS ||
               ws_type == PWST_HCOPY_TRUE_PDF ||
               ws_type == PWST_HCOPY_TRUE_SVG ||
-              ws_type == PWST_HCOPY_TRUE_OBJ
+              ws_type == PWST_HCOPY_TRUE_OBJ ||
+              ws_type == PWST_HCOPY_TRUE_GLTF
               ) {
             args.conn_type = PHG_ARGS_CONN_HCOPY;
             args.width = config[ws_id].display_width*config[ws_id].hcsf;
@@ -170,6 +172,7 @@ FTN_SUBROUTINE(popwk)(
           wsgl_use_shaders = 0;
           break;
         case  PWST_HCOPY_TRUE_OBJ:
+        case  PWST_HCOPY_TRUE_GLTF:
           printf("fb_ws: switch Recording ON\n");
           record_geom = TRUE;
         }

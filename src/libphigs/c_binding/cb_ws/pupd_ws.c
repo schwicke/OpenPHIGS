@@ -68,6 +68,7 @@ void pupd_ws(
     case PCAT_PDF:
     case PCAT_SVG:
     case PCAT_OBJ:
+    case PCAT_GLTF:
     case PCAT_MO:
       wsh = PHG_WSID(ws_id);
       (*wsh->update)(wsh, regen_flag);
