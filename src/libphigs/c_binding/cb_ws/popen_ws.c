@@ -68,6 +68,7 @@
   8  PWST_HCOPY_TRUE_PDF              Hardcopy to file as PDF, no shaders
   9  PWST_HCOPY_TRUE_SVG              Hardcopy to file as SVG, no shaders
   10 PWST_HCOPY_TRUE_OBJ              Export geometry as OBJ
+  11 PWST_HCOPY_TRUE_GLTF             Export geometry as GLTF
  * \endverbatim
  *
  * \note The implementation for geometry export as OBJ is relatively basic and does not include any material or color schemas. The scale factor for TGA and PNG output can be set with the function pxset_conf_hcsf.
