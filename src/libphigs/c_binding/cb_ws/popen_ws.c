@@ -135,7 +135,8 @@ void popen_ws(
               ws_type == PWST_HCOPY_TRUE_EPS ||
               ws_type == PWST_HCOPY_TRUE_PDF ||
               ws_type == PWST_HCOPY_TRUE_SVG ||
-              ws_type == PWST_HCOPY_TRUE_OBJ
+              ws_type == PWST_HCOPY_TRUE_OBJ ||
+              ws_type == PWST_HCOPY_TRUE_GLTF
               ) {
             args.conn_type = PHG_ARGS_CONN_HCOPY;
             args.width = config[ws_id].display_width*config[ws_id].hcsf;
@@ -156,6 +157,7 @@ void popen_ws(
           wsgl_use_shaders = 0;
           break;
         case  PWST_HCOPY_TRUE_OBJ:
+        case  PWST_HCOPY_TRUE_GLTF:
           record_geom = TRUE;
         }
         args.wsid = ws_id;
@@ -214,6 +216,9 @@ void popen_ws(
             break;
           case PCAT_OBJ:
             strcpy(wsh->filename, "output.obj");
+            break;
+          case PCAT_GLTF:
+            strcpy(wsh->filename, "output.gltf");
             break;
           case PCAT_IN:
           case PCAT_OUT:

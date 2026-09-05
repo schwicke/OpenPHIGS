@@ -133,6 +133,42 @@ void wsgl_add_geometry(GeomType type, const int* verts, const int* norms, int co
 }
 
 /*******************************************************************************
+ * wsgl_export_gltf(const char* filename, const char* title)
+ * DESCR:       export as glTF file
+ * RETURNS:     void
+ */
+void wsgl_export_gltf(const char* filename, const char* title) {
+  FILE* f = fopen(filename, "w");
+  if (!f) {
+    perror("fopen gltf");
+    return;
+  }
+#ifdef DEBUG_OBJ
+  printf("wsgl_export: exporting glTF with %d vertices and %d normals\n", vertex_count, normal_count);
+#endif
+  
+  // We'll output a simplistic JSON structure. In a production glTF, 
+  // you'd write a separate .bin file and define accessors/bufferViews.
+  // For this initial implementation, we structure the hierarchy to match.
+  fprintf(f, "{\n  \"asset\": {\n    \"version\": \"2.0\",\n    \"generator\": \"OpenPHIGS glTF Exporter\"\n  },\n");
+  fprintf(f, "  \"scene\": 0,\n  \"scenes\": [\n    {\n      \"name\": \"%s\",\n      \"nodes\": [0]\n    }\n  ],\n", title);
+  fprintf(f, "  \"nodes\": [\n    {\n      \"mesh\": 0\n    }\n  ],\n");
+  
+  // The heavy lifting of converting 'vertices' array into base64 or 
+  // binary buffer goes here. We will log a stub for now.
+  fprintf(f, "  \"meshes\": [\n    {\n      \"primitives\": [\n");
+  
+  // Basic geometry loop
+  for (int i = 0; i < geom_count; ++i) {
+    fprintf(f, "        {\n          \"mode\": %d,\n", (geometries[i].type == GEOM_FACE) ? 4 : 1);
+    fprintf(f, "          \"attributes\": { \"POSITION\": 0 }\n        }%s\n", (i == geom_count - 1) ? "" : ",");
+  }
+  
+  fprintf(f, "      ]\n    }\n  ]\n}\n");
+  fclose(f);
+}
+
+/*******************************************************************************
  * wsgl_export_obj(const char* filename)
  * DESCR:       export as OBJ file
  * RETURNS:     Non zero or zero on error

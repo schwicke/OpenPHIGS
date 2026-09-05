@@ -166,7 +166,8 @@ extern "C" {
     PCAT_EPS,
     PCAT_PDF,
     PCAT_SVG,
-    PCAT_OBJ
+    PCAT_OBJ,
+    PCAT_GLTF
   } Pws_cat;
 
   typedef enum {
