@@ -35,26 +35,6 @@
 #include "ws.h"
 #include "private/wsglP.h"
 
-GLint vertex_shader, fragment_shader;
-GLint shading_mode;
-GLint vAmbient, vDiffuse, vSpecular, vPositional;
-GLint ModelViewMatrix, ProjectionMatrix;
-GLint lightSource0, lightSourceTyp0, lightSourceCol0, lightSourcePos0, lightSourceCoef0;
-GLint lightSource1, lightSourceTyp1, lightSourceCol1, lightSourcePos1, lightSourceCoef1;
-GLint lightSource2, lightSourceTyp2, lightSourceCol2, lightSourcePos2, lightSourceCoef2;
-GLint lightSource3, lightSourceTyp3, lightSourceCol3, lightSourcePos3, lightSourceCoef3;
-GLint lightSource4, lightSourceTyp4, lightSourceCol4, lightSourcePos4, lightSourceCoef4;
-GLint lightSource5, lightSourceTyp5, lightSourceCol5, lightSourcePos5, lightSourceCoef5;
-GLint lightSource6, lightSourceTyp6, lightSourceCol6, lightSourcePos6, lightSourceCoef6;
-
-GLint applyTexture = 0;
-GLint sLoc, tLoc;
-GLfloat s_plane[] = {1.0f, 0.0f, 0.0f, 0.0f};
-GLfloat t_plane[] = {0.0f, 1.0f, 0.0f, 0.0f};
-
-/* OIR rendering mode */
-GLint oirMode = 0;
-
 /* version 1.20 vertex and fragment shaders */
 #include "private/vs120.h"
 #include "private/fs120.h"
@@ -339,6 +319,8 @@ void wsgl_shaders(Ws * ws){
   GLint linked;
   GLint vColorLoc;
   int driver_glsl;
+  
+  GLint vertex_shader, fragment_shader;
 
   if (ws->drawable_id){
     glXMakeCurrent(ws->display, ws->drawable_id, ws->glx_context);
@@ -411,30 +393,30 @@ void wsgl_shaders(Ws * ws){
     wsgl_compile_shader(fragment_shader, GL_FRAGMENT_SHADER,
                         wsgl_frag_shader_version);
 
-    ws->program = glCreateProgram();
-    glAttachShader(ws->program, vertex_shader);
-    glAttachShader(ws->program, fragment_shader);
-    glLinkProgram(ws->program);
-    glGetProgramiv(ws->program, GL_LINK_STATUS, &linked);
+    ws->shader.program = glCreateProgram();
+    glAttachShader(ws->shader.program, vertex_shader);
+    glAttachShader(ws->shader.program, fragment_shader);
+    glLinkProgram(ws->shader.program);
+    glGetProgramiv(ws->shader.program, GL_LINK_STATUS, &linked);
     if (!linked) {
       fprintf(stderr, "[ERROR] Linking the shader program failed"
               " (vertex version %d, fragment version %d)\n",
               wsgl_vert_shader_version, wsgl_frag_shader_version);
-      wsgl_print_program_log(ws->program);
+      wsgl_print_program_log(ws->shader.program);
       abort();
     }
     /* it linked, but the driver may still have warnings worth seeing */
-    wsgl_print_program_log(ws->program);
-    glUseProgram(ws->program);
+    wsgl_print_program_log(ws->shader.program);
+    glUseProgram(ws->shader.program);
     /* define static vColor as index 1 */
-    glBindAttribLocation(ws->program, vCOLOR, "vColor");
+    glBindAttribLocation(ws->shader.program, vCOLOR, "vColor");
     /*
       The whole colour path drives vColor through glVertexAttrib*(vCOLOR, ...),
       so warn if the linker did not put it there. Note that the call above only
       takes effect on the next link, so this reports the location the driver
       picked by itself.
     */
-    vColorLoc = glGetAttribLocation(ws->program, "vColor");
+    vColorLoc = glGetAttribLocation(ws->shader.program, "vColor");
     if (vColorLoc < 0){
       fprintf(stderr, "WARNING: vColor is not an active attribute of the"
               " shader program, colours will not reach the shader\n");
@@ -442,87 +424,81 @@ void wsgl_shaders(Ws * ws){
       fprintf(stderr, "WARNING: vColor was linked to attribute location %d,"
               " but colours are sent to location %d\n", vColorLoc, vCOLOR);
     }
-    /* lighting parameters */
-    vAmbient = glGetUniformLocation(ws->program, "vAmbient");
-    vDiffuse = glGetUniformLocation(ws->program, "vDiffuse");
-    vSpecular = glGetUniformLocation(ws->program, "vSpecular");
-    vPositional = glGetUniformLocation(ws->program, "vPositional");
-    /*define default color */
+    /* define default color */
     glVertexAttrib4f(vCOLOR, 0.5, 0.5, 0.5, 1.0);
+    /* lighting parameters */
+    ws->shader.vAmbient = glGetUniformLocation(ws->shader.program, "vAmbient");
+    ws->shader.vDiffuse = glGetUniformLocation(ws->shader.program, "vDiffuse");
+    ws->shader.vSpecular = glGetUniformLocation(ws->shader.program, "vSpecular");
+    ws->shader.vPositional = glGetUniformLocation(ws->shader.program, "vPositional");
     /* shading mode */
-    shading_mode = glGetUniformLocation(ws->program, "ShadingMode");
+    ws->shader.shading_mode = glGetUniformLocation(ws->shader.program, "ShadingMode");
     /* light sources */
-    lightSource0    = glGetUniformLocation(ws->program, "lightSource0");
-    lightSourceTyp0 = glGetUniformLocation(ws->program, "lightSourceTyp0");
-    lightSourceCol0 = glGetUniformLocation(ws->program, "lightSourceCol0");
-    lightSourcePos0 = glGetUniformLocation(ws->program, "lightSourcePos0");
-    lightSourceCoef0 = glGetUniformLocation(ws->program, "lightSourceCoef0");
-
-    lightSource1    = glGetUniformLocation(ws->program, "lightSource1");
-    lightSourceTyp1 = glGetUniformLocation(ws->program, "lightSourceTyp1");
-    lightSourceCol1 = glGetUniformLocation(ws->program, "lightSourceCol1");
-    lightSourcePos1 = glGetUniformLocation(ws->program, "lightSourcePos1");
-    lightSourceCoef1 = glGetUniformLocation(ws->program, "lightSourceCoef1");
-
-    lightSource2    = glGetUniformLocation(ws->program, "lightSource2");
-    lightSourceTyp2 = glGetUniformLocation(ws->program, "lightSourceTyp2");
-    lightSourceCol2 = glGetUniformLocation(ws->program, "lightSourceCol2");
-    lightSourcePos2 = glGetUniformLocation(ws->program, "lightSourcePos2");
-    lightSourceCoef2 = glGetUniformLocation(ws->program, "lightSourceCoef2");
-
-    lightSource3    = glGetUniformLocation(ws->program, "lightSource3");
-    lightSourceTyp3 = glGetUniformLocation(ws->program, "lightSourceTyp3");
-    lightSourceCol3 = glGetUniformLocation(ws->program, "lightSourceCol3");
-    lightSourcePos3 = glGetUniformLocation(ws->program, "lightSourcePos3");
-    lightSourceCoef3 = glGetUniformLocation(ws->program, "lightSourceCoef3");
-
-    lightSource4    = glGetUniformLocation(ws->program, "lightSource4");
-    lightSourceTyp4 = glGetUniformLocation(ws->program, "lightSourceTyp4");
-    lightSourceCol4 = glGetUniformLocation(ws->program, "lightSourceCol4");
-    lightSourcePos4 = glGetUniformLocation(ws->program, "lightSourcePos4");
-    lightSourceCoef4 = glGetUniformLocation(ws->program, "lightSourceCoef4");
-
-    lightSource5    = glGetUniformLocation(ws->program, "lightSource5");
-    lightSourceTyp5 = glGetUniformLocation(ws->program, "lightSourceTyp5");
-    lightSourceCol5 = glGetUniformLocation(ws->program, "lightSourceCol5");
-    lightSourcePos5 = glGetUniformLocation(ws->program, "lightSourcePos5");
-    lightSourceCoef5 = glGetUniformLocation(ws->program, "lightSourceCoef5");
-
-    lightSource6    = glGetUniformLocation(ws->program, "lightSource6");
-    lightSourceTyp6 = glGetUniformLocation(ws->program, "lightSourceTyp6");
-    lightSourceCol6 = glGetUniformLocation(ws->program, "lightSourceCol6");
-    lightSourcePos6 = glGetUniformLocation(ws->program, "lightSourcePos6");
-    lightSourceCoef6 = glGetUniformLocation(ws->program, "lightSourceCoef6");
+    ws->shader.lightSource0     = glGetUniformLocation(ws->shader.program, "lightSource0");
+    ws->shader.lightSourceTyp0  = glGetUniformLocation(ws->shader.program, "lightSourceTyp0");
+    ws->shader.lightSourceCol0  = glGetUniformLocation(ws->shader.program, "lightSourceCol0");
+    ws->shader.lightSourcePos0  = glGetUniformLocation(ws->shader.program, "lightSourcePos0");
+    ws->shader.lightSourceCoef0 = glGetUniformLocation(ws->shader.program, "lightSourceCoef0");
+    ws->shader.lightSource1     = glGetUniformLocation(ws->shader.program, "lightSource1");
+    ws->shader.lightSourceTyp1  = glGetUniformLocation(ws->shader.program, "lightSourceTyp1");
+    ws->shader.lightSourceCol1  = glGetUniformLocation(ws->shader.program, "lightSourceCol1");
+    ws->shader.lightSourcePos1  = glGetUniformLocation(ws->shader.program, "lightSourcePos1");
+    ws->shader.lightSourceCoef1 = glGetUniformLocation(ws->shader.program, "lightSourceCoef1");
+    ws->shader.lightSource2     = glGetUniformLocation(ws->shader.program, "lightSource2");
+    ws->shader.lightSourceTyp2  = glGetUniformLocation(ws->shader.program, "lightSourceTyp2");
+    ws->shader.lightSourceCol2  = glGetUniformLocation(ws->shader.program, "lightSourceCol2");
+    ws->shader.lightSourcePos2  = glGetUniformLocation(ws->shader.program, "lightSourcePos2");
+    ws->shader.lightSourceCoef2 = glGetUniformLocation(ws->shader.program, "lightSourceCoef2");
+    ws->shader.lightSource3     = glGetUniformLocation(ws->shader.program, "lightSource3");
+    ws->shader.lightSourceTyp3  = glGetUniformLocation(ws->shader.program, "lightSourceTyp3");
+    ws->shader.lightSourceCol3  = glGetUniformLocation(ws->shader.program, "lightSourceCol3");
+    ws->shader.lightSourcePos3  = glGetUniformLocation(ws->shader.program, "lightSourcePos3");
+    ws->shader.lightSourceCoef3 = glGetUniformLocation(ws->shader.program, "lightSourceCoef3");
+    ws->shader.lightSource4     = glGetUniformLocation(ws->shader.program, "lightSource4");
+    ws->shader.lightSourceTyp4  = glGetUniformLocation(ws->shader.program, "lightSourceTyp4");
+    ws->shader.lightSourceCol4  = glGetUniformLocation(ws->shader.program, "lightSourceCol4");
+    ws->shader.lightSourcePos4  = glGetUniformLocation(ws->shader.program, "lightSourcePos4");
+    ws->shader.lightSourceCoef4 = glGetUniformLocation(ws->shader.program, "lightSourceCoef4");
+    ws->shader.lightSource5     = glGetUniformLocation(ws->shader.program, "lightSource5");
+    ws->shader.lightSourceTyp5  = glGetUniformLocation(ws->shader.program, "lightSourceTyp5");
+    ws->shader.lightSourceCol5  = glGetUniformLocation(ws->shader.program, "lightSourceCol5");
+    ws->shader.lightSourcePos5  = glGetUniformLocation(ws->shader.program, "lightSourcePos5");
+    ws->shader.lightSourceCoef5 = glGetUniformLocation(ws->shader.program, "lightSourceCoef5");
+    ws->shader.lightSource6     = glGetUniformLocation(ws->shader.program, "lightSource6");
+    ws->shader.lightSourceTyp6  = glGetUniformLocation(ws->shader.program, "lightSourceTyp6");
+    ws->shader.lightSourceCol6  = glGetUniformLocation(ws->shader.program, "lightSourceCol6");
+    ws->shader.lightSourcePos6  = glGetUniformLocation(ws->shader.program, "lightSourcePos6");
+    ws->shader.lightSourceCoef6 = glGetUniformLocation(ws->shader.program, "lightSourceCoef6");
     /* projection matrices */
-    ModelViewMatrix = glGetUniformLocation(ws->program, "ModelViewMatrix");
-    ProjectionMatrix = glGetUniformLocation(ws->program, "ProjectionMatrix");
+    ws->shader.ModelViewMatrix  = glGetUniformLocation(ws->shader.program, "ModelViewMatrix");
+    ws->shader.ProjectionMatrix = glGetUniformLocation(ws->shader.program, "ProjectionMatrix");
     /* Texture settings */
-    applyTexture = glGetUniformLocation(ws->program, "applyTexture");
-    sLoc = glGetUniformLocation(ws->program, "sPlane");
-    tLoc = glGetUniformLocation(ws->program, "tPlane");
-    glUniform4fv(sLoc, 1, s_plane);
-    glUniform4fv(tLoc, 1, t_plane);
+    ws->shader.applyTexture = glGetUniformLocation(ws->shader.program, "applyTexture");
+    ws->shader.sLoc = glGetUniformLocation(ws->shader.program, "sPlane");
+    ws->shader.tLoc = glGetUniformLocation(ws->shader.program, "tPlane");
+    glUniform4fv( ws->shader.sLoc, 1, ws->shader.s_plane);
+    glUniform4fv( ws->shader.tLoc, 1, ws->shader.t_plane);
     /*
       Order independent rendering needs a second program to resolve the
       per pixel fragment lists. Only the 4.20 fragment shader builds those
       lists, so for every other version oir_program stays zero and the
       rendering path is exactly what it always was.
     */
-    ws->oir_program = 0;
+    ws->shader.oir_program = 0;
     if (wsgl_frag_shader_version == 420 && ws->oir.mode > 0){
-      ws->oir_program = wsgl_build_program(vertex_shader_text_420_resolve,
+      ws->shader.oir_program = wsgl_build_program(vertex_shader_text_420_resolve,
                                            fragment_shader_text_420_resolve,
                                            "OIR resolve");
-      if (ws->oir_program == 0){
+      if (ws->shader.oir_program == 0){
         fprintf(stderr, "[ERROR] Could not build the order independent"
                 " rendering resolve program\n");
         abort();
       }
       /* fixme this should be stored in the workstation */
-      oirMode = glGetUniformLocation(ws->oir_program, "oirMode");
+      ws->shader.oirMode = glGetUniformLocation(ws->shader.oir_program, "oirMode");
       printf("[INFO] Order independent rendering enabled\n");
     }
     /* the geometry program has to be the current one when we return */
-    glUseProgram(ws->program);
+    glUseProgram(ws->shader.program);
   }
 }

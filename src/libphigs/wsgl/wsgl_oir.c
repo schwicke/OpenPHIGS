@@ -223,7 +223,7 @@ void wsgl_oir_resolve(Ws * ws){
   if (ws->oir.mode == 0) return;
   if (!wsgl_use_shaders) return;
   if (ws->oir.head_p_texture == 0) return;
-  if (ws->oir_program == 0) return;
+  if (ws->shader.oir_program == 0) return;
 
   /* make the appends of this frame visible to the reads below */
   glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT |
@@ -258,7 +258,7 @@ void wsgl_oir_resolve(Ws * ws){
   */
   glViewport(0, 0, (GLsizei) ws->oir.oir_width, (GLsizei) ws->oir.oir_height);
 
-  glUseProgram(ws->oir_program);
+  glUseProgram(ws->shader.oir_program);
   /*
     The quad is given in clip coordinates and vs420_resolve.vert passes it
     through unchanged, so the current matrices are irrelevant here.
@@ -270,7 +270,7 @@ void wsgl_oir_resolve(Ws * ws){
     glVertex4f(-1.0f,  1.0f, 0.0f, 1.0f);
   glEnd();
 
-  glUseProgram(ws->program);
+  glUseProgram(ws->shader.program);
   glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
   if (!blend) glDisable(GL_BLEND);
   if (!depth_test) glDisable(GL_DEPTH_TEST);

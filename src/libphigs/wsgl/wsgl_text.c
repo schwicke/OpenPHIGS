@@ -60,6 +60,7 @@ void wsgl_text_vertex3tcs(
  * RETURNS:  New position
  */
 static void wsgl_set_text_align(
+                                Ws *ws,
                                 Ptext *text,
                                 Ws_attr_st *ast,
                                 Ppoint pos,
@@ -79,7 +80,7 @@ static void wsgl_set_text_align(
   Pfloat lx, ly;
   Pfloat dx, dy;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_space = wsgl_get_char_space(ast);
   char_ht = ast->char_ht;
 
@@ -145,6 +146,7 @@ static void wsgl_set_text_align(
  * RETURNS:  New position
  */
 static void wsgl_set_text_align3(
+                                 Ws *ws,
                                  Ptext3 *text,
                                  Ws_attr_st *ast,
                                  Ppoint3 pos,
@@ -164,7 +166,7 @@ static void wsgl_set_text_align3(
   Pfloat lx, ly;
   Pfloat dx, dy, dz;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_space = wsgl_get_char_space(ast);
   char_ht = ast->char_ht;
 
@@ -233,6 +235,7 @@ static void wsgl_set_text_align3(
  * RETURNS:  New position
  */
 static void wsgl_set_anno_text_align(
+                                     Ws *ws,
                                      Ptext *text,
                                      Ws_attr_st *ast,
                                      Ppoint pos,
@@ -252,7 +255,7 @@ static void wsgl_set_anno_text_align(
   Pfloat lx, ly;
   Pfloat dx, dy;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_space = wsgl_get_char_space(ast);
   char_ht = ast->anno_char_ht;
 
@@ -318,6 +321,7 @@ static void wsgl_set_anno_text_align(
  * RETURNS:  New position
  */
 static void wsgl_set_anno_text_align3(
+                                      Ws *ws,
                                       Ptext3 *text,
                                       Ws_attr_st *ast,
                                       Ppoint3 pos,
@@ -337,7 +341,7 @@ static void wsgl_set_anno_text_align3(
   Pfloat lx, ly;
   Pfloat dx, dy, dz;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_space = wsgl_get_char_space(ast);
   char_ht = ast->anno_char_ht;
 
@@ -424,12 +428,12 @@ static void wsgl_text_string(
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
 
   posa.x = text->pos.x;
   posa.y = text->pos.y;
-  wsgl_set_text_align(text, ast, posa, &pos);
+  wsgl_set_text_align(ws, text, ast, posa, &pos);
 
   str = text->char_string;
 
@@ -495,7 +499,7 @@ static void wsgl_text_string3(
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
 
   posa.x = text->pos.x;
@@ -505,7 +509,7 @@ static void wsgl_text_string3(
   glLineStipple(2, 0xffff);
   glDisable(GL_LINE_STIPPLE);
 
-  wsgl_set_text_align3(text, ast, posa, &pos);
+  wsgl_set_text_align3(ws, text, ast, posa, &pos);
   len = strlen(str);
   for (i = 0; i < len; i++) {
 
@@ -568,13 +572,13 @@ static void wsgl_anno_text_string3(
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_ht = ast->anno_char_ht;
 
   posa.x = text->pos.x;
   posa.y = text->pos.y;
   posa.z = text->pos.z;
-  wsgl_set_anno_text_align3(text, ast, posa, &pos);
+  wsgl_set_anno_text_align3(ws, text, ast, posa, &pos);
 
   str = text->char_string;
   glLineStipple(2, 0xffff);
@@ -643,7 +647,7 @@ static void wsgl_text_char(
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
   char_space = wsgl_get_char_space(ast);
   text_path = ast->text_path;
@@ -651,7 +655,7 @@ static void wsgl_text_char(
 
   posa.x = text->pos.x;
   posa.y = text->pos.y;
-  wsgl_set_text_align(text, ast, posa, &pos);
+  wsgl_set_text_align(ws, text, ast, posa, &pos);
   str = text->char_string;
 
   len = strlen(str);
@@ -735,7 +739,7 @@ static void wsgl_text_char3(
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
   char_space = wsgl_get_char_space(ast);
   text_path = ast->text_path;
@@ -743,7 +747,7 @@ static void wsgl_text_char3(
   posa.x = text->pos.x;
   posa.y = text->pos.y;
   posa.z = text->pos.z;
-  wsgl_set_text_align3(text, ast, posa, &pos);
+  wsgl_set_text_align3(ws, text, ast, posa, &pos);
   glLineStipple(2, 0xffff);
   glDisable(GL_LINE_STIPPLE);
 
@@ -832,7 +836,7 @@ static void wsgl_anno_text_char3(
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_ht = ast->anno_char_ht;
   char_space = wsgl_get_char_space(ast);
   text_path = ast->anno_text_path;
@@ -841,7 +845,7 @@ static void wsgl_anno_text_char3(
   posa.x = text->pos.x;
   posa.y = text->pos.y;
   posa.z = text->pos.z;
-  wsgl_set_anno_text_align3(text, ast, posa, &pos);
+  wsgl_set_anno_text_align3(ws, text, ast, posa, &pos);
   str = text->char_string;
   glLineStipple(2, 0xffff);
   glDisable(GL_LINE_STIPPLE);
@@ -928,7 +932,7 @@ static void wsgl_text_stroke(
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
   char_space = wsgl_get_char_space(ast);
   text_path = ast->text_path;
@@ -940,7 +944,7 @@ static void wsgl_text_stroke(
 
   posa.x = text->pos.x;
   posa.y = text->pos.y;
-  wsgl_set_text_align(text, ast, posa, &pos);
+  wsgl_set_text_align(ws, text, ast, posa, &pos);
   str = text->char_string;
 
   len = strlen(str);
@@ -1039,7 +1043,7 @@ static void wsgl_text_stroke3(
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_ht = ast->char_ht;
   char_space = wsgl_get_char_space(ast);
   text_path = ast->text_path;
@@ -1052,7 +1056,7 @@ static void wsgl_text_stroke3(
   posa.x = text->pos.x;
   posa.y = text->pos.y;
   posa.z = text->pos.z;
-  wsgl_set_text_align3(text, ast, posa, &pos);
+  wsgl_set_text_align3(ws, text, ast, posa, &pos);
 
   glLineStipple(2, 0xffff);
   glDisable(GL_LINE_STIPPLE);
@@ -1155,7 +1159,7 @@ static void wsgl_anno_text_stroke3(
   int vertex_indices[MAX_VERTICES];
   int n_vertices = 0;
 
-  wsgl_setup_text_attr(ast, &fnt, &char_expan);
+  wsgl_setup_text_attr(ws, ast, &fnt, &char_expan);
   char_ht = ast->anno_char_ht;
   char_space = wsgl_get_char_space(ast);
   text_path = ast->anno_text_path;
@@ -1168,7 +1172,7 @@ static void wsgl_anno_text_stroke3(
   posa.x = text->pos.x;
   posa.y = text->pos.y;
   posa.z = text->pos.z;
-  wsgl_set_anno_text_align3(text, ast, posa, &pos);
+  wsgl_set_anno_text_align3(ws, text, ast, posa, &pos);
   str = text->char_string;
   glLineStipple(2, 0xffff);
   glDisable(GL_LINE_STIPPLE);

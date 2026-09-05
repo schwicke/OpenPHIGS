@@ -71,7 +71,7 @@ void sortFragments(int n){
  * GL_SRC_ALPHA / GL_ONE_MINUS_SRC_ALPHA blend puts it over the opaque image
  * correctly. This is the default mode.
  */
-vec4 finalColor0(int nfrag){
+vec4 finalColor1(int nfrag){
   vec3 acc = vec3(0.0, 0.0, 0.0);
   float alpha = 0.0;
   int i;
@@ -87,7 +87,7 @@ vec4 finalColor0(int nfrag){
 /* Alternative approach: start from the front and blend in stuff which is behind
    scaling by a factor (e.g. 0.6) to enforce fragments which are further away
    contribute less and being darker */
-vec4 finalColor1(int nfrag){
+vec4 finalColor2(int nfrag){
   vec3 acc = vec3(0.0, 0.0, 0.0);
   float alpha = 0.0;
   int i;

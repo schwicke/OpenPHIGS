@@ -37,16 +37,11 @@
 #include "private/wsglP.h"
 #include "private/wsxP.h"
 
-extern GLint shading_mode;
-extern GLint ModelViewMatrix, ProjectionMatrix;
-extern GLfloat s_plane[], t_plane[];
-
 GLint state1;
 GLboolean state2;
 
 // FIXME: this should be moved into a header file
 extern void wsgl_select_pattern(Ws * ws, unsigned short style_ind);
-extern GLint applyTexture;
 /*******************************************************************************
  * wsgl_set_matrix
  *
@@ -79,6 +74,7 @@ static void wsgl_set_matrix(
 }
 
 static void wsgl_set_model_view_matrix(
+                                       Ws *ws,
                                        Pmatrix3 mat
                                        )
 {
@@ -92,10 +88,11 @@ static void wsgl_set_model_view_matrix(
       mp++;
     }
   }
-  glUniformMatrix4fv(ModelViewMatrix, 1, FALSE, m);
+  glUniformMatrix4fv(ws->shader.ModelViewMatrix, 1, FALSE, m);
 }
 
 static void wsgl_set_projection_matrix(
+                                       Ws *ws,
                                        Pmatrix3 mat
                                        )
 {
@@ -108,7 +105,7 @@ static void wsgl_set_projection_matrix(
       mp++;
     }
   }
-  glUniformMatrix4fv(ProjectionMatrix, 1, FALSE, m);
+  glUniformMatrix4fv(ws->shader.ProjectionMatrix, 1, FALSE, m);
 }
 
 /*******************************************************************************
@@ -133,13 +130,13 @@ void wsgl_update_projection(
                 wsgl->pick_tran,
                 wsgl->cur_struct.view_rep.map_matrix);
     if (wsgl_use_shaders){
-      wsgl_set_projection_matrix(wsgl->model_tran);
+      wsgl_set_projection_matrix(ws, wsgl->model_tran);
     } else {
       wsgl_set_matrix(wsgl->model_tran, FALSE);
     }
   } else {
     if (wsgl_use_shaders){
-      wsgl_set_projection_matrix(wsgl->cur_struct.view_rep.map_matrix);
+      wsgl_set_projection_matrix(ws, wsgl->cur_struct.view_rep.map_matrix);
     } else {
       wsgl_set_matrix(wsgl->cur_struct.view_rep.map_matrix, FALSE);
     }
@@ -176,7 +173,7 @@ void wsgl_update_modelview(
               wsgl->cur_struct.view_rep.ori_matrix,
               wsgl->composite_tran);
   if (wsgl_use_shaders){
-    wsgl_set_model_view_matrix(wsgl->model_tran);
+    wsgl_set_model_view_matrix(ws, wsgl->model_tran);
   } else {
     wsgl_set_matrix(wsgl->model_tran, FALSE);
   }
@@ -719,6 +716,7 @@ void wsgl_set_line_ind(
  * RETURNS:    N/A
  */
 void wsgl_setup_line_attr(
+                          Ws *ws,
                           Ws_attr_st *ast
                           )
 {
@@ -767,7 +765,7 @@ void wsgl_setup_line_attr(
   }
   if (wsgl_use_shaders){
     glEnable(GL_LINE_SMOOTH);
-    glUniform1i(shading_mode, 0);
+    glUniform1i(ws->shader.shading_mode, 0);
   } else {
     glDisable(GL_LIGHTING);
   }
@@ -867,6 +865,7 @@ Pint_style wsgl_get_int_style(
  * RETURNS:    N/A
  */
 void wsgl_setup_int_style(
+                          Ws * ws,
                           Pint_style style
                           )
 {
@@ -874,24 +873,24 @@ void wsgl_setup_int_style(
   case PSTYLE_HOLLOW:
     glDisable(GL_POLYGON_STIPPLE);
     glDisable(GL_TEXTURE_2D);
-    glUniform1i(applyTexture, 0);
+    glUniform1i(ws->shader.applyTexture, 0);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     break;
 
   case PSTYLE_SOLID:
     glDisable(GL_POLYGON_STIPPLE);
     glDisable(GL_TEXTURE_2D);
-    glUniform1i(applyTexture, 0);
+    glUniform1i(ws->shader.applyTexture, 0);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     break;
 
   case PSTYLE_PATTERN:
     /* setup patterns */
-    glUniform1i(applyTexture, 1);
+    glUniform1i(ws->shader.applyTexture, 1);
     glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
     glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-    glTexGenfv(GL_S, GL_OBJECT_PLANE, s_plane);
-    glTexGenfv(GL_T, GL_OBJECT_PLANE, t_plane);
+    glTexGenfv(GL_S, GL_OBJECT_PLANE, ws->shader.s_plane);
+    glTexGenfv(GL_T, GL_OBJECT_PLANE, ws->shader.t_plane);
     glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
     glEnable(GL_TEXTURE_2D);
@@ -899,14 +898,14 @@ void wsgl_setup_int_style(
     break;
 
   case PSTYLE_HATCH:
-    glUniform1i(applyTexture, 0);
+    glUniform1i(ws->shader.applyTexture, 0);
     glEnable(GL_POLYGON_STIPPLE);
     glDisable(GL_TEXTURE_2D);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     break;
 
   default:
-    glUniform1i(applyTexture, 0);
+    glUniform1i(ws->shader.applyTexture, 0);
     glDisable(GL_POLYGON_STIPPLE);
     glDisable(GL_TEXTURE_2D);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -933,7 +932,7 @@ void wsgl_setup_int_attr_nocol(
 
   style = wsgl_get_int_style(ast);
   if (style != wsgl->dev_st.int_style) {
-    wsgl_setup_int_style(style);
+    wsgl_setup_int_style(ws, style);
     wsgl->dev_st.int_style = style;
   }
 
@@ -947,7 +946,7 @@ void wsgl_setup_int_attr_nocol(
   state1 = 0;
   state2 = GL_FALSE;
   if (wsgl_use_shaders){
-    glGetUniformiv(ws->program, applyTexture, &state1);
+    glGetUniformiv(ws->shader.program, ws->shader.applyTexture, &state1);
   } else {
     glGetBooleanv(GL_TEXTURE_2D, &state2);
   }
@@ -978,10 +977,10 @@ void wsgl_setup_int_attr_nocol(
 
   if (wsgl_use_shaders){
     if (wsgl->cur_struct.lighting) {
-      glUniform1i(shading_mode, 1);
+      glUniform1i(ws->shader.shading_mode, 1);
     }
     else {
-      glUniform1i(shading_mode, 0);
+      glUniform1i(ws->shader.shading_mode, 0);
     }
   } else {
     if (wsgl->cur_struct.lighting) {
@@ -1085,6 +1084,7 @@ Pfloat wsgl_get_edge_width(
  * RETURNS:    N/A
  */
 void wsgl_setup_edge_attr(
+                          Ws *ws,
                           Ws_attr_st *ast
                           )
 {
@@ -1129,7 +1129,7 @@ void wsgl_setup_edge_attr(
     break;
   }
   if (wsgl_use_shaders) {
-    glUniform1i(shading_mode, 0);
+    glUniform1i(ws->shader.shading_mode, 0);
   } else {
     glDisable(GL_LIGHTING);
   }
@@ -1168,6 +1168,7 @@ void wsgl_set_marker_ind(
  * RETURNS:    N/A
  */
 void wsgl_setup_marker_attr(
+                            Ws *ws,
                             Ws_attr_st *ast,
                             Pint *type,
                             Pfloat *size
@@ -1195,7 +1196,7 @@ void wsgl_setup_marker_attr(
     *size = ast->bundl_group.marker_bundle.size;
   }
   if (wsgl_use_shaders){
-    glUniform1i(shading_mode, 0);
+    glUniform1i(ws->shader.shading_mode, 0);
   } else {
     glDisable(GL_LIGHTING);
   }
@@ -1295,6 +1296,7 @@ Ptext_prec wsgl_get_text_prec(
  */
 
 void wsgl_setup_text_attr(
+                          Ws *ws,
                           Ws_attr_st *ast,
                           Phg_font **fnt,
                           Pfloat *char_expan
@@ -1331,7 +1333,7 @@ void wsgl_setup_text_attr(
   }
 
   if (wsgl_use_shaders){
-    glUniform1i(shading_mode, 0);
+    glUniform1i(ws->shader.shading_mode, 0);
   }
   else
     {
