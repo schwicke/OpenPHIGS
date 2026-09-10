@@ -12,11 +12,16 @@
  * transparent surface.
  *
  * The bindings have to match the ones wsgl_oir_reset() sets up, and the ones
- * fs420.frag appends through.
+ * fs430.frag appends through.
+ *
+ * The head pointer is a shader storage buffer of one uint per pixel, indexed
+ * as y * oirWidth + x, rather than a uimage2D -- see the matching comment in
+ * fs430.frag for why.
  */
-layout (binding = 0, r32ui)    coherent uniform uimage2D     head_pointer_image;
+layout (std430, binding = 0)   readonly buffer HeadPointers { uint head_pointers[]; };
 layout (binding = 1, rgba32ui) coherent uniform uimageBuffer list_buffer;
 uniform uint list_capacity;
+uniform uint oirWidth;
 
 #define MAX_FRAGMENTS 16
 #define LIST_END 0xFFFFFFFFu
@@ -46,12 +51,9 @@ uvec4 fragments[MAX_FRAGMENTS];
  */
 int createFragmentList(){
   int n = 0;
-  //ivec2 coord = ivec2(gl_FragCoord.xy);
-  //ivec2 sz = imageSize(head_pointer_image);
-  //  if (coord.x >= sz.x || coord.y >= sz.y) return 0;
-
   int steps = 0;
-  uint current = imageLoad(head_pointer_image, ivec2(gl_FragCoord.xy)).x;
+  uint headIndex = uint(gl_FragCoord.y) * oirWidth + uint(gl_FragCoord.x);
+  uint current = head_pointers[headIndex];
   while (current != LIST_END && steps < MAX_WALK){
     steps++;
     if (current >= list_capacity) break;
@@ -77,7 +79,18 @@ int createFragmentList(){
 
 /*
  * sortFragments: farthest fragment first, so that the loop in finalColor()
- * can composite each nearer fragment over what is already accumulated
+ * can composite each nearer fragment over what is already accumulated.
+ *
+ * createFragmentList() walks the list head first, i.e. most-recently-drawn
+ * first, so fragments[] arrives ordered newest..oldest. For two fragments at
+ * exactly the same depth (the common case for flat 2D overlays -- a banner
+ * box and the text drawn on top of it, all at Z=0) the comparison must still
+ * swap them: <= rather than < reverses ties, putting the newest (last drawn)
+ * one at the far end of the array, which finalColor() composites last, i.e.
+ * on top. With a strict <, equal-depth fragments keep their original
+ * newest-first order, so finalColor() would composite the newest one first
+ * (at the bottom) and the oldest one last (on top) -- backwards, and exactly
+ * what made a banner's background box hide the text drawn over it.
  */
 void sortFragments(int n){
   int i, j;
@@ -85,7 +98,7 @@ void sortFragments(int n){
     for (j=0; j<n-1-i; j++){
       float depth_j  = uintBitsToFloat(fragments[j].z);
       float depth_j1 = uintBitsToFloat(fragments[j+1].z);
-      if (depth_j < depth_j1){
+      if (depth_j <= depth_j1){
         uvec4 tmp = fragments[j];
         fragments[j] = fragments[j+1];
         fragments[j+1] = tmp;
