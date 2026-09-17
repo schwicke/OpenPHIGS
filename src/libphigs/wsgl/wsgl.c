@@ -48,8 +48,8 @@
 /* instantiate globals. */
 short int wsgl_use_shaders = 1;
 short int wsgl_use_shaders_settings = 0;
-short int wsgl_vert_shader_version = 420;
-short int wsgl_frag_shader_version = 420;
+short int wsgl_vert_shader_version = 430;
+short int wsgl_frag_shader_version = 430;
 
 #define LOG_INT(DATA)                                   \
   css_print_eltype(ELMT_HEAD(DATA)->elementType);       \

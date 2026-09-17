@@ -131,7 +131,9 @@ can be done via a call to PSCM(WKID, COLORMODE). Note that this call should be d
 Use
 
 COLORMODE=0 for PINDIRECT
+
 COLORMODE=1 for PMODEL_RGB
+
 COLORMODE=2 for PMODEL_RGBA
 
 ### Default colors
@@ -139,8 +141,9 @@ To pre-define some colors you can use
 
 CALL PXSCM(WKID)
 
-In COLORMODE=1 create 125 colors starting with index 16. Any colors with lower indices will not be touched.
-In COLORMODE=2 same as above. In addition, it will create 5 levels of transparent colors for all colors, with offset 200 with decreasing transparency. This is done as well for any existing colors with indices between 1 and 15.
+In RGB mode:  Create 125 colors starting with index 16. Any colors with lower indices will not be touched.
+
+In RGBA mode: In addition, create 6 levels of transparent colors for all colors, with offset 200 with decreasing transparency. This is done as well for any existing colors with indices between 1 and 15.
 
 ## Extensions
 ### Fortran bindings
@@ -149,14 +152,14 @@ In COLORMODE=2 same as above. In addition, it will create 5 levels of transparen
 * PXQHCSF(INTEGER IWK, REAL VALUE): Inquire the current scale factor for workstation ID WKID. The value is returned in the second argument.
 * PSFNAME(INTEGER IWK, CHARACTER FNAME): set output file name for workstation ID IWK
 * PXSCM(): Set color map
-* PXOIRM(InTEGER IWK, INTEGER mode): OIR mode. 0=OIR disabled, >0 number of layers per pixel
+* PXOIRM(INTEGER IWK, INTEGER mode): OIR mode. 0=OIR disabled, 1: Default blending, 2: Alternative blending
 
 ### C-bindings
-* pxset_conf_file_name(char* path): set the configuration location and file name
-* pxset_conf_hcsf(int wkid, Pfloat value): Set hardcopy scale factor for workstation ID WKID. Must be set before the workstation is being opened
+* void pxset_conf_file_name(char* path): set the configuration location and file name
+* void pxset_conf_hcsf(int wkid, Pfloat value): Set hardcopy scale factor for workstation ID WKID. Must be set before the workstation is being opened
 * Pfloat pxinq_conf_hcsf(int wkid): Inquire the current hardcopy scale factor for workstation ID WKID.
-* pxset_color_map(int wkid): set color map
-* pxset_oir_mode(int wkid, int mode): OIR mode. 0=OIR disabled, >0 number of layers per pixel
+* void pxset_color_map(int wkid): set color map
+* void pxset_oir_mode(int wkid, int mode): OIR mode. 0=OIR disabled,  1: Default blending, 2: Alternative blending
 
 ### Configuration file
 By default, OpenPHIGS will look for a file named phigs.def in the current directly, and use it to apply default values. This is where you can set window names, backgrounds etc. Explanations can be found in the template shipped with the distribution.

@@ -398,7 +398,7 @@ void wsgl_shaders(Ws * ws){
         printf("Detected Intel card.\n");
       } else {
         printf("Unknown vendor card.\n");
-        printf("Using default shaders version 1.20\n");
+        printf("Using default shaders version.\n");
       }
     }
     /*
