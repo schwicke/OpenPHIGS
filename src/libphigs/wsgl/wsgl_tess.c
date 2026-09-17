@@ -144,11 +144,11 @@ static void CALLBACK tessCombineCB(GLdouble coords[3],
           Wsgl_tess_vertex *vj = (Wsgl_tess_vertex *) vertex_data[j];
           if (vj == NULL || weight[j] == 0.0f || !vj->has_norm)
             continue;
-          nx += weight[j] * vj->norm[0];
-          ny += weight[j] * vj->norm[1];
-          nz += weight[j] * vj->norm[2];
+          nx += (double)weight[j] * (double)vj->norm[0];
+          ny += (double)weight[j] * (double)vj->norm[1];
+          nz += (double)weight[j] * (double)vj->norm[2];
         }
-        len = sqrt(nx*nx + ny*ny + nz*nz);
+        len = sqrt((double)nx*(double)nx + (double)ny*(double)ny + (double)nz*(double)nz);
         if (len > 1e-12) {
           new_vert->norm[0] = nx / len;
           new_vert->norm[1] = ny / len;
