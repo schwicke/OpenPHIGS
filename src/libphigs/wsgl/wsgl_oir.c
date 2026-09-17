@@ -75,28 +75,34 @@ static void wsgl_oir_dump_bindings(Ws * ws)
 
   if (done) return;
   done = 1;
-
+#ifdef DEBUGGL
   fprintf(stderr, "[OIR][DIAG] Vendor: %s, Renderer: %s\n",
           (const char *) glGetString(GL_VENDOR),
           (const char *) glGetString(GL_RENDERER));
-
+#endif
   glGetIntegeri_v(GL_SHADER_STORAGE_BUFFER_BINDING, OIR_HEAD_POINTER_BINDING, &ssbo_buf);
+#ifdef DEBUGGL
   fprintf(stderr, "[OIR][DIAG] SSBO binding %d (head pointer): buffer=%d"
           " (expected %u)\n", OIR_HEAD_POINTER_BINDING, ssbo_buf, ws->oir.head_p_buffer);
+#endif
   wsgl_oir_check_gl("glGetIntegeri_v(head pointer SSBO)");
 
   glGetIntegeri_v(GL_IMAGE_BINDING_NAME, OIR_LIST_BUFFER_UNIT, &name);
   glGetIntegeri_v(GL_IMAGE_BINDING_FORMAT, OIR_LIST_BUFFER_UNIT, &format);
   glGetIntegeri_v(GL_IMAGE_BINDING_ACCESS, OIR_LIST_BUFFER_UNIT, &access);
+#ifdef DEBUGGL
   fprintf(stderr, "[OIR][DIAG] image unit %d (fragment list): name=%d"
           " (expected %u), format=0x%04x (expected 0x%04x), access=0x%04x\n",
           OIR_LIST_BUFFER_UNIT, name, ws->oir.frag_storage_texture,
           format, GL_RGBA32UI, access);
+#endif
   wsgl_oir_check_gl("glGetIntegeri_v(fragment list image)");
 
   glGetIntegeri_v(GL_ATOMIC_COUNTER_BUFFER_BINDING, 0, &counter_buf);
+#ifdef DEBUGGL
   fprintf(stderr, "[OIR][DIAG] atomic counter binding point 0: buffer=%d"
           " (expected %u)\n", counter_buf, ws->oir.acounter_buffer);
+#endif
   wsgl_oir_check_gl("glGetIntegeri_v(atomic counter buffer)");
 
   if (ws->shader.program > 0){
@@ -106,11 +112,15 @@ static void wsgl_oir_dump_bindings(Ws * ws)
     if (loc >= 0) glGetUniformiv(ws->shader.program, loc, &enabled);
     loc = glGetUniformLocation(ws->shader.program, "list_capacity");
     if (loc >= 0) glGetUniformuiv(ws->shader.program, loc, &cap);
+#ifdef DEBUGGL
     fprintf(stderr, "[OIR][DIAG] 1st pass program %d: oirEnable=%d,"
             " list_capacity=%u (expected %u)\n",
             ws->shader.program, enabled, cap, ws->oir.frag_list_capacity);
+#endif
   }
+#ifdef DEBUGGL
   fprintf(stderr, "[OIR][DIAG] resolve program: %d\n", ws->shader.oir_program);
+#endif
 }
 
 /*******************************************************************************
@@ -431,8 +441,10 @@ void wsgl_oir_diag_readback(Ws * ws)
     for (s = 0; s < 5; s++){
       long x = samples[s][0], y = samples[s][1];
       long idx = (y * width + x) * 3;
+#ifdef DEBUGGL
       fprintf(stderr, "[OIR][DIAG]   pixel (%ld,%ld) = (%d,%d,%d)\n",
               x, y, pixels[idx], pixels[idx + 1], pixels[idx + 2]);
+#endif
     }
   }
   free(pixels);
