@@ -207,6 +207,8 @@ vec4 fragColor(vec4 inColor){
  * the head pointer is left alone. Without that check the store would go out
  * of range and the head would be made to point at an entry that does not
  * exist, which corrupts the lists of unrelated pixels.
+ * We store the index in the 4th component, which is used later on for proper sorting
+ * of the list.
  */
 bool appendFragment(vec4 fragCol){
   uint index = atomicCounterIncrement(index_counter);
@@ -217,7 +219,7 @@ bool appendFragment(vec4 fragCol){
   item.x = old_head;
   item.y = packUnorm4x8(fragCol);
   item.z = floatBitsToUint(gl_FragCoord.z);
-  item.w = 0u;
+  item.w = index;
   imageStore(list_buffer, int(index), item);
   return true;
 }

@@ -78,27 +78,23 @@ int createFragmentList(){
 }
 
 /*
- * sortFragments: farthest fragment first, so that the loop in finalColor()
- * can composite each nearer fragment over what is already accumulated.
- *
- * createFragmentList() walks the list head first, i.e. most-recently-drawn
- * first, so fragments[] arrives ordered newest..oldest. For two fragments at
- * exactly the same depth (the common case for flat 2D overlays -- a banner
- * box and the text drawn on top of it, all at Z=0) the comparison must still
- * swap them: <= rather than < reverses ties, putting the newest (last drawn)
- * one at the far end of the array, which finalColor() composites last, i.e.
- * on top. With a strict <, equal-depth fragments keep their original
- * newest-first order, so finalColor() would composite the newest one first
- * (at the bottom) and the oldest one last (on top) -- backwards, and exactly
- * what made a banner's background box hide the text drawn over it.
+ * Sort the fragments by Z value but respecting the order in which they
+ * have been added to the list, in case the Z value is the same. For this,
+ * we use the index which has been stored in the 4th component.
  */
+#define DEPTH_EPS 1e-6
+
 void sortFragments(int n){
   int i, j;
   for (i=0; i<n-1; i++){
     for (j=0; j<n-1-i; j++){
       float depth_j  = uintBitsToFloat(fragments[j].z);
       float depth_j1 = uintBitsToFloat(fragments[j+1].z);
-      if (depth_j <= depth_j1){
+      bool tied = abs(depth_j - depth_j1) < DEPTH_EPS;
+      bool shouldSwap = tied
+        ? (fragments[j].w > fragments[j+1].w)   /* equal depth: later draw goes on top */
+        : (depth_j < depth_j1);                 /* different depth: farther goes first */
+      if (shouldSwap){
         uvec4 tmp = fragments[j];
         fragments[j] = fragments[j+1];
         fragments[j+1] = tmp;
