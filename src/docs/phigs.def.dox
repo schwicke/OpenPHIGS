@@ -17,13 +17,13 @@
  * \section workstations Workstation specific settings
  * Define one section for each workstation. Each section starts with a \%wk, followed by a positive integer representing the workstation number. Definitions for workstation number 0 set the default for all other workstations. That is, settings following  \%wk 0 are applied to all workstations, \%wk 1 are only applied to workstation 1 and so on. Later definitions usually win. Available parameters depend on the workstation type as well.
  *
- * - \%oir <integer>        Order Independent Rendering mode. 0=disabled, 1=enabled with default algorith, 2=alternative algorith. Requires shaders and shader versions 4.30, and RGBA mode.
- * - \%lpp <integer>        OIR layers per pixel. Positive integer between 1 and 16. Defaults: 16
- * - \%bs <yes/no>          Backing store, yes or no
+ * - \%oir integer          Order Independent Rendering mode. 0=disabled, 1=enabled with default algorith, 2=alternative algorith. Requires shaders and shader versions 4.30, and RGBA mode.
+ * - \%lpp integer          OIR layers per pixel. Positive integer between 1 and 16. Defaults: 16
+ * - \%bs yes/no            Backing store, yes or no
  * - \%wn string            Set workstation name to string
  * - \%in string            set workstation icon name to string
- * - \%xe <yes/no>          return x events
- * - \%wr <yes/no>          Window is resizable or not
+ * - \%xe yes/no            return x events
+ * - \%wr yes/no            Window is resizable or not
  * - \%wg 512 512 0 0 1     Window width height px py and border size in pixel
  * - \%wp 0.0 1.0 0.0 1.    Window positition
  * - \%bg  0. 0. 0.         Background color in RGB mode

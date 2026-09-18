@@ -89,6 +89,20 @@ static const Wsgl_shader_set wsgl_shader_sets[] = {
   (sizeof(wsgl_shader_sets) / sizeof(wsgl_shader_sets[0]))
 
 /*******************************************************************************
+ * Wsgl_shader_match
+ *
+ * DESCR:       Tries to match the best shader version
+ * RETURNS:     shader version or 0 if failed
+ */
+short int Wsgl_shader_match(int driver_glsl){
+  if (driver_glsl < 120) return 0;
+  if (driver_glsl >=120 && driver_glsl <130) return 120;
+  if (driver_glsl >=130 && driver_glsl <420) return 130;
+  if (driver_glsl >=420 && driver_glsl <430) return 420;
+  return 430;
+}
+
+/*******************************************************************************
  * wsgl_shader_source
  *
  * DESCR:	Look up the built in source of one shader stage
@@ -398,7 +412,6 @@ void wsgl_shaders(Ws * ws){
         printf("Detected Intel card.\n");
       } else {
         printf("Unknown vendor card.\n");
-        printf("Using default shaders version.\n");
       }
     }
     /*
@@ -412,12 +425,34 @@ void wsgl_shaders(Ws * ws){
         fprintf(stderr, "WARNING: Requested vertex shader version %d is newer"
                 " than the %d supported by the driver\n",
                 wsgl_vert_shader_version, driver_glsl);
+        wsgl_vert_shader_version = Wsgl_shader_match(driver_glsl);
+        if (wsgl_vert_shader_version > 0){
+          fprintf(stderr, "WARNING: Switching to %d\n", wsgl_vert_shader_version);
+        } else {
+          fprintf(stderr, "WARNING: Unable to find a matching shader version\n");
+          wsgl_use_shaders = 0;
+          return;
+        }
       }
       if (wsgl_frag_shader_version > driver_glsl){
         fprintf(stderr, "WARNING: Requested fragment shader version %d is newer"
                 " than the %d supported by the driver\n",
                 wsgl_frag_shader_version, driver_glsl);
+        wsgl_frag_shader_version = Wsgl_shader_match(driver_glsl);
+        if (wsgl_frag_shader_version > 0){
+          fprintf(stderr, "WARNING: Switching to %d\n", wsgl_vert_shader_version);
+        } else {
+          fprintf(stderr, "WARNING: Unable to find a matching shader version\n");
+          wsgl_use_shaders = 0;
+          return;
+        }
       }
+    }
+    if (ws->oir.mode > 0 && wsgl_frag_shader_version < 430){
+      fprintf(stderr, "WARNING: order independent rendering needs shader"
+              " version 430 or later (configured: %d). Continuing with OIR"
+              " disabled for this workstation.\n", wsgl_frag_shader_version);
+      ws->oir.mode = 0;
     }
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -513,31 +548,26 @@ void wsgl_shaders(Ws * ws){
     glUniform4fv( ws->shader.tLoc, 1, ws->shader.t_plane);
     /* location of uniform oirMode in first pass program */
     ws->shader.oirModeLoc = -1;
-    ws->shader.oirModeLoc = glGetUniformLocation(ws->shader.program, "oirEnable");
-    /* set shading OIR mode in default program */
-    if (ws->shader.oirModeLoc >= 0){
-      glProgramUniform1i(ws->shader.program, ws->shader.oirModeLoc, ws->oir.mode);
-    } else {
-      printf("ERROR initialising OIR mode in 1st pass program. Aborting.");
-      exit(1);
-    }
-    /*
-      Order independent rendering needs a second program to resolve the
-      per pixel fragment lists. Only the 4.30 fragment shader builds those
-      lists (the head pointer needs an SSBO, which is not reliably available
-      as a 4.20 extension across the hardware/drivers this runs on -- see
-      the comment on wsgl_oir_wanted() in wsgl_oir.c), so for every other
-      version oir_program stays zero and the rendering path is exactly what
-      it always was.
-    */
-    ws->shader.oir_program = 0;
-    ws->shader.oirMode = -1;
-    if (ws->oir.mode > 0 && wsgl_frag_shader_version < 430){
-      fprintf(stderr, "WARNING: order independent rendering needs shader"
-              " version 430 or later (configured: %d). Continuing with OIR"
-              " disabled for this workstation.\n", wsgl_frag_shader_version);
-    }
-    else if (ws->oir.mode > 0){
+    if (ws->oir.mode > 0){
+      ws->shader.oirModeLoc = glGetUniformLocation(ws->shader.program, "oirEnable");
+      /* set shading OIR mode in default program */
+      if (ws->shader.oirModeLoc >= 0){
+	glProgramUniform1i(ws->shader.program, ws->shader.oirModeLoc, ws->oir.mode);
+      } else {
+	printf("ERROR initialising OIR mode in 1st pass program. Aborting.");
+	exit(1);
+      }
+      /*
+	Order independent rendering needs a second program to resolve the
+	per pixel fragment lists. Only the 4.30 fragment shader builds those
+	lists (the head pointer needs an SSBO, which is not reliably available
+	as a 4.20 extension across the hardware/drivers this runs on -- see
+	the comment on wsgl_oir_wanted() in wsgl_oir.c), so for every other
+	version oir_program stays zero and the rendering path is exactly what
+	it always was.
+      */
+      ws->shader.oir_program = 0;
+      ws->shader.oirMode = -1;
       if (wsgl_frag_shader_version == 430 ){
         ws->shader.oir_program = wsgl_build_program(vertex_shader_text_430_resolve,
                                                     fragment_shader_text_430_resolve,
