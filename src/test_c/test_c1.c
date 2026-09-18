@@ -220,10 +220,10 @@ int main(int argc, char *argv[])
    pset_ws_win3(0, &win);
    pset_hlhsr_mode(0, PHIGS_HLHSR_MODE_ZBUFF);
 
-   col_rep.rgba.red = 0.0;
-   col_rep.rgba.green = 0.25;
-   col_rep.rgba.blue = 0.25;
-   col_rep.rgba.alpha = 1.0;
+   col_rep.rgba.red = 0.5;
+   col_rep.rgba.green = 0.5;
+   col_rep.rgba.blue = 0.5;
+   col_rep.rgba.alpha = 0.8;
    pset_colr_rep(0, 0, &col_rep);
 
    col_rep.rgba.red = 0.0;
