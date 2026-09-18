@@ -676,7 +676,7 @@ int wsgl_setup_int_colr(
 #ifdef DEBUGLIGHT
     printf("wsgl_setup_int_colr: Setup int color\n");
 #endif
-    // US broken?    wsgl_setup_int_refl_props(colr_type, colr, ast);
+    wsgl_setup_int_refl_props(ws, colr_type, colr, ast);
     wsgl_setup_int_reflectance_model(ws, colr_type, colr, ast);
     lighting = TRUE;
   }
@@ -743,7 +743,7 @@ int wsgl_setup_back_int_colr(
 #ifdef DEBUGLIGHT
     printf("Setup back int color\n");
 #endif
-    //US broken ? wsgl_setup_back_int_refl_props(colr_type, colr, ast);
+    wsgl_setup_back_int_refl_props(ws, colr_type, colr, ast);
     wsgl_setup_int_reflectance_model(ws, colr_type, colr, ast);
     lighting = TRUE;
   }
