@@ -220,7 +220,7 @@ void main()
   vec4 col = fragColor(Color);
   /* see the matching branch in fs430.frag for why opaque fragments must
      bypass the list */
-  if (oirEnable == 0 || col.a >= 1.0){
+  if (oirEnable == 0){
     gl_FragColor = col;    /* OIR disabled, or opaque: straight out */
   } else {
     if (!appendFragment(col)) {

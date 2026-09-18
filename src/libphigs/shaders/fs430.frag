@@ -234,7 +234,7 @@ void main()
    * lose early entries, such as an opaque fill sitting underneath
    * everything else drawn that frame).
    */
-  if (oirEnable == 0 || col.a >= 1.0){
+  if (oirEnable == 0 ){
     gl_FragColor = col;    /* OIR disabled, or opaque: straight out */
   } else {
     if (!appendFragment(col)) {
