@@ -12,7 +12,7 @@ config:	clean
 build:	config
 	cd build && cmake --build .
 docs:	config
-	cd build && which doxygen >/dev/null 2>&1 && make docs
+	cd build && which doxygen >/dev/null 2>&1 && make docs; /bin/false
 install: build
 	cd build && cmake --install . --prefix ../distrib
 clean:
