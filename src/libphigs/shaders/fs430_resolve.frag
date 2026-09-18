@@ -33,11 +33,22 @@ uniform uint oirWidth;
   shader, and with it the display.
 */
 #define MAX_WALK 256
+#define DEPTH_EPS 1e-6
 
 /* Define the mode in which the final color is calculated */
 uniform int oirMode;
 
 uvec4 fragments[MAX_FRAGMENTS];
+
+/* returns true if a is farther (less important to keep) than b under the
+   same (depth, draw-order) ordering used by sortFragments() */
+bool isFarther(uvec4 a, uvec4 b){
+  float da = uintBitsToFloat(a.z);
+  float db = uintBitsToFloat(b.z);
+  if (abs(da - db) < DEPTH_EPS)
+    return a.w < b.w;         /* tied: earlier draw is "farther" (less kept) */
+  return da > db;             /* larger depth = farther */
+}
 
 /*
  * createFragmentList: collect the fragments of this pixel, head first.
@@ -65,13 +76,11 @@ int createFragmentList(){
     } else {
       /* full: let this fragment displace the farthest one held, if nearer */
       int far = 0;
-      float fardepth = uintBitsToFloat(fragments[0].z);
       int i;
       for (i = 1; i < MAX_FRAGMENTS; i++){
-        float d = uintBitsToFloat(fragments[i].z);
-        if (d > fardepth){ fardepth = d; far = i; }
+        if (isFarther(fragments[i], fragments[far])) far = i;
       }
-      if (uintBitsToFloat(item.z) < fardepth) fragments[far] = item;
+      if (isFarther(fragments[far], item)) fragments[far] = item;
     }
   }
   return(n);
@@ -82,7 +91,6 @@ int createFragmentList(){
  * have been added to the list, in case the Z value is the same. For this,
  * we use the index which has been stored in the 4th component.
  */
-#define DEPTH_EPS 1e-6
 
 void sortFragments(int n){
   int i, j;
