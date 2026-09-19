@@ -35,8 +35,14 @@ void pdel_struct(
                  Pint struct_id
                  )
 {
+  Struct_handle exists;
+
   if (phg_entry_check(PHG_ERH, ERR2, Pfn_del_struct)) {
-    phg_del_struct(PHG_CSS, struct_id);
+    exists = CSS_STRUCT_EXISTS(PHG_CSS, struct_id);
+    if (exists != NULL){
+      phg_del_struct(PHG_CSS, struct_id);
+    } else {
+      ERR_REPORT(PHG_ERH, ERR200);
+    }
   }
 }
-
