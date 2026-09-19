@@ -53,12 +53,13 @@ set(GLEW_VERBOSE ON)
 
 # for debugging
 add_definitions(-g)
+# add_definitions(-DGLDEBUG)   # to get GL debugging messages and trap severe once
 # add_definitions(-DTEST)
 # add_definitions(-DDEBUGA)
 # add_definitions(-DDEBUG)
 # add_definitions(-DDEBUGL)
 # add_definitions(-DDEBUGINP)
-#add_definitions(-DDEBUGCL)
+# add_definitions(-DDEBUGCL)
 #
 # use Motif widgets rather than Xaw
 add_definitions(-DMOTIF)

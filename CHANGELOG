@@ -11,12 +11,85 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Order independent rendering
 * Sissor test in x-y plane
 * Tesselation shader
-* additional C and Fortran bindings
+* Additional C and Fortran bindings
 * Documentation via Doxygen
 
 ### Changed
 * Cleanup of global variables for OpenGL
 * Updated contributor list
+
+### Removed
+
+## [v0.6-2]  2026-07-24
+
+### Added
+* Add edge type fortran binding and fix polyline drawing
+
+### Changed
+* Bug fixings
+
+### Removed
+
+## [v0.6-1]  2026-07-20
+
+### Added
+* Pattern filling support with two sample patterns
+
+### Changed
+* Bug fixings
+
+### Removed
+
+## [v0.5-1]  2026-06-30
+
+### Added
+* Improved support for transparency
+* tesselation to fix filling of concave surfaces
+
+### Changed
+* Bug fixings
+
+### Removed
+
+## [v0.4-1]  2026-03-04
+
+### Added
+* support for a second clipping plane
+
+### Changed
+* Bug fixes
+* improve Wayland support
+* Fix edge-cases on Mac
+
+### Removed
+
+## [v0.3-1]  2025-08-14
+
+### Added
+*  Functions to manage the scale factor programmatically
+
+### Changed
+*  C style fixings
+*  test_f5 review, code improvements
+* clipping review
+
+### Removed
+
+## [v0.2-1]  2025-08-01
+
+### Added
+*  Scale factor for hardcopies
+
+### Changed
+
+### Removed
+
+## [v0.1-1]  2025-06-09
+
+### Added
+
+### Changed
+* Fixes for exotic hardware
 
 ### Removed
 

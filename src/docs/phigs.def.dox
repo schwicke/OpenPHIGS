@@ -7,18 +7,23 @@
  * \section global Global options
  * Global options determine general features of the library
  * - \%gs 1                 Use shaders (1) or not (0)
- * - \%vs 420               Vertex shader version, can be 120 or 420
- * - \%fs 420               Fragment shader version, can be 120 or 420
+ * - \%vs 430               Vertex shader version, can be 120, 420 or 430
+ * - \%fs 430               Fragment shader version, can be 120, 420 or 430
  * - \%pc 1                 print configuration if set to 1. Set to 0 to disable dumping of configuration parameters.
+ *
+ * \section workstation specific defaults
+ * Workstation related sections start with \%wk, followed by the workstation number. The value 0 has a special meaning: Values defined for workstation number 0 are taken as defaults for all workstations, and can be overwritten by an additional section for workstation numbers larger than zero.
  *
  * \section workstations Workstation specific settings
  * Define one section for each workstation. Each section starts with a \%wk, followed by a positive integer representing the workstation number. Definitions for workstation number 0 set the default for all other workstations. That is, settings following  \%wk 0 are applied to all workstations, \%wk 1 are only applied to workstation 1 and so on. Later definitions usually win. Available parameters depend on the workstation type as well.
  *
- * - \%bs <yes/no>          Backing store, yes or no
+ * - \%oir integer          Order Independent Rendering mode. 0=disabled, 1=enabled with default algorith, 2=alternative algorith. Requires shaders and shader versions 4.30, and RGBA mode.
+ * - \%lpp integer          OIR layers per pixel. Positive integer between 1 and 16. Defaults: 16
+ * - \%bs yes/no            Backing store, yes or no
  * - \%wn string            Set workstation name to string
  * - \%in string            set workstation icon name to string
- * - \%xe <yes/no>          return x events
- * - \%wr <yes/no>          Window is resizable or not
+ * - \%xe yes/no            return x events
+ * - \%wr yes/no            Window is resizable or not
  * - \%wg 512 512 0 0 1     Window width height px py and border size in pixel
  * - \%wp 0.0 1.0 0.0 1.    Window positition
  * - \%bg  0. 0. 0.         Background color in RGB mode

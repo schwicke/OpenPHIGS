@@ -52,7 +52,7 @@
  *
  * This functions is an extension to PHIGS.
  * - In COLORMODE=1 it creates 125 colors starting with index 16. Any colors with lower indices will not be touched.
- * - COLORMODE=2 does same as 1. In addition, it creates 5 levels of transparent colors for all colors, with offset 200 with decreasing transparency. This is done as well for any existing colors with indices between 1 and 15.
+ * - COLORMODE=2 does same as 1. In addition, it creates 6 levels of transparent colors for all colors, with offset 200 with decreasing transparency. This is done as well for any existing colors with indices between 1 and 15.
  *
  * The color mode is set with pxscm.
  *
@@ -61,20 +61,22 @@
 void pxset_color_map(Pint ws_id){
   int i, j, k, l;
   int n = 5;
-  int index = 0;
+  int na = 6;
+  int index;
   int offset = 16;
   float delta_n = 1.0/(n-1);
   Pcolr_rep rep;
   Ws_handle wsh;
   Pgcolr gcolr;
-  Pfloat def_alpha[n+1];
-  memcpy(def_alpha, (float[]) { 1.0, 0.8, 0.6, 0.4, 0.3, 0.1}, sizeof def_alpha);
+  Pfloat def_alpha[na];
+  memcpy(def_alpha, (float[]) { 1.0, 0.7, 0.4, 0.2, 0.1, 0.05}, sizeof def_alpha);
 
   wsh = PHG_WSID(ws_id);
   switch (wsh->current_colour_model){
   case PINDIRECT:
     break;
   case PMODEL_RGB:
+    index = 0;
     for (i=0; i<n; i++){
       for (j=0; j<n; j++){
         for (k=0; k<n; k++){
@@ -91,28 +93,30 @@ void pxset_color_map(Pint ws_id){
     }
     break;
   case PMODEL_RGBA:
-    for (i=0; i<=n; i++){
-      index = 0;
+    index = 0;
+    for (i=0; i<n; i++){
       for (j=0; j<n; j++){
         for (k=0; k<n; k++){
           for (l=0; l<n; l++){
-            rep.rgba.red   = j*delta_n;
-            rep.rgba.green = k*delta_n;
-            rep.rgba.blue  = l*delta_n;
-            rep.rgba.alpha = def_alpha[i];
-            pset_colr_rep(ws_id, offset+index+200*i, &rep);
+            rep.rgba.red   = i*delta_n;
+            rep.rgba.green = j*delta_n;
+            rep.rgba.blue  = k*delta_n;
+            for (l=0;l<na;l++){
+              rep.rgba.alpha = def_alpha[l];
+              pset_colr_rep(ws_id, offset+index+200*l, &rep);
 #ifdef DEBUGA
-            printf("Defining color index %d as RGBA %f %f %f %f\n",
-                   offset+index+200*i,
-                   rep.rgba.red, rep.rgba.green, rep.rgba.blue, rep.rgba.alpha);
+              printf("Defining color index %d as RGBA %f %f %f %f\n",
+                     offset+index+200*i,
+                     rep.rgba.red, rep.rgba.green, rep.rgba.blue, rep.rgba.alpha);
 #endif
+            }
             index += 1;
           }
         }
       }
     }
     /* Redefine any existing colors with transparency */
-    for (i=0;i<=16;i++){
+    for (i=0;i<offset;i++){
       phg_get_colr_ind(wsh, &gcolr, i);
       switch (gcolr.type){
       case PINDIRECT:
@@ -120,7 +124,7 @@ void pxset_color_map(Pint ws_id){
       case PMODEL_RGB:
         break;
       case PMODEL_RGBA:
-        for (j=1;j<=n;j++){
+        for (j=0;j<na;j++){
           rep.rgba.red   = gcolr.val.general.x;
           rep.rgba.green = gcolr.val.general.y;
           rep.rgba.blue  = gcolr.val.general.z;
@@ -129,7 +133,7 @@ void pxset_color_map(Pint ws_id){
           printf("Re-defining color index %d as RGBA %f %f %f %f\n",
                  i+200*j, rep.rgba.red, rep.rgba.green, rep.rgba.blue, rep.rgba.alpha);
 #endif
-          pset_colr_rep(ws_id, i+200*j, &rep);
+          pset_colr_rep(ws_id, i+200*(j+1), &rep);
         }
         break;
       default:

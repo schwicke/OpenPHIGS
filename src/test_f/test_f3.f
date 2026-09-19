@@ -30,76 +30,89 @@ C *****************************************************************************
       SUBROUTINE INITCOLS(IWK1)
       COMMON /KXCCOL/ NCOL, IBLACK, IWHIT, IRED, IGREEN, IBLUE, IYEL,
      ,                IGREY, IMAG, ICYAN, IORAN, ICOL(7),
-     ,                COLR(16), COLG(16), COLB(16)
+     ,                COLR(16), COLG(16), COLB(16), COLA(16)
       INTEGER         NCOL, IBLACK, IWHIT, IRED, IGREEN, IBLUE, IYEL,
      ,                IGREY, IMAG, ICYAN, IORAN, ICOL, ICLTB(16)
-      REAL            COLR    ,COLG     ,COLB
+      REAL            COLR    ,COLG     ,COLB, COLA
       EQUIVALENCE    (IBLACK, ICLTB)
-      REAL            FCOLR(3)
+      REAL            FCOLR(4)
       INTEGER IWK1
       NCOL = 7
       IBLACK = 1
       COLR(1) = 0.0
       COLG(1) = 0.0
       COLB(1) = 0.0
+      COLA(1) = 1.0
 
       IWHITE = 2
       COLR(2) = 1.0
       COLG(2) = 1.0
       COLB(2) = 1.0
+      COLA(2) = 1.0
 
       IRED = 3
       COLR(3) = 1.0
       COLG(3) = 0.0
       COLB(3) = 0.0
+      COLA(3) = 0.5
 
       IGREEN = 4
       COLR(4) = 0.0
       COLG(4) = 1.0
       COLB(4) = 0.0
+      COLA(4) = 1.0
 
       IBLUE = 5
       COLR(5) = 0.0
       COLG(5) = 0.0
       COLB(5) = 1.0
+      COLA(5) = 1.0
 
       IYEL = 6
       COLR(6) = 0.0
       COLG(6) = 1.0
       COLB(6) = 0.0
+      COLA(6) = 1.0
 
       IGREY = 7
       COLR(7) = 0.7
       COLG(7) = 0.7
       COLB(7) = 0.7
+      COLA(7) = 1.0
 
       DO I=1, NCOL
          FCOLR(1) = COLR(I)
          FCOLR(2) = COLG(I)
          FCOLR(3) = COLB(I)
-         CALL PSCR (IWK1, I, 3, FCOLR)
+         FCOLR(4) = COLA(I)
+         CALL PSCR (IWK1, I, 4, FCOLR)
       END DO
 
       FCOLR(1) = 1.0
       FCOLR(2) = 1.0
       FCOLR(3) = 1.0
-      CALL PSCR (IWK1, 150, 3, FCOLR)
+      FCOLR(4) = 1.
+      CALL PSCR (IWK1, 150, 4, FCOLR)
       FCOLR(1) = 0.0
       FCOLR(2) = 0.0
       FCOLR(3) = 0.0
-      CALL PSCR (IWK1, 151, 3, FCOLR)
+      FCOLR(4) = 1.
+      CALL PSCR (IWK1, 151, 4, FCOLR)
       FCOLR(1) = 1.0
       FCOLR(2) = 1.0
       FCOLR(3) = 0.0
-      CALL PSCR (IWK1, 152, 3, FCOLR)
+      FCOLR(4) = 1.
+      CALL PSCR (IWK1, 152, 4, FCOLR)
       FCOLR(1) = 0.0
       FCOLR(2) = 1.0
       FCOLR(3) = 1.0
-      CALL PSCR (IWK1, 153, 3, FCOLR)
+      FCOLR(4) = 1.
+      CALL PSCR (IWK1, 153, 4, FCOLR)
       FCOLR(1) =  0.8
       FCOLR(2) =  0.8
       FCOLR(3) =  0.8
-      CALL PSCR (IWK1, 154, 3, FCOLR)
+      FCOLR(4) = 1.
+      CALL PSCR (IWK1, 154, 4, FCOLR)
 
       END
 
@@ -142,10 +155,10 @@ CDECK  ID>, KYDELP.
 *
       COMMON /KXCCOL/ NCOL, IBLACK, IWHIT, IRED, IGREEN, IBLUE, IYEL,
      ,                IGREY,IMAG, ICYAN, IORAN, ICOL(7),
-     ,                COLR(16), COLG(16), COLB(16)
+     ,                COLR(16), COLG(16), COLB(16), COLA(16)
       INTEGER         NCOL, IBLACK, IWHIT, IRED, IGREEN, IBLUE, IYEL,
      ,                IGREY,IMAG, ICYAN, IORAN, ICOL, ICLTB(16)
-      REAL            COLR    ,COLG     ,COLB
+      REAL            COLR    ,COLG     ,COLB,  COLA
       EQUIVALENCE    (IBLACK, ICLTB)
 *
       INTEGER    NPT1      , NPT2      , NPT3      , NPT4
@@ -503,7 +516,59 @@ CDECK  ID>, KYDELP.
         CALL PSIS(PISEMP)
       END
 
-      PROGRAM DRAWLINE
+      SUBROUTINE BOX(IWK1)
+      IMPLICIT NONE
+      INCLUDE 'phigsf77.h'
+      INTEGER IWK1
+      REAL FCOLR(4), XB(5), YB(5)
+      
+      FCOLR(1) =  0.8
+      FCOLR(2) =  0.8
+      FCOLR(3) =  0.8
+      FCOLR(4) = 1.0
+      CALL PSCR (IWK1, 154, 4, FCOLR)
+      CALL PSIS (PSOLID)
+      CALL PSEWSC (1.0)
+      CALL PSEDFG (0)
+      CALL PSICI (154)
+      XB(1) = 0.3
+      XB(2) = 0.7
+      XB(3) = XB(2)
+      XB(4) = XB(1)
+      XB(5) = XB(1)
+      YB(1) = 0.5
+      YB(2) = YB(1)
+      YB(3) = 0.4
+      YB(4) = YB(3)
+      YB(5) = YB(1)
+      CALL PFA (5, XB, YB)
+      XB(1) = 0.3
+      XB(2) = 0.7
+      XB(3) = XB(2)
+      XB(4) = XB(1)
+      XB(5) = XB(1)
+      YB(1) = 0.6
+      YB(2) = YB(1)
+      YB(3) = 0.5
+      YB(4) = YB(3)
+      YB(5) = YB(1)
+      CALL PSIS (PHATCH)
+      CALL PFA (5, XB, YB)
+      XB(1) = 0.3
+      XB(2) = 0.7
+      XB(3) = XB(2)
+      XB(4) = XB(1)
+      XB(5) = XB(1)
+      YB(1) = 0.7
+      YB(2) = YB(1)
+      YB(3) = 0.6
+      YB(4) = YB(3)
+      YB(5) = YB(1)
+      CALL PSIS (PPATTR)
+      CALL PFA (5, XB, YB)
+      END
+      
+      PROGRAM DOLPHIN
 
 C      Include PHIGS enumeration file
       INCLUDE 'phigsf77.h'
@@ -515,13 +580,17 @@ C     Open PHIGS and a workstation
       CALL POPPH(0, 1)
       CALL POPWK(IWK, 0, 3)
 
+C     Change color model to RGBA
+      CALL PSCM(IWK, PRGBA)
+
 C     Initialize colors
       CALL INITCOLS(IWK)
 
-C      Open structure
+C     Open structure
       CALL POPST(0)
       CALL PSIASF(13, 1)
-      CALL KYDELP(0.3, 0.5, 1.)
+      CALL BOX(IWK)
+      CALL KYDELP(0.4, 0.45, 1.)
 C
 C     Close structure
       CALL PCLST

@@ -1,4 +1,4 @@
-#version 420 compatibility
+#version 430 compatibility
 /*
  * Order independent rendering, pass 2 of 2: resolve.
  *
@@ -12,17 +12,16 @@
  * transparent surface.
  *
  * The bindings have to match the ones wsgl_oir_reset() sets up, and the ones
- * fs420.frag appends through.
+ * fs430.frag appends through.
  *
- * NOTE: not actually built/used any more (wsgl_oir_wanted() in wsgl_oir.c
- * requires 4.30+); kept only so this file stays close to
- * fs430_resolve.frag's structure. See the matching note in fs420.frag for
- * why it does not use an SSBO for the head pointer, unlike fs430_resolve.frag.
+ * The head pointer is a shader storage buffer of one uint per pixel, indexed
+ * as y * oirWidth + x, rather than a uimage2D -- see the matching comment in
+ * fs430.frag for why.
  */
-layout (binding = 0, r32ui)    coherent uniform uimage2D     head_pointer_image;
+layout (std430, binding = 0)   readonly buffer HeadPointers { uint head_pointers[]; };
 layout (binding = 1, rgba32ui) coherent uniform uimageBuffer list_buffer;
-/* entries the fragment list holds, set by wsgl_oir_reset() */
 uniform uint list_capacity;
+uniform uint oirWidth;
 
 #define MAX_FRAGMENTS 16
 #define LIST_END 0xFFFFFFFFu
@@ -34,11 +33,22 @@ uniform uint list_capacity;
   shader, and with it the display.
 */
 #define MAX_WALK 256
+#define DEPTH_EPS 1e-6
 
 /* Define the mode in which the final color is calculated */
 uniform int oirMode;
 
 uvec4 fragments[MAX_FRAGMENTS];
+
+/* returns true if a is farther (less important to keep) than b under the
+   same (depth, draw-order) ordering used by sortFragments() */
+bool isFarther(uvec4 a, uvec4 b){
+  float da = uintBitsToFloat(a.z);
+  float db = uintBitsToFloat(b.z);
+  if (abs(da - db) < DEPTH_EPS)
+    return a.w < b.w;         /* tied: earlier draw is "farther" (less kept) */
+  return da > db;             /* larger depth = farther */
+}
 
 /*
  * createFragmentList: collect the fragments of this pixel, head first.
@@ -53,14 +63,10 @@ uvec4 fragments[MAX_FRAGMENTS];
 int createFragmentList(){
   int n = 0;
   int steps = 0;
-  uint current = imageLoad(head_pointer_image, ivec2(gl_FragCoord.xy)).x;
+  uint headIndex = uint(gl_FragCoord.y) * oirWidth + uint(gl_FragCoord.x);
+  uint current = head_pointers[headIndex];
   while (current != LIST_END && steps < MAX_WALK){
     steps++;
-    /*
-      Refuse to follow an index that cannot be in the list. A stale head
-      pointer, or a chain left over from a frame whose appends overran the
-      capacity, would otherwise make the imageLoad below read out of range.
-    */
     if (current >= list_capacity) break;
     uvec4 item = imageLoad(list_buffer, int(current));
     current = item.x;
@@ -70,40 +76,33 @@ int createFragmentList(){
     } else {
       /* full: let this fragment displace the farthest one held, if nearer */
       int far = 0;
-      float fardepth = uintBitsToFloat(fragments[0].z);
       int i;
       for (i = 1; i < MAX_FRAGMENTS; i++){
-        float d = uintBitsToFloat(fragments[i].z);
-        if (d > fardepth){ fardepth = d; far = i; }
+        if (isFarther(fragments[i], fragments[far])) far = i;
       }
-      if (uintBitsToFloat(item.z) < fardepth) fragments[far] = item;
+      if (isFarther(fragments[far], item)) fragments[far] = item;
     }
   }
   return(n);
 }
 
 /*
- * sortFragments: farthest fragment first, so that the loop in finalColor()
- * can composite each nearer fragment over what is already accumulated.
- *
- * createFragmentList() walks the list head first, i.e. most-recently-drawn
- * first, so fragments[] arrives ordered newest..oldest. For two fragments at
- * exactly the same depth (the common case for flat 2D overlays -- a banner
- * box and the text drawn on top of it, all at Z=0) the comparison must still
- * swap them: <= rather than < reverses ties, putting the newest (last drawn)
- * one at the far end of the array, which finalColor() composites last, i.e.
- * on top. With a strict <, equal-depth fragments keep their original
- * newest-first order, so finalColor() would composite the newest one first
- * (at the bottom) and the oldest one last (on top) -- backwards, and exactly
- * what made a banner's background box hide the text drawn over it.
+ * Sort the fragments by Z value but respecting the order in which they
+ * have been added to the list, in case the Z value is the same. For this,
+ * we use the index which has been stored in the 4th component.
  */
+
 void sortFragments(int n){
   int i, j;
   for (i=0; i<n-1; i++){
     for (j=0; j<n-1-i; j++){
       float depth_j  = uintBitsToFloat(fragments[j].z);
       float depth_j1 = uintBitsToFloat(fragments[j+1].z);
-      if (depth_j <= depth_j1){
+      bool tied = abs(depth_j - depth_j1) < DEPTH_EPS;
+      bool shouldSwap = tied
+        ? (fragments[j].w > fragments[j+1].w)   /* equal depth: later draw goes on top */
+        : (depth_j < depth_j1);                 /* different depth: farther goes first */
+      if (shouldSwap){
         uvec4 tmp = fragments[j];
         fragments[j] = fragments[j+1];
         fragments[j+1] = tmp;
@@ -136,9 +135,13 @@ vec4 finalColor1(int nfrag){
 /*
  * Alternative approach: walk the fragments nearest-first, scaling each by a
  * factor (e.g. 0.6) so ones further away contribute less and appear darker.
- * See the matching note in fs430_resolve.frag for why this starts from the
- * same fully transparent (background) seed as finalColor1() instead of the
- * nearest fragment's own raw colour.
+ *
+ * Starts from the same fully transparent seed as finalColor1(), i.e. the
+ * background, rather than the nearest fragment's own raw colour: seeding
+ * with the nearest fragment made it count twice (once unweighted as the
+ * seed, once more through the loop below) and skipped the 0.6 attenuation
+ * every other layer gets, which is not "starting from the background", it is
+ * starting from the frontmost layer with no background at all.
  */
 vec4 finalColor2(int nfrag){
   vec3 acc = vec3(0.0, 0.0, 0.0);

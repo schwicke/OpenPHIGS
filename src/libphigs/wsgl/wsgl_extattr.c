@@ -185,10 +185,11 @@ void wsgl_setup_int_refl_props(
   case PREFL_AMBIENT:
     if (colr_type == PMODEL_RGB) {
       glColorMaterial(GL_FRONT, GL_AMBIENT);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->ambient_coef,
                        colr->direct.rgb.green * refl_props->ambient_coef,
-                       colr->direct.rgb.blue  * refl_props->ambient_coef);
+                       colr->direct.rgb.blue  * refl_props->ambient_coef,
+                       1.0);
     }
     if (colr_type == PMODEL_RGBA) {
       glColorMaterial(GL_FRONT, GL_AMBIENT);
@@ -209,17 +210,19 @@ void wsgl_setup_int_refl_props(
   case PREFL_AMB_DIFF:
     if (colr_type == PMODEL_RGB) {
       glColorMaterial(GL_FRONT, GL_AMBIENT);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->ambient_coef,
                        colr->direct.rgb.green * refl_props->ambient_coef,
-                       colr->direct.rgb.blue  * refl_props->ambient_coef
+                       colr->direct.rgb.blue  * refl_props->ambient_coef,
+                       1.0
                        );
 
       glColorMaterial(GL_FRONT, GL_DIFFUSE);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->diffuse_coef,
                        colr->direct.rgb.green * refl_props->diffuse_coef,
-                       colr->direct.rgb.blue  * refl_props->diffuse_coef
+                       colr->direct.rgb.blue  * refl_props->diffuse_coef,
+                       1.0
                        );
     }
     if (colr_type == PMODEL_RGBA) {
@@ -245,24 +248,27 @@ void wsgl_setup_int_refl_props(
   case PREFL_AMB_DIFF_SPEC:
     if (colr_type == PMODEL_RGB) {
       glColorMaterial(GL_FRONT, GL_AMBIENT);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->ambient_coef,
                        colr->direct.rgb.green * refl_props->ambient_coef,
-                       colr->direct.rgb.blue  * refl_props->ambient_coef
+                       colr->direct.rgb.blue  * refl_props->ambient_coef,
+                       1.0
                        );
 
       glColorMaterial(GL_FRONT, GL_DIFFUSE);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->diffuse_coef,
                        colr->direct.rgb.green * refl_props->diffuse_coef,
-                       colr->direct.rgb.blue  * refl_props->diffuse_coef
+                       colr->direct.rgb.blue  * refl_props->diffuse_coef,
+                       1.0
                        );
 
       glColorMaterial(GL_FRONT, GL_SPECULAR);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->specular_coef,
                        colr->direct.rgb.green * refl_props->specular_coef,
-                       colr->direct.rgb.blue  * refl_props->specular_coef
+                       colr->direct.rgb.blue  * refl_props->specular_coef,
+                       1.0
                        );
     }
     if (colr_type == PMODEL_RGBA) {
@@ -298,7 +304,7 @@ void wsgl_setup_int_refl_props(
  * wsgl_setup_back_int_refl_props
  *
  * DESCR:       Setup backface surface reflection and colour properties
- * NOTES:    Make sure to enable GL_COLOR_MATERIAL before use
+ * NOTES:       Make sure to enable GL_COLOR_MATERIAL before use
  * RETURNS:     N/A
  */
 void wsgl_setup_back_int_refl_props(
@@ -334,10 +340,11 @@ void wsgl_setup_back_int_refl_props(
   case PREFL_AMBIENT:
     if (colr_type == PMODEL_RGB) {
       glColorMaterial(GL_BACK, GL_AMBIENT);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->ambient_coef,
                        colr->direct.rgb.green * refl_props->ambient_coef,
-                       colr->direct.rgb.blue  * refl_props->ambient_coef
+                       colr->direct.rgb.blue  * refl_props->ambient_coef,
+                       1.0
                        );
     }
     if (colr_type == PMODEL_RGBA) {
@@ -359,17 +366,19 @@ void wsgl_setup_back_int_refl_props(
   case PREFL_AMB_DIFF:
     if (colr_type == PMODEL_RGB) {
       glColorMaterial(GL_BACK, GL_AMBIENT);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->ambient_coef,
                        colr->direct.rgb.green * refl_props->ambient_coef,
-                       colr->direct.rgb.blue  * refl_props->ambient_coef
+                       colr->direct.rgb.blue  * refl_props->ambient_coef,
+                       1.0
                        );
 
       glColorMaterial(GL_BACK, GL_DIFFUSE);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->diffuse_coef,
                        colr->direct.rgb.green * refl_props->diffuse_coef,
-                       colr->direct.rgb.blue  * refl_props->diffuse_coef
+                       colr->direct.rgb.blue  * refl_props->diffuse_coef,
+                       1.0
                        );
     }
     if (colr_type == PMODEL_RGBA) {
@@ -395,24 +404,27 @@ void wsgl_setup_back_int_refl_props(
   case PREFL_AMB_DIFF_SPEC:
     if (colr_type == PMODEL_RGB) {
       glColorMaterial(GL_BACK, GL_AMBIENT);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->ambient_coef,
                        colr->direct.rgb.green * refl_props->ambient_coef,
-                       colr->direct.rgb.blue  * refl_props->ambient_coef
+                       colr->direct.rgb.blue  * refl_props->ambient_coef,
+                       1.0
                        );
 
       glColorMaterial(GL_BACK, GL_DIFFUSE);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->diffuse_coef,
                        colr->direct.rgb.green * refl_props->diffuse_coef,
-                       colr->direct.rgb.blue  * refl_props->diffuse_coef
+                       colr->direct.rgb.blue  * refl_props->diffuse_coef,
+                       1.0
                        );
 
       glColorMaterial(GL_BACK, GL_SPECULAR);
-      glVertexAttrib3f(vCOLOR,
+      glVertexAttrib4f(vCOLOR,
                        colr->direct.rgb.red   * refl_props->specular_coef,
                        colr->direct.rgb.green * refl_props->specular_coef,
-                       colr->direct.rgb.blue  * refl_props->specular_coef
+                       colr->direct.rgb.blue  * refl_props->specular_coef,
+                       1.0
                        );
     }
     if (colr_type == PMODEL_RGBA) {
@@ -664,7 +676,7 @@ int wsgl_setup_int_colr(
 #ifdef DEBUGLIGHT
     printf("wsgl_setup_int_colr: Setup int color\n");
 #endif
-    // US broken?    wsgl_setup_int_refl_props(colr_type, colr, ast);
+    wsgl_setup_int_refl_props(ws, colr_type, colr, ast);
     wsgl_setup_int_reflectance_model(ws, colr_type, colr, ast);
     lighting = TRUE;
   }
@@ -731,7 +743,7 @@ int wsgl_setup_back_int_colr(
 #ifdef DEBUGLIGHT
     printf("Setup back int color\n");
 #endif
-    //US broken ? wsgl_setup_back_int_refl_props(colr_type, colr, ast);
+    wsgl_setup_back_int_refl_props(ws, colr_type, colr, ast);
     wsgl_setup_int_reflectance_model(ws, colr_type, colr, ast);
     lighting = TRUE;
   }
