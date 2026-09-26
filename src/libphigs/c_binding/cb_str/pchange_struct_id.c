@@ -29,7 +29,12 @@
 /**
  * \file pchange_struct_id.c
  *
- * \brief       Changes structure id
+ * \brief       Change structure identifier
+ *
+ * \param[in]  orig_struct_id    original structure identifier
+ * \param[in]  result_struct_id  resulting structure identifier
+ *
+ * \sa pempty_struct pexec_struct ppost_struct
  */
 void pchange_struct_id(
                        Pint orig_struct_id,

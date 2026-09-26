@@ -31,7 +31,21 @@
 /**
  * \file psln.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set linetype
+ *
+ * \param[in]  ltype  linetype
+ * \verbatim
+  1  PLSOLI  solid
+  2  PLDASH  dashed
+  3  PLDOT   dotted
+  4  PLDASD  dash-dotted
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_linetype psiasf psplr
+ */
 FTN_SUBROUTINE(psln)(
                      FTN_INTEGER(ltype)
                      )

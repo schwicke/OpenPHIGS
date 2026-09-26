@@ -40,6 +40,21 @@ extern int record_geom;
  * \file psedr.c
  *
  * \brief       Set edge representation
+ *
+ * \param[in]  wkid    workstation identifier
+ * \param[in]  edi     edge index
+ * \param[in]  edflag  edge flag: 0 off, 1 on
+ * \param[in]  edtype  edgetype
+ * \verbatim
+  1  PLSOLI  solid
+  2  PLDASH  dashed
+  3  PLDOT   dotted
+  4  PLDASD  dash-dotted
+\endverbatim
+ * \param[in]  ewidth  edgewidth scale factor
+ * \param[in]  coli    colour index
+ *
+ * \sa pset_edge_rep pscm psedci psedi psedt psewsc psiasf
  */
 
 FTN_SUBROUTINE(psedr)(

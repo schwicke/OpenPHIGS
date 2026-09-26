@@ -40,6 +40,25 @@ extern int record_geom;
  * \file pspmr.c
  *
  * \brief       Set polymarker representation
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  pmi    polymarker index
+ * \param[in]  mtype  marker type
+ * \verbatim
+  1  PPOINT  dot
+  2  PPLUS   plus sign
+  3  PAST    asterisk
+  4  POMARK  circle
+  5  PXMARK  diagonal cross
+  6  triangle
+  7  square
+  8  pentagon
+  9  hexagon
+\endverbatim
+ * \param[in]  mszsf  marker size scale factor
+ * \param[in]  coli   colour index
+ *
+ * \sa pset_marker_rep pscm psiasf psmksc pspmci pspmi
  */
 FTN_SUBROUTINE(pspmr)(
                       FTN_INTEGER(wkid),

@@ -31,7 +31,14 @@
 /**
  * \file pspkid.c
  *
- * \brief       set pick identifier
+ * \brief       Set pick identifier
+ *
+ * \param[in]  pkid  pick identifier
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_pick_id
  */
 FTN_SUBROUTINE(pspkid)(
                        FTN_INTEGER(pkid)

@@ -29,7 +29,15 @@
 /**
  * \file pset_edit_mode.c
  *
- * \brief       Set structure edit mode
+ * \brief       Set edit mode
+ *
+ * \param[in]  edit_mode  edit mode
+ * \verbatim
+  0  PEDIT_INSERT   insert
+  1  PEDIT_REPLACE  replace
+\endverbatim
+ *
+ * \sa psedm pinq_edit_mode
  */
 void pset_edit_mode(
                     Pedit_mode edit_mode

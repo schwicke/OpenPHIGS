@@ -35,7 +35,14 @@
 /**
  * \file psii.c
  *
- * \brief       set interior index
+ * \brief       Set interior index
+ *
+ * \param[in]  ii  interior index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_int_ind psir
  */
 FTN_SUBROUTINE(psii)(
                      FTN_INTEGER(ii)

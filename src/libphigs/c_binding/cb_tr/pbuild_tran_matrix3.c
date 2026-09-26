@@ -57,7 +57,18 @@ SOFTWARE.
 /**
  * \file pbuild_tran_matrix3.c
  *
- * \brief       Generate 3D transformation matrix
+ * \brief       Build transformation matrix 3
+ *
+ * \param[in]  pt         fixed point for scaling and rotation
+ * \param[in]  shift      translation (shift) vector
+ * \param[in]  x_angle    rotation angle about the x axis in radians
+ * \param[in]  y_angle    rotation angle about the y axis in radians
+ * \param[in]  z_angle    rotation angle about the z axis in radians
+ * \param[in]  scale      scale factors
+ * \param[out] error_ind  error indicator, 0 on success
+ * \param[out] matrix     resulting transformation matrix
+ *
+ * \sa pbltm3 pbuild_tran_matrix
  */
 void pbuild_tran_matrix3(
                          Ppoint3 *pt,               /* fixed point */

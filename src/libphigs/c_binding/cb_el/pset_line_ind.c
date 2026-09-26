@@ -31,7 +31,15 @@
 /**
  * \file pset_line_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set polyline index
+ *
+ * \param[in]  line_ind  polyline bundle index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pinq_line_rep pset_line_rep
+ */
 void pset_line_ind(
                    Pint line_ind
                    )

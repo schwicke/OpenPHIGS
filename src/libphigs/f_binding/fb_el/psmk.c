@@ -31,7 +31,25 @@
 /**
  * \file psmk.c
  *
- * \brief       set marker type
+ * \brief       Set marker type
+ *
+ * \param[in]  mtype  marker type
+ * \verbatim
+  1  PPOINT  dot
+  2  PPLUS   plus sign
+  3  PAST    asterisk
+  4  POMARK  circle
+  5  PXMARK  diagonal cross
+  6  triangle
+  7  square
+  8  pentagon
+  9  hexagon
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_marker_type psiasf psplr
  */
 FTN_SUBROUTINE(psmk)(
                      FTN_INTEGER(mtype)

@@ -31,7 +31,15 @@
 /**
  * \file pset_global_tran3.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set global transformation 3
+ *
+ * \param[in]  global_tran  global modelling transformation matrix
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psgmt3
+ */
 void pset_global_tran3(
                        Pmatrix3 global_tran
                        )

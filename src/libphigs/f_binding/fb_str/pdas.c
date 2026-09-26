@@ -34,6 +34,8 @@
  * \file pdas.c
  *
  * \brief       Delete all structures
+ *
+ * \sa pdel_all_structs pdst
  */
 FTN_SUBROUTINE(pdas)(){
   pdel_all_structs();

@@ -30,7 +30,19 @@
 /**
  * \file pset_face_disting_mode.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set face distinguishing mode
+ *
+ * \param[in]  disting_mode  face distinguishing mode
+ * \verbatim
+  0  PDISTING_NO   no
+  1  PDISTING_YES  yes
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psfdm
+ */
 void pset_face_disting_mode(
                             Pdisting_mode disting_mode
                             )

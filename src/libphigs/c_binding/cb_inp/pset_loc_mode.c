@@ -32,7 +32,25 @@
 /**
  * \file pset_loc_mode.c
  *
- * \brief       Set locator input device mode
+ * \brief       Set locator mode
+ *
+ * \param[in]  ws_id        workstation identifier
+ * \param[in]  loc_num      locator device number
+ * \param[in]  op_mode      operating mode
+ * \verbatim
+  0  POP_REQ     request
+  1  POP_SAMPLE  sample
+  2  POP_EVENT   event
+\endverbatim
+ * \param[in]  echo_switch  echo switch
+ * \verbatim
+  0  PSWITCH_NO_ECHO  no echo
+  1  PSWITCH_ECHO     echo
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pslcm pawait_event pinit_loc3 preq_loc3 psample_loc psample_loc3
  */
 void pset_loc_mode(
                    Pint ws_id,

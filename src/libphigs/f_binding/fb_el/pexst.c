@@ -31,7 +31,14 @@
 /**
  * \file pexst.c
  *
- * \brief       execute structure
+ * \brief       Execute structure
+ *
+ * \param[in]  strid  identifier of the structure to execute
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pexec_struct
  */
 FTN_SUBROUTINE(pexst)(
                       FTN_INTEGER(strid)

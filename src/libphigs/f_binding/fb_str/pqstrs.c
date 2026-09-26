@@ -34,6 +34,10 @@
  * \file pqstrs.c
  *
  * \brief       Inquire structure state value
+ *
+ * \param[out] strsta  returned structure state: 0 closed, 1 open
+ *
+ * \sa pinq_struct_st popst pclst
  */
 FTN_SUBROUTINE(pqstrs)(Pint* strsta){
   pinq_struct_st(strsta);

@@ -40,6 +40,11 @@ extern int record_geom;
  * \file pmsg.c
  *
  * \brief       Message
+ *
+ * \param[in]  wkid  workstation identifier
+ * \param[in]  msg   message text
+ *
+ * \sa pmessage
  */
 
 FTN_SUBROUTINE(pmsg)(

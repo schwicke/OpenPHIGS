@@ -30,7 +30,15 @@
 /**
  * \file pset_anno_char_ht.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set annotation text character height
+ *
+ * \param[in]  height  annotation text character height
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psatch
+ */
 void pset_anno_char_ht(
                        Pfloat height
                        )

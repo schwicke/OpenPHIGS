@@ -31,7 +31,22 @@
 /**
  * \file pset_conf_res.c
  *
- * \brief       Set structure conflict resolution for archive
+ * \brief       Set conflict resolution
+ *
+ * \param[in]  archive_res    conflict resolution used when archiving
+ * \verbatim
+  0  PRES_MAINTAIN  maintain
+  1  PRES_ABANDON   abandon
+  2  PRES_UPD       update
+\endverbatim
+ * \param[in]  retrieval_res  conflict resolution used when retrieving
+ * \verbatim
+  0  PRES_MAINTAIN  maintain
+  1  PRES_ABANDON   abandon
+  2  PRES_UPD       update
+\endverbatim
+ *
+ * \sa pinq_conf_res
  */
 void pset_conf_res(
                    Pconf_res archive_res,

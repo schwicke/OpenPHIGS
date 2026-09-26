@@ -32,7 +32,18 @@
 /**
  * \file pinit_val3.c
  *
- * \brief       Initialize valuator3
+ * \brief       Initialize valuator 3
+ *
+ * \param[in]  ws_id         workstation identifier
+ * \param[in]  val_dev       valuator device number
+ * \param[in]  init_value    initial value
+ * \param[in]  pet           prompt and echo type
+ * \param[in]  echo_volume   echo volume in device coordinates
+ * \param[in]  val_data_rec  valuator data record
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pinvl3 pset_val_mode
  */
 void pinit_val3(
                 Pint ws_id,

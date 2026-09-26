@@ -37,7 +37,11 @@
 /**
  * \file pdel_store.c
  *
- * \brief       Delete storage object
+ * \brief       Delete store
+ *
+ * \param[in]  store  store to delete
+ *
+ * \sa pcreate_store
  */
 void pdel_store(
                 Pstore store

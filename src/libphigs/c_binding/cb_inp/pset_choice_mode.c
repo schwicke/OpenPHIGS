@@ -32,7 +32,25 @@
 /**
  * \file pset_choice_mode.c
  *
- * \brief       Set choice input device mode
+ * \brief       Set choice mode
+ *
+ * \param[in]  ws_id        workstation identifier
+ * \param[in]  choice_dev   choice device number
+ * \param[in]  op_mode      operating mode
+ * \verbatim
+  0  POP_REQ     request
+  1  POP_SAMPLE  sample
+  2  POP_EVENT   event
+\endverbatim
+ * \param[in]  echo_switch  echo switch
+ * \verbatim
+  0  PSWITCH_NO_ECHO  no echo
+  1  PSWITCH_ECHO     echo
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pschm pawait_event pinit_choice3 preq_choice
  */
 void pset_choice_mode(
                       Pint ws_id,

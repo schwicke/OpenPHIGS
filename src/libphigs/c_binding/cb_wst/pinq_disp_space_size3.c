@@ -28,7 +28,13 @@
 /**
  * \file pinq_disp_space_size3.c
  *
- * \brief       Get display size 3D
+ * \brief       Inquire display space size 3
+ *
+ * \param[in]  ws_type  workstation type
+ * \param[out] err_ind  error indicator, 0 on success
+ * \param[out] size     returned display space size
+ *
+ * \sa pqdsp3 pinit_choice3 pinit_loc3 pinit_pick3 pinit_string3 pinit_stroke3 pinit_val3 pinq_ws_conn_type
  */
 void pinq_disp_space_size3(
                            Pint ws_type,

@@ -31,7 +31,15 @@
 /**
  * \file pset_anno_char_up_vec.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set annotation text character up vector
+ *
+ * \param[in]  char_up_vec  annotation text character up vector
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psatcu pset_text_prec
+ */
 void pset_anno_char_up_vec(
                            Pvec *char_up_vec
                            )

@@ -30,7 +30,20 @@
 /**
  * \file pset_face_cull_mode.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set face culling mode
+ *
+ * \param[in]  cull_mode  face culling mode
+ * \verbatim
+  0  PCULL_NONE       no culling
+  1  PCULL_BACKFACE   cull back faces
+  2  PCULL_FRONTFACE  cull front faces
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psfcm
+ */
 void pset_face_cull_mode(
                          Pcull_mode cull_mode
                          )

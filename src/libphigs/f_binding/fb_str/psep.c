@@ -34,6 +34,10 @@
  * \file psep.c
  *
  * \brief       Set element pointer
+ *
+ * \param[in]  pos  new element pointer value
+ *
+ * \sa pset_elem_ptr
  */
 FTN_SUBROUTINE(psep)(
                      FTN_INTEGER(pos)

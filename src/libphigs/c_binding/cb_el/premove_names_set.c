@@ -31,7 +31,15 @@
 /**
  * \file premove_names_set.c
  *
- * \brief       Creates a new element  */
+ * \brief       Remove names from set
+ *
+ * \param[in]  names  list of names
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pres padd_names_set
+ */
 void premove_names_set(
                        Pint_list *names
                        )

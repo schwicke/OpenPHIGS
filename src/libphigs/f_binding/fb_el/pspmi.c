@@ -31,7 +31,14 @@
 /**
  * \file pspmi.c
  *
- * \brief       set polymarker index
+ * \brief       Set polymarker index
+ *
+ * \param[in]  pmi  polymarker index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_marker_ind psplr
  */
 FTN_SUBROUTINE(pspmi)(
                       FTN_INTEGER(pmi)

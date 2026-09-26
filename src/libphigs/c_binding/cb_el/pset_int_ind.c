@@ -31,7 +31,15 @@
 /**
  * \file pset_int_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set interior index
+ *
+ * \param[in]  int_ind  interior bundle index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psii pinq_int_rep pset_int_rep
+ */
 void pset_int_ind(
                   Pint int_ind
                   )

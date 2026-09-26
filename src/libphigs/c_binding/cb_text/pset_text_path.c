@@ -30,7 +30,21 @@
 /**
  * \file pset_text_path.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set text path
+ *
+ * \param[in]  text_path  text path
+ * \verbatim
+  0  PPATH_RIGHT  right
+  1  PPATH_LEFT   left
+  2  PPATH_UP     up
+  3  PPATH_DOWN   down
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pstxp pset_text_prec
+ */
 void pset_text_path(
                     Ptext_path text_path
                     )

@@ -32,7 +32,15 @@
 /**
  * \file pset_pick_filter.c
  *
- * \brief       Set pick device filter
+ * \brief       Set pick filter
+ *
+ * \param[in]  ws_id     workstation identifier
+ * \param[in]  pick_num  pick device number
+ * \param[in]  filter    pick filter: inclusion and exclusion name sets
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pspkft padd_names_set premove_names_set
  */
 void pset_pick_filter(
                       Pint ws_id,

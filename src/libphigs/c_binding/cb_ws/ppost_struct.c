@@ -46,7 +46,15 @@
 /**
  * \file ppost_struct.c
  *
- * \brief       Post structure to workstation
+ * \brief       Post structure
+ *
+ * \param[in]  ws_id      workstation identifier
+ * \param[in]  struct_id  structure identifier
+ * \param[in]  priority   display priority, between 0 and 1
+ *
+ * \pre The workstation must be open
+ *
+ * \sa ppost punpost_all_structs punpost_struct
  */
 void ppost_struct(
                   Pint ws_id,

@@ -32,7 +32,21 @@
 /**
  * \file preq_choice.c
  *
- * \brief       Request input from choice
+ * \brief       Request choice
+ *
+ * \param[in]  ws_id       workstation identifier
+ * \param[in]  choice_dev  choice device number
+ * \param[out] status      input status
+ * \verbatim
+  0  PIN_STATUS_NONE   none
+  1  PIN_STATUS_OK     ok
+  2  PIN_STATUS_NO_IN  no input
+\endverbatim
+ * \param[out] choice      returned choice number
+ *
+ * \pre The workstation must be open
+ *
+ * \sa prqch pset_choice_mode
  */
 void preq_choice(
                  Pint ws_id,

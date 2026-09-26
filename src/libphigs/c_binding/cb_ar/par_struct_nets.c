@@ -31,7 +31,12 @@
 /**
  * \file par_struct_nets.c
  *
- * \brief       Store structure networks in archive
+ * \brief       Archive structure networks
+ *
+ * \param[in]  archive_id  archive file identifier
+ * \param[in]  struct_ids  list of structure identifiers
+ *
+ * \sa par_structs pset_conf_res
  */
 void par_struct_nets(
                      Pint archive_id,

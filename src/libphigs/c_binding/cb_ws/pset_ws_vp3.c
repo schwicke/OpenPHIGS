@@ -46,7 +46,12 @@
 /**
  * \file pset_ws_vp3.c
  *
- * \brief       Set workstation viewport
+ * \brief       Set workstation viewport 3
+ *
+ * \param[in]  ws_id     workstation identifier
+ * \param[in]  viewport  workstation viewport limits in device coordinates
+ *
+ * \sa pswkv3 pset_ws_vp pset_ws_win pset_ws_win3
  */
 void pset_ws_vp3(
                  Pint ws_id,

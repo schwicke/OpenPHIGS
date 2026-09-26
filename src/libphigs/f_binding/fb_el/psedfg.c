@@ -31,7 +31,14 @@
 /**
  * \file psedfg.c
  *
- * \brief       set edge flag
+ * \brief       Set edge flag
+ *
+ * \param[in]  flag  edge flag: 0 off, 1 on
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_edge_flag psiasf
  */
 FTN_SUBROUTINE(psedfg)(
                        FTN_INTEGER(flag)

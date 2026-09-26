@@ -56,7 +56,14 @@ SOFTWARE.
 /**
  * \file pcompose_matrix3.c
  *
- * \brief       Generate combined 3D transformation matrix
+ * \brief       Compose matrix 3
+ *
+ * \param[in]  a          first matrix
+ * \param[in]  b          second matrix
+ * \param[out] error_ind  error indicator, 0 on success
+ * \param[out] m          resulting matrix a * b
+ *
+ * \sa pcompose_matrix
  */
 void pcompose_matrix3(
                       Pmatrix3 a,                /* matrix a */

@@ -30,6 +30,19 @@
  * \file psatp.c
  *
  * \brief       Set annotation text path
+ *
+ * \param[in]  path  annotation text path
+ * \verbatim
+  0  PRIGHT  right
+  1  PLEFT   left
+  2  PUP     up
+  3  PDOWN   down
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_anno_path pstxpr
  */
 FTN_SUBROUTINE(psatp)(
                       FTN_INTEGER(path)

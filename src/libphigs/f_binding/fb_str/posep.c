@@ -34,6 +34,10 @@
  * \file posep.c
  *
  * \brief       Offset element pointer
+ *
+ * \param[in]  epo  element pointer offset (may be negative)
+ *
+ * \sa poffset_elem_ptr
  */
 FTN_SUBROUTINE(posep)(
                       FTN_INTEGER(epo)

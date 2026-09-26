@@ -31,7 +31,12 @@
 /**
  * \file pret_structs.c
  *
- * \brief       Retreive structures from archive
+ * \brief       Retrieve structures
+ *
+ * \param[in]  archive_id  archive file identifier
+ * \param[in]  struct_ids  list of structure identifiers
+ *
+ * \sa pret_all_structs pset_conf_res
  */
 void pret_structs(
                   Pint archive_id,

@@ -30,7 +30,45 @@
 /**
  * \file pfill_area_set_data.c
  *
- * \brief       Creates a new element  */
+ * \brief       Fill area set with data
+ *
+ * Not part of the standard. Takes the same arguments as pfill_area_set3_data.
+ *
+ * \param[in]  fflag      facet data flag
+ * \verbatim
+  0  PFACET_NONE           no facet data
+  1  PFACET_COLOUR         facet colour
+  2  PFACET_NORMAL         facet normal
+  3  PFACET_COLOUR_NORMAL  facet colour and normal
+\endverbatim
+ * \param[in]  eflag      edge data flag
+ * \verbatim
+  0  PEDGE_NONE        no edge data
+  1  PEDGE_VISIBILITY  edge visibility flags
+\endverbatim
+ * \param[in]  vflag      vertex data flag
+ * \verbatim
+  0  PVERT_COORD                coordinates only
+  1  PVERT_COORD_COLOUR         coordinates and colour
+  2  PVERT_COORD_NORMAL         coordinates and normal
+  3  PVERT_COORD_COLOUR_NORMAL  coordinates, colour and normal
+\endverbatim
+ * \param[in]  colr_type  colour type of facet and vertex colours
+ * \verbatim
+  0  PINDIRECT    colour index
+  1  PMODEL_RGB   RGB
+  2  PMODEL_RGBA  RGB with alpha
+\endverbatim
+ * \param[in]  fdata      facet data (colour and/or normal, according to fflag)
+ * \param[in]  nfa        number of fill areas in the set
+ * \param[in]  edata      edge visibility flags per fill area (if eflag is PEDGE_VISIBILITY)
+ * \param[in]  vdata      vertex data per fill area (according to vflag)
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pfill_area_set3_data pfasd
+ */
 void pfill_area_set_data(
                          Pint fflag,
                          Pint eflag,

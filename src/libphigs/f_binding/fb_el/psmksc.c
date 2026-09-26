@@ -31,7 +31,14 @@
 /**
  * \file psmksc.c
  *
- * \brief       set marker size scale factor
+ * \brief       Set marker size scale factor
+ *
+ * \param[in]  mszsf  marker size scale factor
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_marker_size psiasf psplr
  */
 FTN_SUBROUTINE(psmksc)(
                        FTN_REAL(mszsf)

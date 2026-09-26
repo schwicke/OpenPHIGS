@@ -31,7 +31,11 @@
 /**
  * \file pinq_ar_files.c
  *
- * \brief       Get open archive files
+ * \brief       Inquire archive files
+ *
+ * \param[in]  store     store used to hold the returned data (see pcreate_store)
+ * \param[out] err_ind   error indicator, 0 on success
+ * \param[out] ar_files  returned list of open archive files (allocated in store)
  */
 void pinq_ar_files(
                    Pstore store,

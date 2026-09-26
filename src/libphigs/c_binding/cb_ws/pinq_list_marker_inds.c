@@ -47,7 +47,16 @@
 /**
  * \file pinq_list_marker_inds.c
  *
- * \brief       Get workstation list of marker indices
+ * \brief       Inquire list of polymarker indices
+ *
+ * \param[in]  ws_id                workstation identifier
+ * \param[in]  num_elems_appl_list  number of list elements the application has room for
+ * \param[in]  start_ind            index of the first list element to return
+ * \param[out] err_ind              error indicator, 0 on success
+ * \param[out] def_marker_ind       returned list of polymarker indices
+ * \param[out] num_elems_impl_list  number of elements available in the implementation list
+ *
+ * \sa pset_marker_rep
  */
 void pinq_list_marker_inds(
                            Pint ws_id,

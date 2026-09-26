@@ -40,6 +40,17 @@ extern int record_geom;
  * \file prst.c
  *
  * \brief       Redraw all structures
+ *
+ * \param[in]  wkid  workstation identifier
+ * \param[in]  cofl  control flag: clear the display surface conditionally or always
+ * \verbatim
+  0  PCONDI  conditionally
+  1  PALWAY  always
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa predraw_all_structs puwk
  */
 
 FTN_SUBROUTINE(prst)(

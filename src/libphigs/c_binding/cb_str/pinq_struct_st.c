@@ -29,7 +29,11 @@
 /**
  * \file pinq_struct_st.c
  *
- * \brief       Get current structure state
+ * \brief       Inquire structure state value
+ *
+ * \param[out] struct_st  returned structure state (PSTRUCT_ST_STCL or PSTRUCT_ST_STOP)
+ *
+ * \sa pqstrs popen_struct pclose_struct
  */
 void pinq_struct_st(
                     Pint *struct_st

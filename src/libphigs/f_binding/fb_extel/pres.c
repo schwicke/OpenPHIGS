@@ -35,7 +35,15 @@
 /**
  * \file pres.c
  *
- * \brief       remove name set
+ * \brief       Remove names from set
+ *
+ * \param[in]  num  number of names to remove
+ * \param[in]  set  names to remove
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa premove_names_set pads
  */
 FTN_SUBROUTINE(pres)(
                      FTN_INTEGER(num),

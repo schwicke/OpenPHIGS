@@ -30,7 +30,17 @@
 /**
  * \file ptext3.c
  *
- * \brief       Creates a new element  */
+ * \brief       Text 3
+ *
+ * \param[in]  text_pos     text position
+ * \param[in]  plane        two text direction vectors defining the text plane
+ * \param[in]  char_string  character string
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa ptx3 pset_char_expan pset_char_ht pset_char_space pset_char_up_vec pset_text_align pset_text_colr_ind pset_text_font
+ */
 void ptext3(
             Ppoint3 *text_pos,
             Pvec3 plane[2],

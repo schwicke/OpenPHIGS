@@ -32,7 +32,25 @@
 /**
  * \file pset_val_mode.c
  *
- * \brief       Set valuator input device mode
+ * \brief       Set valuator mode
+ *
+ * \param[in]  ws_id        workstation identifier
+ * \param[in]  val_dev      valuator device number
+ * \param[in]  op_mode      operating mode
+ * \verbatim
+  0  POP_REQ     request
+  1  POP_SAMPLE  sample
+  2  POP_EVENT   event
+\endverbatim
+ * \param[in]  echo_switch  echo switch
+ * \verbatim
+  0  PSWITCH_NO_ECHO  no echo
+  1  PSWITCH_ECHO     echo
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa psvlm pawait_event pinit_val3 preq_valuator
  */
 void pset_val_mode(
                    Pint ws_id,

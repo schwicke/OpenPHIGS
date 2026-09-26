@@ -47,7 +47,14 @@
 /**
  * \file pinq_invis_filter.c
  *
- * \brief       Get workstation invisibility filter
+ * \brief       Inquire invisibility filter
+ *
+ * \param[in]  ws_id         workstation identifier
+ * \param[in]  store         store used to hold the returned data (see pcreate_store)
+ * \param[out] err_ind       error indicator, 0 on success
+ * \param[out] invis_filter  returned invisibility filter (allocated in store)
+ *
+ * \sa pset_invis_filter
  */
 void pinq_invis_filter(
                        Pint ws_id,

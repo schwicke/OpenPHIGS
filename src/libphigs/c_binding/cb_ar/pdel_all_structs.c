@@ -30,6 +30,8 @@
  * \file pdel_all_structs.c
  *
  * \brief       Delete all structures
+ *
+ * \sa pdas pdel_struct
  */
 void pdel_all_structs(
                       void

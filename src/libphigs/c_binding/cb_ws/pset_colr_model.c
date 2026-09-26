@@ -46,7 +46,17 @@
 /**
  * \file pset_colr_model.c
  *
- * \brief       Set workstation colour model
+ * \brief       Set colour model
+ *
+ * \param[in]  ws_id  workstation identifier
+ * \param[in]  model  colour model
+ * \verbatim
+  0  PINDIRECT    colour index
+  1  PMODEL_RGB   RGB
+  2  PMODEL_RGBA  RGB with alpha
+\endverbatim
+ *
+ * \sa pscm
  */
 void pset_colr_model(
                      Pint ws_id,

@@ -31,7 +31,15 @@
 /**
  * \file pads.c
  *
- * \brief       add names to set
+ * \brief       Add names to set
+ *
+ * \param[in]  n        number of names to add
+ * \param[in]  nameset  names to add
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa padd_names_set pres pshlft pspkft
  */
 
 FTN_SUBROUTINE(pads)(

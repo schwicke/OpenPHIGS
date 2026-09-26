@@ -46,7 +46,19 @@
 /**
  * \file pinq_colr_rep.c
  *
- * \brief       Get workstation colour representation
+ * \brief       Inquire colour representation
+ *
+ * \param[in]  ws_id     workstation identifier
+ * \param[in]  colr_ind  colour index
+ * \param[in]  type      return the value as set or as realised
+ * \verbatim
+  0  PINQ_SET       value as set
+  1  PINQ_REALIZED  value as realised
+\endverbatim
+ * \param[out] err_ind   error indicator, 0 on success
+ * \param[out] colr_rep  returned colour representation
+ *
+ * \sa pqcr pset_colr_rep
  */
 void pinq_colr_rep(
                    Pint ws_id,

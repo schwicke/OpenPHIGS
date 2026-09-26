@@ -31,7 +31,15 @@
 /**
  * \file pset_edge_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set edge index
+ *
+ * \param[in]  edge_ind  edge bundle index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psedi pinq_edge_rep pset_edge_rep
+ */
 void pset_edge_ind(
                    Pint edge_ind
                    )

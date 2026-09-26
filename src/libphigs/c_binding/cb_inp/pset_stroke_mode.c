@@ -32,7 +32,25 @@
 /**
  * \file pset_stroke_mode.c
  *
- * \brief       Set stroke input device mode
+ * \brief       Set stroke mode
+ *
+ * \param[in]  ws_id        workstation identifier
+ * \param[in]  stroke_num   stroke device number
+ * \param[in]  op_mode      operating mode
+ * \verbatim
+  0  POP_REQ     request
+  1  POP_SAMPLE  sample
+  2  POP_EVENT   event
+\endverbatim
+ * \param[in]  echo_switch  echo switch
+ * \verbatim
+  0  PSWITCH_NO_ECHO  no echo
+  1  PSWITCH_ECHO     echo
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pawait_event pinit_stroke3 preq_stroke3 psample_stroke psample_stroke3
  */
 void pset_stroke_mode(
                       Pint ws_id,

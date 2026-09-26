@@ -32,7 +32,17 @@
 /**
  * \file pget_choice.c
  *
- * \brief       Get choice event from event queue
+ * \brief       Get choice
+ *
+ * \param[out] in_status  input status
+ * \verbatim
+  0  PIN_STATUS_NONE   none
+  1  PIN_STATUS_OK     ok
+  2  PIN_STATUS_NO_IN  no input
+\endverbatim
+ * \param[out] choice     returned choice number
+ *
+ * \sa pgtch pawait_event
  */
 void pget_choice(
                  Pin_status *in_status,

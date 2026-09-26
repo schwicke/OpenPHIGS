@@ -31,7 +31,15 @@
 /**
  * \file pset_char_space.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set character spacing
+ *
+ * \param[in]  char_space  character spacing
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pschsp pset_indiv_asf pset_text_prec
+ */
 void pset_char_space(
                      Pfloat char_space
                      )

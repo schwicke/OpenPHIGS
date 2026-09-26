@@ -35,7 +35,16 @@
 /**
  * \file psmcv3.c
  *
- * \brief       set modelling clipping volume 3
+ * \brief       Set modelling clipping volume 3
+ *
+ * \param[in]  op      modelling clipping operator, 0 to 2 (currently not used)
+ * \param[in]  nhalfs  number of half spaces
+ * \param[in]  halfsp  half spaces, 6 values each: point x, y, z followed by normal x, y, z
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_model_clip_vol3 psmcli
  */
 FTN_SUBROUTINE(psmcv3)(
                        FTN_INTEGER(op),

@@ -31,7 +31,14 @@
 /**
  * \file psedi.c
  *
- * \brief       set edge index
+ * \brief       Set edge index
+ *
+ * \param[in]  edi  edge index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_edge_ind psedr
  */
 FTN_SUBROUTINE(psedi)(
                       FTN_INTEGER(edi)

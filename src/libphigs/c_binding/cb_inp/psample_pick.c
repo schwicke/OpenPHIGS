@@ -32,7 +32,22 @@
 /**
  * \file psample_pick.c
  *
- * \brief       Sample pick device
+ * \brief       Sample pick
+ *
+ * \param[in]  ws_id           workstation identifier
+ * \param[in]  pick_num        pick device number
+ * \param[in]  depth           maximum depth of the returned pick path
+ * \param[out] pick_in_status  input status
+ * \verbatim
+  0  PIN_STATUS_NONE   none
+  1  PIN_STATUS_OK     ok
+  2  PIN_STATUS_NO_IN  no input
+\endverbatim
+ * \param[out] pick            pick path
+ *
+ * \pre The workstation must be open
+ *
+ * \sa psmpk pset_pick_mode
  */
 void psample_pick(
                   Pint ws_id,

@@ -56,7 +56,13 @@ SOFTWARE.
 /**
  * \file ptranslate3.c
  *
- * \brief       Generate 3D translation matrix
+ * \brief       Translate 3
+ *
+ * \param[in]  trans_vector  translation vector
+ * \param[out] error_ind     error indicator, 0 on success
+ * \param[out] m             resulting transformation matrix
+ *
+ * \sa ptranslate
  */
 void ptranslate3(
                  Pvec3 *trans_vector,       /* translation vector */

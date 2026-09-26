@@ -31,7 +31,15 @@
 /**
  * \file pset_marker_size.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set marker size scale factor
+ *
+ * \param[in]  marker_size  marker size scale factor
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psmksc pinq_marker_rep pset_indiv_asf pset_line_rep
+ */
 void pset_marker_size(
                       Pfloat marker_size
                       )

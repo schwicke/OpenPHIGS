@@ -35,7 +35,14 @@
 /**
  * \file psbisi.c
  *
- * \brief       set back interior style index
+ * \brief       Set back interior style index
+ *
+ * \param[in]  stylei  back interior style index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_back_int_style_ind psisi
  */
 FTN_SUBROUTINE(psbisi)(
                       FTN_INTEGER(stylei)

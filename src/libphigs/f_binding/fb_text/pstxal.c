@@ -30,6 +30,28 @@
  * \file pstxal.c
  *
  * \brief       Set text alignment
+ *
+ * \param[in]  txalh  horizontal text alignment
+ * \verbatim
+  0  PAHNOR  normal
+  1  PALEFT  left
+  2  PACENT  centre
+  3  PARITE  right
+\endverbatim
+ * \param[in]  txalv  vertical text alignment
+ * \verbatim
+  0  PAVNOR  normal
+  1  PATOP   top
+  2  PACAP   cap
+  3  PAHALF  half
+  4  PABASE  base
+  5  PABOTT  bottom
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_text_align pstxpr
  */
 FTN_SUBROUTINE(pstxal)(
                        FTN_INTEGER(txalh),

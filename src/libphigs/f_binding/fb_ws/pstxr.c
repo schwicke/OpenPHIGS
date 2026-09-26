@@ -40,6 +40,21 @@ extern int record_geom;
  * \file pstxr.c
  *
  * \brief       Set text representation
+ *
+ * \param[in]  wkid  workstation identifier
+ * \param[in]  txi   text index
+ * \param[in]  font  text font
+ * \param[in]  prec  text precision
+ * \verbatim
+  0  PSTRP   string precision
+  1  PCHARP  character precision
+  2  PSTRKP  stroke precision
+\endverbatim
+ * \param[in]  chxp  character expansion factor
+ * \param[in]  chsp  character spacing
+ * \param[in]  coli  colour index
+ *
+ * \sa pset_text_rep pschxp pschsp pscm psiasf pstxci pstxfn pstxi
  */
 
 FTN_SUBROUTINE(pstxr)(

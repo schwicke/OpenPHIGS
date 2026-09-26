@@ -31,7 +31,16 @@
 /**
  * \file pfa.c
  *
- * \brief       fill area
+ * \brief       Fill area
+ *
+ * \param[in]  n    number of points
+ * \param[in]  pxa  x coordinates of the points
+ * \param[in]  pya  y coordinates of the points
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pfill_area psis psisi psir psii psici pfa3
  */
 
 FTN_SUBROUTINE(pfa)(

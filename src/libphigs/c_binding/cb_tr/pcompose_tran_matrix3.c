@@ -57,7 +57,19 @@ SOFTWARE.
 /**
  * \file pcompose_tran_matrix3.c
  *
- * \brief       Combine 3D transformation with other transformation matrix
+ * \brief       Compose transformation matrix 3
+ *
+ * \param[in]  m          matrix to compose with
+ * \param[in]  pt         fixed point for scaling and rotation
+ * \param[in]  shift      translation (shift) vector
+ * \param[in]  x_ang      rotation angle about the x axis in radians
+ * \param[in]  y_ang      rotation angle about the y axis in radians
+ * \param[in]  z_ang      rotation angle about the z axis in radians
+ * \param[in]  scale      scale factors
+ * \param[out] error_ind  error indicator, 0 on success
+ * \param[out] result     resulting transformation matrix
+ *
+ * \sa pcompose_tran_matrix
  */
 void pcompose_tran_matrix3(
                            Pmatrix3 m,                /* transformation matrix */

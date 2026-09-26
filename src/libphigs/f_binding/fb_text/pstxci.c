@@ -30,6 +30,13 @@
  * \file pstxci.c
  *
  * \brief       Set text colour index
+ *
+ * \param[in]  coli  text colour index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_text_colr_ind psiasf pstxr
  */
 FTN_SUBROUTINE(pstxci)(
                        FTN_INTEGER(coli)

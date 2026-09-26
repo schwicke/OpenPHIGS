@@ -35,7 +35,18 @@
 /**
  * \file psism.c
  *
- * \brief       set interior shading method
+ * \brief       Set interior shading method
+ *
+ * \param[in]  ism1  interior shading method
+ * \verbatim
+  1  PNOIS  no shading (flat)
+  2  PCIS   colour interpolation (smooth)
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_int_shad_meth psbism
  */
 FTN_SUBROUTINE(psism)(
                       FTN_INTEGER(ism1)

@@ -40,6 +40,20 @@ extern int record_geom;
  * \file psplr.c
  *
  * \brief       Set polyline representation
+ *
+ * \param[in]  wkid    workstation identifier
+ * \param[in]  pli     polyline index
+ * \param[in]  ltyp    linetype
+ * \verbatim
+  1  PLSOLI  solid
+  2  PLDASH  dashed
+  3  PLDOT   dotted
+  4  PLDASD  dash-dotted
+\endverbatim
+ * \param[in]  lwidth  linewidth scale factor
+ * \param[in]  coli    colour index
+ *
+ * \sa pset_line_rep pscm psiasf psln pslwsc psplci
  */
 
 FTN_SUBROUTINE(psplr)(

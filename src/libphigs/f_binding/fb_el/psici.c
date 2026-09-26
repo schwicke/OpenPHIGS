@@ -31,7 +31,14 @@
 /**
  * \file psici.c
  *
- * \brief       set interior colour index for front face
+ * \brief       Set interior colour index
+ *
+ * \param[in]  coli  interior colour index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_int_colr_ind psir
  */
 FTN_SUBROUTINE(psici)(
                       FTN_INTEGER(coli)

@@ -31,7 +31,25 @@
 /**
  * \file psstm.c
  *
- * \brief       set string mode
+ * \brief       Set string mode
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  stdnr  string device number
+ * \param[in]  mode   operating mode
+ * \verbatim
+  0  PREQU   request
+  1  PSAMPL  sample
+  2  PEVENT  event
+\endverbatim
+ * \param[in]  esw    echo switch
+ * \verbatim
+  0  PNECHO  no echo
+  1  PECHO   echo
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pset_string_mode pwait pinst pinst3 prqst psmst
  */
 FTN_SUBROUTINE(psstm)(
                       FTN_INTEGER(wkid),

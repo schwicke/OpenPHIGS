@@ -28,7 +28,13 @@
 /**
  * \file pinq_ws_cat.c
  *
- * \brief       Get workstation category
+ * \brief       Inquire workstation category
+ *
+ * \param[in]  ws_type  workstation type
+ * \param[out] err_ind  error indicator, 0 on success
+ * \param[out] cat      returned workstation category (PCAT_* value)
+ *
+ * \sa pinq_ws_conn_type
  */
 
 void pinq_ws_cat(

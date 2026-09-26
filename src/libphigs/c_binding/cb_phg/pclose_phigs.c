@@ -37,7 +37,9 @@
 /**
  * \file pclose_phigs.c
  *
- * \brief       Close phigs
+ * \brief       Close PHIGS
+ *
+ * \sa pclph popen_phigs
  */
 void pclose_phigs(
                   void

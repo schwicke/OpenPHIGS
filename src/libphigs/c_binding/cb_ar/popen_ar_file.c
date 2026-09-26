@@ -33,6 +33,11 @@
  * \file popen_ar_file.c
  *
  * \brief       Open archive file
+ *
+ * \param[in]  archive_id    archive file identifier
+ * \param[in]  archive_file  archive file name
+ *
+ * \sa pclose_ar_file
  */
 void popen_ar_file(
                    Pint archive_id,

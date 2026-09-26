@@ -34,6 +34,10 @@
  * \file pseplb.c
  *
  * \brief       Set element pointer at label
+ *
+ * \param[in]  label  label to move the element pointer to
+ *
+ * \sa pset_elem_ptr_label plb
  */
 
 FTN_SUBROUTINE(pseplb)(

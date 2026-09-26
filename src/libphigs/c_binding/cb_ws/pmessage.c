@@ -46,7 +46,12 @@
 /**
  * \file pmessage.c
  *
- * \brief       Display a message box
+ * \brief       Message
+ *
+ * \param[in]  ws_id    workstation identifier
+ * \param[in]  message  message text
+ *
+ * \sa pmsg
  */
 void pmessage(
               Pint ws_id,

@@ -32,7 +32,12 @@
 /**
  * \file pget_loc3.c
  *
- * \brief       Get locator event from event queue 3D
+ * \brief       Get locator 3
+ *
+ * \param[out] view_ind  view index
+ * \param[out] loc_pos   locator position
+ *
+ * \sa pawait_event pget_loc pset_view_tran_in_pri
  */
 void pget_loc3(
                Pint *view_ind,

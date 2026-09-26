@@ -31,7 +31,15 @@
 /**
  * \file pexec_struct.c
  *
- * \brief       Creates a new element  */
+ * \brief       Execute structure
+ *
+ * \param[in]  struct_id  identifier of the structure to execute
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pexst
+ */
 void pexec_struct(
                   Pint struct_id
                   )

@@ -31,7 +31,14 @@
 /**
  * \file plb.c
  *
- * \brief       label
+ * \brief       Label
+ *
+ * \param[in]  label  label identifier
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa plabel pseplb
  */
 FTN_SUBROUTINE(plb)(
                     FTN_INTEGER(label)

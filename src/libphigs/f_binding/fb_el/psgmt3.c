@@ -31,7 +31,14 @@
 /**
  * \file psgmt3.c
  *
- * \brief       set global transformation 3
+ * \brief       Set global transformation 3
+ *
+ * \param[in]  xfrmt  4x4 global transformation matrix, XFRMT(row,column)
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_global_tran3
  */
 FTN_SUBROUTINE(psgmt3)(
                        float* xfrmt

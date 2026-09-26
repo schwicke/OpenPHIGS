@@ -29,7 +29,13 @@
 /**
  * \file pinq_cur_elem_type_size.c
  *
- * \brief       Get current element type and size
+ * \brief       Inquire current element type and size
+ *
+ * \param[out] err_ind    error indicator, 0 on success
+ * \param[out] elem_type  element type
+ * \param[out] elem_size  element size in bytes
+ *
+ * \sa pinq_cur_elem_content
  */
 void pinq_cur_elem_type_size(
                              Pint *err_ind,

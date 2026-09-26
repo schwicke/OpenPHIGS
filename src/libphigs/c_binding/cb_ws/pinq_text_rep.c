@@ -46,7 +46,19 @@
 /**
  * \file pinq_text_rep.c
  *
- * \brief       Get workstation text representation
+ * \brief       Inquire text representation
+ *
+ * \param[in]  ws_id     workstation identifier
+ * \param[in]  index     bundle table index
+ * \param[in]  type      return the value as set or as realised
+ * \verbatim
+  0  PINQ_SET       value as set
+  1  PINQ_REALIZED  value as realised
+\endverbatim
+ * \param[out] err_ind   error indicator, 0 on success
+ * \param[out] text_rep  returned text representation
+ *
+ * \sa pset_text_rep
  */
 void pinq_text_rep(
                    Pint ws_id,

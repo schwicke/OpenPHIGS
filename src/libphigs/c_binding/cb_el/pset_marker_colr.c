@@ -30,7 +30,13 @@
 /**
  * \file pset_marker_colr.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set polymarker colour
+ *
+ * \param[in]  colr  colour, given as index or as direct colour
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ */
 void pset_marker_colr(
                       Pgcolr *colr
                       )

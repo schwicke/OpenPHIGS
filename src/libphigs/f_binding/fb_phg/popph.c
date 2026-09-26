@@ -37,7 +37,14 @@
 /**
  * \file popph.c
  *
- * \brief       Open phigs
+ * \brief       Open PHIGS
+ *
+ * Both arguments are accepted for compatibility and ignored.
+ *
+ * \param[in]  errfil  error file unit (currently not used)
+ * \param[in]  bufa    buffer area size (currently not used)
+ *
+ * \sa popen_phigs pclph
  */
 FTN_SUBROUTINE(popph)(
                       FTN_INTEGER(errfil),

@@ -31,7 +31,17 @@
 /**
  * \file ppl.c
  *
- * \brief       Creates a new element  */
+ * \brief       Polyline
+ *
+ * \param[in]  n    number of points
+ * \param[in]  pxa  x coordinates of the points
+ * \param[in]  pya  y coordinates of the points
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa ppolyline psln pslwsc ppl3
+ */
 FTN_SUBROUTINE(ppl)(
                     FTN_INTEGER(n),
                     FTN_REAL_ARRAY(pxa),

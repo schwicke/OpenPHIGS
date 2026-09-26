@@ -29,7 +29,10 @@
 /**
  * \file pinq_elem_ptr.c
  *
- * \brief       Returns the index of the current element.
+ * \brief       Inquire element pointer
+ *
+ * \param[out] err_ind         error indicator, 0 on success
+ * \param[out] elem_ptr_value  returned element pointer
  */
 void pinq_elem_ptr(
                    Pint *err_ind,

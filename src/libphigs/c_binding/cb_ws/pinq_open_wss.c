@@ -46,7 +46,15 @@
 /**
  * \file pinq_open_wss.c
  *
- * \brief       Get list of open workstations
+ * \brief       Inquire set of open workstations
+ *
+ * \param[in]  num_elems_appl_list  number of list elements the application has room for
+ * \param[in]  start_ind            index of the first list element to return
+ * \param[out] err_ind              error indicator, 0 on success
+ * \param[out] open_ws_ids          returned list of open workstation identifiers
+ * \param[out] num_elems_impl_list  number of elements available in the implementation list
+ *
+ * \sa popen_ws pclose_ws
  */
 void pinq_open_wss(
                    Pint num_elems_appl_list,

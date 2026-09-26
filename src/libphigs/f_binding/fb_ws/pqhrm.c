@@ -39,7 +39,15 @@ extern int record_geom;
 /**
  * \file pqhrm.c
  *
- * \brief       Inquire hlhsr mode
+ * \brief       Inquire HLHSR mode
+ *
+ * \param[in]  wkid     workstation identifier
+ * \param[out] err_ind  error indicator, 0 on success
+ * \param[out] hupd     HLHSR update state: 0 not pending, 1 pending
+ * \param[out] chrm     current HLHSR mode (0 off, 1 z-buffer)
+ * \param[out] rhrm     requested HLHSR mode (0 off, 1 z-buffer)
+ *
+ * \sa pshrm
  */
 
 FTN_SUBROUTINE(pqhrm)(

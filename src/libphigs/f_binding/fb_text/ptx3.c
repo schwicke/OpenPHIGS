@@ -29,7 +29,20 @@
 /**
  * \file ptx3.c
  *
- * \brief       TEXT 3
+ * \brief       Text 3
+ *
+ * \param[in]  px     x coordinate of the text position
+ * \param[in]  py     y coordinate of the text position
+ * \param[in]  pz     z coordinate of the text position
+ * \param[in]  tdx    x components of the two text direction vectors
+ * \param[in]  tdy    y components of the two text direction vectors
+ * \param[in]  tdz    z components of the two text direction vectors
+ * \param[in]  chars  character string
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa ptext3 pschxp pschh pschsp pschup pstxal pstxci pstxfn
  */
 FTN_SUBROUTINE(ptx3)(
                      FTN_REAL(px),

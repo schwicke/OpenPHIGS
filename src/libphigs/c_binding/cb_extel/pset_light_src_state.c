@@ -30,7 +30,16 @@
 /**
  * \file pset_light_src_state.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set light source state
+ *
+ * \param[in]  activation    light source indices to activate
+ * \param[in]  deactivation  light source indices to deactivate
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pslss
+ */
 void pset_light_src_state(
                           Pint_list *activation,
                           Pint_list *deactivation

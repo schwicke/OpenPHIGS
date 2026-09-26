@@ -30,7 +30,15 @@
 /**
  * \file pset_text_align.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set text alignment
+ *
+ * \param[in]  text_align  horizontal and vertical text alignment (PHOR_* and PVERT_* values)
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pstxal pset_text_prec
+ */
 void pset_text_align(
                      Ptext_align *text_align
                      )

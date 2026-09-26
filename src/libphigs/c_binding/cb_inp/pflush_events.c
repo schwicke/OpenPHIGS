@@ -32,7 +32,24 @@
 /**
  * \file pflush_events.c
  *
- * \brief       Flush events for device
+ * \brief       Flush device events
+ *
+ * \param[in]  ws_id      workstation identifier
+ * \param[in]  inp_class  input class
+ * \verbatim
+  0  PIN_NONE    none
+  1  PIN_LOC     locator
+  2  PIN_STROKE  stroke
+  3  PIN_VAL     valuator
+  4  PIN_CHOICE  choice
+  5  PIN_PICK    pick
+  6  PIN_STRING  string
+\endverbatim
+ * \param[in]  dev        device number
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pflush
  */
 void pflush_events(
                    Pint        ws_id,     /* workstation identifier       */

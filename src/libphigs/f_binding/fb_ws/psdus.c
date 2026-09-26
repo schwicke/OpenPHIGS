@@ -40,6 +40,14 @@ extern int record_geom;
  * \file psdus.c
  *
  * \brief       Set display update state
+ *
+ * \param[in]  wkid    workstation identifier
+ * \param[in]  defmod  deferral mode: 0 ASAP, 1 BNIG, 2 BNIL, 3 ASTI, 4 WAIT
+ * \param[in]  modmod  modification mode: 0 NIVE, 1 UWOR, 2 UQUM
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pset_disp_upd_st
  */
 
 FTN_SUBROUTINE(psdus)(

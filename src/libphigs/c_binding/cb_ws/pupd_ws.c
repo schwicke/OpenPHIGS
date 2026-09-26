@@ -46,7 +46,18 @@
 /**
  * \file pupd_ws.c
  *
- * \brief       Set workstation update state
+ * \brief       Update workstation
+ *
+ * \param[in]  ws_id       workstation identifier
+ * \param[in]  regen_flag  regeneration flag
+ * \verbatim
+  0  PFLAG_POSTPONE  postpone
+  1  PFLAG_PERFORM   perform
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa puwk
  */
 void pupd_ws(
              Pint ws_id,

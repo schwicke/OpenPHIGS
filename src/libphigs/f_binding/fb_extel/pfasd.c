@@ -35,7 +35,60 @@
 /**
  * \file pfasd.c
  *
- * \brief       fill area set
+ * \brief       Fill area set with data
+ *
+ * Creates a FILL AREA SET 3 WITH DATA element; the z coordinates of all vertices are 0.
+ *
+ * \param[in]  fflag1      facet data flag
+ * \verbatim
+  0  PFNO  no facet data
+  1  PFC   facet colour
+  2  PFN   facet normal
+  3  PFCN  facet colour and normal
+\endverbatim
+ * \param[in]  eflag1      edge data flag
+ * \verbatim
+  0  PENO  no edge data
+  1  PEVF  edge visibility flags
+\endverbatim
+ * \param[in]  vflag1      vertex data flag
+ * \verbatim
+  0  PCD    coordinates only
+  1  PCDC   coordinates and colour
+  2  PCDN   coordinates and normal
+  3  PCDCN  coordinates, colour and normal
+\endverbatim
+ * \param[in]  colr_type1  colour type; facet and vertex colours are currently taken as colour indices
+ * \verbatim
+  0  PINDIR  colour index
+  1  PRGB    RGB
+  2  PRGBA   RGB with alpha
+\endverbatim
+ * \param[in]  ncc1        number of colour components (not used)
+ * \param[in]  fcoli1      facet colour index (PFC, PFCN)
+ * \param[in]  fcolr       facet data values; for PFN the facet normal is read from here
+ * \param[in]  fnx         x component of the facet normal (PFCN)
+ * \param[in]  fny         y component of the facet normal (PFCN)
+ * \param[in]  fnz         z component of the facet normal (PFCN)
+ * \param[in]  fdlen       length of the facet application data (not used)
+ * \param[in]  fdata       facet application data (not used)
+ * \param[in]  npl         number of point lists (fill areas) in the set
+ * \param[in]  ixa         number of vertices of each point list; all lists must currently have the same length
+ * \param[in]  edata       edge visibility flags (PEVF)
+ * \param[in]  pxa         x coordinates of the vertices
+ * \param[in]  pya         y coordinates of the vertices
+ * \param[in]  vcoli       vertex colour indices (PCDC, PCDCN)
+ * \param[in]  vcolr       vertex colour values (not used)
+ * \param[in]  vnxa        x components of the vertex normals (PCDN, PCDCN)
+ * \param[in]  vnya        y components of the vertex normals (PCDN, PCDCN)
+ * \param[in]  vnza        z components of the vertex normals (PCDN, PCDCN)
+ * \param[in]  vdn         length of the vertex application data (not used)
+ * \param[in]  vdata       vertex application data (not used)
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pfill_area_set3_data pfas3d pfill_area_set_data
  */
 FTN_SUBROUTINE(pfasd)(
                       FTN_INTEGER(fflag1),

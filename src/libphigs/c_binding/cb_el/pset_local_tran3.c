@@ -31,7 +31,21 @@
 /**
  * \file pset_local_tran3.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set local transformation 3
+ *
+ * \param[in]  local_tran    local modelling transformation matrix
+ * \param[in]  compose_type  composition type
+ * \verbatim
+  0  PTYPE_PRECONCAT   preconcatenate
+  1  PTYPE_POSTCONCAT  postconcatenate
+  2  PTYPE_REPLACE     replace
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pslmt3
+ */
 void pset_local_tran3(
                       Pmatrix3 local_tran,
                       Pcompose_type compose_type

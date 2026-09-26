@@ -31,7 +31,21 @@
 /**
  * \file pinq_conf_res.c
  *
- * \brief       Get archive conflict resolution
+ * \brief       Inquire conflict resolution
+ *
+ * \param[out] err_ind        error indicator, 0 on success
+ * \param[out] archive_res    returned archival conflict resolution
+ * \verbatim
+  0  PRES_MAINTAIN  maintain
+  1  PRES_ABANDON   abandon
+  2  PRES_UPD       update
+\endverbatim
+ * \param[out] retrieval_res  returned retrieval conflict resolution
+ * \verbatim
+  0  PRES_MAINTAIN  maintain
+  1  PRES_ABANDON   abandon
+  2  PRES_UPD       update
+\endverbatim
  */
 void pinq_conf_res(
                    Pint *err_ind,

@@ -32,7 +32,11 @@
 /**
  * \file pget_val.c
  *
- * \brief       Get valuator event from event queue
+ * \brief       Get valuator
+ *
+ * \param[out] val  returned valuator value
+ *
+ * \sa pgtvl pawait_event
  */
 void pget_val(
               Pfloat *val

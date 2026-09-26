@@ -30,6 +30,13 @@
  * \file pstxfn.c
  *
  * \brief       Set text font
+ *
+ * \param[in]  font  text font
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_text_font psiasf pstxr
  */
 FTN_SUBROUTINE(pstxfn)(
                        FTN_INTEGER(font)

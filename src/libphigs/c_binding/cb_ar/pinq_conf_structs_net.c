@@ -31,7 +31,22 @@
 /**
  * \file pinq_conf_structs_net.c
  *
- * \brief       Get conflicting structure ids in network
+ * \brief       Inquire conflicting structures in network
+ *
+ * \param[in]  ar_id                archive file identifier
+ * \param[in]  struct_id            structure identifier
+ * \param[in]  source               structure network source
+ * \verbatim
+  0  PNET_CSS  central structure store
+  1  PNET_AR   archive
+\endverbatim
+ * \param[in]  num_elems_appl_list  number of list elements the application has room for
+ * \param[in]  start_ind            index of the first list element to return
+ * \param[out] err_ind              error indicator, 0 on success
+ * \param[out] ids                  returned list of conflicting structure identifiers
+ * \param[out] num_elems_impl_list  number of elements available in the implementation list
+ *
+ * \sa pinq_all_conf_structs
  */
 void pinq_conf_structs_net(
                            Pint ar_id,

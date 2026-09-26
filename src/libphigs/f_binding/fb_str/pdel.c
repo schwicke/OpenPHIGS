@@ -34,6 +34,10 @@
  * \file pdel.c
  *
  * \brief       Delete element
+ *
+ * Deletes the element at the element pointer.
+ *
+ * \sa pdel_elem psep posep pseplb
  */
 FTN_SUBROUTINE(pdel)(void)
 {

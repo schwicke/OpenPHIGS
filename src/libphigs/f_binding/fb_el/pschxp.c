@@ -31,7 +31,14 @@
 /**
  * \file pschxp.c
  *
- * \brief       set character expansion factor
+ * \brief       Set character expansion factor
+ *
+ * \param[in]  chxp  character expansion factor
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_char_expan psiasf pstxpr
  */
 FTN_SUBROUTINE(pschxp)(
                        FTN_REAL(chxp)

@@ -35,7 +35,14 @@
 /**
  * \file psbici.c
  *
- * \brief       set back interior colour index
+ * \brief       Set back interior colour index
+ *
+ * \param[in]  coli  back interior colour index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_back_int_colr_ind psbic psici
  */
 FTN_SUBROUTINE(psbici)(
                       FTN_INTEGER(coli)

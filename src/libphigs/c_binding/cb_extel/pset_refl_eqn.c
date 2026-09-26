@@ -30,7 +30,21 @@
 /**
  * \file pset_refl_eqn.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set interior reflectance equation
+ *
+ * \param[in]  refl_equ  reflectance equation
+ * \verbatim
+  1  PREFL_NONE           no reflectance calculation
+  2  PREFL_AMBIENT        ambient
+  3  PREFL_AMB_DIFF       ambient and diffuse
+  4  PREFL_AMB_DIFF_SPEC  ambient, diffuse and specular
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psrfeq pset_back_refl_eqn
+ */
 void pset_refl_eqn(
                    Pint refl_equ
                    )

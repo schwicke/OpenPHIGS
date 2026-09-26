@@ -56,7 +56,12 @@ SOFTWARE.
 /**
  * \file protate_z.c
  *
- * \brief       Generate matrix for rotation around z */
+ * \brief       Rotate z
+ *
+ * \param[in]  angle      rotation angle in radians
+ * \param[out] error_ind  error indicator, 0 on success
+ * \param[out] m          resulting transformation matrix
+ */
 void protate_z(
                Pfloat angle,              /* rotation angle */
                Pint *error_ind,           /* OUT error indicator */

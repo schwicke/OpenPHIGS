@@ -46,7 +46,13 @@
 /**
  * \file pset_edge_rep.c
  *
- * \brief       Set workstation edge represenation
+ * \brief       Set edge representation
+ *
+ * \param[in]  ws_id        workstation identifier
+ * \param[in]  edge_ind     edge bundle index
+ * \param[in]  edge_bundle  edge bundle: flag, type, width and colour index
+ *
+ * \sa psedr pinq_edge_rep pset_colr_model pset_edge_colr_ind pset_edge_ind pset_edgetype pset_edgewidth pset_indiv_asf
  */
 void pset_edge_rep(
                    Pint ws_id,

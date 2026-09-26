@@ -29,7 +29,16 @@
 /**
  * \file pinq_edit_mode.c
  *
- * \brief       Get structure edit mode
+ * \brief       Inquire edit mode
+ *
+ * \param[out] err_ind    error indicator, 0 on success
+ * \param[out] edit_mode  returned edit mode
+ * \verbatim
+  0  PEDIT_INSERT   insert
+  1  PEDIT_REPLACE  replace
+\endverbatim
+ *
+ * \sa pqedm pset_edit_mode
  */
 void pinq_edit_mode(
                     Pint *err_ind,

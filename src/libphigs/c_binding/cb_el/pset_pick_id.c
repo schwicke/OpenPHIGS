@@ -31,7 +31,15 @@
 /**
  * \file pset_pick_id.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set pick identifier
+ *
+ * \param[in]  pick_id  pick identifier
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pspkid
+ */
 void pset_pick_id(
                   Pint pick_id
                   )

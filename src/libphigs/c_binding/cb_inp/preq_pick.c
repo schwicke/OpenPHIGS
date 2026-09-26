@@ -32,7 +32,22 @@
 /**
  * \file preq_pick.c
  *
- * \brief       Request input from stroke device 3D
+ * \brief       Request pick
+ *
+ * \param[in]  ws_id     workstation identifier
+ * \param[in]  pick_num  pick device number
+ * \param[in]  depth     maximum depth of the returned pick path
+ * \param[out] status    input status
+ * \verbatim
+  0  PIN_STATUS_NONE   none
+  1  PIN_STATUS_OK     ok
+  2  PIN_STATUS_NO_IN  no input
+\endverbatim
+ * \param[out] pick      pick path
+ *
+ * \pre The workstation must be open
+ *
+ * \sa prqpk padd_names_set premove_names_set pset_pick_filter pset_pick_id pset_pick_mode
  */
 void preq_pick(
                Pint ws_id,

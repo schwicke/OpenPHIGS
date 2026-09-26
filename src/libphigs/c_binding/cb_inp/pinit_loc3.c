@@ -32,7 +32,19 @@
 /**
  * \file pinit_loc3.c
  *
- * \brief       Initialize locator device 3D
+ * \brief       Initialize locator 3
+ *
+ * \param[in]  ws_id          workstation identifier
+ * \param[in]  loc_num        locator device number
+ * \param[in]  init_view_ind  initial view index
+ * \param[in]  init_loc_pos   initial locator position
+ * \param[in]  pet            prompt and echo type
+ * \param[in]  echo_vol       echo volume in device coordinates
+ * \param[in]  loc_data       locator data record
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pinlc3 pset_loc_mode
  */
 void pinit_loc3(
                 Pint ws_id,

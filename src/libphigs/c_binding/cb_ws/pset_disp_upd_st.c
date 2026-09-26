@@ -46,7 +46,27 @@
 /**
  * \file pset_disp_upd_st.c
  *
- * \brief       Set workstation update state
+ * \brief       Set display update state
+ *
+ * \param[in]  ws_id     workstation identifier
+ * \param[in]  def_mode  deferral mode
+ * \verbatim
+  0  PDEFER_ASAP  as soon as possible
+  1  PDEFER_BNIG  before next interaction globally
+  2  PDEFER_BNIL  before next interaction locally
+  3  PDEFER_ASTI  at some time
+  4  PDEFER_WAIT  when the application requests it
+\endverbatim
+ * \param[in]  mod_mode  modification mode
+ * \verbatim
+  0  PMODE_NIVE  no immediate visual effects
+  1  PMODE_UWOR  update without regeneration
+  2  PMODE_UQUM  use quick update methods
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa psdus
  */
 void pset_disp_upd_st(
                       Pint ws_id,

@@ -40,6 +40,21 @@ extern int record_geom;
  * \file psir.c
  *
  * \brief       Set interior representation
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  ii     interior index
+ * \param[in]  ints   interior style
+ * \verbatim
+  0  PISEMP  empty
+  1  PHOLLO  hollow (outline only)
+  2  PSOLID  solid
+  3  PHATCH  hatch
+  4  PPATTR  pattern
+\endverbatim
+ * \param[in]  styli  interior style index
+ * \param[in]  coli   colour index
+ *
+ * \sa pset_int_rep pscm psiasf psici psii psisi
  */
 
 FTN_SUBROUTINE(psir)(

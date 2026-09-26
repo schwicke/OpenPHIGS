@@ -46,7 +46,19 @@
 /**
  * \file pinq_int_rep.c
  *
- * \brief       Get workstation interior representation
+ * \brief       Inquire interior representation
+ *
+ * \param[in]  ws_id    workstation identifier
+ * \param[in]  index    bundle table index
+ * \param[in]  type     return the value as set or as realised
+ * \verbatim
+  0  PINQ_SET       value as set
+  1  PINQ_REALIZED  value as realised
+\endverbatim
+ * \param[out] err_ind  error indicator, 0 on success
+ * \param[out] int_rep  returned interior representation
+ *
+ * \sa pset_int_rep
  */
 void pinq_int_rep(
                   Pint ws_id,

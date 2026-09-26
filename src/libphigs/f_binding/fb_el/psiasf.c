@@ -31,7 +31,15 @@
 /**
  * \file psiasf.c
  *
- * \brief       set individual asf
+ * \brief       Set individual ASF
+ *
+ * \param[in]  attr  aspect identifier
+ * \param[in]  val   aspect source: 0 bundled, 1 individual
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_indiv_asf
  */
 FTN_SUBROUTINE(psiasf)(
                        FTN_INTEGER(attr),

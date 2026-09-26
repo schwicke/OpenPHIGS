@@ -30,7 +30,16 @@
 /**
  * \file ptext.c
  *
- * \brief       Creates a new element  */
+ * \brief       Text
+ *
+ * \param[in]  text_pos     text position
+ * \param[in]  char_string  character string
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa ptx pset_char_expan pset_char_ht pset_char_space pset_char_up_vec pset_text_align pset_text_colr_ind pset_text_font
+ */
 void ptext(
            Ppoint *text_pos,
            char *char_string

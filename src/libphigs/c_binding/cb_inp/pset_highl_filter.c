@@ -33,6 +33,11 @@
  * \file pset_highl_filter.c
  *
  * \brief       Set highlighting filter
+ *
+ * \param[in]  ws_id   workstation identifier
+ * \param[in]  filter  highlighting filter: inclusion and exclusion name sets
+ *
+ * \sa pshlft padd_names_set premove_names_set
  */
 void pset_highl_filter(
                        Pint ws_id,

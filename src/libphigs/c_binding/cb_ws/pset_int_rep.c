@@ -46,7 +46,13 @@
 /**
  * \file pset_int_rep.c
  *
- * \brief       Set workstation interior represenation
+ * \brief       Set interior representation
+ *
+ * \param[in]  ws_id       workstation identifier
+ * \param[in]  int_ind     interior bundle index
+ * \param[in]  int_bundle  interior bundle: style, style index and colour index
+ *
+ * \sa psir pinq_int_rep pset_colr_model pset_indiv_asf pset_int_colr_ind pset_int_ind pset_int_style_ind
  */
 void pset_int_rep(
                   Pint ws_id,

@@ -35,7 +35,14 @@
 /**
  * \file psfcm.c
  *
- * \brief       set facet culling mode
+ * \brief       Set face culling mode
+ *
+ * \param[in]  imode  face culling mode: 0 none, 1 back faces, 2 front faces
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_face_cull_mode
  */
 FTN_SUBROUTINE(psfcm)(
                       FTN_INTEGER(imode)

@@ -32,7 +32,16 @@
 /**
  * \file psample_loc.c
  *
- * \brief       Sample locator device
+ * \brief       Sample locator
+ *
+ * \param[in]  ws_id     workstation identifier
+ * \param[in]  loc_num   locator device number
+ * \param[out] view_ind  view index
+ * \param[out] loc_pos   locator position
+ *
+ * \pre The workstation must be open
+ *
+ * \sa psmlc pset_loc_mode psample_loc3
  */
 void psample_loc(
                  Pint ws_id,

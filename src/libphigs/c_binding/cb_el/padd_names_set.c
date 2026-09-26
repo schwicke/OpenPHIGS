@@ -31,7 +31,15 @@
 /**
  * \file padd_names_set.c
  *
- * \brief       Creates a new element  */
+ * \brief       Add names to set
+ *
+ * \param[in]  names  list of names
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pads premove_names_set pset_highl_filter pset_invis_filter pset_pick_filter
+ */
 void padd_names_set(
                     Pint_list *names
                     )

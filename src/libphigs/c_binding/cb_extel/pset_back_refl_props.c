@@ -30,7 +30,15 @@
 /**
  * \file pset_back_refl_props.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set back area properties
+ *
+ * \param[in]  refl_props  reflectance properties: ambient, diffuse and specular coefficients, specular colour and exponent
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_refl_props
+ */
 void pset_back_refl_props(
                           Prefl_props *refl_props
                           )

@@ -40,6 +40,12 @@ extern int record_geom;
  * \file pupast.c
  *
  * \brief       Unpost all structures
+ *
+ * \param[in]  wkid  workstation identifier
+ *
+ * \pre The workstation must be open
+ *
+ * \sa punpost_all_structs pqpost pqwkpo ppost pupost
  */
 
 FTN_SUBROUTINE(pupast)(

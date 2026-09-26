@@ -46,7 +46,13 @@
 /**
  * \file pset_colr_rep.c
  *
- * \brief       Set workstation colour representation
+ * \brief       Set colour representation
+ *
+ * \param[in]  ws_id  workstation identifier
+ * \param[in]  ind    colour index
+ * \param[in]  rep    colour representation
+ *
+ * \sa pscr pinq_colr_rep
  */
 void pset_colr_rep(
                    Pint ws_id,

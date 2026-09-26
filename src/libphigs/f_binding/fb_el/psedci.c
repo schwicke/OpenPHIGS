@@ -31,7 +31,14 @@
 /**
  * \file psedci.c
  *
- * \brief       set edge colour index
+ * \brief       Set edge colour index
+ *
+ * \param[in]  coli  edge colour index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_edge_colr_ind psiasf
  */
 FTN_SUBROUTINE(psedci)(
                        FTN_INTEGER(coli)

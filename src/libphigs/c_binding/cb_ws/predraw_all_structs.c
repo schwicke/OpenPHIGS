@@ -46,7 +46,18 @@
 /**
  * \file predraw_all_structs.c
  *
- * \brief       Redraw all structures on workstation
+ * \brief       Redraw all structures
+ *
+ * \param[in]  ws_id      workstation identifier
+ * \param[in]  ctrl_flag  control flag: clear the display surface conditionally or always
+ * \verbatim
+  0  PFLAG_COND    conditionally
+  1  PFLAG_ALWAYS  always
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa prst pupd_ws
  */
 void predraw_all_structs(
                          Pint ws_id,
