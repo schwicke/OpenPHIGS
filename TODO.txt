@@ -1,0 +1,443 @@
+OpenPHIGS: missing C and FORTRAN bindings
+=========================================
+
+Compared against the PHIGS (ISO/IEC 9592-1) and PHIGS PLUS (ISO/IEC 9592-4)
+function lists. The ISO documents were not available; the reference was
+assembled from public sources:
+  - X Consortium PEX-SI headers (C names, incl. PHIGS PLUS):
+    https://www.x.org/archive/unsupported/lib/PHIGS/include/
+  - IBM graPHIGS ISO PHIGS Subroutine Reference (C and ISO FORTRAN names):
+    http://ps-2.kev009.com/tl/techlib/manuals/adoclib/libs/phigsiso/toc.htm
+No public list of PHIGS PLUS FORTRAN names was found, so for PHIGS PLUS
+only the C binding is compared. A '-' means the name is not known.
+The same information is in src/docs/bindings_status.dox (man page
+bindings_status(3)).
+
+Summary
+-------
+
+              functions  C implemented  FORTRAN implemented
+  ----------  ---------  -------------  --------------------
+  PHIGS       326        206            132
+  PHIGS PLUS  75         21             13 (OpenPHIGS names)
+
+1. PHIGS functions missing in both bindings
+===========================================
+
+Output Primitives:
+
+  Function                         C             FORTRAN
+  -------------------------------  ------------  -------
+  CELL ARRAY                       pcell_array   PCA
+  CELL ARRAY 3                     pcell_array3  PCA3
+  GENERALIZED DRAWING PRIMITIVE    pgdp          PGDP
+  GENERALIZED DRAWING PRIMITIVE 3  pgdp3         PGDP3
+
+Attribute Specification:
+
+  Function                                 C                        FORTRAN
+  ---------------------------------------  -----------------------  -------
+  SET ANNOTATION STYLE                     pset_anno_style          PSANS
+  SET PATTERN REFERENCE POINT              pset_pat_ref_point       PSPARF
+  SET PATTERN REFERENCE POINT AND VECTORS  pset_pat_ref_point_vecs  PSPRPV
+  SET PATTERN SIZE                         pset_pat_size            PSPA
+
+Miscellaneous Structure Element:
+
+  Function          C           FORTRAN
+  ----------------  ----------  -------
+  APPLICATION DATA  pappl_data  PAP
+
+Workstation Table Settings:
+
+  Function                    C              FORTRAN
+  --------------------------  -------------  -------
+  SET PATTERN REPRESENTATION  pset_pat_rep   PSPAR
+  SET VIEW REPRESENTATION     pset_view_rep  PSVWR
+
+Structure Archiving:
+
+  Function                           C                 FORTRAN
+  ---------------------------------  ----------------  -------
+  RETRIEVE ANCESTORS OF STRUCTURE    pret_paths_ances  PREPAN
+  RETRIEVE DESCENDANTS OF STRUCTURE  pret_paths_descs  PREPDE
+
+Transformation:
+
+  Function                           C                        FORTRAN
+  ---------------------------------  -----------------------  -------
+  RESTORE MODELLING CLIPPING VOLUME  prestore_model_clip_vol  PRMCV
+  SET GLOBAL TRANSFORMATION          pset_global_tran         PSGMT
+  SET LOCAL TRANSFORMATION           pset_local_tran          PSLMT
+  SET MODELLING CLIPPING VOLUME      pset_model_clip_vol      PSMCV
+
+Input:
+
+  Function             C               FORTRAN
+  -------------------  --------------  -------
+  GET STRING           pget_string     PGTST
+  INITIALIZE CHOICE    pinit_choice    PINCH
+  INITIALIZE STROKE    pinit_stroke    PINSK
+  INITIALIZE VALUATOR  pinit_val       PINVL
+  REQUEST LOCATOR      preq_loc        PRQLC
+  REQUEST STROKE       preq_stroke     PRQSK
+  SAMPLE CHOICE        psample_choice  PSMCH
+  SAMPLE VALUATOR      psample_val     PSMVL
+
+Utility:
+
+  Function            C     FORTRAN
+  ------------------  ----  -------
+  UNPACK DATA RECORD  -     PUREC
+
+Error Control:
+
+  Function                 C                       FORTRAN
+  -----------------------  ----------------------  -------
+  EMERGENCY CLOSE PHIGS    pemergency_close_phigs  PECLPH
+  SET ERROR HANDLING MODE  pset_err_hand_mode      PSERHM
+
+Special Interface:
+
+  Function  C        FORTRAN
+  --------  -------  -------
+  ESCAPE    pescape  PESC
+
+Inquire:
+
+  Function                                                    C                         FORTRAN
+  ----------------------------------------------------------  ------------------------  -------
+  INQUIRE ANNOTATION FACILITIES                               pinq_anno_facs            PQANF
+  INQUIRE CHOICE DEVICE STATE                                 pinq_choice_st            PQCHS
+  INQUIRE CHOICE DEVICE STATE 3                               pinq_choice_st3           PQCHS3
+  INQUIRE COLOUR MODEL                                        pinq_colr_model           PQCMD
+  INQUIRE COLOUR MODEL FACILITIES                             pinq_colr_model_facs      PQCMDF
+  INQUIRE DEFAULT CHOICE DEVICE DATA                          pinq_def_choice_data      PQDCH
+  INQUIRE DEFAULT CHOICE DEVICE DATA 3                        pinq_def_choice_data3     PQDCH3
+  INQUIRE DEFAULT DISPLAY UPDATE STATE                        pinq_def_disp_upd_st      PQDDUS
+  INQUIRE DEFAULT LOCATOR DEVICE DATA                         pinq_def_loc_data         PQDLC
+  INQUIRE DEFAULT PICK DEVICE DATA                            pinq_def_pick_data        PQDPK
+  INQUIRE DEFAULT PICK DEVICE DATA 3                          pinq_def_pick_data3       PQDPK3
+  INQUIRE DEFAULT STRING DEVICE DATA                          pinq_def_string_data      PQDST
+  INQUIRE DEFAULT STRING DEVICE DATA 3                        pinq_def_string_data3     PQDST3
+  INQUIRE DEFAULT STROKE DEVICE DATA                          pinq_def_stroke_data      PQDSK
+  INQUIRE DEFAULT STROKE DEVICE DATA 3                        pinq_def_stroke_data3     PQDSK3
+  INQUIRE DEFAULT VALUATOR DEVICE DATA                        pinq_def_val_data         PQDVL
+  INQUIRE DEFAULT VALUATOR DEVICE DATA 3                      pinq_def_val_data3        PQDVL3
+  INQUIRE DISPLAY SPACE SIZE                                  pinq_disp_space_size      PQDSP
+  INQUIRE DISPLAY UPDATE STATE                                pinq_disp_upd_st          PQDUS
+  INQUIRE DYNAMICS OF STRUCTURES                              pinq_dyns_structs         PQDSTR
+  INQUIRE DYNAMICS OF WORKSTATION ATTRIBUTES                  pinq_dyns_ws_attrs        PQDSWA
+  INQUIRE EDGE FACILITIES                                     pinq_edge_facs            PQEDF
+  INQUIRE ERROR HANDLING MODE                                 pinq_err_hand_mode        PQERHM
+  INQUIRE GENERALIZED DRAWING PRIMITIVE                       pinq_gdp                  PQGDP
+  INQUIRE GENERALIZED DRAWING PRIMITIVE 3                     pinq_gdp3                 PQGDP3
+  INQUIRE GENERALIZED STRUCTURE ELEMENT FACILITIES            pinq_gse_facs             PQGSEF
+  INQUIRE HIGHLIGHTING FILTER                                 pinq_highl_filter         PQHLFT
+  INQUIRE HLHSR IDENTIFIER FACILITIES                         pinq_hlhsr_id_facs        PQHRIF
+  INQUIRE HLHSR MODE FACILITIES                               pinq_hlhsr_mode_facs      PQHRMF
+  INQUIRE INPUT QUEUE OVERFLOW                                pinq_in_overf             PQIQOV
+  INQUIRE INTERIOR FACILITIES                                 pinq_int_facs             PQIF
+  INQUIRE LIST OF AVAILABLE GENERALIZED DRAWING PRIMITIVES    pinq_list_avail_gdp       PQEGDP
+  INQUIRE LIST OF AVAILABLE GENERALIZED DRAWING PRIMITIVES 3  pinq_list_avail_gdp3      PQEGD3
+  INQUIRE LIST OF AVAILABLE GENERALIZED STRUCTURE ELEMENTS    pinq_list_avail_gse       PQEGSE
+  INQUIRE LIST OF AVAILABLE WORKSTATION TYPES                 pinq_list_avail_ws_types  PQEWK
+  INQUIRE LIST OF PATTERN INDICES                             pinq_list_pat_inds        PQEPAI
+  INQUIRE LOCATOR DEVICE STATE                                pinq_loc_st               PQLCS
+  INQUIRE LOCATOR DEVICE STATE 3                              pinq_loc_st3              PQLCS3
+  INQUIRE MODELLING CLIPPING FACILITIES                       pinq_model_clip_facs      PQMCLF
+  INQUIRE MORE SIMULTANEOUS EVENTS                            pinq_more_simult_events   PQSIM
+  INQUIRE NUMBER OF AVAILABLE LOGICAL INPUT DEVICES           pinq_num_avail_in         PQLI
+  INQUIRE NUMBER OF DISPLAY PRIORITIES SUPPORTED              pinq_num_disp_pris        PQDP
+  INQUIRE PATHS TO ANCESTORS                                  pinq_paths_ances          PQPAN
+  INQUIRE PATHS TO DESCENDANTS                                pinq_paths_descs          PQPDE
+  INQUIRE PATTERN FACILITIES                                  pinq_pat_facs             PQPAF
+  INQUIRE PATTERN REPRESENTATION                              pinq_pat_rep              PQPAR
+  INQUIRE PHIGS FACILITIES                                    pinq_phigs_facs           PQPHF
+  INQUIRE PICK DEVICE STATE                                   pinq_pick_st              PQPKS
+  INQUIRE PICK DEVICE STATE 3                                 pinq_pick_st3             PQPKS3
+  INQUIRE POLYLINE FACILITIES                                 pinq_line_facs            PQPLF
+  INQUIRE POLYMARKER FACILITIES                               pinq_marker_facs          PQPMF
+  INQUIRE PREDEFINED COLOUR REPRESENTATION                    pinq_pred_colr_rep        PQPCR
+  INQUIRE PREDEFINED EDGE REPRESENTATION                      pinq_pred_edge_rep        PQPEDR
+  INQUIRE PREDEFINED INTERIOR REPRESENTATION                  pinq_pred_int_rep         PQPIR
+  INQUIRE PREDEFINED PATTERN REPRESENTATION                   pinq_pred_pat_rep         PQPPAR
+  INQUIRE PREDEFINED POLYLINE REPRESENTATION                  pinq_pred_line_rep        PQPPLR
+  INQUIRE PREDEFINED POLYMARKER REPRESENTATION                pinq_pred_marker_rep      PQPPMR
+  INQUIRE PREDEFINED TEXT REPRESENTATION                      pinq_pred_text_rep        PQPTXR
+  INQUIRE PREDEFINED VIEW REPRESENTATION                      pinq_pred_view_rep        PQPVWR
+  INQUIRE STRING DEVICE STATE                                 pinq_string_st            PQSTS
+  INQUIRE STRING DEVICE STATE 3                               pinq_string_st3           PQSTS3
+  INQUIRE STROKE DEVICE STATE                                 pinq_stroke_st            PQSKS
+  INQUIRE STROKE DEVICE STATE 3                               pinq_stroke_st3           PQSKS3
+  INQUIRE STRUCTURE IDENTIFIERS                               pinq_struct_ids           PQSID
+  INQUIRE SYSTEM STATE VALUE                                  pinq_sys_st               PQSYS
+  INQUIRE TEXT EXTENT                                         pinq_text_extent          PQTXX
+  INQUIRE TEXT FACILITIES                                     pinq_text_facs            PQTXF
+  INQUIRE VALUATOR DEVICE STATE                               pinq_val_st               PQVLS
+  INQUIRE VALUATOR DEVICE STATE 3                             pinq_val_st3              PQVLS3
+  INQUIRE VIEW FACILITIES                                     pinq_view_facs            PQVWF
+  INQUIRE WORKSTATION CLASSIFICATION                          pinq_ws_class             PQWKCL
+  INQUIRE WORKSTATION STATE TABLE LENGTHS                     pinq_ws_st_table          PQWKSL
+
+Other functions:
+
+  Function                                C                          FORTRAN
+  --------------------------------------  -------------------------  -------
+  COMPUTE FILL AREA SET GEOMETRIC NORMAL  pcomp_fill_area_set_gnorm  -
+  GET ITEM TYPE FROM METAFILE             pget_item_type             -
+  INCREMENTAL SPATIAL SEARCH              pincr_spa_search           -
+  INCREMENTAL SPATIAL SEARCH 3            pincr_spa_search3          -
+  INTERPRET ITEM                          pinterpret_item            -
+  READ ITEM FROM METAFILE                 pread_item                 -
+  WRITE ITEM TO METAFILE                  pwrite_item                -
+
+2. PHIGS functions missing in the FORTRAN binding (C exists)
+============================================================
+
+Output Primitives:
+
+  Function         C (exists)       FORTRAN (missing)
+  ---------------  ---------------  -----------------
+  FILL AREA SET    pfill_area_set   PFAS
+  FILL AREA SET 3  pfill_area_set3  PFAS3
+
+Attribute Specification:
+
+  Function            C (exists)     FORTRAN (missing)
+  ------------------  -------------  -----------------
+  SET POLYLINE INDEX  pset_line_ind  PSPLI
+
+Miscellaneous Structure Element:
+
+  Function                       C (exists)  FORTRAN (missing)
+  -----------------------------  ----------  -----------------
+  GENERALIZED STRUCTURE ELEMENT  pgse        PGSE
+
+Structure Operation:
+
+  Function                                    C (exists)              FORTRAN (missing)
+  ------------------------------------------  ----------------------  -----------------
+  CHANGE STRUCTURE IDENTIFIER                 pchange_struct_id       PCSTID
+  CHANGE STRUCTURE IDENTIFIER AND REFERENCES  pchange_struct_id_refs  PCSTIR
+  CHANGE STRUCTURE REFERENCES                 pchange_struct_refs     PCSTRF
+  DELETE ELEMENT RANGE                        pdel_elem_range         PDELRA
+  DELETE ELEMENTS BETWEEN LABELS              pdel_elems_labels       PDELLB
+  DELETE STRUCTURE NETWORK                    pdel_struct_net         PDSN
+  EMPTY STRUCTURE                             pempty_struct           PEMST
+
+Workstation Table Settings:
+
+  Function                                C (exists)             FORTRAN (missing)
+  --------------------------------------  ---------------------  -----------------
+  SET INVISIBILITY FILTER                 pset_invis_filter      PSIVFT
+  SET VIEW TRANSFORMATION INPUT PRIORITY  pset_view_tran_in_pri  PSVTIP
+
+Structure Archiving:
+
+  Function                                C (exists)           FORTRAN (missing)
+  --------------------------------------  -------------------  -----------------
+  ARCHIVE ALL STRUCTURES                  par_all_structs      PARAST
+  ARCHIVE STRUCTURE NETWORKS              par_struct_nets      PARSN
+  ARCHIVE STRUCTURES                      par_structs          PARST
+  CLOSE ARCHIVE FILE                      pclose_ar_file       PCLARF
+  DELETE ALL STRUCTURES FROM ARCHIVE      pdel_all_structs_ar  PDASAR
+  DELETE STRUCTURE NETWORKS FROM ARCHIVE  pdel_struct_nets_ar  PDSNAR
+  DELETE STRUCTURES FROM ARCHIVE          pdel_structs_ar      PDSTAR
+  OPEN ARCHIVE FILE                       popen_ar_file        POPARF
+  RETRIEVE ALL STRUCTURES                 pret_all_structs     PRAST
+  RETRIEVE STRUCTURE IDENTIFIERS          pret_struct_ids      PRSID
+  RETRIEVE STRUCTURE NETWORKS             pret_struct_nets     PRESN
+  RETRIEVE STRUCTURES                     pret_structs         PREST
+  SET CONFLICT RESOLUTION                 pset_conf_res        PSCNRS
+
+Transformation:
+
+  Function                  C (exists)  FORTRAN (missing)
+  ------------------------  ----------  -----------------
+  SET WORKSTATION VIEWPORT  pset_ws_vp  PSWKV
+
+Input:
+
+  Function             C (exists)        FORTRAN (missing)
+  -------------------  ----------------  -----------------
+  GET LOCATOR          pget_loc          PGTLC
+  GET LOCATOR 3        pget_loc3         PGTLC3
+  GET STROKE           pget_stroke       PGTSK
+  GET STROKE 3         pget_stroke3      PGTSK3
+  INITIALIZE PICK 3    pinit_pick3       PINPK3
+  INITIALIZE STROKE 3  pinit_stroke3     PINSK3
+  REQUEST STROKE 3     preq_stroke3      PRQSK3
+  SAMPLE STROKE        psample_stroke    PSMSK
+  SAMPLE STROKE 3      psample_stroke3   PSMSK3
+  SET STROKE MODE      pset_stroke_mode  PSSKM
+
+Utility:
+
+  Function                          C (exists)             FORTRAN (missing)
+  --------------------------------  ---------------------  -----------------
+  BUILD TRANSFORMATION MATRIX       pbuild_tran_matrix     PBLTM
+  COMPOSE MATRIX                    pcompose_matrix        PCOM
+  COMPOSE MATRIX 3                  pcompose_matrix3       PCOM3
+  COMPOSE TRANSFORMATION MATRIX     pcompose_tran_matrix   PCOTM
+  COMPOSE TRANSFORMATION MATRIX 3   pcompose_tran_matrix3  PCOTM3
+  EVALUATE VIEW MAPPING MATRIX      peval_view_map_matrix  PEVMM
+  EVALUATE VIEW ORIENTATION MATRIX  peval_view_ori_matrix  PEVOM
+  ROTATE                            protate                PRO
+  ROTATE X                          protate_x              PROX
+  ROTATE Y                          protate_y              PROY
+  ROTATE Z                          protate_z              PROZ
+  SCALE                             pscale                 PSC
+  SCALE 3                           pscale3                PSC3
+  TRANSFORM POINT                   ptran_point            PTP
+  TRANSFORM POINT 3                 ptran_point3           PTP3
+  TRANSLATE                         ptranslate             PTR
+  TRANSLATE 3                       ptranslate3            PTR3
+
+Error Control:
+
+  Function        C (exists)  FORTRAN (missing)
+  --------------  ----------  -----------------
+  ERROR HANDLING  perr_hand   PERHND
+  ERROR LOGGING   perr_log    PERLOG
+
+Inquire:
+
+  Function                                   C (exists)               FORTRAN (missing)
+  -----------------------------------------  -----------------------  -----------------
+  INQUIRE ALL CONFLICTING STRUCTURES         pinq_all_conf_structs    PQCST
+  INQUIRE ARCHIVE FILES                      pinq_ar_files            PQARF
+  INQUIRE ARCHIVE STATE VALUE                pinq_ar_st               PQARS
+  INQUIRE CONFLICT RESOLUTION                pinq_conf_res            PQCNRS
+  INQUIRE CONFLICTING STRUCTURES IN NETWORK  pinq_conf_structs_net    PQCSTN
+  INQUIRE CURRENT ELEMENT CONTENT            pinq_cur_elem_content    PQCECO
+  INQUIRE CURRENT ELEMENT TYPE AND SIZE      pinq_cur_elem_type_size  PQCETS
+  INQUIRE EDGE REPRESENTATION                pinq_edge_rep            PQEDR
+  INQUIRE ELEMENT POINTER                    pinq_elem_ptr            PQEP
+  INQUIRE ELEMENT TYPE AND SIZE              pinq_elem_type_size      PQETS
+  INQUIRE INTERIOR REPRESENTATION            pinq_int_rep             PQIR
+  INQUIRE INVISIBILITY FILTER                pinq_invis_filter        PQIVFT
+  INQUIRE LIST OF COLOUR INDICES             pinq_list_colr_inds      PQECI
+  INQUIRE LIST OF EDGE INDICES               pinq_list_edge_inds      PQEEDI
+  INQUIRE LIST OF INTERIOR INDICES           pinq_list_int_inds       PQEII
+  INQUIRE LIST OF POLYLINE INDICES           pinq_list_line_inds      PQEPLI
+  INQUIRE LIST OF POLYMARKER INDICES         pinq_list_marker_inds    PQEPMI
+  INQUIRE LIST OF TEXT INDICES               pinq_list_text_inds      PQETXI
+  INQUIRE LIST OF VIEW INDICES               pinq_list_view_inds      PQEVWI
+  INQUIRE OPEN STRUCTURE                     pinq_open_struct         PQOPST
+  INQUIRE POLYLINE REPRESENTATION            pinq_line_rep            PQPLR
+  INQUIRE POLYMARKER REPRESENTATION          pinq_marker_rep          PQPMR
+  INQUIRE SET OF OPEN WORKSTATIONS           pinq_open_wss            PQOPWK
+  INQUIRE TEXT REPRESENTATION                pinq_text_rep            PQTXR
+  INQUIRE WORKSTATION CATEGORY               pinq_ws_cat              PQWKCA
+  INQUIRE WORKSTATION CONNECTION AND TYPE    pinq_ws_conn_type        PQWKC
+  INQUIRE WORKSTATION STATE VALUE            pinq_ws_st               PQWKST
+
+3. PHIGS functions missing in the C binding (FORTRAN exists)
+============================================================
+
+Workstation Table Settings:
+
+  Function                   C (missing)     FORTRAN (exists)
+  -------------------------  --------------  ----------------
+  SET VIEW REPRESENTATION 3  pset_view_rep3  PSVWR3
+
+Input:
+
+  Function            C (missing)  FORTRAN (exists)
+  ------------------  -----------  ----------------
+  INITIALIZE LOCATOR  pinit_loc    PINLC
+  INITIALIZE PICK     pinit_pick   PINPK
+
+Inquire:
+
+  Function                                     C (missing)          FORTRAN (exists)
+  -------------------------------------------  -------------------  ----------------
+  INQUIRE COLOUR FACILITIES                    pinq_colr_facs       PQCF
+  INQUIRE DEFAULT LOCATOR DEVICE DATA 3        pinq_def_loc_data3   PQDLC3
+  INQUIRE HLHSR MODE                           pinq_hlhsr_mode      PQHRM
+  INQUIRE POSTED STRUCTURES                    pinq_posted_structs  PQPOST
+  INQUIRE SET OF WORKSTATIONS TO WHICH POSTED  pinq_wss_posted      PQWKPO
+  INQUIRE VIEW REPRESENTATION                  pinq_view_rep        PQVWR
+  INQUIRE WORKSTATION TRANSFORMATION           pinq_ws_tran         PQWKT
+  INQUIRE WORKSTATION TRANSFORMATION 3         pinq_ws_tran3        PQWKT3
+
+4. PHIGS PLUS functions missing in the C binding (and in FORTRAN)
+=================================================================
+
+  Function                                           C
+  -------------------------------------------------  ------------------------------
+  CELL ARRAY 3 PLUS                                  pcell_array3_plus
+  INQUIRE COLOUR MAPPING FACILITIES                  pinq_colr_map_facs
+  INQUIRE COLOUR MAPPING METHOD FACILITIES           pinq_colr_map_method_facs
+  INQUIRE COLOUR MAPPING REPRESENTATION              pinq_colr_map_rep
+  INQUIRE COLOUR MAPPING STATE                       pinq_colr_map_st
+  INQUIRE CURVE AND SURFACE FACILITIES               pinq_curv_surf_facs
+  INQUIRE DEPTH CUE FACILITIES                       pinq_dcue_facs
+  INQUIRE DEPTH CUE REPRESENTATION                   pinq_dcue_rep
+  INQUIRE DIRECT COLOUR MODEL FACILITIES             pinq_direct_colr_model_facs
+  INQUIRE DYNAMICS OF WORKSTATION ATTRIBUTES PLUS    pinq_dyns_ws_attrs_plus
+  INQUIRE EDGE REPRESENTATION PLUS                   pinq_edge_rep_plus
+  INQUIRE INTERIOR FACILITIES PLUS                   pinq_int_facs_plus
+  INQUIRE INTERIOR REPRESENTATION PLUS               pinq_int_rep_plus
+  INQUIRE LIGHT SOURCE FACILITIES                    pinq_light_src_facs
+  INQUIRE LIST OF COLOUR MAPPING INDICES             pinq_list_colr_map_inds
+  INQUIRE LIST OF DEPTH CUE INDICES                  pinq_list_dcue_inds
+  INQUIRE LIST OF LIGHT SOURCE INDICES               pinq_list_light_src_inds
+  INQUIRE PATTERN REPRESENTATION PLUS                pinq_pat_rep_plus
+  INQUIRE POLYLINE FACILITIES PLUS                   pinq_line_facs_plus
+  INQUIRE POLYLINE REPRESENTATION PLUS               pinq_line_rep_plus
+  INQUIRE POLYMARKER REPRESENTATION PLUS             pinq_marker_rep_plus
+  INQUIRE PREDEFINED COLOUR MAPPING REPRESENTATION   pinq_pred_colr_map_rep
+  INQUIRE PREDEFINED DEPTH CUE REPRESENTATION        pinq_pred_dcue_rep
+  INQUIRE PREDEFINED EDGE REPRESENTATION PLUS        pinq_pred_edge_rep_plus
+  INQUIRE PREDEFINED INTERIOR REPRESENTATION PLUS    pinq_pred_int_rep_plus
+  INQUIRE PREDEFINED LIGHT SOURCE REPRESENTATION     pinq_pred_light_src_rep
+  INQUIRE PREDEFINED PATTERN REPRESENTATION PLUS     pinq_pred_pat_rep_plus
+  INQUIRE PREDEFINED POLYLINE REPRESENTATION PLUS    pinq_pred_line_rep_plus
+  INQUIRE PREDEFINED POLYMARKER REPRESENTATION PLUS  pinq_pred_marker_rep_plus
+  INQUIRE PREDEFINED TEXT REPRESENTATION PLUS        pinq_pred_text_rep_plus
+  INQUIRE RENDERING COLOUR MODEL FACILITIES          pinq_rendering_colr_model_facs
+  INQUIRE TEXT REPRESENTATION PLUS                   pinq_text_rep_plus
+  INQUIRE WORKSTATION STATE TABLE LENGTHS PLUS       pinq_ws_st_table_plus
+  NON-UNIFORM B-SPLINE CURVE                         pnuni_bsp_curv
+  NON-UNIFORM B-SPLINE SURFACE                       pnuni_bsp_surf
+  POLYLINE SET 3 WITH DATA                           ppolyline_set3_data
+  QUADRILATERAL MESH 3 WITH DATA                     pquad_mesh3_data
+  SET BACK INTERIOR INDEX                            -
+  SET COLOUR MAPPING INDEX                           pset_colr_map_ind
+  SET COLOUR MAPPING REPRESENTATION                  pset_colr_map_rep
+  SET CURVE APPROXIMATION CRITERIA                   pset_curve_approx
+  SET DEPTH CUE INDEX                                pset_dcue_ind
+  SET DEPTH CUE REPRESENTATION                       pset_dcue_rep
+  SET EDGE REPRESENTATION PLUS                       pset_edge_rep_plus
+  SET INTERIOR REPRESENTATION PLUS                   pset_int_rep_plus
+  SET PARAMETRIC SURFACE CHARACTERISTICS             pset_para_surf_characs
+  SET PATTERN REPRESENTATION PLUS                    pset_pat_rep_plus
+  SET POLYLINE REPRESENTATION PLUS                   pset_line_rep_plus
+  SET POLYLINE SHADING METHOD                        pset_line_shad_meth
+  SET POLYMARKER REPRESENTATION PLUS                 pset_marker_rep_plus
+  SET RENDERING COLOUR MODEL                         pset_rendering_colr_model
+  SET SURFACE APPROXIMATION CRITERIA                 pset_surf_approx
+  SET TEXT REPRESENTATION PLUS                       pset_text_rep_plus
+  TRIANGLE STRIP 3 WITH DATA                         ptri_strip3_data
+
+5. PHIGS PLUS functions implemented in C but without FORTRAN binding
+====================================================================
+
+  Function                             C (exists)
+  -----------------------------------  ---------------------------
+  INQUIRE LIGHT SOURCE REPRESENTATION  pinq_light_src_rep
+  SET BACK AREA PROPERTIES             pset_back_refl_props
+  SET EDGE COLOUR                      pset_edge_colr
+  SET INTERIOR COLOUR                  pset_int_colr
+  SET OF FILL AREA SET 3 WITH DATA     pset_of_fill_area_set3_data
+  SET POLYLINE COLOUR                  pset_line_colr
+  SET POLYMARKER COLOUR                pset_marker_colr
+  SET TEXT COLOUR                      pset_text_colr
+
+6. Names that differ from the standard
+======================================
+
+  C       preq_valuator   standard name: preq_val    (REQUEST VALUATOR)
+  FORTRAN PSCM            standard name: PSCMD       (SET COLOUR MODEL)
