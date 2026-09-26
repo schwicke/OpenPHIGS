@@ -451,6 +451,10 @@ static void init_rendering_state(
   phg_nset_names_clear_all(&wsgl->cur_struct.cur_nameset);
   phg_nset_names_clear_all(&wsgl->cur_struct.lightstat);
   wsgl->cur_struct.pick_id = 0;
+  wsgl->dev_st.int_style = -1;
+  wsgl->dev_st.int_style_ind = -1;
+  wsgl->dev_st.int_shad_meth = -1;
+
   glEdgeFlag(GL_TRUE);
   glDepthMask(GL_TRUE);
 
