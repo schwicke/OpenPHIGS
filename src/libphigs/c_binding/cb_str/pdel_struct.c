@@ -43,9 +43,11 @@ void pdel_struct(
     exists = CSS_STRUCT_EXISTS(PHG_CSS, struct_id);
     if (exists != NULL){
       phg_del_struct(PHG_CSS, struct_id);
+#ifdef VERBOSE
     } else {
       printf("ERROR: pdel_struct: Cannot delete structure %d.\n", struct_id);
       ERR_REPORT(PHG_ERH, ERR200);
+#endif
     }
   } else {
     ERR_REPORT(PHG_ERH, ERR2);
