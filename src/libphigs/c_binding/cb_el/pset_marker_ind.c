@@ -31,7 +31,15 @@
 /**
  * \file pset_marker_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set polymarker index
+ *
+ * \param[in]  marker_ind  polymarker bundle index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pspmi pinq_marker_rep pset_line_rep
+ */
 void pset_marker_ind(
                      Pint marker_ind
                      )

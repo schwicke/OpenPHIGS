@@ -31,7 +31,15 @@
 /**
  * \file pset_edgewidth.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set edgewidth scale factor
+ *
+ * \param[in]  edgewidth  edgewidth scale factor
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psewsc pset_edge_flag pinq_edge_rep pset_edge_rep pset_indiv_asf
+ */
 void pset_edgewidth(
                     Pfloat edgewidth
                     )

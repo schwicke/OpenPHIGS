@@ -34,6 +34,14 @@
  * \file psedm.c
  *
  * \brief       Set edit mode
+ *
+ * \param[in]  editmode  edit mode
+ * \verbatim
+  0  PINSRT  insert
+  1  PREPLC  replace
+\endverbatim
+ *
+ * \sa pset_edit_mode pqedm
  */
 FTN_SUBROUTINE(psedm)(
                       FTN_INTEGER(editmode)

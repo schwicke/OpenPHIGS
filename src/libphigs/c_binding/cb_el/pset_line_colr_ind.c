@@ -31,7 +31,15 @@
 /**
  * \file pset_line_colr_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set polyline colour index
+ *
+ * \param[in]  colr_ind  colour index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psplci pinq_line_rep pset_indiv_asf pset_line_rep
+ */
 void pset_line_colr_ind(
                         Pint colr_ind
                         )

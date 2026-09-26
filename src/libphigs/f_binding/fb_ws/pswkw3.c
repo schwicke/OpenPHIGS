@@ -40,6 +40,11 @@ extern int record_geom;
  * \file pswkw3.c
  *
  * \brief       Set workstation window 3
+ *
+ * \param[in]  wkid  workstation identifier
+ * \param[in]  wkwn  workstation window limits XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX
+ *
+ * \sa pset_ws_win3 pqwkt3 pswkv3 pswkw
  */
 
 FTN_SUBROUTINE(pswkw3)(

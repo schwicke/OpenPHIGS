@@ -31,7 +31,15 @@
 /**
  * \file ppolymarker3.c
  *
- * \brief       Creates a new element  */
+ * \brief       Polymarker 3
+ *
+ * \param[in]  point_list  list of points
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa ppm3 pset_marker_type pset_marker_size pset_marker_colr_ind pset_marker_ind ppolymarker
+ */
 
 void ppolymarker3(
                   Ppoint_list3 *point_list

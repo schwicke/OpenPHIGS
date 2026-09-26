@@ -30,7 +30,15 @@
 /**
  * \file pset_text_font.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set text font
+ *
+ * \param[in]  font  text font
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pstxfn pinq_text_rep pset_indiv_asf pset_text_rep
+ */
 void pset_text_font(
                     Pint font
                     )

@@ -29,7 +29,22 @@
 /**
  * \file pelem_search.c
  *
- * \brief       Get all matching elements
+ * \brief       Element search
+ *
+ * \param[in]  struct_id       structure identifier
+ * \param[in]  struct_elem     element position to start the search at
+ * \param[in]  dir             search direction
+ * \verbatim
+  0  PDIR_BACKWARD  backward
+  1  PDIR_FORWARD   forward
+\endverbatim
+ * \param[in]  incl            element types to include in the search
+ * \param[in]  excl            element types to exclude from the search
+ * \param[out] err_ind         error indicator, 0 on success
+ * \param[out] status          returned search status (PSEARCH_STATUS_FAILURE or PSEARCH_STATUS_SUCCESS)
+ * \param[out] found_elem_ptr  returned position of the element found
+ *
+ * \sa pels
  */
 void pelem_search(
                   Pint struct_id,

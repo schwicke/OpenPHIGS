@@ -31,7 +31,15 @@
 /**
  * \file pschup.c
  *
- * \brief       set character up vector
+ * \brief       Set character up vector
+ *
+ * \param[in]  chux  x component of the character up vector
+ * \param[in]  chuy  y component of the character up vector
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_char_up_vec pstxpr
  */
 FTN_SUBROUTINE(pschup)(
                        FTN_REAL(chux),

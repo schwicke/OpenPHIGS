@@ -46,7 +46,15 @@
 /**
  * \file pset_light_src_rep.c
  *
- * \brief       Set light source for workstation
+ * \brief       Set light source representation
+ *
+ * \param[in]  ws_id          workstation identifier
+ * \param[in]  light_src_ind  light source index
+ * \param[in]  light_src_rep  light source representation (type and type-specific record)
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pslsr pinq_light_src_rep
  */
 void pset_light_src_rep(
                         Pint ws_id,

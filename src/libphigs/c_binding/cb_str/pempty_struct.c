@@ -29,7 +29,9 @@
 /**
  * \file pempty_struct.c
  *
- * \brief       Clear structure
+ * \brief       Empty structure
+ *
+ * \param[in]  struct_id  structure identifier
  */
 void pempty_struct(
                    Pint struct_id

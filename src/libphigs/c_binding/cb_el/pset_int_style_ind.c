@@ -31,7 +31,15 @@
 /**
  * \file pset_int_style_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set interior style index
+ *
+ * \param[in]  int_style_ind  interior style index (hatch or pattern index)
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psisi pinq_int_rep pset_indiv_asf pset_int_rep pset_int_style pset_back_int_style_ind
+ */
 void pset_int_style_ind(
                         Pint int_style_ind
                         )

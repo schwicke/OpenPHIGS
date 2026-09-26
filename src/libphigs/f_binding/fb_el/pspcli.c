@@ -31,7 +31,15 @@
 /**
  * \file pspcli.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set polyline colour index
+ *
+ * \param[in]  coli  polyline colour index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_line_colr_ind psiasf psplr
+ */
 FTN_SUBROUTINE(psplci)(
                        FTN_INTEGER(coli)
                        )

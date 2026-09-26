@@ -31,7 +31,15 @@
 /**
  * \file psatcu.c
  *
- * \brief       set annotation text character up vector
+ * \brief       Set annotation text character up vector
+ *
+ * \param[in]  atchux  x component of the annotation text character up vector
+ * \param[in]  atchuy  y component of the annotation text character up vector
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_anno_char_up_vec pstxpr
  */
 
 FTN_SUBROUTINE(psatcu)(

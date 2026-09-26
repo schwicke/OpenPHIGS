@@ -31,7 +31,25 @@
 /**
  * \file pspkm.c
  *
- * \brief       set pick mode
+ * \brief       Set pick mode
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  pkdnr  pick device number
+ * \param[in]  mode   operating mode
+ * \verbatim
+  0  PREQU   request
+  1  PSAMPL  sample
+  2  PEVENT  event
+\endverbatim
+ * \param[in]  esw    echo switch
+ * \verbatim
+  0  PNECHO  no echo
+  1  PECHO   echo
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pset_pick_mode pwait pinpk prqpk psmpk
  */
 FTN_SUBROUTINE(pspkm)(
                       FTN_INTEGER(wkid),

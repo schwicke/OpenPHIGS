@@ -32,7 +32,15 @@
 /**
  * \file psample_string.c
  *
- * \brief       Sample string device
+ * \brief       Sample string
+ *
+ * \param[in]  ws_id       workstation identifier
+ * \param[in]  string_dev  string device number
+ * \param[out] string      returned string (buffer supplied by the caller)
+ *
+ * \pre The workstation must be open
+ *
+ * \sa psmst pset_string_mode
  */
 void psample_string(
                     Pint ws_id,

@@ -56,7 +56,11 @@ SOFTWARE.
 /**
  * \file protate.c
  *
- * \brief       Generate rotation matrix
+ * \brief       Rotate
+ *
+ * \param[in]  angle      rotation angle in radians
+ * \param[out] error_ind  error indicator, 0 on success
+ * \param[out] m          resulting transformation matrix
  */
 void protate(
              Pfloat angle,              /* rotation angle */

@@ -46,7 +46,13 @@
 /**
  * \file pset_line_rep.c
  *
- * \brief       Set workstation line represenation
+ * \brief       Set polyline representation
+ *
+ * \param[in]  ws_id        workstation identifier
+ * \param[in]  line_ind     polyline bundle index
+ * \param[in]  line_bundle  polyline bundle: type, width and colour index
+ *
+ * \sa psplr pinq_line_rep pset_colr_model pset_indiv_asf pset_linetype pset_linewidth pset_line_colr_ind pset_line_ind
  */
 void pset_line_rep(
                    Pint ws_id,

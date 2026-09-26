@@ -30,7 +30,20 @@
 /**
  * \file pset_text_prec.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set text precision
+ *
+ * \param[in]  prec  text precision
+ * \verbatim
+  0  PREC_STRING  string precision
+  1  PREC_CHAR    character precision
+  2  PREC_STROKE  stroke precision
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pstxpr pinq_text_rep pset_indiv_asf pset_text_rep
+ */
 void pset_text_prec(
                     Ptext_prec prec
                     )

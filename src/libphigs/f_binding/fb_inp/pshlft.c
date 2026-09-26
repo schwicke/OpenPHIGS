@@ -31,7 +31,15 @@
 /**
  * \file pshlft.c
  *
- * \brief       set highlighting filter
+ * \brief       Set highlighting filter
+ *
+ * \param[in]  wkid  workstation identifier
+ * \param[in]  isn   number of names in the inclusion set
+ * \param[in]  is    inclusion set (names)
+ * \param[in]  esn   number of names in the exclusion set
+ * \param[in]  es    exclusion set (names; passed as INTEGER)
+ *
+ * \sa pset_highl_filter pads pres
  */
 FTN_SUBROUTINE(pshlft)(
                        FTN_INTEGER(wkid),

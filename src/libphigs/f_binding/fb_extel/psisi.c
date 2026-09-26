@@ -35,7 +35,14 @@
 /**
  * \file psisi.c
  *
- * \brief       set interior style index
+ * \brief       Set interior style index
+ *
+ * \param[in]  ii  interior style index (hatch or pattern index)
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_int_style_ind psiasf psir psis psbisi
  */
 FTN_SUBROUTINE(psisi)(
                       FTN_INTEGER(ii)

@@ -30,7 +30,15 @@
 /**
  * \file pset_back_int_style_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set back interior style index
+ *
+ * \param[in]  int_style_ind  back interior style index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psbisi pset_int_style_ind
+ */
 void pset_back_int_style_ind(
                              Pint int_style_ind
                              )

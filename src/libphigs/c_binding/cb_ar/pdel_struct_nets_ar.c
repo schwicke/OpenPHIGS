@@ -32,6 +32,11 @@
  * \file pdel_struct_nets_ar.c
  *
  * \brief       Delete structure networks from archive
+ *
+ * \param[in]  archive_id  archive file identifier
+ * \param[in]  struct_ids  list of structure identifiers
+ *
+ * \sa pdel_all_structs_ar pdel_structs_ar pexec_struct
  */
 void pdel_struct_nets_ar(
                          Pint archive_id,

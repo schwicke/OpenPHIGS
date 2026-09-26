@@ -40,6 +40,11 @@ extern int record_geom;
  * \file pswkv3.c
  *
  * \brief       Set workstation viewport 3
+ *
+ * \param[in]  wkid  workstation identifier
+ * \param[in]  wkvp  workstation viewport limits XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX in device coordinates
+ *
+ * \sa pset_ws_vp3 pqwkt pqwkt3 pswkw pswkw3
  */
 
 FTN_SUBROUTINE(pswkv3)(

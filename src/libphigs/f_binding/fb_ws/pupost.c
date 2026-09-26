@@ -40,6 +40,13 @@ extern int record_geom;
  * \file pupost.c
  *
  * \brief       Unpost structure
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  strid  structure identifier
+ *
+ * \pre The workstation must be open
+ *
+ * \sa punpost_struct pqpost pqwkpo ppost
  */
 
 FTN_SUBROUTINE(pupost)(

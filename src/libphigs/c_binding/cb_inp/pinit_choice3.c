@@ -32,7 +32,24 @@
 /**
  * \file pinit_choice3.c
  *
- * \brief       Initialize choice3
+ * \brief       Initialize choice 3
+ *
+ * \param[in]  ws_id            workstation identifier
+ * \param[in]  choice_dev       choice device number
+ * \param[in]  init_status      initial status
+ * \verbatim
+  0  PIN_STATUS_NONE   none
+  1  PIN_STATUS_OK     ok
+  2  PIN_STATUS_NO_IN  no input
+\endverbatim
+ * \param[in]  init_choice      initial choice number
+ * \param[in]  pet              prompt and echo type
+ * \param[in]  echo_volume      echo volume in device coordinates
+ * \param[in]  choice_data_rec  choice data record
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pinch3 pinq_disp_space_size3 pset_choice_mode
  */
 void pinit_choice3(
                    Pint ws_id,

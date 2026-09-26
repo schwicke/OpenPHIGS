@@ -32,7 +32,22 @@
 /**
  * \file preq_loc3.c
  *
- * \brief       Request input from locator device 3D
+ * \brief       Request locator 3
+ *
+ * \param[in]  ws_id      workstation identifier
+ * \param[in]  loc_num    locator device number
+ * \param[out] in_status  input status
+ * \verbatim
+  0  PIN_STATUS_NONE   none
+  1  PIN_STATUS_OK     ok
+  2  PIN_STATUS_NO_IN  no input
+\endverbatim
+ * \param[out] view_ind   view index
+ * \param[out] loc_pos    locator position
+ *
+ * \pre The workstation must be open
+ *
+ * \sa prqlc3 pinit_loc3 pset_loc_mode
  */
 void preq_loc3(
                Pint ws_id,
