@@ -415,13 +415,6 @@ static void init_rendering_state(
 {
   Wsgl_handle wsgl = ws->render_context;
 
-  /* GL state may have been changed by another workstation sharing this
-     context (e.g. hardcopy FBO workstations), so the cached device state
-     cannot be trusted across traversals. */
-  wsgl->dev_st.int_style     = -1;
-  wsgl->dev_st.int_style_ind = -1;
-  wsgl->dev_st.int_shad_meth = -1;
-
   wsgl->cur_struct.hlhsr_id = PHIGS_HLHSR_ID_OFF;
   wsgl_update_hlhsr_id(ws);
   phg_mat_identity(wsgl->composite_tran);
@@ -458,6 +451,9 @@ static void init_rendering_state(
   phg_nset_names_clear_all(&wsgl->cur_struct.cur_nameset);
   phg_nset_names_clear_all(&wsgl->cur_struct.lightstat);
   wsgl->cur_struct.pick_id = 0;
+  /* GL state may have been changed by another workstation sharing this
+     context (e.g. hardcopy FBO workstations), so the cached device state
+     cannot be trusted across traversals. */
   wsgl->dev_st.int_style = -1;
   wsgl->dev_st.int_style_ind = -1;
   wsgl->dev_st.int_shad_meth = -1;
