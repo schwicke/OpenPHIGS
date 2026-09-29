@@ -45,12 +45,6 @@
 #include "private/wsbP.h"
 #include "private/sofas3P.h"
 
-/* instantiate globals. */
-short int wsgl_use_shaders = 1;
-short int wsgl_use_shaders_settings = 0;
-short int wsgl_vert_shader_version = 430;
-short int wsgl_frag_shader_version = 430;
-
 #define LOG_INT(DATA)                                   \
   css_print_eltype(ELMT_HEAD(DATA)->elementType);       \
   printf(":\tSIZE: %d\t", ELMT_HEAD(DATA)->length);     \
@@ -60,6 +54,28 @@ short int wsgl_frag_shader_version = 430;
   css_print_eltype(ELMT_HEAD(DATA)->elementType);       \
   printf(":\tSIZE: %d\t", ELMT_HEAD(DATA)->length);     \
   printf("CONTENT: %f\n", PHG_FLOAT(DATA));
+
+/********************************************************************************
+ * wsgl_init_gl
+ *
+ * DESCR:    set GL into a defined starting state
+ * RETURNS:  N/A
+ */
+void wsgl_init_gl(
+                  Ws *ws
+                  ) {
+  glDisable(GL_POLYGON_OFFSET_LINE);
+  glDisable(GL_POLYGON_OFFSET_FILL);
+  glDisable(GL_CLIP_PLANE0);
+  glDisable(GL_CLIP_PLANE1);
+  glDisable(GL_CULL_FACE);
+  glDisable(GL_LIGHTING);
+  glDisable(GL_LINE_STIPPLE);
+  glDisable(GL_SCISSOR_TEST);
+  glEdgeFlag(GL_TRUE);
+  glDepthMask(GL_TRUE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+}
 
 /*******************************************************************************
  * wsgl_init
@@ -116,7 +132,9 @@ int wsgl_init(
   /* initialise shaders */
   wsgl_clear_geometry();
   wsgl_shaders(ws);
+
   status = TRUE;
+  wsgl_init_gl(ws);
 
   return status;
 }
@@ -264,8 +282,8 @@ void wsgl_clear(
 #endif
     glFlush();
   }
-  glDepthMask (GL_TRUE);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  //  glDepthMask (GL_TRUE);
+  //  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 /*******************************************************************************
@@ -427,6 +445,16 @@ static void init_rendering_state(
   phg_nset_names_clear_all(&wsgl->cur_struct.cur_nameset);
   phg_nset_names_clear_all(&wsgl->cur_struct.lightstat);
   wsgl->cur_struct.pick_id = 0;
+  /* GL state may have been changed by another workstation sharing this
+     context (e.g. hardcopy FBO workstations), so the cached device state
+     cannot be trusted across traversals. */
+  wsgl->dev_st.int_style = -1;
+  wsgl->dev_st.int_style_ind = -1;
+  wsgl->dev_st.int_shad_meth = -1;
+
+  glEdgeFlag(GL_TRUE);
+  glDepthMask(GL_TRUE);
+
 }
 
 /*******************************************************************************
@@ -442,7 +470,7 @@ void wsgl_begin_rendering(
 #ifdef DEBUG
   printf("Begin rendering\n");
 #endif
-  if (wsgl_use_shaders){
+  if (ws->shader.use_shaders){
     GLint currentProgram = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
     if (currentProgram != ws->shader.program){

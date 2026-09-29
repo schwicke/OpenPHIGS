@@ -197,8 +197,8 @@ static void wsgl_oir_publish_state(Ws * ws, int enabled)
  */
 static int wsgl_oir_wanted(Ws * ws)
 {
-  return (ws->oir.mode > 0) && wsgl_use_shaders &&
-         (wsgl_frag_shader_version >= 430);
+  return (ws->oir.mode > 0) && (ws->shader.use_shaders > 0) &&
+         (ws->shader.fs_vers >= 430);
 }
 
 /*******************************************************************************
@@ -322,11 +322,14 @@ void wsgl_oir_reset(Ws * ws){
     size_t n_pixels = (size_t) width * (size_t) height;
     const GLuint list_end = 0xFFFFFFFFu;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, ws->oir.head_p_buffer);
+    wsgl_oir_check_gl("wsgl_oir_reset: glBindBuffer(head pointer SSBO)");
     glClearBufferSubData(GL_SHADER_STORAGE_BUFFER, GL_R32UI, 0,
                          (GLsizeiptr) n_pixels * sizeof(GLuint),
                          GL_RED_INTEGER, GL_UNSIGNED_INT, &list_end);
+    wsgl_oir_check_gl("wsgl_oir_reset: glClearBufferSubData(head pointer SSBO)");
   }
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, OIR_HEAD_POINTER_BINDING, ws->oir.head_p_buffer);
+  wsgl_oir_check_gl("wsgl_oir_reset: glBindBufferBase(head pointer SSBO)");
   glBindImageTexture(OIR_LIST_BUFFER_UNIT,
                      ws->oir.frag_storage_texture,
                      0,
@@ -334,8 +337,9 @@ void wsgl_oir_reset(Ws * ws){
                      0,
                      GL_READ_WRITE,
                      GL_RGBA32UI);
+  wsgl_oir_check_gl("wsgl_oir_reset: glBindImageTexture(fragment list)");
   glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, ws->oir.acounter_buffer);
-  wsgl_oir_check_gl("wsgl_oir_reset: buffer/image/atomic counter binding");
+  wsgl_oir_check_gl("wsgl_oir_reset: glBindBufferBase(atomic counter)");
   /*
     Before clearing the counter, read what the previous frame asked for. The
     counter keeps rising past the capacity when the list is full, so a value
@@ -462,7 +466,9 @@ void wsgl_oir_diag_readback(Ws * ws)
  */
 void wsgl_oir_resolve(Ws * ws){
   GLboolean depth_test, blend, depth_mask, scissor_test, alpha_test;
+  GLboolean polygon_stipple;
   GLint viewport[4];
+  GLint polygon_mode[2];
 
   if (!wsgl_oir_wanted(ws)) return;
   if (ws->oir.head_p_buffer == 0) return;
@@ -502,6 +508,17 @@ void wsgl_oir_resolve(Ws * ws){
   */
   alpha_test = glIsEnabled(GL_ALPHA_TEST);
   if (alpha_test) glDisable(GL_ALPHA_TEST);
+  /*
+    Interior style HOLLOW is implemented with glPolygonMode(GL_LINE), and
+    HATCH with GL_POLYGON_STIPPLE. If the last fill area of the frame used
+    one of them, the resolve quad would be rasterised as its outline only
+    (the whole frame stays blank) or with holes. The quad always has to be
+    filled completely.
+  */
+  glGetIntegerv(GL_POLYGON_MODE, polygon_mode);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  polygon_stipple = glIsEnabled(GL_POLYGON_STIPPLE);
+  if (polygon_stipple) glDisable(GL_POLYGON_STIPPLE);
 
   /*
     The resolve covers the viewport with one quad, so it must not be depth
@@ -546,4 +563,8 @@ void wsgl_oir_resolve(Ws * ws){
   glDepthMask(depth_mask);
   if (scissor_test) glEnable(GL_SCISSOR_TEST);
   if (alpha_test) glEnable(GL_ALPHA_TEST);
+  /* restore, so the cached interior style state in dev_st stays valid */
+  glPolygonMode(GL_FRONT, (GLenum) polygon_mode[0]);
+  glPolygonMode(GL_BACK, (GLenum) polygon_mode[1]);
+  if (polygon_stipple) glEnable(GL_POLYGON_STIPPLE);
 }
