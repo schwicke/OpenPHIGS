@@ -221,7 +221,7 @@ void wsgl_oir_ini(Ws *ws){
   }
   Pint width = ws->ws_rect.width;
   Pint height = ws->ws_rect.height;
-  size_t n_pixels = width * height;
+  size_t n_pixels = (size_t)width * (size_t)height;
   if (n_pixels <= 0){
     /* At the first call things may not be initialised yet. Capture this and just ignore the call */
     wsgl_oir_publish_state(ws, 0);
