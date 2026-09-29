@@ -46,7 +46,20 @@
 /**
  * \file pset_view_tran_in_pri.c
  *
- * \brief       Set view input priority
+ * \brief       Set view transformation input priority
+ *
+ * \param[in]  ws_id         workstation identifier
+ * \param[in]  view_ind      view index
+ * \param[in]  ref_view_ind  reference view index
+ * \param[in]  rel_pri       relative priority
+ * \verbatim
+  0  PPRI_HIGHER  higher
+  1  PPRI_LOWER   lower
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pinq_list_view_inds
  */
 void pset_view_tran_in_pri(
                            Pint ws_id,

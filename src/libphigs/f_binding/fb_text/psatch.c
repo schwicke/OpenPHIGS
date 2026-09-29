@@ -30,6 +30,13 @@
  * \file psatch.c
  *
  * \brief       Set annotation text character height
+ *
+ * \param[in]  atchh  annotation text character height
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_anno_char_ht
  */
 FTN_SUBROUTINE(psatch)(
                        FTN_REAL(atchh)

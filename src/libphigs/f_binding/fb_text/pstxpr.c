@@ -30,6 +30,18 @@
  * \file pstxpr.c
  *
  * \brief       Set text precision
+ *
+ * \param[in]  prec  text precision
+ * \verbatim
+  0  PSTRP   string precision
+  1  PCHARP  character precision
+  2  PSTRKP  stroke precision
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_text_prec psiasf pstxr
  */
 FTN_SUBROUTINE(pstxpr)(
                        FTN_INTEGER(prec)

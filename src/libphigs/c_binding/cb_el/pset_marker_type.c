@@ -31,7 +31,26 @@
 /**
  * \file pset_marker_type.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set marker type
+ *
+ * \param[in]  marker_type  marker type
+ * \verbatim
+  1  PMARKER_DOT       dot
+  2  PMARKER_PLUS      plus sign
+  3  PMARKER_ASTERISK  asterisk
+  4  PMARKER_CIRCLE    circle
+  5  PMARKER_CROSS     diagonal cross
+  6  PMARKER_TRIANG    triangle
+  7  PMARKER_SQUARE    square
+  8  PMARKER_PENTAGON  pentagon
+  9  PMARKER_HEXAGON   hexagon
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psmk pinq_marker_rep pset_indiv_asf pset_line_rep
+ */
 void pset_marker_type(
                       Pint marker_type
                       )

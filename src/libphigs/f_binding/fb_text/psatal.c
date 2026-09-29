@@ -29,7 +29,29 @@
 /**
  * \file psatal.c
  *
- * \brief       
+ * \brief       Set annotation text alignment
+ *
+ * \param[in]  atalh  horizontal annotation text alignment
+ * \verbatim
+  0  PAHNOR  normal
+  1  PALEFT  left
+  2  PACENT  centre
+  3  PARITE  right
+\endverbatim
+ * \param[in]  atalv  vertical annotation text alignment
+ * \verbatim
+  0  PAVNOR  normal
+  1  PATOP   top
+  2  PACAP   cap
+  3  PAHALF  half
+  4  PABASE  base
+  5  PABOTT  bottom
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_anno_align pstxpr
  */
 FTN_SUBROUTINE(psatal)(
                        FTN_INTEGER(atalh),

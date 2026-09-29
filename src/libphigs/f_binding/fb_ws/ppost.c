@@ -40,6 +40,14 @@ extern int record_geom;
  * \file ppost.c
  *
  * \brief       Post structure
+ *
+ * \param[in]  wkid    workstation identifier
+ * \param[in]  strid   structure identifier
+ * \param[in]  priort  display priority, between 0 and 1
+ *
+ * \pre The workstation must be open
+ *
+ * \sa ppost_struct pqpost pqwkpo pupast pupost
  */
 
 FTN_SUBROUTINE(ppost)(

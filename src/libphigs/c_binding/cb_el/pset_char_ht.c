@@ -31,7 +31,15 @@
 /**
  * \file pset_char_ht.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set character height
+ *
+ * \param[in]  char_ht  character height
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pschh
+ */
 void pset_char_ht(
                   Pfloat char_ht
                   )

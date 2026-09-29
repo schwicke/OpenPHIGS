@@ -31,7 +31,15 @@
 /**
  * \file pset_char_expan.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set character expansion factor
+ *
+ * \param[in]  char_expan  character expansion factor
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pschxp pset_indiv_asf pset_text_prec
+ */
 void pset_char_expan(
                      Pfloat char_expan
                      )

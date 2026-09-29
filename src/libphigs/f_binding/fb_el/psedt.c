@@ -31,7 +31,20 @@
 /**
  * \file psedt.c
  *
- * \brief       set edge type
+ * \brief       Set edgetype
+ *
+ * \param[in]  etype  edgetype
+ * \verbatim
+  1  PLSOLI  solid
+  2  PLDASH  dashed
+  3  PLDOT   dotted
+  4  PLDASD  dash-dotted
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_edgetype psedr psiasf
  */
 FTN_SUBROUTINE(psedt)(
                        FTN_INTEGER(etype)

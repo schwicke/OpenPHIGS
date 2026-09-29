@@ -32,6 +32,11 @@
  * \file pdel_structs_ar.c
  *
  * \brief       Delete structures from archive
+ *
+ * \param[in]  archive_id  archive file identifier
+ * \param[in]  struct_ids  list of structure identifiers
+ *
+ * \sa pdel_all_structs_ar pexec_struct
  */
 void pdel_structs_ar(
                      Pint archive_id,

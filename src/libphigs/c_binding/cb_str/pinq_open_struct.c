@@ -29,7 +29,13 @@
 /**
  * \file pinq_open_struct.c
  *
- * \brief       Get current structure open and edit status
+ * \brief       Inquire open structure
+ *
+ * \param[out] err_ind    error indicator, 0 on success
+ * \param[out] status     returned open structure status (PSTRUCT_NONE or PSTRUCT_OPEN)
+ * \param[out] struct_id  returned identifier of the open structure
+ *
+ * \sa popen_struct pclose_struct
  */
 void pinq_open_struct(
                       Pint *err_ind,

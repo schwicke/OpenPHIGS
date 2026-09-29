@@ -31,7 +31,14 @@
 /**
  * \file pschsp.c
  *
- * \brief       set character spacing
+ * \brief       Set character spacing
+ *
+ * \param[in]  chsp  character spacing
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_char_space psiasf pstxpr
  */
 FTN_SUBROUTINE(pschsp)(
                        FTN_REAL(chsp)

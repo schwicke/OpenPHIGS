@@ -30,7 +30,15 @@
 /**
  * \file pset_text_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set text index
+ *
+ * \param[in]  text_ind  text bundle index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pstxi pinq_text_rep pset_text_rep
+ */
 void pset_text_ind(
                    Pint text_ind
                    )

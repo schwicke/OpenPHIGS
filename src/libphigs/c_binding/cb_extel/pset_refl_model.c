@@ -30,7 +30,21 @@
 /**
  * \file pset_refl_model.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set reflectance model
+ *
+ * \param[in]  refl_model  reflectance model
+ * \verbatim
+  1  PREFL_NONE           no reflectance calculation
+  2  PREFL_AMBIENT        ambient
+  3  PREFL_AMB_DIFF       ambient and diffuse
+  4  PREFL_AMB_DIFF_SPEC  ambient, diffuse and specular
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psrfm pset_refl_eqn pset_refl_props
+ */
 void pset_refl_model(
                    Pint refl_model
                    )

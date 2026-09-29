@@ -30,7 +30,19 @@
 /**
  * \file pset_int_shad_meth.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set interior shading method
+ *
+ * \param[in]  shad_meth  shading method
+ * \verbatim
+  1  PSD_NONE    no shading (flat)
+  2  PSD_COLOUR  colour interpolation (smooth)
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psism pset_back_int_shad_meth
+ */
 void pset_int_shad_meth(
                         Pint shad_meth
                         )

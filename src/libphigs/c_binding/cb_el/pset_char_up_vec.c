@@ -31,7 +31,15 @@
 /**
  * \file pset_char_up_vec.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set character up vector
+ *
+ * \param[in]  char_up_vec  character up vector
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pschup pset_text_prec
+ */
 void pset_char_up_vec(
                       Pvec *char_up_vec
                       )

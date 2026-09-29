@@ -30,6 +30,15 @@
  * \file ptx.c
  *
  * \brief       Text
+ *
+ * \param[in]  px     x coordinate of the text position
+ * \param[in]  py     y coordinate of the text position
+ * \param[in]  chars  character string
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa ptext pschxp pschh pschsp pschup pstxal pstxci pstxfn
  */
 FTN_SUBROUTINE(ptx)(
                     FTN_REAL(px),

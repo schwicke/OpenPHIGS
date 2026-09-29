@@ -31,7 +31,9 @@
 /**
  * \file pinq_ar_st.c
  *
- * \brief       Get archive state
+ * \brief       Inquire archive state value
+ *
+ * \param[out] ar_st  returned archive state (PST_ARCL or PST_AROP)
  */
 void pinq_ar_st(
                 Par_st *ar_st

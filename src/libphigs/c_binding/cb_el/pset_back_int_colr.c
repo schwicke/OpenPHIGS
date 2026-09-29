@@ -30,7 +30,15 @@
 /**
  * \file pset_back_int_colr.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set back interior colour
+ *
+ * \param[in]  colr  colour, given as index or as direct colour
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psbic pset_int_colr
+ */
 void pset_back_int_colr(
                         Pgcolr *colr
                         )

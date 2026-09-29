@@ -31,7 +31,21 @@
 /**
  * \file pset_edgetype.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set edgetype
+ *
+ * \param[in]  edgetype  edgetype (same values as linetypes)
+ * \verbatim
+  1  PLINE_SOLID     solid
+  2  PLINE_DASH      dashed
+  3  PLINE_DOT       dotted
+  4  PLINE_DASH_DOT  dash-dotted
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psedt pinq_edge_rep pset_edge_rep pset_indiv_asf
+ */
 
 void pset_edgetype(
                    Pint edgetype

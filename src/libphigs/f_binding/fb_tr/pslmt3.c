@@ -30,7 +30,20 @@
 /**
  * \file pslmt3.c
  *
- * \brief       SET LOCAL TRANSFORMATION 3
+ * \brief       Set local transformation 3
+ *
+ * \param[in]  xfrmt  4x4 modelling transformation matrix, XFRMT(row,column)
+ * \param[in]  ctype  composition type
+ * \verbatim
+  0  PCPRE   preconcatenate
+  1  PCPOST  postconcatenate
+  2  PCREPL  replace
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_local_tran3
  */
 FTN_SUBROUTINE(pslmt3)(
                        float * xfrmt,

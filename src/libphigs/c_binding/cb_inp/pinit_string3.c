@@ -32,7 +32,18 @@
 /**
  * \file pinit_string3.c
  *
- * \brief       Initialize string 3d
+ * \brief       Initialize string 3
+ *
+ * \param[in]  ws_id        workstation identifier
+ * \param[in]  string_dev   string device number
+ * \param[in]  init_string  initial string
+ * \param[in]  pet          prompt and echo type
+ * \param[in]  echo_vol     echo volume in device coordinates
+ * \param[in]  string_data  string data record
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pinst3 pset_string_mode pinit_string
  */
 void pinit_string3(
                    Pint ws_id,

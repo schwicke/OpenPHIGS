@@ -32,7 +32,22 @@
 /**
  * \file preq_stroke3.c
  *
- * \brief       Request input from stroke device 3D
+ * \brief       Request stroke 3
+ *
+ * \param[in]  ws_id       workstation identifier
+ * \param[in]  stroke_num  stroke device number
+ * \param[out] in_status   input status
+ * \verbatim
+  0  PIN_STATUS_NONE   none
+  1  PIN_STATUS_OK     ok
+  2  PIN_STATUS_NO_IN  no input
+\endverbatim
+ * \param[out] view_ind    view index
+ * \param[out] stroke      stroke points
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pinit_stroke3 pset_stroke_mode
  */
 void preq_stroke3(
                   Pint ws_id,

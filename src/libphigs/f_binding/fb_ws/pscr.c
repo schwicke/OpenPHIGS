@@ -40,6 +40,13 @@ extern int record_geom;
  * \file pscr.c
  *
  * \brief       Set colour representation
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  ci     colour index
+ * \param[in]  nccs   number of colour components in CSPEC (3 or 4)
+ * \param[in]  cspec  colour specification in the current colour model of the workstation (RGB, or RGBA if NCCS is 4)
+ *
+ * \sa pset_colr_rep pqcf pqcr
  */
 
 FTN_SUBROUTINE(pscr)(

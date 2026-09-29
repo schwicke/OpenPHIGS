@@ -33,6 +33,17 @@
  * \file pinit_string.c
  *
  * \brief       Initialize string
+ *
+ * \param[in]  ws_id        workstation identifier
+ * \param[in]  string_dev   string device number
+ * \param[in]  init_string  initial string
+ * \param[in]  pet          prompt and echo type
+ * \param[in]  area         echo area in device coordinates
+ * \param[in]  string_data  string data record
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pinst pset_string_mode pinit_string3
  */
 void pinit_string(
                   Pint ws_id,

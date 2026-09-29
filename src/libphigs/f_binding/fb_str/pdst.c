@@ -34,6 +34,10 @@
  * \file pdst.c
  *
  * \brief       Delete structure
+ *
+ * \param[in]  strid  structure identifier
+ *
+ * \sa pdel_struct pexst pupost
  */
 FTN_SUBROUTINE(pdst)(
                      FTN_INTEGER(strid)

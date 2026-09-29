@@ -46,7 +46,13 @@
 /**
  * \file pset_text_rep.c
  *
- * \brief       Set workstation text represenation
+ * \brief       Set text representation
+ *
+ * \param[in]  ws_id        workstation identifier
+ * \param[in]  text_ind     text bundle index
+ * \param[in]  text_bundle  text bundle: font, precision, expansion, spacing and colour index
+ *
+ * \sa pstxr pinq_text_rep pset_char_expan pset_char_space pset_colr_model pset_indiv_asf pset_text_colr_ind pset_text_font
  */
 void pset_text_rep(
                    Pint ws_id,

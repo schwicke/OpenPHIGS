@@ -31,7 +31,21 @@
 /**
  * \file pset_linetype.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set linetype
+ *
+ * \param[in]  linetype  linetype
+ * \verbatim
+  1  PLINE_SOLID     solid
+  2  PLINE_DASH      dashed
+  3  PLINE_DOT       dotted
+  4  PLINE_DASH_DOT  dash-dotted
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psln pinq_line_rep pset_indiv_asf pset_line_rep
+ */
 void pset_linetype(
                    Pint linetype
                    )

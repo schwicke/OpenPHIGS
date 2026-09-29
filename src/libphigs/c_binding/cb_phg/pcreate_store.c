@@ -37,7 +37,12 @@
 /**
  * \file pcreate_store.c
  *
- * \brief       Create storage object
+ * \brief       Create store
+ *
+ * \param[out] err_ind  error indicator, 0 on success
+ * \param[in]  store    returned new store
+ *
+ * \sa pdel_store
  */
 void pcreate_store(
                    Pint *err_ind,

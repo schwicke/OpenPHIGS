@@ -31,7 +31,17 @@
 /**
  * \file ppm3.c
  *
- * \brief       polymarker 3
+ * \brief       Polymarker 3
+ *
+ * \param[in]  n    number of points
+ * \param[in]  pxa  x coordinates of the points
+ * \param[in]  pya  y coordinates of the points
+ * \param[in]  pza  z coordinates of the points
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa ppolymarker3 psmk psmksc pspmci pspmi ppm
  */
 FTN_SUBROUTINE(ppm3)(
                      FTN_INTEGER(n),

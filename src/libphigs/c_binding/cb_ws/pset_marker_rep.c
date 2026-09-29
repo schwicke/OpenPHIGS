@@ -46,7 +46,13 @@
 /**
  * \file pset_marker_rep.c
  *
- * \brief       Set workstation marker represenation
+ * \brief       Set polymarker representation
+ *
+ * \param[in]  ws_id          workstation identifier
+ * \param[in]  marker_ind     polymarker bundle index
+ * \param[in]  marker_bundle  polymarker bundle: type, size and colour index
+ *
+ * \sa pspmr pinq_marker_rep pset_colr_model pset_indiv_asf pset_marker_size pset_marker_colr_ind pset_marker_ind
  */
 void pset_marker_rep(
                      Pint ws_id,

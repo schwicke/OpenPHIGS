@@ -31,7 +31,15 @@
 /**
  * \file ppolyline3.c
  *
- * \brief       Creates a new element  */
+ * \brief       Polyline 3
+ *
+ * \param[in]  point_list  list of points
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa ppl3 pset_linetype pset_linewidth pset_line_colr_ind pset_line_ind ppolyline
+ */
 void ppolyline3(
                 Ppoint_list3 *point_list
                 )

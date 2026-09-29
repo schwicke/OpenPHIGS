@@ -31,7 +31,15 @@
 /**
  * \file pfill_area.c
  *
- * \brief       Creates a new element  */
+ * \brief       Fill area
+ *
+ * \param[in]  point_list  list of points
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pfa pset_int_style pset_int_style_ind pset_int_rep pset_int_ind pset_int_colr_ind pfill_area3
+ */
 void pfill_area(
                 Ppoint_list *point_list
                 )

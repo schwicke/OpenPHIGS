@@ -46,7 +46,13 @@
 /**
  * \file punpost_all_structs.c
  *
- * \brief       Remove all posted structures from workstation
+ * \brief       Unpost all structures
+ *
+ * \param[in]  ws_id  workstation identifier
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pupast ppost_struct punpost_struct
  */
 void punpost_all_structs(
                          Pint ws_id

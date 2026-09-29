@@ -57,7 +57,17 @@ SOFTWARE.
 /**
  * \file pcompose_tran_matrix.c
  *
- * \brief       Combine transformation with other transformation matrix
+ * \brief       Compose transformation matrix
+ *
+ * \param[in]  m          matrix to compose with
+ * \param[in]  pt         fixed point for scaling and rotation
+ * \param[in]  shift      translation (shift) vector
+ * \param[in]  angle      rotation angle in radians
+ * \param[in]  scale      scale factors
+ * \param[out] error_ind  error indicator, 0 on success
+ * \param[out] result     resulting transformation matrix
+ *
+ * \sa pcompose_tran_matrix3
  */
 void pcompose_tran_matrix(
                           Pmatrix m,                 /* transformation matrix */

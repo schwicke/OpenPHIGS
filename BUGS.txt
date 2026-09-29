@@ -1,0 +1,113 @@
+OpenPHIGS: known bugs
+=====================
+
+Found while reviewing the bindings and the structure/posting code
+(2026-09). None of these is fixed yet. Line numbers refer to the
+doc/binding-man-pages branch. The man pages of the affected FORTRAN
+bindings describe the current behaviour.
+
+
+FORTRAN bindings
+----------------
+
+1. PFASD / PFAS3D: vertices of fill area sets with lists of different length
+   src/libphigs/f_binding/fb_extel/pfasd.c:251,261,269
+   src/libphigs/f_binding/fb_extel/pfas3d.c:251,261,269
+
+   IXA is used as the number of vertices of each point list, while ISO
+   9593-1 defines it as the end index of each list in PXA/PYA/PZA. Vertex
+   data is then read at index j + num_vertices*i, which is only correct if
+   all lists have the same length. A set mixing, e.g., a quadrilateral and
+   a triangle reads the wrong vertices for the second list (and beyond).
+   The same indexing is used for VCOLI, VNXA, VNYA and VNZA.
+   Fix: keep a running start offset, and take the list length from IXA as
+   end indices (IXA(i) - IXA(i-1)).
+
+2. PFASD / PFAS3D: facet normal read from FCOLR for PFN
+   src/libphigs/f_binding/fb_extel/pfasd.c:226
+   src/libphigs/f_binding/fb_extel/pfas3d.c:225
+
+   With facet flag PFN (normal only) the facet normal is taken from
+   FCOLR(1..3). With PFCN it is taken from FNX/FNY/FNZ. It should come from
+   FNX/FNY/FNZ in both cases.
+
+3. PFASD / PFAS3D: direct colours not supported
+   src/libphigs/f_binding/fb_extel/pfasd.c:112
+   src/libphigs/f_binding/fb_extel/pfas3d.c:112
+
+   Facet and vertex colours are always stored as colour indices (FCOLI,
+   VCOLI), whatever the colour type. FCOLR (for colours) and VCOLR are not
+   used, so PRGB/PRGBA facet or vertex colours cannot be given.
+
+4. PSRFP: alpha of an RGBA specular colour overwrites blue
+   src/libphigs/f_binding/fb_extel/psrfp.c:92
+
+   In the PMODEL_RGBA case the fourth component is assigned to
+   specular_colr.val.general.z instead of .a, so blue is replaced by the
+   alpha value and alpha is left unset.
+
+5. PSHLFT: exclusion set declared as REAL
+   src/libphigs/f_binding/fb_inp/pshlft.c:49
+
+   The exclusion set is declared "Pfloat *es" but copied as integers (and
+   the corresponding PSPKFT uses "Pint *es"). Works because both types
+   have the same size, but the declaration (and the generated man page
+   signature) is wrong. Should be Pint *es.
+
+6. PFA3: errors reported for the wrong function
+   src/libphigs/f_binding/fb_el/pfa3.c:62
+
+   phg_entry_check() is called with Pfn_fill_area instead of
+   Pfn_fill_area3, so errors are attributed to FILL AREA.
+
+7. PSCR: comma operator in alpha default
+   src/libphigs/f_binding/fb_ws/pscr.c:87
+
+   "rep.rgba.alpha = 1,0;" is parsed as (alpha = 1), 0. The result is
+   correct by accident; it should read "rep.rgba.alpha = 1.0;".
+
+
+Structure posting lists (CSS)
+-----------------------------
+
+8. ADD_TO_WS_LIST has no bounds check
+   src/libphigs/css/css_ws.c:71
+
+   The ws_posted_to / ws_appear_on lists are allocated with
+   MAX_NO_OPEN_WS+1 entries, but ADD_TO_WS_LIST appends without checking
+   the length. More than MAX_NO_OPEN_WS distinct workstation handles in one
+   list (e.g. stale handles accumulating over many open/close cycles)
+   overflow the heap block. Should stop at MAX_NO_OPEN_WS and report an
+   error.
+
+9. RM_FROM_WS_LIST keeps entries with negative counts
+   src/libphigs/css/css_ws.c:99
+
+   An entry is only removed when its count becomes exactly 0
+   ("if ( !wsptr->count )"). If the count ever drops below zero the entry,
+   and with it a possibly dangling workstation handle, stays in the list
+   for good. Should be "if ( wsptr->count <= 0 )". (The known cause of such
+   drift, unposting structures that were not posted, is fixed.)
+
+
+Workstation identifiers
+-----------------------
+
+10. Off-by-one in the workstation identifier check
+    src/libphigs/f_binding/fb_ws/popwk.c:117
+    src/libphigs/c_binding/cb_ws/popen_ws.c:103
+
+    Both check "ws_id > MAX_NO_OPEN_WS", which accepts ws_id ==
+    MAX_NO_OPEN_WS (100). PHG_WS_LIST only has MAX_NO_OPEN_WS entries
+    (src/libphigs/f_binding/fb_phg/popph.c:121 and popen_phigs.c), so that
+    identifier writes past the end of the array. Should be ">=".
+
+
+To be investigated
+------------------
+
+11. OIR mode 2 renders colours darker
+    With %oir 2 an opaque green (0,255,0) fill area is displayed as
+    (0,153,0), both before and after the OIR resolve fix. %oir 0 and 1 show
+    the full colour. Not analysed; may be intended by the alternative
+    blending, or a bug in the mode 2 resolve shader.

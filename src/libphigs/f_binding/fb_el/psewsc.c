@@ -31,7 +31,14 @@
 /**
  * \file psewsc.c
  *
- * \brief       set edgewidth scale factor
+ * \brief       Set edgewidth scale factor
+ *
+ * \param[in]  ewidth  edgewidth scale factor
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_edgewidth psedfg psedr psiasf
  */
 FTN_SUBROUTINE(psewsc)(
                        FTN_REAL(ewidth)

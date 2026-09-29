@@ -56,7 +56,13 @@ SOFTWARE.
 /**
  * \file peval_view_map_matrix.c
  *
- * \brief       Generate view mapping matrix
+ * \brief       Evaluate view mapping matrix
+ *
+ * \param[in]  map        view mapping (window, projection viewport and, in 3D, projection type, reference point and planes)
+ * \param[out] error_ind  error indicator, 0 on success
+ * \param[out] m          resulting transformation matrix
+ *
+ * \sa peval_view_map_matrix3
  */
 void peval_view_map_matrix(
                            Pview_map *map,            /* view mapping */

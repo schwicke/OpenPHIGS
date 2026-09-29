@@ -30,7 +30,19 @@
 /**
  * \file pset_model_clip_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set modelling clipping indicator
+ *
+ * \param[in]  clipi  modelling clipping indicator
+ * \verbatim
+  0  PIND_NO_CLIP  no clipping
+  1  PIND_CLIP     clip
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psmcli pset_model_clip_vol3
+ */
 void pset_model_clip_ind(
                          Pclip_ind clipi
                          )

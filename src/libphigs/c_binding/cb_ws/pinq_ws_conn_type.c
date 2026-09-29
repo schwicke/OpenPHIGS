@@ -46,7 +46,13 @@
 /**
  * \file pinq_ws_conn_type.c
  *
- * \brief       Get workstation connection type
+ * \brief       Inquire workstation connection and type
+ *
+ * \param[in]  ws_id    workstation identifier
+ * \param[in]  store    store used to hold the returned data (see pcreate_store)
+ * \param[out] err_ind  error indicator, 0 on success
+ * \param[out] conn_id  returned connection identifier (allocated in store)
+ * \param[out] ws_type  returned workstation type
  */
 void pinq_ws_conn_type(
                        Pint ws_id,

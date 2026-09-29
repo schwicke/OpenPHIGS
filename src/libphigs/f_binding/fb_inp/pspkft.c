@@ -31,7 +31,18 @@
 /**
  * \file pspkft.c
  *
- * \brief       set pick filter
+ * \brief       Set pick filter
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  pkdnr  pick device number
+ * \param[in]  isn    number of names in the inclusion set
+ * \param[in]  is     inclusion set (names)
+ * \param[in]  esn    number of names in the exclusion set
+ * \param[in]  es     exclusion set (names)
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pset_pick_filter pads pres
  */
 FTN_SUBROUTINE(pspkft)(
                        FTN_INTEGER(wkid),

@@ -32,7 +32,12 @@
 /**
  * \file pget_stroke.c
  *
- * \brief       Get stroke event from event queue
+ * \brief       Get stroke
+ *
+ * \param[out] view_ind  view index
+ * \param[out] stroke    stroke points
+ *
+ * \sa pawait_event pget_stroke3 pset_view_tran_in_pri
  */
 void pget_stroke(
                  Pint *view_ind,

@@ -33,7 +33,23 @@
 /**
  * \file pawait_event.c
  *
- * \brief       Wait for event to occur
+ * \brief       Await event
+ *
+ * \param[in]  timeout    maximum time to wait, in seconds
+ * \param[out] ws_id      returned workstation identifier of the event
+ * \param[out] dev_class  returned input class of the event
+ * \verbatim
+  0  PIN_NONE    none
+  1  PIN_LOC     locator
+  2  PIN_STROKE  stroke
+  3  PIN_VAL     valuator
+  4  PIN_CHOICE  choice
+  5  PIN_PICK    pick
+  6  PIN_STRING  string
+\endverbatim
+ * \param[out] in_num     returned device number of the event
+ *
+ * \sa pwait pflush_events pget_choice pget_loc pget_loc3 pget_pick pget_stroke pget_stroke3
  */
 void pawait_event(
                   Pfloat timeout,

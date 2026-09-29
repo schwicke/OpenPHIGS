@@ -35,7 +35,17 @@
 /**
  * \file pslss.c
  *
- * \brief       set light source state
+ * \brief       Set light source state
+ *
+ * \param[in]  nacti    number of light sources to activate
+ * \param[in]  acti     light source indices to activate
+ * \param[in]  ndeacti  number of light sources to deactivate
+ * \param[in]  deacti   light source indices to deactivate
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_light_src_state
  */
 FTN_SUBROUTINE(pslss)(
                       FTN_INTEGER(nacti),

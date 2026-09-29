@@ -31,7 +31,11 @@
 /**
  * \file par_all_structs.c
  *
- * \brief       Store all structures in archive
+ * \brief       Archive all structures
+ *
+ * \param[in]  archive_id  archive file identifier
+ *
+ * \sa par_struct_nets par_structs pset_conf_res
  */
 void par_all_structs(
                      Pint archive_id

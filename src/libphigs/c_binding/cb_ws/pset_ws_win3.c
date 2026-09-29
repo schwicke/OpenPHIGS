@@ -46,7 +46,12 @@
 /**
  * \file pset_ws_win3.c
  *
- * \brief       Set workstation window
+ * \brief       Set workstation window 3
+ *
+ * \param[in]  ws_id   workstation identifier
+ * \param[in]  window  workstation window limits
+ *
+ * \sa pswkw3 pset_ws_vp pset_ws_vp3 pset_ws_win
  */
 void pset_ws_win3(
                   Pint ws_id,

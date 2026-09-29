@@ -30,6 +30,15 @@
  * \file pdel_struct_net.c
  *
  * \brief       Delete structure network
+ *
+ * \param[in]  struct_id  structure identifier
+ * \param[in]  ref_flag   what to do with structures in the network that are referenced from outside of it
+ * \verbatim
+  0  PFLAG_DEL   delete referenced structures too
+  1  PFLAG_KEEP  keep structures referenced from elsewhere
+\endverbatim
+ *
+ * \sa pdel_struct
  */
 void pdel_struct_net(
                      Pint struct_id,

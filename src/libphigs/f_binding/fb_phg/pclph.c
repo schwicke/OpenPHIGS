@@ -37,7 +37,9 @@
 /**
  * \file pclph.c
  *
- * \brief       Close phigs
+ * \brief       Close PHIGS
+ *
+ * \sa pclose_phigs popph
  */
 FTN_SUBROUTINE(pclph)()
 {

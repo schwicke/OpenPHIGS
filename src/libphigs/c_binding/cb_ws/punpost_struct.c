@@ -46,7 +46,14 @@
 /**
  * \file punpost_struct.c
  *
- * \brief       Remove posted structure from workstation
+ * \brief       Unpost structure
+ *
+ * \param[in]  ws_id      workstation identifier
+ * \param[in]  struct_id  structure identifier
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pupost ppost_struct
  */
 void punpost_struct(
                     Pint ws_id,

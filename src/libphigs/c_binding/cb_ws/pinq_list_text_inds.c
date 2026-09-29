@@ -47,7 +47,16 @@
 /**
  * \file pinq_list_text_inds.c
  *
- * \brief       Get workstation list of text indices
+ * \brief       Inquire list of text indices
+ *
+ * \param[in]  ws_id                workstation identifier
+ * \param[in]  num_elems_appl_list  number of list elements the application has room for
+ * \param[in]  start_ind            index of the first list element to return
+ * \param[out] err_ind              error indicator, 0 on success
+ * \param[out] def_text_ind         returned list of text indices
+ * \param[out] num_elems_impl_list  number of elements available in the implementation list
+ *
+ * \sa pset_text_rep
  */
 void pinq_list_text_inds(
                          Pint ws_id,

@@ -29,7 +29,13 @@
 /**
  * \file pinq_struct_status.c
  *
- * \brief       Get current status of give structure
+ * \brief       Inquire structure status
+ *
+ * \param[in]  struct_id  structure identifier
+ * \param[out] err_ind    error indicator, 0 on success
+ * \param[out] status     returned structure status (PSTRUCT_STATUS_NON_EXISTENT, PSTRUCT_STATUS_EMPTY or PSTRUCT_STATUS_NOT_EMPTY)
+ *
+ * \sa pqstst
  */
 void pinq_struct_status(
                         Pint struct_id,

@@ -30,6 +30,10 @@
  * \file pdel_struct.c
  *
  * \brief       Delete structure
+ *
+ * \param[in]  struct_id  structure identifier
+ *
+ * \sa pdst pempty_struct pexec_struct punpost_struct
  */
 void pdel_struct(
                  Pint struct_id

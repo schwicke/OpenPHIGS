@@ -32,7 +32,19 @@
 /**
  * \file pinit_stroke3.c
  *
- * \brief       Initialize stroke device 3D
+ * \brief       Initialize stroke 3
+ *
+ * \param[in]  ws_id          workstation identifier
+ * \param[in]  stroke_num     stroke device number
+ * \param[in]  init_view_ind  initial view index
+ * \param[in]  init_stroke    initial stroke
+ * \param[in]  pet            prompt and echo type
+ * \param[in]  echo_vol       echo volume in device coordinates
+ * \param[in]  stroke_data    stroke data record
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pset_stroke_mode
  */
 void pinit_stroke3(
                    Pint ws_id,

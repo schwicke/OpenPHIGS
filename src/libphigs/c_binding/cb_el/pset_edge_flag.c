@@ -31,7 +31,19 @@
 /**
  * \file pset_edge_flag.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set edge flag
+ *
+ * \param[in]  edge_flag  edge flag
+ * \verbatim
+  0  PEDGE_OFF  off
+  1  PEDGE_ON   on
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psedfg pset_indiv_asf
+ */
 
 void pset_edge_flag(
                     Pedge_flag edge_flag

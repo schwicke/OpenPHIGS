@@ -35,7 +35,20 @@
 /**
  * \file psbrfm.c
  *
- * \brief       set back reflectance equation
+ * \brief       Set back interior reflectance equation
+ *
+ * \param[in]  refl_eq  back reflectance equation
+ * \verbatim
+  1  PNORM   no reflectance calculation
+  2  PARM    ambient
+  3  PADRM   ambient and diffuse
+  4  PADSRM  ambient, diffuse and specular
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_back_refl_eqn psrfeq
  */
 FTN_SUBROUTINE(psbrfm)(
                        FTN_INTEGER(refl_eq)

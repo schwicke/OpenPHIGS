@@ -56,7 +56,14 @@ SOFTWARE.
 /**
  * \file peval_view_ori_matrix.c
  *
- * \brief       Generate view orientation matrix
+ * \brief       Evaluate view orientation matrix
+ *
+ * \param[in]  vrp        view reference point
+ * \param[in]  vup        view up vector
+ * \param[out] error_ind  error indicator, 0 on success
+ * \param[out] m          resulting transformation matrix
+ *
+ * \sa peval_view_ori_matrix3
  */
 void peval_view_ori_matrix(
                            Ppoint *vrp,               /* view reference point */

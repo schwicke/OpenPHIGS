@@ -32,6 +32,10 @@
  * \file pclose_ar_file.c
  *
  * \brief       Close archive file
+ *
+ * \param[in]  archive_id  archive file identifier
+ *
+ * \sa popen_ar_file
  */
 void pclose_ar_file(
                     Pint archive_id

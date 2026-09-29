@@ -35,7 +35,21 @@
 /**
  * \file psbis.c
  *
- * \brief       set back interior style
+ * \brief       Set back interior style
+ *
+ * \param[in]  istyle  back interior style
+ * \verbatim
+  0  PISEMP  empty
+  1  PHOLLO  hollow (outline only)
+  2  PSOLID  solid
+  3  PHATCH  hatch
+  4  PPATTR  pattern
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_back_int_style psis
  */
 FTN_SUBROUTINE(psbis)(
                       FTN_INTEGER(istyle)
