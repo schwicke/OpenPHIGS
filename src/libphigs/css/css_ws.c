@@ -96,7 +96,7 @@ SOFTWARE.
 		wsptr->count -= (n); \
 	    else \
 		wsptr->count = 0; \
-	    if ( !wsptr->count ) \
+	    if ( wsptr->count <= 0 ) \
 		while (wsptr->wsh) { \
 		    wsptr->wsh = (wsptr+1)->wsh; \
 		    wsptr->count = (wsptr+1)->count; \

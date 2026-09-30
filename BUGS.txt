@@ -80,12 +80,3 @@ Structure posting lists (CSS)
    overflow the heap block. Should stop at MAX_NO_OPEN_WS and report an
    error.
 
-9. RM_FROM_WS_LIST keeps entries with negative counts
-   src/libphigs/css/css_ws.c:99
-
-   An entry is only removed when its count becomes exactly 0
-   ("if ( !wsptr->count )"). If the count ever drops below zero the entry,
-   and with it a possibly dangling workstation handle, stays in the list
-   for good. Should be "if ( wsptr->count <= 0 )". (The known cause of such
-   drift, unposting structures that were not posted, is fixed.)
-
