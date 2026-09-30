@@ -1,12 +1,6 @@
 OpenPHIGS: known bugs
 =====================
 
-Found while reviewing the bindings and the structure/posting code
-(2026-09). None of these is fixed yet. Line numbers refer to the
-doc/binding-man-pages branch. The man pages of the affected FORTRAN
-bindings describe the current behaviour.
-
-
 FORTRAN bindings
 ----------------
 
