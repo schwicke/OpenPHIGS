@@ -89,25 +89,3 @@ Structure posting lists (CSS)
    for good. Should be "if ( wsptr->count <= 0 )". (The known cause of such
    drift, unposting structures that were not posted, is fixed.)
 
-
-Workstation identifiers
------------------------
-
-10. Off-by-one in the workstation identifier check
-    src/libphigs/f_binding/fb_ws/popwk.c:117
-    src/libphigs/c_binding/cb_ws/popen_ws.c:103
-
-    Both check "ws_id > MAX_NO_OPEN_WS", which accepts ws_id ==
-    MAX_NO_OPEN_WS (100). PHG_WS_LIST only has MAX_NO_OPEN_WS entries
-    (src/libphigs/f_binding/fb_phg/popph.c:121 and popen_phigs.c), so that
-    identifier writes past the end of the array. Should be ">=".
-
-
-To be investigated
-------------------
-
-11. OIR mode 2 renders colours darker
-    With %oir 2 an opaque green (0,255,0) fill area is displayed as
-    (0,153,0), both before and after the OIR resolve fix. %oir 0 and 1 show
-    the full colour. Not analysed; may be intended by the alternative
-    blending, or a bug in the mode 2 resolve shader.
