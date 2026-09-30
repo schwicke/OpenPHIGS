@@ -39,13 +39,6 @@ FORTRAN bindings
    VCOLI), whatever the colour type. FCOLR (for colours) and VCOLR are not
    used, so PRGB/PRGBA facet or vertex colours cannot be given.
 
-4. PSRFP: alpha of an RGBA specular colour overwrites blue
-   src/libphigs/f_binding/fb_extel/psrfp.c:92
-
-   In the PMODEL_RGBA case the fourth component is assigned to
-   specular_colr.val.general.z instead of .a, so blue is replaced by the
-   alpha value and alpha is left unset.
-
 Structure posting lists (CSS)
 -----------------------------
 

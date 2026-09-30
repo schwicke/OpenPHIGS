@@ -89,7 +89,7 @@ FTN_SUBROUTINE(psrfp)(
       refl_properties.specular_colr.val.general.x = fp[4];
       refl_properties.specular_colr.val.general.y = fp[5];
       refl_properties.specular_colr.val.general.z = fp[6];
-      refl_properties.specular_colr.val.general.z = fp[7];
+      refl_properties.specular_colr.val.general.a = fp[7];
       break;
     default:
       printf("ERROR in psrfp: unknown color model %d.", col_type);
