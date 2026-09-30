@@ -54,19 +54,6 @@ FORTRAN bindings
    have the same size, but the declaration (and the generated man page
    signature) is wrong. Should be Pint *es.
 
-6. PFA3: errors reported for the wrong function
-   src/libphigs/f_binding/fb_el/pfa3.c:62
-
-   phg_entry_check() is called with Pfn_fill_area instead of
-   Pfn_fill_area3, so errors are attributed to FILL AREA.
-
-7. PSCR: comma operator in alpha default
-   src/libphigs/f_binding/fb_ws/pscr.c:87
-
-   "rep.rgba.alpha = 1,0;" is parsed as (alpha = 1), 0. The result is
-   correct by accident; it should read "rep.rgba.alpha = 1.0;".
-
-
 Structure posting lists (CSS)
 -----------------------------
 

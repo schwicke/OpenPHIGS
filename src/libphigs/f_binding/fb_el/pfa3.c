@@ -59,7 +59,7 @@ FTN_SUBROUTINE(pfa3)(
   Pint i;
   Pint  *data;
   Ppoint3 *point;
-  if (phg_entry_check(PHG_ERH, 0, Pfn_fill_area)) {
+  if (phg_entry_check(PHG_ERH, 0, Pfn_fill_area3)) {
     if (PSL_STRUCT_STATE(PHG_PSL) != PSTRUCT_ST_STOP) {
       ERR_REPORT(PHG_ERH, ERR5);
     }
