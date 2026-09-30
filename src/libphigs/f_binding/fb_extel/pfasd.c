@@ -223,9 +223,9 @@ FTN_SUBROUTINE(pfasd)(
           break;
 
         case PFACET_NORMAL:
-          vec3.delta_x = FTN_REAL_ARRAY_GET(fcolr, 0);//Facet colour values
-          vec3.delta_y = FTN_REAL_ARRAY_GET(fcolr, 1);
-          vec3.delta_z = FTN_REAL_ARRAY_GET(fcolr, 2);
+          vec3.delta_x = FTN_REAL_ARRAY_GET(fnx, 0);//Facet colour values
+          vec3.delta_y = FTN_REAL_ARRAY_GET(fny, 1);
+          vec3.delta_z = FTN_REAL_ARRAY_GET(fnz, 2);
           memcpy(tp, &vec3, sizeof(Pvec3));
           tp += sizeof(Pvec3);
           break;

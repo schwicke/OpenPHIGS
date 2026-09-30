@@ -23,15 +23,7 @@ FORTRAN bindings
    Fix: keep a running start offset, and take the list length from IXA as
    end indices (IXA(i) - IXA(i-1)).
 
-2. PFASD / PFAS3D: facet normal read from FCOLR for PFN
-   src/libphigs/f_binding/fb_extel/pfasd.c:226
-   src/libphigs/f_binding/fb_extel/pfas3d.c:225
-
-   With facet flag PFN (normal only) the facet normal is taken from
-   FCOLR(1..3). With PFCN it is taken from FNX/FNY/FNZ. It should come from
-   FNX/FNY/FNZ in both cases.
-
-3. PFASD / PFAS3D: direct colours not supported
+2. PFASD / PFAS3D: direct colours not supported
    src/libphigs/f_binding/fb_extel/pfasd.c:112
    src/libphigs/f_binding/fb_extel/pfas3d.c:112
 
