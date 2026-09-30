@@ -1342,6 +1342,15 @@ extern "C" {
    */
   void wsgl_oir_reset(Ws * ws);
 
+  /*******************************************************************************
+   * wsgl_oir_next_element
+   *
+   * DESCR:       Start a new draw sequence number for the element about to be
+   *              rendered (no-op unless order independent rendering is active)
+   * RETURNS:     N/A
+   */
+  void wsgl_oir_next_element(Ws * ws);
+
 
   /*******************************************************************************
    * wsgl_oir_resolve

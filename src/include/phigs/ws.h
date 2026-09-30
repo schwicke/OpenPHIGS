@@ -259,6 +259,16 @@ typedef struct {
  */
   GLuint frag_peak_used;
   int overflow_warned;
+/*
+ * Draw sequence number, incremented for every element rendered in a frame
+ * and published to the first pass shader as oirDrawSeq. It is the sort key
+ * for fragments of equal depth, so that draw order (not the order in which
+ * shader invocations happen to run) decides which of several coplanar 2D
+ * primitives ends up on top. draw_seq_loc is looked up lazily.
+ */
+  GLuint draw_seq;
+  GLint draw_seq_loc;
+  int draw_seq_loc_ready;
 } Wsgl_oir;
 
   typedef struct {

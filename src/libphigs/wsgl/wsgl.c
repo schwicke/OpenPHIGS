@@ -756,6 +756,7 @@ void wsgl_render_element(
   }
   update_cur_struct(ws);
   ows = &ws->out_ws;
+  wsgl_oir_next_element(ws);
   switch (el->eltype) {
   case PELEM_LABEL:
     break;

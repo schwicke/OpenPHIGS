@@ -133,23 +133,20 @@ vec4 finalColor1(int nfrag){
 }
 
 /*
- * Alternative approach: walk the fragments nearest-first, scaling each by a
- * factor (e.g. 0.6) so ones further away contribute less and appear darker.
- *
- * Starts from the same fully transparent seed as finalColor1(), i.e. the
- * background, rather than the nearest fragment's own raw colour: seeding
- * with the nearest fragment made it count twice (once unweighted as the
- * seed, once more through the loop below) and skipped the 0.6 attenuation
- * every other layer gets, which is not "starting from the background", it is
- * starting from the frontmost layer with no background at all.
+ * Alternative approach: composite back to front like finalColor1(), but
+ * attenuate what is already accumulated (it lies behind the layer being
+ * added) by 0.6 each time a layer is put in front of it, so that further
+ * away layers contribute less and appear darker. The frontmost layer is
+ * never scaled, so an opaque 2D scene comes out as in mode 1, and a later
+ * draw at the same depth ends up on top.
  */
 vec4 finalColor2(int nfrag){
   vec3 acc = vec3(0.0, 0.0, 0.0);
   float alpha = 0.0;
   int i;
-  for (i=nfrag-1; i>=0; i--){
+  for (i=0; i<nfrag; i++){
     vec4 inCol = unpackUnorm4x8(fragments[i].y);
-    acc = acc * (1.0 - inCol.a) + inCol.rgb*inCol.a * 0.6;
+    acc   = acc * 0.6 * (1.0 - inCol.a) + inCol.rgb * inCol.a;
     alpha = alpha * (1.0 - inCol.a) + inCol.a;
   }
   if (alpha <= 0.0) return vec4(0.0, 0.0, 0.0, 0.0);
