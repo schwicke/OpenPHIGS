@@ -46,14 +46,6 @@ FORTRAN bindings
    specular_colr.val.general.z instead of .a, so blue is replaced by the
    alpha value and alpha is left unset.
 
-5. PSHLFT: exclusion set declared as REAL
-   src/libphigs/f_binding/fb_inp/pshlft.c:49
-
-   The exclusion set is declared "Pfloat *es" but copied as integers (and
-   the corresponding PSPKFT uses "Pint *es"). Works because both types
-   have the same size, but the declaration (and the generated man page
-   signature) is wrong. Should be Pint *es.
-
 Structure posting lists (CSS)
 -----------------------------
 

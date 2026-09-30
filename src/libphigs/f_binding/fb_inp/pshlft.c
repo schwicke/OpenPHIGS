@@ -46,7 +46,7 @@ FTN_SUBROUTINE(pshlft)(
                        FTN_INTEGER(isn),
                        Pint *is,
                        FTN_INTEGER(esn),
-                       Pfloat *es
+                       Pint *es
                        )
 {
   Pint ws_id = FTN_INTEGER_GET(wkid);
