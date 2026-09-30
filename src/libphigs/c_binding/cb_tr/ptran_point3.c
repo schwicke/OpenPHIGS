@@ -56,7 +56,14 @@ SOFTWARE.
 /**
  * \file ptran_point3.c
  *
- * \brief       Translate 3D point using transformation matrix
+ * \brief       Transform point 3
+ *
+ * \param[in]  p          point to transform
+ * \param[in]  m          transformation matrix
+ * \param[out] error_ind  error indicator, 0 on success
+ * \param[out] r          transformed point
+ *
+ * \sa ptran_point
  */
 void ptran_point3(
                   Ppoint3 *p,                /* point */

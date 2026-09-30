@@ -31,7 +31,25 @@
 /**
  * \file psvlm.c
  *
- * \brief       set valuator mode
+ * \brief       Set valuator mode
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  vldnr  valuator device number
+ * \param[in]  mode   operating mode
+ * \verbatim
+  0  PREQU   request
+  1  PSAMPL  sample
+  2  PEVENT  event
+\endverbatim
+ * \param[in]  esw    echo switch
+ * \verbatim
+  0  PNECHO  no echo
+  1  PECHO   echo
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pset_val_mode pwait pinvl3 prqvl
  */
 FTN_SUBROUTINE(psvlm)(
                       FTN_INTEGER(wkid),

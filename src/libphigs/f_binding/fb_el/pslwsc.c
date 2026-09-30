@@ -31,7 +31,15 @@
 /**
  * \file pslwsc.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set linewidth scale factor
+ *
+ * \param[in]  lwidth  linewidth scale factor
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_linewidth psiasf psplr
+ */
 
 FTN_SUBROUTINE(pslwsc)(
                        FTN_REAL(lwidth)

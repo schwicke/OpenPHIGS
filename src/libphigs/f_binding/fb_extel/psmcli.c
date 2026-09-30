@@ -35,7 +35,18 @@
 /**
  * \file psmcli.c
  *
- * \brief       set modelling clipping indicator
+ * \brief       Set modelling clipping indicator
+ *
+ * \param[in]  mclipi  modelling clipping indicator
+ * \verbatim
+  0  PNCLIP  no clipping
+  1  PCLIP   clip
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_model_clip_ind psmcv3
  */
 FTN_SUBROUTINE(psmcli)(
                        FTN_INTEGER(mclipi)

@@ -40,6 +40,13 @@ extern int record_geom;
  * \file puwk.c
  *
  * \brief       Update workstation
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  regfl  regeneration flag: 0 postpone, 1 perform
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pupd_ws
  */
 
 FTN_SUBROUTINE(puwk)(

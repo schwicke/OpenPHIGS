@@ -35,7 +35,16 @@
 /**
  * \file psrfp.c
  *
- * \brief       set reflectance properties
+ * \brief       Set area properties
+ *
+ * \param[in]  refl_type1  type of reflectance properties; only 1 is supported
+ * \param[in]  refl_len1   length of the data record
+ * \param[in]  datarec     data record, as packed by PPREC: integers colour type, number of colour components and colour index, then reals ambient, diffuse, specular coefficient, specular exponent and the specular colour components
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_refl_props
  */
 FTN_SUBROUTINE(psrfp)(
                       FTN_INTEGER(refl_type1),
@@ -80,7 +89,7 @@ FTN_SUBROUTINE(psrfp)(
       refl_properties.specular_colr.val.general.x = fp[4];
       refl_properties.specular_colr.val.general.y = fp[5];
       refl_properties.specular_colr.val.general.z = fp[6];
-      refl_properties.specular_colr.val.general.z = fp[7];
+      refl_properties.specular_colr.val.general.a = fp[7];
       break;
     default:
       printf("ERROR in psrfp: unknown color model %d.", col_type);

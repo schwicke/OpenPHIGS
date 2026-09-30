@@ -31,7 +31,12 @@
 /**
  * \file pret_struct_nets.c
  *
- * \brief       Retreive structure networks from archive
+ * \brief       Retrieve structure networks
+ *
+ * \param[in]  archive_id  archive file identifier
+ * \param[in]  struct_ids  list of structure identifiers
+ *
+ * \sa pret_all_structs pret_structs pset_conf_res
  */
 void pret_struct_nets(
                       Pint archive_id,

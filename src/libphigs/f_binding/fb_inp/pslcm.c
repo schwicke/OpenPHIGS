@@ -31,7 +31,25 @@
 /**
  * \file pslcm.c
  *
- * \brief       set locator mode
+ * \brief       Set locator mode
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  lcdnr  locator device number
+ * \param[in]  mode   operating mode
+ * \verbatim
+  0  PREQU   request
+  1  PSAMPL  sample
+  2  PEVENT  event
+\endverbatim
+ * \param[in]  echo   echo switch
+ * \verbatim
+  0  PNECHO  no echo
+  1  PECHO   echo
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pset_loc_mode pwait pinlc pinlc3 prqlc3 psmlc psmlc3
  */
 FTN_SUBROUTINE(pslcm)(
                       FTN_INTEGER(wkid),

@@ -1,0 +1,40 @@
+OpenPHIGS: known bugs
+=====================
+
+FORTRAN bindings
+----------------
+
+1. PFASD / PFAS3D: vertices of fill area sets with lists of different length
+   src/libphigs/f_binding/fb_extel/pfasd.c:251,261,269
+   src/libphigs/f_binding/fb_extel/pfas3d.c:251,261,269
+
+   IXA is used as the number of vertices of each point list, while ISO
+   9593-1 defines it as the end index of each list in PXA/PYA/PZA. Vertex
+   data is then read at index j + num_vertices*i, which is only correct if
+   all lists have the same length. A set mixing, e.g., a quadrilateral and
+   a triangle reads the wrong vertices for the second list (and beyond).
+   The same indexing is used for VCOLI, VNXA, VNYA and VNZA.
+   Fix: keep a running start offset, and take the list length from IXA as
+   end indices (IXA(i) - IXA(i-1)).
+
+2. PFASD / PFAS3D: direct colours not supported
+   src/libphigs/f_binding/fb_extel/pfasd.c:112
+   src/libphigs/f_binding/fb_extel/pfas3d.c:112
+
+   Facet and vertex colours are always stored as colour indices (FCOLI,
+   VCOLI), whatever the colour type. FCOLR (for colours) and VCOLR are not
+   used, so PRGB/PRGBA facet or vertex colours cannot be given.
+
+Structure posting lists (CSS)
+-----------------------------
+
+8. ADD_TO_WS_LIST has no bounds check
+   src/libphigs/css/css_ws.c:71
+
+   The ws_posted_to / ws_appear_on lists are allocated with
+   MAX_NO_OPEN_WS+1 entries, but ADD_TO_WS_LIST appends without checking
+   the length. More than MAX_NO_OPEN_WS distinct workstation handles in one
+   list (e.g. stale handles accumulating over many open/close cycles)
+   overflow the heap block. Should stop at MAX_NO_OPEN_WS and report an
+   error.
+

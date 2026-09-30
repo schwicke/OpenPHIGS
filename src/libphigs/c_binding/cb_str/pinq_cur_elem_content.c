@@ -29,7 +29,13 @@
 /**
  * \file pinq_cur_elem_content.c
  *
- * \brief       Get current element content
+ * \brief       Inquire current element content
+ *
+ * \param[in]  store      store used to hold the element data
+ * \param[out] err_ind    error indicator, 0 on success
+ * \param[out] elem_data  element data (allocated in store)
+ *
+ * \sa pinq_cur_elem_type_size
  */
 void pinq_cur_elem_content(
                            Pstore store,

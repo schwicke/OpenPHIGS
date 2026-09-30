@@ -31,7 +31,15 @@
 /**
  * \file pset_back_int_colr_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set back interior colour index
+ *
+ * \param[in]  colr_ind  back interior colour index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psbici pset_back_int_colr pset_int_colr_ind
+ */
 void pset_back_int_colr_ind(
                        Pint colr_ind
                        )

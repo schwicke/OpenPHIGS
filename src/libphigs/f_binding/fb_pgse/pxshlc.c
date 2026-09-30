@@ -29,7 +29,20 @@
 /**
  * \file pxshlc.c
  *
- * \brief       Extension */
+ * \brief       Set highlighting colour (OpenPHIGS extension)
+ *
+ * \param[in]  ctype  colour type
+ * \verbatim
+  0  PINDIR  colour index
+  1  PRGB    RGB
+  2  PRGBA   RGB with alpha
+\endverbatim
+ * \param[in]  ncc    number of colour components (not used)
+ * \param[in]  coli   colour index, used if CTYPE is PINDIR
+ * \param[in]  colr   colour components, used for PRGB and PRGBA
+ *
+ * \sa pxset_highlight_colr pshlft
+ */
 FTN_SUBROUTINE(pxshlc)(
                        FTN_INTEGER(ctype),
                        FTN_INTEGER(ncc),

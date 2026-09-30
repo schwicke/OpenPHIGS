@@ -29,7 +29,15 @@
 /**
  * \file pinq_elem_type_size.c
  *
- * \brief       Get element type and size
+ * \brief       Inquire element type and size
+ *
+ * \param[in]  struct_id  structure identifier
+ * \param[in]  elem_num   element number
+ * \param[out] err_ind    error indicator, 0 on success
+ * \param[out] elem_type  element type
+ * \param[out] elem_size  element size in bytes
+ *
+ * \sa pinq_elem_content
  */
 void pinq_elem_type_size(
                          Pint struct_id,

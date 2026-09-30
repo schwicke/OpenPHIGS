@@ -34,6 +34,10 @@
  * \file pcelst.c
  *
  * \brief       Copy all elements from structure
+ *
+ * \param[in]  strid  identifier of the structure to copy the elements from
+ *
+ * \sa pcopy_all_elems_struct pexst
  */
 FTN_SUBROUTINE(pcelst)(FTN_INTEGER(strid)){
   Pint struct_id = FTN_INTEGER_GET(strid);

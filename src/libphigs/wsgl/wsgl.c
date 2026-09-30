@@ -756,6 +756,7 @@ void wsgl_render_element(
   }
   update_cur_struct(ws);
   ows = &ws->out_ws;
+  wsgl_oir_next_element(ws);
   switch (el->eltype) {
   case PELEM_LABEL:
     break;
@@ -914,7 +915,19 @@ void wsgl_render_element(
     break;
 
   case PELEM_MARKER_SIZE:
-    wsgl->cur_struct.ast.indiv_group.marker_bundle.size = PHG_FLOAT(el)*scalef;
+    /*
+      Unlike line/edge width, marker size is not a device-pixel quantity --
+      it is a WC-relative offset added to the marker's anchor point in
+      wsgl_marker.c, which then goes through the normal transform pipeline
+      including the NPC-to-device viewport mapping. That mapping already
+      scales it up by hcsf on its own (the hardcopy canvas is
+      width*hcsf x height*hcsf pixels covering the same WC/NPC extent), so
+      multiplying by scalef here as well double-counts it: markers end up
+      scaled by roughly hcsf^2 while everything else (including line/edge
+      width, which DOES need the explicit *scalef below to compensate for
+      glLineWidth() being device-pixel-based) only scales by hcsf.
+    */
+    wsgl->cur_struct.ast.indiv_group.marker_bundle.size = PHG_FLOAT(el);
     break;
 
   case PELEM_MARKER_TYPE:

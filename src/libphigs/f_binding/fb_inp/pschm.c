@@ -31,7 +31,25 @@
 /**
  * \file pschm.c
  *
- * \brief       set choice mode
+ * \brief       Set choice mode
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  chdnr  choice device number
+ * \param[in]  mode   operating mode
+ * \verbatim
+  0  PREQU   request
+  1  PSAMPL  sample
+  2  PEVENT  event
+\endverbatim
+ * \param[in]  esw    echo switch
+ * \verbatim
+  0  PNECHO  no echo
+  1  PECHO   echo
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pset_choice_mode pwait pinch3 prqch
  */
 FTN_SUBROUTINE(pschm)(
                       FTN_INTEGER(wkid),

@@ -31,7 +31,21 @@
 /**
  * \file psis.c
  *
- * \brief       set interior style
+ * \brief       Set interior style
+ *
+ * \param[in]  ints  interior style
+ * \verbatim
+  0  PISEMP  empty
+  1  PHOLLO  hollow (outline only)
+  2  PSOLID  solid
+  3  PHATCH  hatch
+  4  PPATTR  pattern
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_int_style psiasf psisi pbsi psbis
  */
 FTN_SUBROUTINE(psis)(
                      FTN_INTEGER(ints)

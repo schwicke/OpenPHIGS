@@ -30,7 +30,15 @@
 /**
  * \file pset_anno_align.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set annotation text alignment
+ *
+ * \param[in]  text_align  annotation text alignment (PHOR_* and PVERT_* values)
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psatal pset_text_prec
+ */
 void pset_anno_align(
                      Ptext_align *text_align
                      )

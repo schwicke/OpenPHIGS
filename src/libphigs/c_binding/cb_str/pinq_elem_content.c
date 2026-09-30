@@ -29,7 +29,15 @@
 /**
  * \file pinq_elem_content.c
  *
- * \brief       Get element content
+ * \brief       Inquire element content
+ *
+ * \param[in]  struct_id  structure identifier
+ * \param[in]  elem_num   element number
+ * \param[in]  store      store used to hold the element data
+ * \param[out] err_ind    error indicator, 0 on success
+ * \param[out] elem_data  element data (allocated in store)
+ *
+ * \sa pqeco pinq_elem_type_size
  */
 void pinq_elem_content(
                        Pint struct_id,

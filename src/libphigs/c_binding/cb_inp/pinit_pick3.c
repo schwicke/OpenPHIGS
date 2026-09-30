@@ -32,7 +32,29 @@
 /**
  * \file pinit_pick3.c
  *
- * \brief       Initialize pick device 3D
+ * \brief       Initialize pick 3
+ *
+ * \param[in]  ws_id        workstation identifier
+ * \param[in]  pick_num     pick device number
+ * \param[in]  init_status  initial status
+ * \verbatim
+  0  PIN_STATUS_NONE   none
+  1  PIN_STATUS_OK     ok
+  2  PIN_STATUS_NO_IN  no input
+\endverbatim
+ * \param[in]  init_pick    initial pick path
+ * \param[in]  pet          prompt and echo type
+ * \param[in]  echo_vol     echo volume in device coordinates
+ * \param[in]  pick_data    pick data record
+ * \param[in]  order        pick path order
+ * \verbatim
+  0  PORDER_TOP_FIRST     top first
+  1  PORDER_BOTTOM_FIRST  bottom first
+\endverbatim
+ *
+ * \pre The workstation must be open
+ *
+ * \sa padd_names_set premove_names_set pset_pick_filter pset_pick_id pset_pick_mode
  */
 void pinit_pick3(
                  Pint ws_id,

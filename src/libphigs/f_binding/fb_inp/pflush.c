@@ -31,7 +31,24 @@
 /**
  * \file pflush.c
  *
- * \brief       flush device events
+ * \brief       Flush device events
+ *
+ * \param[in]  wkid  workstation identifier
+ * \param[in]  icl   input class
+ * \verbatim
+  0  PNCLAS  none
+  1  PLOCAT  locator
+  2  PSTROK  stroke
+  3  PVALUA  valuator
+  4  PCHOIC  choice
+  5  PPICK   pick
+  6  PSTRIN  string
+\endverbatim
+ * \param[in]  idnr  device number
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pflush_events
  */
 FTN_SUBROUTINE(pflush)(
                        FTN_INTEGER(wkid),

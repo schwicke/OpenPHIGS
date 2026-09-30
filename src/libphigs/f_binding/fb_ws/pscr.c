@@ -40,6 +40,13 @@ extern int record_geom;
  * \file pscr.c
  *
  * \brief       Set colour representation
+ *
+ * \param[in]  wkid   workstation identifier
+ * \param[in]  ci     colour index
+ * \param[in]  nccs   number of colour components in CSPEC (3 or 4)
+ * \param[in]  cspec  colour specification in the current colour model of the workstation (RGB, or RGBA if NCCS is 4)
+ *
+ * \sa pset_colr_rep pqcf pqcr
  */
 
 FTN_SUBROUTINE(pscr)(
@@ -77,7 +84,7 @@ FTN_SUBROUTINE(pscr)(
       rep.rgba.alpha = FTN_REAL_ARRAY_GET(cspec, 3);
     } else {
       printf("INFO: psrc no alpha component specified in RGBA mode. Using 1.\n");
-      rep.rgba.alpha = 1,0;
+      rep.rgba.alpha = 1.0;
     };
 #ifdef DEBUGA
     printf("INFO: psrc set color RGBA %f%f %f %f\n",

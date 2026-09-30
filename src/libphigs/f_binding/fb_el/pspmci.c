@@ -31,7 +31,14 @@
 /**
  * \file pspmci.c
  *
- * \brief       set polymarker colour index
+ * \brief       Set polymarker colour index
+ *
+ * \param[in]  coli  polymarker colour index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_marker_colr_ind psiasf psplr
  */
 FTN_SUBROUTINE(pspmci)(
                        FTN_INTEGER(coli)

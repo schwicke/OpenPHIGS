@@ -37,7 +37,14 @@
 /**
  * \file popen_phigs.c
  *
- * \brief       Open phigs
+ * \brief       Open PHIGS
+ *
+ * The memory argument is accepted for compatibility and ignored.
+ *
+ * \param[in]  error_file  name of the error file
+ * \param[in]  memory      size of the memory buffer (currently not used)
+ *
+ * \sa popph pclose_phigs
  */
 void popen_phigs(
                  char *error_file,

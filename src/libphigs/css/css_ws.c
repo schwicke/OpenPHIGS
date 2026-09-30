@@ -56,66 +56,66 @@ SOFTWARE.
 #include "private/cssP.h"
 #include "private/phgP.h"
 
-#define ADD_TO_WS_LIST(cssh, wslist, wshdl, n, wspost) \
-  { Css_ws_list wsptr; \
-    \
-    if (!(wslist)) { \
-	if ( !((wslist) = (Css_ws_list) \
-		malloc((MAX_NO_OPEN_WS+1) * sizeof(Css_ws_on))) ) { \
-	    ERR_BUF((cssh)->erh, ERR901); \
-	    return(0);					/* out of memory */ \
-	} \
-	(wslist)->wsh = NULL; \
-    } \
-    wsptr = (wslist); \
-    while (wsptr->wsh && wsptr->wsh!=(wshdl)) \
-	wsptr++; \
-    if (wsptr->wsh) \
-	/* don't increment the count if this is the ws_posted_to list */ \
-	if ((wspost)) \
-	    (wspost) = FALSE; \
-	else \
-	    wsptr->count += (n); \
-    else { \
-	/* this ws not already in the list, so add it */ \
-	wsptr->wsh = (wshdl); \
-	wsptr->count = (n); \
-	(wsptr+1)->wsh = NULL; \
-    } \
+#define ADD_TO_WS_LIST(cssh, wslist, wshdl, n, wspost)                  \
+  { Css_ws_list wsptr;                                                  \
+                                                                        \
+    if (!(wslist)) {                                                    \
+      if ( !((wslist) = (Css_ws_list)                                   \
+             malloc((MAX_NO_OPEN_WS+1) * sizeof(Css_ws_on))) ) {        \
+        ERR_BUF((cssh)->erh, ERR901);                                   \
+        return(0);                    /* out of memory */               \
+      }                                                                 \
+      (wslist)->wsh = NULL;                                             \
+    }                                                                   \
+    wsptr = (wslist);                                                   \
+    while (wsptr->wsh && wsptr->wsh!=(wshdl))                           \
+      wsptr++;                                                          \
+    if (wsptr->wsh)                                                     \
+      /* don't increment the count if this is the ws_posted_to list */  \
+      if ((wspost))                                                     \
+        (wspost) = FALSE;                                               \
+      else                                                              \
+        wsptr->count += (n);                                            \
+    else {                                                              \
+      /* this ws not already in the list, so add it */                  \
+      wsptr->wsh = (wshdl);                                             \
+      wsptr->count = (n);                                               \
+      (wsptr+1)->wsh = NULL;                                            \
+    }                                                                   \
   }
 
-#define RM_FROM_WS_LIST(wslist, wshdl, n) \
-  { Css_ws_list wsptr; \
-    \
-    if (wslist) { \
-	wsptr = (wslist); \
-	while (wsptr->wsh && wsptr->wsh!=(wshdl)) \
-	    wsptr++; \
-	if (wsptr->wsh) { \
-	    if (n) \
-		wsptr->count -= (n); \
-	    else \
-		wsptr->count = 0; \
-	    if ( !wsptr->count ) \
-		while (wsptr->wsh) { \
-		    wsptr->wsh = (wsptr+1)->wsh; \
-		    wsptr->count = (wsptr+1)->count; \
-		    wsptr++; \
-		} \
-	    if (!wslist->wsh) { \
-		free((char *)(wslist)); \
-		wslist = NULL; \
-	    } \
-	} \
-    } \
+#define RM_FROM_WS_LIST(wslist, wshdl, n)       \
+  { Css_ws_list wsptr;                          \
+                                                \
+    if (wslist) {                               \
+      wsptr = (wslist);                         \
+      while (wsptr->wsh && wsptr->wsh!=(wshdl)) \
+        wsptr++;                                \
+      if (wsptr->wsh) {                         \
+        if (n)                                  \
+          wsptr->count -= (n);                  \
+        else                                    \
+          wsptr->count = 0;                     \
+        if ( wsptr->count <= 0 )                \
+          while (wsptr->wsh) {                  \
+            wsptr->wsh = (wsptr+1)->wsh;        \
+            wsptr->count = (wsptr+1)->count;    \
+            wsptr++;                            \
+          }                                     \
+        if (!wslist->wsh) {                     \
+          free((char *)(wslist));               \
+          wslist = NULL;                        \
+        }                                       \
+      }                                         \
+    }                                           \
   }
 
 /*******************
 
     phg_css_post - "Post" the given structure by adding wsh to its list of
-		   workstations it is posted to and appears on. Also add wsh
-		   to list of workstations appearing on for all descendants
-		   of the structure.
+           workstations it is posted to and appears on. Also add wsh
+           to list of workstations appearing on for all descendants
+           of the structure.
 
 *******************/
 
@@ -124,46 +124,46 @@ Struct_handle phg_css_post(Css_handle cssh,
                            Ws_handle wsh,
                            int *was_posted)
 {
-    Struct_handle	structp;
-    Css_ws_on		addlist[2];
-    char 		postflag;
+  Struct_handle    structp;
+  Css_ws_on        addlist[2];
+  char         postflag;
 
-    *was_posted = FALSE;
-    if ( !(structp = CSS_STRUCT_EXISTS(cssh, structid)) ) {
-	/* create an empty one */
-	if ( !(structp = phg_css_create_struct(structid)) ) {
-	    ERR_BUF(cssh->erh, ERR901);
-	    return(NULL);				/* out of memory */
-	}
-	if ( !phg_css_stab_insert(cssh->stab, structid, structp) ) {
-	    ERR_BUF(cssh->erh, ERR901);
-	    return(NULL);				/* out of memory */
-	}
+  *was_posted = FALSE;
+  if ( !(structp = CSS_STRUCT_EXISTS(cssh, structid)) ) {
+    /* create an empty one */
+    if ( !(structp = phg_css_create_struct(structid)) ) {
+      ERR_BUF(cssh->erh, ERR901);
+      return(NULL);                /* out of memory */
     }
-    postflag = TRUE;
-    ADD_TO_WS_LIST(cssh, structp->ws_posted_to, wsh, 1, postflag)
+    if ( !phg_css_stab_insert(cssh->stab, structid, structp) ) {
+      ERR_BUF(cssh->erh, ERR901);
+      return(NULL);                /* out of memory */
+    }
+  }
+  postflag = TRUE;
+  ADD_TO_WS_LIST(cssh, structp->ws_posted_to, wsh, 1, postflag)
     /* if postflag has been negated, struct is already posted - nothing to do */
     if (postflag) {
-	addlist[0].wsh = wsh;
-	addlist[0].count = 1;
-	addlist[1].wsh = NULL;
-	if ( !phg_css_add_to_ws_appear(cssh, structp, addlist, 1) )
-	    return(NULL);				/* out of memory */
+      addlist[0].wsh = wsh;
+      addlist[0].count = 1;
+      addlist[1].wsh = NULL;
+      if ( !phg_css_add_to_ws_appear(cssh, structp, addlist, 1) )
+        return(NULL);                /* out of memory */
     } else
 #ifdef DEBUG
       printf("phg_css_post posted structure %d\n", structid);
 #endif
-	*was_posted = TRUE;
+  *was_posted = TRUE;
 
-    return(structp);
+  return(structp);
 }
 
 /*******************
 
     phg_css_unpost - "Unpost" the given structure by removing wsh from its list
-		     of workstations it is posted to and appears on. Also remove
-		     from list of workstations appearing on for all descendants
-		     of the structure.
+             of workstations it is posted to and appears on. Also remove
+             from list of workstations appearing on for all descendants
+             of the structure.
 
 *******************/
 
@@ -171,72 +171,72 @@ Struct_handle phg_css_unpost(Css_handle cssh,
                              Pint structid,
                              Ws_handle wsh)
 {
-    Struct_handle 	structp;
-    Css_ws_on		rmlist[2];
+  Struct_handle     structp;
+  Css_ws_on        rmlist[2];
 
-    if ( !(structp = CSS_STRUCT_EXISTS(cssh, structid)) )
-	return(NULL);
-    /* Not posted to this ws: nothing to do. Removing the appearances
-     * anyway would corrupt the ws_appear_on counts of the network and
-     * leave dangling workstation handles behind once the ws is closed.
-     */
-    if ( !phg_css_ws_posted(structp, wsh) )
-	return(NULL);
-    RM_FROM_WS_LIST(structp->ws_posted_to, wsh, 1)
+  if ( !(structp = CSS_STRUCT_EXISTS(cssh, structid)) )
+    return(NULL);
+  /* Not posted to this ws: nothing to do. Removing the appearances
+   * anyway would corrupt the ws_appear_on counts of the network and
+   * leave dangling workstation handles behind once the ws is closed.
+   */
+  if ( !phg_css_ws_posted(structp, wsh) )
+    return(NULL);
+  RM_FROM_WS_LIST(structp->ws_posted_to, wsh, 1)
 
     rmlist[0].wsh = wsh;
-    rmlist[0].count = 1;
-    rmlist[1].wsh = NULL;
-    phg_css_rm_from_ws_appear(cssh, structp, rmlist, 1);
-    return(structp);
+  rmlist[0].count = 1;
+  rmlist[1].wsh = NULL;
+  phg_css_rm_from_ws_appear(cssh, structp, rmlist, 1);
+  return(structp);
 }
 
 /*******************
 
     phg_css_unpost_all - "Unpost" all structures posted to and appearing on
-			 the given workstation, by removing wsh from all
-			 posted to and appearing on lists.
-			 Returns the number of structures which still
-			 referred to wsh.
+             the given workstation, by removing wsh from all
+             posted to and appearing on lists.
+             Returns the number of structures which still
+             referred to wsh.
 
 *******************/
 
 int phg_css_unpost_all(Css_handle cssh, Ws_handle wsh)
 {
-    Css_hash_block	**stab_row, *block;
-    int			n;
-    int			nfound = 0;
+  Css_hash_block    **stab_row, *block;
+  int            n;
+  int            nfound = 0;
 
-    n = cssh->stab->nstructs;
-    stab_row = cssh->stab->table;
-    while (n) {
-	block = (*stab_row)->next;
-	while (block) {
-	    if ( phg_css_ws_posted(block->struct_ptr, wsh) ||
-		 phg_css_ws_appearances(block->struct_ptr, wsh) ) {
+  n = cssh->stab->nstructs;
+  stab_row = cssh->stab->table;
+  while (n) {
+    block = (*stab_row)->next;
+    while (block) {
+      if ( phg_css_ws_posted(block->struct_ptr, wsh) ||
+           phg_css_ws_appearances(block->struct_ptr, wsh) ) {
 #ifdef DEBUG
-		printf("phg_css_unpost_all: structure %d still refers to ws %p\n",
-		       block->struct_id, (void *)wsh);
+        printf("phg_css_unpost_all: structure %d still refers to ws %p\n",
+               block->struct_id, (void *)wsh);
 #endif
-		nfound++;
-	    }
-	    RM_FROM_WS_LIST(block->struct_ptr->ws_posted_to, wsh, 1)
-	    /* 0 tells RM_FROM_WS_LIST to zero the count */
-	    RM_FROM_WS_LIST(block->struct_ptr->ws_appear_on, wsh, 0)
-	    block = block->next;
-	    n--;
-	}
-	if (n)
-	    /* in case we are at the last row of the table */
-	    stab_row++;
+        nfound++;
+      }
+      RM_FROM_WS_LIST(block->struct_ptr->ws_posted_to, wsh, 1)
+        /* 0 tells RM_FROM_WS_LIST to zero the count */
+        RM_FROM_WS_LIST(block->struct_ptr->ws_appear_on, wsh, 0)
+        block = block->next;
+      n--;
     }
-    return(nfound);
+    if (n)
+      /* in case we are at the last row of the table */
+      stab_row++;
+  }
+  return(nfound);
 }
 
 /*******************
 
     phg_css_add_to_ws_appear - Add the given list of workstations to the
-			       executed structure and all of its descendants.
+                   executed structure and all of its descendants.
 
 *******************/
 
@@ -245,33 +245,33 @@ int phg_css_add_to_ws_appear(Css_handle cssh,
                              Css_ws_list addlist,
                              int nexec)
 {
-    Css_ws_list		wsnext;
-    Css_set_element	*el;
-    char 		postflag = FALSE;
+  Css_ws_list        wsnext;
+  Css_set_element    *el;
+  char         postflag = FALSE;
 
-    if ( !(wsnext = addlist) )
-	return(TRUE);					/* nothing to do */
-    /* combine the 2 ws_appear_on lists for execp and its descendants */
-    while (wsnext->wsh) {
-	ADD_TO_WS_LIST(cssh, execp->ws_appear_on, wsnext->wsh,
-	    wsnext->count*nexec, postflag)
-	wsnext++;
-    }
-    el = execp->i_refer_to->elements->next;
-    while (el) {
-	if ( !phg_css_add_to_ws_appear(cssh, (Struct_handle)el->key,
-		addlist, ((Css_set_ptr)el->data)->num_elements*nexec) )
-	    return(FALSE);				/* out of memory */
-	el = el->next;
-    }
-    return(TRUE);
+  if ( !(wsnext = addlist) )
+    return(TRUE);                    /* nothing to do */
+  /* combine the 2 ws_appear_on lists for execp and its descendants */
+  while (wsnext->wsh) {
+    ADD_TO_WS_LIST(cssh, execp->ws_appear_on, wsnext->wsh,
+                   wsnext->count*nexec, postflag)
+      wsnext++;
+  }
+  el = execp->i_refer_to->elements->next;
+  while (el) {
+    if ( !phg_css_add_to_ws_appear(cssh, (Struct_handle)el->key,
+                                   addlist, ((Css_set_ptr)el->data)->num_elements*nexec) )
+      return(FALSE);                /* out of memory */
+    el = el->next;
+  }
+  return(TRUE);
 }
 
 /*******************
 
     phg_css_rm_from_ws_appear - Remove the given list of workstations from
-				the executed structure and all of its
-				descendants.
+                the executed structure and all of its
+                descendants.
 
 *******************/
 
@@ -280,31 +280,31 @@ void phg_css_rm_from_ws_appear(Css_handle cssh,
                                Css_ws_list rmlist,
                                int nexec)
 {
-    Css_ws_list		wsnext;
-    Css_set_element	*el;
+  Css_ws_list        wsnext;
+  Css_set_element    *el;
 
-    if ( !(wsnext = rmlist) )
-	return;						/* nothing to do */
-    while (wsnext->wsh) {
-	RM_FROM_WS_LIST( execp->ws_appear_on, wsnext->wsh, wsnext->count*nexec)
-	wsnext++;
-    }
-    el = execp->i_refer_to->elements->next;
-    while (el) {
-	phg_css_rm_from_ws_appear(cssh, (Struct_handle)el->key,
-	    rmlist, ((Css_set_ptr)el->data)->num_elements*nexec);
-	el = el->next;
-    }
+  if ( !(wsnext = rmlist) )
+    return;                        /* nothing to do */
+  while (wsnext->wsh) {
+    RM_FROM_WS_LIST( execp->ws_appear_on, wsnext->wsh, wsnext->count*nexec)
+      wsnext++;
+  }
+  el = execp->i_refer_to->elements->next;
+  while (el) {
+    phg_css_rm_from_ws_appear(cssh, (Struct_handle)el->key,
+                              rmlist, ((Css_set_ptr)el->data)->num_elements*nexec);
+    el = el->next;
+  }
 }
 
 /*******************
 
     phg_css_join_ws_list - Combine the lists of workstations that the
-			   structures s1 and s2 appear on or are posted to
-			   (according to the list_op argument), returning the
-			   result in newlist. If newlist is NULL, space will
-			   be allocated for a new list, otherwise s1 and s2's
-			   lists will be added in to newlist.
+               structures s1 and s2 appear on or are posted to
+               (according to the list_op argument), returning the
+               result in newlist. If newlist is NULL, space will
+               be allocated for a new list, otherwise s1 and s2's
+               lists will be added in to newlist.
 
 *******************/
 
@@ -314,33 +314,33 @@ int phg_css_join_ws_list(Css_handle cssh,
                          Css_ws_list *newlist,
                          Css_ws_list_op op)
 {
-    Css_ws_list 	wsnext;
-    char 		postflag = FALSE;
+  Css_ws_list     wsnext;
+  char         postflag = FALSE;
 
-    if (s1 && (wsnext =
-	    (op==CSS_WS_APPEAR ? s1->ws_appear_on : s1->ws_posted_to)) ) {
-	while (wsnext->wsh) {
-	    ADD_TO_WS_LIST(cssh, *newlist, wsnext->wsh, wsnext->count, postflag)
-	    wsnext++;
-	}
+  if (s1 && (wsnext =
+             (op==CSS_WS_APPEAR ? s1->ws_appear_on : s1->ws_posted_to)) ) {
+    while (wsnext->wsh) {
+      ADD_TO_WS_LIST(cssh, *newlist, wsnext->wsh, wsnext->count, postflag)
+        wsnext++;
     }
-    if (s2 && (wsnext =
-	    (op==CSS_WS_APPEAR ? s2->ws_appear_on : s2->ws_posted_to)) ) {
-	while (wsnext->wsh) {
-	    ADD_TO_WS_LIST(cssh, *newlist, wsnext->wsh, wsnext->count, postflag)
-	    wsnext++;
-	}
+  }
+  if (s2 && (wsnext =
+             (op==CSS_WS_APPEAR ? s2->ws_appear_on : s2->ws_posted_to)) ) {
+    while (wsnext->wsh) {
+      ADD_TO_WS_LIST(cssh, *newlist, wsnext->wsh, wsnext->count, postflag)
+        wsnext++;
     }
-    return(TRUE);
+  }
+  return(TRUE);
 }
 
 /*******************
 
     phg_css_copy_ws_lists - Copy the ws_posted to and ws_appear_on lists
-			    from structure "from" to structure "to",
-			    allocating space for the list(s) if necessary.
-			    If op is not CSS_WS_BOTH, only copy the list
-			    specified.
+                from structure "from" to structure "to",
+                allocating space for the list(s) if necessary.
+                If op is not CSS_WS_BOTH, only copy the list
+                specified.
 
 *******************/
 
@@ -349,40 +349,40 @@ int phg_css_copy_ws_lists(Css_handle cssh,
                           Struct_handle to,
                           Css_ws_list_op op)
 {
-    int i;
+  int i;
 
-    if ( (op==CSS_WS_POST || op==CSS_WS_BOTH) && from->ws_posted_to) {
-	if (!to->ws_posted_to)
-	    if ( !(to->ws_posted_to = (Css_ws_list)
-		    malloc((MAX_NO_OPEN_WS+1) * sizeof(Css_ws_on))) ) {
-		ERR_BUF((cssh)->erh, ERR901);
-		return(FALSE);				/* out of memory */
-	    }
-	i = 0;
-	while (from->ws_posted_to[i].wsh) {
-	    to->ws_posted_to[i].wsh = from->ws_posted_to[i].wsh;
-	    to->ws_posted_to[i].count = from->ws_posted_to[i].count;
-	    i++;
-	}
-	to->ws_posted_to[i].wsh = NULL;
+  if ( (op==CSS_WS_POST || op==CSS_WS_BOTH) && from->ws_posted_to) {
+    if (!to->ws_posted_to)
+      if ( !(to->ws_posted_to = (Css_ws_list)
+             malloc((MAX_NO_OPEN_WS+1) * sizeof(Css_ws_on))) ) {
+        ERR_BUF((cssh)->erh, ERR901);
+        return(FALSE);                /* out of memory */
+      }
+    i = 0;
+    while (from->ws_posted_to[i].wsh) {
+      to->ws_posted_to[i].wsh = from->ws_posted_to[i].wsh;
+      to->ws_posted_to[i].count = from->ws_posted_to[i].count;
+      i++;
     }
+    to->ws_posted_to[i].wsh = NULL;
+  }
 
-    if ( (op==CSS_WS_APPEAR || op==CSS_WS_BOTH) && from->ws_appear_on) {
-	if (!to->ws_appear_on)
-	    if ( !(to->ws_appear_on = (Css_ws_list)
-		    malloc((MAX_NO_OPEN_WS+1) * sizeof(Css_ws_on))) ) {
-		ERR_BUF((cssh)->erh, ERR901);
-		return(FALSE);				/* out of memory */
-	    }
-	i = 0;
-	while (from->ws_appear_on[i].wsh) {
-	    to->ws_appear_on[i].wsh = from->ws_appear_on[i].wsh;
-	    to->ws_appear_on[i].count = from->ws_appear_on[i].count;
-	    i++;
-	}
-	to->ws_appear_on[i].wsh = NULL;
+  if ( (op==CSS_WS_APPEAR || op==CSS_WS_BOTH) && from->ws_appear_on) {
+    if (!to->ws_appear_on)
+      if ( !(to->ws_appear_on = (Css_ws_list)
+             malloc((MAX_NO_OPEN_WS+1) * sizeof(Css_ws_on))) ) {
+        ERR_BUF((cssh)->erh, ERR901);
+        return(FALSE);                /* out of memory */
+      }
+    i = 0;
+    while (from->ws_appear_on[i].wsh) {
+      to->ws_appear_on[i].wsh = from->ws_appear_on[i].wsh;
+      to->ws_appear_on[i].count = from->ws_appear_on[i].count;
+      i++;
     }
-    return(TRUE);
+    to->ws_appear_on[i].wsh = NULL;
+  }
+  return(TRUE);
 }
 
 /*******************
@@ -393,14 +393,14 @@ int phg_css_copy_ws_lists(Css_handle cssh,
 
 int phg_css_ws_posted(Struct_handle structp, Ws_handle wsh)
 {
-    Css_ws_list wsptr;
+  Css_ws_list wsptr;
 
-    if ( !(wsptr = structp->ws_posted_to) )
-	return(FALSE);
-    while (wsptr->wsh && wsptr->wsh!=wsh)
-	wsptr++;
-    /* don't return the pointer truncated to int, it may end up as 0 */
-    return(wsptr->wsh != NULL);
+  if ( !(wsptr = structp->ws_posted_to) )
+    return(FALSE);
+  while (wsptr->wsh && wsptr->wsh!=wsh)
+    wsptr++;
+  /* don't return the pointer truncated to int, it may end up as 0 */
+  return(wsptr->wsh != NULL);
 }
 
 /*******************
@@ -411,11 +411,11 @@ int phg_css_ws_posted(Struct_handle structp, Ws_handle wsh)
 
 int phg_css_ws_appearances(Struct_handle structp, Ws_handle wsh)
 {
-    Css_ws_list wsptr;
+  Css_ws_list wsptr;
 
-    if ( !(wsptr = structp->ws_appear_on) )
-	return(0);
-    while (wsptr->wsh && wsptr->wsh!=wsh)
-	wsptr++;
-    return(wsptr->wsh ? wsptr->count : 0);
+  if ( !(wsptr = structp->ws_appear_on) )
+    return(0);
+  while (wsptr->wsh && wsptr->wsh!=wsh)
+    wsptr++;
+  return(wsptr->wsh ? wsptr->count : 0);
 }

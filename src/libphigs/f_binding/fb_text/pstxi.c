@@ -30,6 +30,13 @@
  * \file pstxi.c
  *
  * \brief       Set text index
+ *
+ * \param[in]  txi  text index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_text_ind pstxr
  */
 FTN_SUBROUTINE(pstxi)(
                       FTN_INTEGER(txi)

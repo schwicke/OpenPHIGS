@@ -32,7 +32,16 @@
 /**
  * \file psample_stroke3.c
  *
- * \brief       Sample stroke device 3D
+ * \brief       Sample stroke 3
+ *
+ * \param[in]  ws_id       workstation identifier
+ * \param[in]  stroke_num  stroke device number
+ * \param[out] view_ind    view index
+ * \param[out] stroke      stroke points
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pset_stroke_mode psample_stroke
  */
 void psample_stroke3(
                      Pint ws_id,

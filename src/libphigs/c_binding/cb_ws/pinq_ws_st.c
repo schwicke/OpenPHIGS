@@ -46,7 +46,13 @@
 /**
  * \file pinq_ws_st.c
  *
- * \brief       Get workstation state
+ * \brief       Inquire workstation state value
+ *
+ * Returns the workstation state value of PHIGS, not of a single workstation.
+ *
+ * \param[out] ws_state  returned workstation state (PWS_ST_WSCL or PWS_ST_WSOP)
+ *
+ * \sa pclose_ws popen_ws
  */
 void pinq_ws_st(
                 Pws_st *ws_state

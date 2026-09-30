@@ -31,7 +31,15 @@
 /**
  * \file pschh.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set character height
+ *
+ * \param[in]  chh  character height
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_char_ht
+ */
 
 FTN_SUBROUTINE(pschh)(
                       FTN_REAL(chh)

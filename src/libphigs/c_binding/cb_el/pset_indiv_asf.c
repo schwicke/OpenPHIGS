@@ -31,7 +31,20 @@
 /**
  * \file pset_indiv_asf.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set individual ASF
+ *
+ * \param[in]  asf_id      aspect identifier (PASPECT_* value)
+ * \param[in]  asf_source  aspect source
+ * \verbatim
+  0  PASF_BUNDLED  bundled
+  1  PASF_INDIV    individual
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psiasf
+ */
 void pset_indiv_asf(
                     Paspect asf_id,
                     Pasf asf_source

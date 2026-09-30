@@ -86,6 +86,8 @@ uniform int applyTexture;
 /* number of entries the fragment list can hold, set by wsgl_oir_reset() */
 uniform uint list_capacity;
 uniform int oirEnable;
+/* draw sequence number of the element being drawn, see wsgl_oir_next_element() */
+uniform uint oirDrawSeq;
 /* width of the canvas, so gl_FragCoord can be turned into a head pointer index */
 uniform uint oirWidth;
 
@@ -226,7 +228,13 @@ bool appendFragment(vec4 fragCol){
   item.x = old_head;
   item.y = packUnorm4x8(fragCol);
   item.z = floatBitsToUint(gl_FragCoord.z);
-  item.w = index;
+  /*
+   * Ordering key for fragments at the same depth: the draw sequence number in
+   * the high bits, the list index (arrival order, only meaningful within one
+   * element) in the low ones. The index alone reflects shader execution
+   * order, which the GPU does not keep equal to draw order between elements.
+   */
+  item.w = ((oirDrawSeq & 0xFFFFFu) << 12) | (index & 0xFFFu);
   imageStore(list_buffer, int(index), item);
   return true;
 }

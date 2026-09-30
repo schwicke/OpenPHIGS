@@ -46,7 +46,12 @@
 /**
  * \file pset_invis_filter.c
  *
- * \brief       Set workstation invisibility filter
+ * \brief       Set invisibility filter
+ *
+ * \param[in]  ws_id   workstation identifier
+ * \param[in]  filter  invisibility filter: inclusion and exclusion name sets
+ *
+ * \sa padd_names_set pinq_invis_filter premove_names_set
  */
 void pset_invis_filter(
                        Pint ws_id,

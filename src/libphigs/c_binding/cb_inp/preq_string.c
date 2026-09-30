@@ -32,7 +32,21 @@
 /**
  * \file preq_string.c
  *
- * \brief       Request input from string
+ * \brief       Request string
+ *
+ * \param[in]  ws_id       workstation identifier
+ * \param[in]  string_dev  string device number
+ * \param[out] status      input status
+ * \verbatim
+  0  PIN_STATUS_NONE   none
+  1  PIN_STATUS_OK     ok
+  2  PIN_STATUS_NO_IN  no input
+\endverbatim
+ * \param[out] string      returned string (buffer supplied by the caller)
+ *
+ * \pre The workstation must be open
+ *
+ * \sa prqst pinit_string pset_string_mode
  */
 void preq_string(
                  Pint ws_id,

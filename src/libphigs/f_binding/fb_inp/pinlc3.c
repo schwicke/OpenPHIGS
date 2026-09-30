@@ -31,7 +31,22 @@
 /**
  * \file pinlc3.c
  *
- * \brief       initialize locator 3
+ * \brief       Initialize locator 3
+ *
+ * \param[in]  wkid    workstation identifier
+ * \param[in]  lcdnr   locator device number
+ * \param[in]  iviewi  initial view index
+ * \param[in]  ipx     x coordinate of the initial locator position
+ * \param[in]  ipy     y coordinate of the initial locator position
+ * \param[in]  ipz     z coordinate of the initial locator position
+ * \param[in]  pet1    prompt and echo type
+ * \param[in]  evol    echo volume XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX (device coordinates)
+ * \param[in]  ldr     length of the data record (in 80-character lines)
+ * \param[in]  datrec  data record, as packed by PPREC
+ *
+ * \pre The workstation must be open
+ *
+ * \sa pinit_loc3 pqdlc3 pprec pslcm pinlc
  */
 FTN_SUBROUTINE(pinlc3)(
                        FTN_INTEGER(wkid),

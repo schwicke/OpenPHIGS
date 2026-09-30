@@ -33,7 +33,11 @@
 /**
  * \file dumpstr.c
  *
- * \brief       Print structure as string
+ * \brief       Print the contents of a structure (OpenPHIGS extension)
+ *
+ * \param[in]  strid  identifier of the structure to print
+ *
+ * \sa popst pclst
  */
 FTN_SUBROUTINE(dumpstr)(FTN_INTEGER(strid)){
   Struct_handle structp;

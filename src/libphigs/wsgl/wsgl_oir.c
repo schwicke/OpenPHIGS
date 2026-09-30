@@ -363,6 +363,8 @@ void wsgl_oir_reset(Ws * ws){
               " (maximum 16), or reduce the window size.\n");
     }
   }
+  ws->oir.draw_seq = 0;
+  ws->oir.draw_seq_loc_ready = 0;   /* program may have been rebuilt */
   const GLuint zero = 0;
   glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(zero), &zero);
   /* order the clears above against last frame's appends and this frame's */
@@ -378,6 +380,32 @@ void wsgl_oir_reset(Ws * ws){
   wsgl_oir_publish_state(ws, 1);
   wsgl_oir_check_gl("wsgl_oir_reset: end");
   wsgl_oir_dump_bindings(ws);
+}
+
+/*******************************************************************************
+ * wsgl_oir_next_element
+ *
+ * DESCR:       Publish a fresh draw sequence number (oirDrawSeq) before an
+ *              element is rendered. Fragments of equal depth, which is what
+ *              all 2D primitives produce, are composited in this order.
+ *              Relying on the order in which the shader invocations reach the
+ *              fragment list instead is not safe: the GPU may run the
+ *              fragments of a later draw before those of an earlier one for
+ *              the same pixel, which shows up as elements randomly hidden
+ *              behind whatever was drawn before them.
+ * RETURNS:     N/A
+ */
+void wsgl_oir_next_element(Ws * ws)
+{
+  if (ws->oir.head_p_buffer == 0 || !wsgl_oir_wanted(ws)) return;
+  if (ws->shader.program <= 0) return;
+  if (!ws->oir.draw_seq_loc_ready){
+    ws->oir.draw_seq_loc = glGetUniformLocation(ws->shader.program, "oirDrawSeq");
+    ws->oir.draw_seq_loc_ready = 1;
+  }
+  if (ws->oir.draw_seq_loc < 0) return;
+  ws->oir.draw_seq++;
+  glProgramUniform1ui(ws->shader.program, ws->oir.draw_seq_loc, ws->oir.draw_seq);
 }
 
 /*******************************************************************************

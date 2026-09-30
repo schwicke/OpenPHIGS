@@ -32,7 +32,18 @@
 /**
  * \file pget_pick.c
  *
- * \brief       Get pick event from event queue
+ * \brief       Get pick
+ *
+ * \param[in]  depth      maximum depth of the returned pick path
+ * \param[out] in_status  input status
+ * \verbatim
+  0  PIN_STATUS_NONE   none
+  1  PIN_STATUS_OK     ok
+  2  PIN_STATUS_NO_IN  no input
+\endverbatim
+ * \param[out] pick       pick path
+ *
+ * \sa pgtpk pawait_event
  */
 void pget_pick(
                Pint depth,

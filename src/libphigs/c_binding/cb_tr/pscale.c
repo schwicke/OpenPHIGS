@@ -56,7 +56,13 @@ SOFTWARE.
 /**
  * \file pscale.c
  *
- * \brief       Generate scaling matrix
+ * \brief       Scale
+ *
+ * \param[in]  scale_vector  scale factors
+ * \param[out] error_ind     error indicator, 0 on success
+ * \param[out] m             resulting transformation matrix
+ *
+ * \sa pscale3
  */
 void pscale(
             Pvec *scale_vector,        /* scale factor vector */

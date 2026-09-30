@@ -34,7 +34,19 @@
 /**
  * \file pinq_light_src_rep.c
  *
- * \brief       inquire light source respresentation
+ * \brief       Inquire light source representation
+ *
+ * \param[in]  ws_id    workstation identifier
+ * \param[in]  index    light source index
+ * \param[in]  type     return the value as set or as realised
+ * \verbatim
+  0  PINQ_SET       value as set
+  1  PINQ_REALIZED  value as realised
+\endverbatim
+ * \param[out] err_ind  error indicator, 0 on success
+ * \param[out] rep      returned light source representation
+ *
+ * \sa pset_light_src_rep
  */
 void pinq_light_src_rep(
 			Pint ws_id,

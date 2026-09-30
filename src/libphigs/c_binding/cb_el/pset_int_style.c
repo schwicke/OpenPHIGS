@@ -31,7 +31,22 @@
 /**
  * \file pset_int_style.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set interior style
+ *
+ * \param[in]  int_style  interior style
+ * \verbatim
+  0  PSTYLE_EMPTY    empty
+  1  PSTYLE_HOLLOW   hollow (outline only)
+  2  PSTYLE_SOLID    solid
+  3  PSTYLE_HATCH    hatch
+  4  PSTYLE_PATTERN  pattern
+\endverbatim
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psis pinq_int_rep pset_indiv_asf pset_int_style_ind pset_back_int_style
+ */
 
 void pset_int_style(
                     Pint_style int_style

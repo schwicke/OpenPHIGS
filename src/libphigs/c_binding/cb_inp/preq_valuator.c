@@ -32,7 +32,23 @@
 /**
  * \file preq_valuator.c
  *
- * \brief       Request input from valuator
+ * \brief       Request valuator
+ *
+ * Named preq_val in the ISO C binding.
+ *
+ * \param[in]  ws_id    workstation identifier
+ * \param[in]  val_dev  valuator device number
+ * \param[out] status   input status
+ * \verbatim
+  0  PIN_STATUS_NONE   none
+  1  PIN_STATUS_OK     ok
+  2  PIN_STATUS_NO_IN  no input
+\endverbatim
+ * \param[out] value    returned valuator value
+ *
+ * \pre The workstation must be open
+ *
+ * \sa prqvl pset_val_mode
  */
 void preq_valuator(
                    Pint ws_id,

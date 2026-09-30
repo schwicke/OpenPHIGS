@@ -35,7 +35,22 @@
 /**
  * \file psbic.c
  *
- * \brief       set back interior color
+ * \brief       Set back interior colour
+ *
+ * \param[in]  ityp   colour type
+ * \verbatim
+  0  PINDIR  colour index
+  1  PRGB    RGB
+  2  PRGBA   RGB with alpha
+\endverbatim
+ * \param[in]  incc   number of colour components in RCOLR (3 for RGB, 4 for RGBA)
+ * \param[in]  icol   colour index, used if ITYP is PINDIR
+ * \param[in]  rcolr  colour components, used for PRGB and PRGBA
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_back_int_colr
  */
 FTN_SUBROUTINE(psbic)(
                       FTN_INTEGER(ityp),

@@ -30,7 +30,16 @@
 /**
  * \file pset_model_clip_vol3.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set modelling clipping volume 3
+ *
+ * \param[in]  op         modelling clipping operator, 0 to 2 (currently not used)
+ * \param[in]  spacelist  list of half spaces (point and normal)
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa psmcv3 pset_model_clip_ind
+ */
 void  pset_model_clip_vol3 (
                             Pint op,
                             Phalf_space_list3 spacelist

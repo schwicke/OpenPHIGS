@@ -31,7 +31,15 @@
 /**
  * \file pset_marker_colr_ind.c
  *
- * \brief       Creates a new element  */
+ * \brief       Set polymarker colour index
+ *
+ * \param[in]  colr_ind  colour index
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pspmci pinq_marker_rep pset_indiv_asf pset_line_rep
+ */
 void pset_marker_colr_ind(
                           Pint colr_ind
                           )

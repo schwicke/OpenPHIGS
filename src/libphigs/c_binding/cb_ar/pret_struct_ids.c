@@ -31,7 +31,13 @@
 /**
  * \file pret_struct_ids.c
  *
- * \brief       Retreive all structures identifiers for archive
+ * \brief       Retrieve structure identifiers
+ *
+ * \param[in]  archive_id           archive file identifier
+ * \param[in]  num_elems_appl_list  number of list elements the application has room for
+ * \param[in]  start_ind            index of the first list element to return
+ * \param[out] ids                  returned list of structure identifiers
+ * \param[out] num_elems_impl_list  number of elements available in the implementation list
  */
 void pret_struct_ids(
                      Pint archive_id,

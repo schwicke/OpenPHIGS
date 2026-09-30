@@ -31,7 +31,15 @@
 /**
  * \file plabel.c
  *
- * \brief       Creates a new element  */
+ * \brief       Label
+ *
+ * \param[in]  label_id  label identifier
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa plb pdel_elems_labels pset_elem_ptr_label
+ */
 void plabel(
             Pint label_id
             )

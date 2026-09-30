@@ -112,7 +112,7 @@ FTN_SUBROUTINE(popwk)(
 
     ERR_SET_CUR_FUNC(PHG_ERH, Pfn_open_ws);
 
-    if ((ws_id < 0) || (ws_id > MAX_NO_OPEN_WS)) {
+    if ((ws_id < 0) || (ws_id >= MAX_NO_OPEN_WS)) {
       ERR_REPORT(PHG_ERH, ERR65);
     }
     else if (phg_psl_inq_ws_open(PHG_PSL, ws_id)) {

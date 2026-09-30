@@ -35,7 +35,14 @@
 /**
  * \file psfdm.c
  *
- * \brief       set facet distinguishing mode
+ * \brief       Set face distinguishing mode
+ *
+ * \param[in]  mode  face distinguishing mode: 0 no, 1 yes
+ *
+ * \note Adds a new element to the current structure
+ * \pre The current structure must be open for editing
+ *
+ * \sa pset_face_disting_mode
  */
 FTN_SUBROUTINE(psfdm)(
                       FTN_INTEGER(mode)
