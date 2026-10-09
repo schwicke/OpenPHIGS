@@ -1351,6 +1351,15 @@ extern "C" {
    */
   void wsgl_oir_next_element(Ws * ws);
 
+  /*******************************************************************************
+   * wsgl_oir_set_select
+   *
+   * DESCR:       Disable fragment list appends during a pick traversal
+   *              (selecting != 0) and enable them again afterwards
+   * RETURNS:     N/A
+   */
+  void wsgl_oir_set_select(Ws * ws, int selecting);
+
 
   /*******************************************************************************
    * wsgl_oir_resolve

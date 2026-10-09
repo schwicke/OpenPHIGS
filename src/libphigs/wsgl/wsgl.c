@@ -1516,6 +1516,7 @@ void wsgl_begin_pick(
 #endif
 
   init_rendering_state(ws);
+  wsgl_oir_set_select(ws, 1);
   glSelectBuffer(wsgl->select_size, wsgl->select_buf);
 #ifdef DEBUGINP
   printf("WSGL begin pick: set render mode to select\n");
@@ -1559,6 +1560,7 @@ void wsgl_end_pick(
   printf("Viewport: %d %d %d %d\n", viewport[0], viewport[1], viewport[2], viewport[3]);
 #endif
   hits = glRenderMode(GL_RENDER);
+  wsgl_oir_set_select(ws, 0);
 #ifdef DEBUGINP
   printf("Number of hits: %d\n", hits);
 #endif

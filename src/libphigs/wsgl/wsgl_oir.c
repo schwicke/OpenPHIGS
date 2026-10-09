@@ -383,6 +383,25 @@ void wsgl_oir_reset(Ws * ws){
 }
 
 /*******************************************************************************
+ * wsgl_oir_set_select
+ *
+ * DESCR:       Stop the first pass appending while a pick traversal is
+ *              running, and allow it again afterwards. With hardware
+ *              accelerated GL_SELECT (the Mesa default) the pick traversal
+ *              still runs the fragment shaders, so without this every pick
+ *              adds another copy of the transparent geometry to the
+ *              fragment lists, and transparent objects get brighter and
+ *              patchy with each click.
+ * RETURNS:     N/A
+ */
+void wsgl_oir_set_select(Ws * ws, int selecting)
+{
+  if (!wsgl_oir_wanted(ws)) return;
+  if (ws->oir.head_p_buffer == 0) return;
+  wsgl_oir_publish_state(ws, !selecting);
+}
+
+/*******************************************************************************
  * wsgl_oir_next_element
  *
  * DESCR:       Publish a fresh draw sequence number (oirDrawSeq) before an

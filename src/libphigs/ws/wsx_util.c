@@ -79,6 +79,25 @@ static Colormap get_sharable_colormap(
 }
 
 /*******************************************************************************
+ * wsx_disable_hw_select
+ *
+ * DESCR:	Ask Mesa for the software implementation of GL_SELECT.
+ *		The hardware accelerated one (the Mesa default) corrupts
+ *		transparent geometry in the frames drawn after a pick when
+ *		order independent rendering is used: transparent objects get
+ *		brighter and patchy with each pick. Has to run before the
+ *		first GLX call, since Mesa reads the option when it sets up the
+ *		driver. A value already set in the environment is kept, so
+ *		MESA_HW_ACCEL_SELECT=1 still selects the hardware path.
+ * RETURNS:	N/A
+ */
+
+static void wsx_disable_hw_select(void)
+{
+   setenv("MESA_HW_ACCEL_SELECT", "0", 0);
+}
+
+/*******************************************************************************
  * phg_wsx_open_gl_display
  *
  * DESCR:	Open dipslay with OpenGL extension
@@ -93,6 +112,7 @@ Display* phg_wsx_open_gl_display(
    Display *display;
    char *display_name;
 
+   wsx_disable_hw_select();
    display_name = XDisplayName(name);
    display = XOpenDisplay(display_name);
    if (display != NULL) {
@@ -216,6 +236,7 @@ void phg_wsx_find_best_visual(
    int status;
 
    *err_ind = 0;
+   wsx_disable_hw_select();
    status = phg_wsx_set_best_args(ws, wst, args, &argc, err_ind);
    switch (status)
      {
