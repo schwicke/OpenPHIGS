@@ -97,21 +97,19 @@ void pxset_color_map(Pint ws_id){
     for (i=0; i<n; i++){
       for (j=0; j<n; j++){
         for (k=0; k<n; k++){
-          for (l=0; l<n; l++){
-            rep.rgba.red   = i*delta_n;
-            rep.rgba.green = j*delta_n;
-            rep.rgba.blue  = k*delta_n;
-            for (l=0;l<na;l++){
-              rep.rgba.alpha = def_alpha[l];
-              pset_colr_rep(ws_id, offset+index+200*l, &rep);
+          rep.rgba.red   = i*delta_n;
+          rep.rgba.green = j*delta_n;
+          rep.rgba.blue  = k*delta_n;
+          for (l=0;l<na;l++){
+            rep.rgba.alpha = def_alpha[l];
+            pset_colr_rep(ws_id, offset+index+200*l, &rep);
 #ifdef DEBUGA
-              printf("Defining color index %d as RGBA %f %f %f %f\n",
-                     offset+index+200*i,
-                     rep.rgba.red, rep.rgba.green, rep.rgba.blue, rep.rgba.alpha);
+            printf("Defining color index %d as RGBA %f %f %f %f\n",
+                   offset+index+200*l,
+                   rep.rgba.red, rep.rgba.green, rep.rgba.blue, rep.rgba.alpha);
 #endif
-            }
-            index += 1;
           }
+          index += 1;
         }
       }
     }
@@ -133,7 +131,7 @@ void pxset_color_map(Pint ws_id){
           printf("Re-defining color index %d as RGBA %f %f %f %f\n",
                  i+200*j, rep.rgba.red, rep.rgba.green, rep.rgba.blue, rep.rgba.alpha);
 #endif
-          pset_colr_rep(ws_id, i+200*(j+1), &rep);
+          pset_colr_rep(ws_id, i+200*j, &rep);
         }
         break;
       default:
@@ -145,7 +143,7 @@ void pxset_color_map(Pint ws_id){
     }
     break;
   default:
-    printf("WARNING in pxset_color_map: unknown color model %d. Ignoring function.\n", gcolr.type);
+    printf("WARNING in pxset_color_map: unknown color model %d. Ignoring function.\n", wsh->current_colour_model);
   }
 }
 
