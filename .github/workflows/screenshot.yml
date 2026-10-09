@@ -11,7 +11,7 @@ jobs:
   test-and-screenshot:
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Install dependencies
       run: sudo apt update && sudo apt install --fix-missing cmake gcc gfortran libx11-dev libglu1-mesa-dev libmotif-dev tcsh libxaw7-dev libglew-dev libdlm-dev libgl2ps-dev libpng-dev xvfb imagemagick
@@ -33,7 +33,7 @@ jobs:
         kill $TEST_PID
         
     - name: Upload Screenshot Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: test_f3-screenshot
         path: test_f3_output.png

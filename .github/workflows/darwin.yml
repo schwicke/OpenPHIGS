@@ -20,7 +20,7 @@ jobs:
         asan: [ON, OFF]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: dependencies
       run: brew reinstall gcc; brew install --cask xquartz; brew install mesa-glu glfw3 tcsh glew openmotif libXaw gl2ps
