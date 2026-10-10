@@ -13,6 +13,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.6-5] 2026-10-10
+
+### Added
+
+### Changed
+* Fix an off by one issue in color palette creation
+* Fix bug in picking when OIR is used
+
+### Removed
+
+## [v0.6-4] 2026-09-30
+
+### Added
+
+### Changed
+* Improved man pages from available information
+* Marker scaling bug fix
+* Various bug fixes
+
+### Removed
+
 ## [v0.6-3] 2026-09-19
 
 ### Added
